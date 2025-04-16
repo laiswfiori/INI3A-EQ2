@@ -77,25 +77,25 @@ const Header: React.FC = () => {
         {menuAberto && (
           <div id="mobileMenu" className="azul">
             <div id="linksMenu">
-              <div>
+              <div className="menu2">
                 <IonTabButton className="azul" tab="agenda" onClick={navAgenda}>
                   <IonIcon icon={calendar} className="iconesMobile" />
                   <IonLabel className="iconesTxt">Agenda</IonLabel>
                 </IonTabButton>
               </div>
-              <div>
+              <div className="menu2">
                 <IonTabButton className="azul" tab="flashcards" onClick={navFlashcards}>
                   <IonIcon icon={star} className="iconesMobile" />
                   <IonLabel className="iconesTxt">Flashcards</IonLabel>
                 </IonTabButton>
               </div>
-              <div>
+              <div className="menu2">
                 <IonTabButton className="azul" tab="conteudos" onClick={navConteudos}>
                   <IonIcon icon={documentText} className="iconesMobile" />
                   <IonLabel className="iconesTxt">Conteúdos</IonLabel>
                 </IonTabButton>
               </div>
-              <div>
+              <div className="menu2">
                 <IonTabButton className="azul" tab="perfil" onClick={navPerfil}>
                   <IonIcon icon={personCircle} className="iconesMobile" />
                   <IonLabel className="iconesTxt">Perfil</IonLabel>
