@@ -4,6 +4,7 @@
     grid-template-rows: 1fr;
     line-height: 1rem;
     height: auto;
+    z-index: 0;
 }
 
 #logo {
@@ -44,10 +45,11 @@
 }
 
 #mobileMenu {
-    display: flex;
     position: fixed;
-    right: calc(-40%);;
+    right: 0;
+    display: flex !important;
 	flex-direction: column;
     align-items: flex-end;
-    width: 40%;
+    z-index: 1000;
+    width: 35%;
 }
