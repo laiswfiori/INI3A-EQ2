@@ -11,27 +11,28 @@ const Configuracoes: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <div id="body">
         <div className="configuracoes-container">
           <div className="div1">
-            <IonRow><h1>Agradecemos por se juntar a nós!</h1></IonRow>
-            <h3>Seu cadastro foi efetivado! Você está quase lá!</h3><br></br>
-            <h2>Configurações de seu plano de estudos</h2>
-            <h3> Lembre-se de criar um plano que se adeque a sua rotina.</h3>
+            <h1><b>✨Agradecemos por se juntar a nós!</b></h1>
+            <h4>Seu cadastro foi efetivado! Você está quase lá!</h4><br />
+            <h3><b>Configurações de seu plano de estudos</b></h3>
+            <h4> *Lembre-se de criar um plano que se adeque a sua rotina.*</h4>
             <div>
-                <h3>Dias para o estudo semanal</h3>
-                <h4> + Adicionar dias</h4>
-                <h3>Horários de estudo dia X</h3>
+                <h4><b>Dias para o estudo semanal</b></h4>
+                <input type = "text" placeholder="+ Adicionar dias"/>
+                <h4><b>Horários de estudo dia X</b></h4>
                 <input type = "text" placeholder="w-h horas"/>
-                <h3>Matérias cadastradas</h3>
-                <h4> + Adicionar matérias</h4>
-                <IonButton expand="full">Salvar</IonButton>
+                <h4><b>Matérias cadastradas</b></h4>
+                <input type = "text" placeholder="+ Adicionar matérias"/><br />
+                <IonButton className="botao">Salvar</IonButton>
             </div>
           </div>
 
           <div className="div2">
-            <h1>FlashMinder</h1>
-            <h3>*Imagem*</h3>
+          <img src="/imgs/logoCompleta.png" alt="Logo png" />
           </div>
+        </div>
         </div>
       </IonContent>
     </IonPage>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonRow } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/react';
 import './registro.css';
 
 const Registro: React.FC = () => {
@@ -10,20 +10,33 @@ const Registro: React.FC = () => {
           <IonTitle>Cadastro</IonTitle>
         </IonToolbar>
       </IonHeader>
+
       <IonContent>
-        <div className="cadastro-container">
+        <div id="body">
+          <div className="cadastro-container">
+            {/* div1 - formulário */}
             <div className="div1">
-                <h1>Cadastre-se em nossa plataforma!</h1>
-                <IonButton expand="full">Continue com o Google</IonButton>
-                ou:
-                <input type="email" placeholder="Digite seu email" />
-                <input type="password" placeholder="Digite sua senha" />
-                <IonButton expand="full">Cadastrar</IonButton>
-                <h3>Já possui uma conta? Faça login!</h3>
+              <h1><b>Cadastre-se em nossa plataforma!</b></h1><br />
+              <IonButton className="botao"><b>Continue com o Google</b></IonButton><br />
+              <p><h3>ou:</h3></p><br />
+              <input type="email" placeholder="Digite seu email" /><br /><br />
+              <input type="password" placeholder="Digite sua senha" /><br /><br />
+              <IonButton className="botao"><b>Cadastrar</b></IonButton><br />
+              <h4>Já possui uma conta? <b>Faça login!</b></h4>
             </div>
+
+            {/* ✅ div2 - animação com texto */}
             <div className="div2">
-                <h1>Seja bem-vindo a melhor plataforma de estudos!</h1>
+              <div className="bola bola1"></div>
+              <div className="bola bola2"></div>
+              <div className="bola bola3"></div>
+
+              <h1>Seja bem-vindo à <b>melhor</b> plataforma de estudos!</h1>
+              <div id="img">
+                <img src="/imgs/logoSemFundo.png" alt="Logo png" />
+              </div>
             </div>
+          </div>
         </div>
       </IonContent>
     </IonPage>

@@ -7,25 +7,34 @@ const Login: React.FC = () => {
     <IonPage>
 
       <IonContent>
+      <div id="body">
         <div className="login-container">
             <div className="div1">
-                <IonRow><h1>Sentimos saudades!</h1></IonRow>
-                <IonRow><h2>Pronto para começar?</h2></IonRow>
+                <IonRow><h1><b>Sentimos saudades!</b></h1></IonRow>
+                <IonRow><h3>Pronto para começar?</h3></IonRow>
+                <div id="img">
+                <img src="/imgs/logoSemFundo.png" alt="Logo png" />
+                </div>
+
+                <div className="bola bola1"></div>
+                <div className="bola bola2"></div>
+                <div className="bola bola3"></div>
             </div>
 
             <div className="div2">
-                <IonRow><h1>Login</h1></IonRow>
-                <IonRow><h3>Não possui uma conta? Cadastre-se!</h3></IonRow>
-                <IonLabel><h3>Email</h3></IonLabel>
-                <IonRow><input type="email" placeholder="Digite seu email" /></IonRow>
-                <IonLabel><h3>Senha</h3></IonLabel>
-                <IonRow><input type="password" placeholder="Digite sua senha" /></IonRow>
-                <IonRow><h3>Esqueci minha senha</h3></IonRow>
-                <IonButton expand="full">Entrar</IonButton>
-                <IonRow><h3>ou</h3></IonRow>
-                <IonButton expand="full">Continuar com Google</IonButton>
+                <h1><b>✨Login</b></h1>
+                <h4>Não possui uma conta? Cadastre-se!</h4>
+                <IonLabel><h3><b>Email</b></h3></IonLabel>
+                <input type="email" placeholder="Digite seu email" />
+                <IonLabel><h3><b>Senha</b></h3></IonLabel>
+                <input type="password" placeholder="Digite sua senha" />
+                <h4>Esqueci minha senha</h4>
+                <IonButton className="botao">Entrar</IonButton>
+                <h3>ou</h3>
+                <IonButton className="botao">Continuar com Google</IonButton>
             </div>
         </div>
+      </div>
       </IonContent>
     </IonPage>
   );

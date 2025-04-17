@@ -1,11 +1,113 @@
 .cadastro-container{
     display: grid;
     place-items: center;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 4fr 4fr 1fr;
+    grid-gap: 7%;
+    margin: 0;
+    height: 100vh;
     .div1{
-        grid-column-start: 1;
+        grid-column-start: 2;
+        background-color: white;
+        padding: 10%;
+        border-radius: 2%;
     }
     .div2{
-        grid-column-start: 2;
+        grid-column-start: 3;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        padding: 10%;
+        height: 77%; 
+        position: relative;
+        overflow: hidden;/* ou o tamanho que você quiser */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        color: rgb(0, 0, 0);
+        border-radius: 2%;
+
+        h1, #img{
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
     }
 }
+.botao{
+    margin-top: 2%;
+    margin-bottom: 2%;
+    display: flex;
+    color: #622c02;
+    --background: #ea7317;
+}
+
+h1,h3,h4{
+    margin: 0;
+}
+
+#body{
+    background-color: #00296b;
+}
+
+#img{
+    display: flex;
+    align-items: flex-end;
+    height: 100%;
+}
+
+.conteudo {
+    position: relative;
+    z-index: 2; /* texto por cima das bolas */
+    text-align: center;
+  }
+
+  .bola {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #00296b, #3da5d9);
+    animation: moverEGradiente 10s infinite ease-in-out alternate;
+    opacity: 0.6;
+    z-index: 1;
+  }
+
+  .bola1 {
+    top: -150px;
+    left: -150px;
+    animation-delay: 0s;
+  }
+  
+  .bola2 {
+    bottom: -150px;
+    right: -150px;
+    animation-delay: 2s;
+  }
+  
+  .bola3 {
+    top: 50%;
+    left: -150px;
+    animation-delay: 4s;
+  }
+  
+  /* Animação que move a bola em direção ao centro e muda o gradiente */
+  @keyframes moverEGradiente {
+    0% {
+      transform: translate(0, 0) scale(1);
+      background: linear-gradient(45deg, #00296b, #3da5d9);
+    }
+    50% {
+      transform: translate(100px, 100px) scale(1.2);
+      background: linear-gradient(225deg, #3da5d9, #00296b);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+      background: linear-gradient(45deg, #00296b, #3da5d9);
+    }
+  }
+
+  input{
+    border-radius: 8%;
+    background: #f7d868;
+  }

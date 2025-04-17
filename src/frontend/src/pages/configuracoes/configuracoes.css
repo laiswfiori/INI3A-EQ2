@@ -1,11 +1,32 @@
 .configuracoes-container{
     display: grid;
     place-items: center;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 4fr 8fr 1fr;
+    height: 100%;
+    grid-gap: 5%;
     .div1{
-        grid-column-start: 1;
+        grid-column-start: 2;
+        background-color: white;
+        padding: 1.2rem;
+        border-radius: 2%;
     }
     .div2{
-        grid-column-start: 2;
+        grid-column-start: 3;
+        background-color: white;
+        padding: 2rem;
+        border-radius: 2%;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        height: 91%;
+
     }
 }
+#body {
+    background-color: #00296b;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
