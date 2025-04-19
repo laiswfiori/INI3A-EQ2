@@ -1,17 +1,61 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { IonPage, IonContent, IonImg, IonIcon, IonLabel } from '@ionic/react';
-import { earth, leaf, book, calculator } from 'ionicons/icons';
+import { library, brush, book, school, accessibility, earth, leaf, batteryCharging, planet, calculator } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import Header from '../../components/Header';
 
 const Home: React.FC = () => {
+  const carouselRef = useRef<HTMLDivElement | null>(null);
+
+  const materias = [
+    { id: 'm1', icon: library, label: 'Português' },
+    { id: 'm2', icon: brush, label: 'Artes' },
+    { id: 'm3', icon: book, label: 'História' },
+    { id: 'm4', icon: school, label: 'Filosofia' },
+    { id: 'm5', icon: accessibility, label: 'Sociologia' },
+    { id: 'm6', icon: earth, label: 'Geografia' },
+    { id: 'm7', icon: leaf, label: 'Biologia' },
+    { id: 'm8', icon: batteryCharging, label: 'Química' },
+    { id: 'm9', icon: planet, label: 'Física' },
+    { id: 'm10', icon: calculator, label: 'Matemática' },
+  ];
+
+  const handleNext = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft += 200;
+    }
+  };
+
+  const handlePrev = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft -= 200;
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+        if (carouselRef.current) {
+            const itemWidth = 170; 
+            const maxScrollLeft = carouselRef.current.scrollWidth - carouselRef.current.clientWidth;
+            
+            if (carouselRef.current.scrollLeft >= maxScrollLeft - 10) {
+                carouselRef.current.scrollLeft = 0;
+            } else {
+                carouselRef.current.scrollLeft += itemWidth;
+            }
+        }
+    }, 3000);
+
+    return () => clearInterval(interval);
+}, []);
+
   return (
   <IonPage className="pagina">
       <Header />
       
       <IonContent>
-        <div id="body">
+        <div id="bodyHome">
 
           <section id="s1">
             <div id="divTxtHome">
@@ -49,29 +93,24 @@ const Home: React.FC = () => {
           <section id="s4">
             <div id="divMateria">
               <div className="titulo3"><h1 className="titulo">Aprenda qualquer matéria.</h1></div>
-              <div className="titulo4"><h2 className="subtitulo">Você está no comando! Adicone conteúdo de biologia à programação.</h2></div>
+              <div className="titulo4"><h2 className="subtitulo">Você está no comando! Adicone conteúdo de geografia à física.</h2></div>
             </div>
 
-            <div id="divMaterias">
-              <div id="m1" className="materia">
-                <IonIcon icon={earth} className="iconesM"/>
-                <IonLabel className="iconesTxtM">Geografia</IonLabel>
+            <div className="divCarousel">
+              <button onClick={handlePrev} className="carouselButton prevButton"> &lt; </button>
+
+              <div id="divMaterias" className="materiasCarousel" ref={carouselRef}>
+                {materias.map((materia) => (
+                  <div key={materia.id} className="materia" id={materia.id}>
+                    <IonIcon icon={materia.icon} className="iconesM" />
+                    <IonLabel className="iconesTxtM">{materia.label}</IonLabel>
+                  </div>
+                ))}
               </div>
-              <div id="m2" className="materia">
-                <IonIcon icon={leaf} className="iconesM"/>
-                <IonLabel className="iconesTxtM">Biologia</IonLabel>
-              </div>
-              <div id="m3" className="materia">
-                <IonIcon icon={book} className="iconesM"/>
-                <IonLabel className="iconesTxtM">História</IonLabel>
-              </div>
-              <div id="m4" className="materia">
-               <IonIcon icon={calculator} className="iconesM"/>
-               <IonLabel className="iconesTxtM">Matemática</IonLabel>
-              </div>
+
+              <button onClick={handleNext} className="carouselButton nextButton"> &gt; </button>
             </div>
           </section>
-
         </div>
       </IonContent>
       

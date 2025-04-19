@@ -20,8 +20,6 @@ section {
 
 #s1 {
     grid-row: 1 / 2;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
 }
 
 #divTxtHome {
@@ -36,7 +34,6 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    align-items: flex-start;
     padding: 0;
 }
 
@@ -45,7 +42,6 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
     padding: 0;
 }
 
@@ -54,7 +50,6 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    align-items: center;
     padding: 0;
 }
 
@@ -63,7 +58,6 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
     padding: 0;
 }
 
@@ -76,13 +70,11 @@ section {
 }
 
 #computador {
-    width: 80% !important;
+    width: 50% !important;
 }
 
 #s2 {
     grid-row: 2 / 3;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
 }
 
 #divCelular {
@@ -102,8 +94,6 @@ section {
 
 #s3 {
     grid-row: 3 / 4;
-    display: grid;
-    grid-template-rows: 1fr 5fr;
 }
 
 #divAlcance {
@@ -123,8 +113,6 @@ section {
 
 #s4 {
     grid-row: 4 / 5;
-    display: grid;
-    grid-template-rows: 1fr 4fr;
 }
 
 #divMateria {
@@ -139,21 +127,64 @@ section {
     display: flex; 
     flex-direction: row;
     gap: 5%;
-    flex-wrap: wrap;
     width: 100%;
     justify-content: center;
     align-items: center;
 }
 
+.materiasCarousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    max-width: 50%;
+    padding: 10px 0;
+    -webkit-overflow-scrolling: touch; 
+    scroll-snap-type: x mandatory; 
+}
+
 .materia {
-    background-color: red;
-    width: auto;
+    border-radius: 12px;
     height: auto;
     padding: 2%;
-    display: flex; 
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex: 0 0 auto;
+    scroll-snap-align: start; 
 }
 
+.divCarousel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+}
+  
+.materiasCarousel::-webkit-scrollbar {
+    display: none;
+}
+ 
+.carouselButton {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1;
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.carouselButton:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+    transform: scale(1.05);
+}
 

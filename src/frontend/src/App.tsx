@@ -6,6 +6,8 @@ import Conteudos from './pages/topicos/conteudos/Conteudos';
 import Login from './pages/login/Login';
 import Registro from './pages/registro/Registro';
 import Configuracoes from './pages/configuracoes/Configuracoes';
+import Agenda from './pages/agenda/Agenda';
+import Flashcards from './pages/flashcards/Flashcards';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -49,6 +51,8 @@ const App: React.FC = () => (
         <Route path="/login/login" component={Login} exact />
         <Route path="/registro/registro" component={Registro} exact />
         <Route path="/configuracoes/configuracoes" component={Configuracoes} exact />
+        <Route path="/agenda/agenda" component={Agenda} exact />
+        <Route path="/flashcards/flashcards" component={Flashcards} exact />
 
         {}
         <Route exact path="/">

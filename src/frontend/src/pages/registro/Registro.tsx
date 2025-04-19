@@ -22,7 +22,9 @@ const Registro: React.FC = () => {
               <input type="email" placeholder="Digite seu email" /><br /><br />
               <input type="password" placeholder="Digite sua senha" /><br /><br />
               <IonButton className="botao"><b>Cadastrar</b></IonButton><br />
-              <h4>Já possui uma conta? <b>Faça login!</b></h4>
+              <h4>Já possui uma conta?
+                <a href="/login/login"><b>Faça login!</b></a>
+              </h4>
             </div>
 
             {/* ✅ div2 - animação com texto */}

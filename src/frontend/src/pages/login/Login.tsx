@@ -23,7 +23,9 @@ const Login: React.FC = () => {
 
             <div className="div2">
                 <h1><b>✨Login</b></h1>
-                <h4>Não possui uma conta? Cadastre-se!</h4>
+                <h4>Não possui uma conta?
+                  <a href="/registro/registro"><b>Cadastre-se!</b></a>
+                </h4>
                 <IonLabel><h3><b>Email</b></h3></IonLabel>
                 <input type="email" placeholder="Digite seu email" />
                 <IonLabel><h3><b>Senha</b></h3></IonLabel>
