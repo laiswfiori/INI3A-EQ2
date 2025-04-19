@@ -17,4 +17,6 @@ class Atividade extends Model
         'tipo',
         'nivel'
     ];
+    protected $primaryKey = 'id';
+
 }

@@ -13,11 +13,19 @@ class Usuario extends Model implements AuthenticatableContract, AuthorizableCont
 {
     use Authenticatable, Authorizable, HasFactory;
 
+    protected $table = 'usuarios';
+
     protected $fillable = [
-        'nome', 'email',
+        'nome',
+        'email',
+        'senha',
+        'biografia',
     ];
 
     protected $hidden = [
-        'password',
+        'senha',
     ];
+
+    protected $primaryKey = 'id';
+
 }

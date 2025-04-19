@@ -14,5 +14,6 @@ class Topico extends Model
          'status',
          'nivel'
     ];
+    protected $primaryKey = 'id';
 
 }

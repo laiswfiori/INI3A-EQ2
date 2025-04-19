@@ -18,13 +18,17 @@
 });*/
 
 // Modelo: $router->get('foo', ['uses' => 'FooController@method', 'as' => 'name']);
+$router->get('/', function () {
+    return 'Hello, world!';
+});
+
 $router->group(['prefix' => 'topicos'], function() use($router)
 {
     $router->get('/', 'TopicosController@index'); //get=lê/busca dados
     $router->post('/', 'TopicosController@store'); //cria recurso
     $router->get('/{id}', 'TopicosController@show');
     $router->put('/{id}', 'TopicosController@update'); //Put tualiza todos os dados; PATCH atualiza parcialmente (só os enviados)
-    $router->delete('/', 'TopicosController@destroy');//a$router->group (['prefix'=>'atividades'], function() use[$router])paga recurso
+    $router->delete('/{id}', 'TopicosController@destroy');//a$router->group (['prefix'=>'atividades'], function() use[$router])paga recurso
 });
 
 $router->group(['prefix' => 'atividades'], function() use($router)
@@ -32,5 +36,5 @@ $router->group(['prefix' => 'atividades'], function() use($router)
     $router->post('/', 'AtividadesController@store');
     $router->get('/{id}', 'AtividadesController@show');
     $router->put('/{id}', 'AtividadesController@update');
-    $router->delete('/', 'AtividadesController@destroy');
+    $router->delete('/{id}', 'AtividadesController@destroy');
 });

@@ -19,24 +19,32 @@ class TopicosController extends Controller
     //Auth::id() retorna o ID do usuário autenticado
     public function index()
     {
-        $usuarioId = Auth::id(); // pega o ID do usuário autenticado
-        $topicos = Topico::where('usuario_id', $usuarioId)->get();
+        //$usuarioId = Auth::id(); // pega o ID do usuário autenticado
+        //$topicos = Topico::where('usuario_id', $usuarioId)->get();
+        //return response()->json($topicos);
+
+        $topicos = Topico::all();
+
         return response()->json($topicos);
     }
 
 
     public function store(Request $request)
     {
-        $dados = $request->only(['titulo', 'descricao', 'status']);
+        
+        $dados = $request->only(['titulo', 'descricao', 'status', 'usuario_id']); //adicionei o usuario id so pq nao da para autenticar ainda
 
         $topico = Topico::create([
             'titulo'     => $dados['titulo'],
             'descricao'  => $dados['descricao'],
             'status'     => $dados['status'],
-            'usuario_id' => Auth::id(), // pega o id do usuário autenticado
+            'usuario_id'     => $dados['usuario_id'],
+            //'usuario_id' => Auth::id(), // pega o id do usuário autenticado
         ]);
 
         return response()->json($topico, 201); // 201 = código https que significa created; criado c sucesso
+
+        
     }
 
     public function show($id)
