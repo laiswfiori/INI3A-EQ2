@@ -21,7 +21,7 @@ const Conteudos: React.FC = () => {
   useEffect(() => {
     const fetchTopicos = async () => {
       try {
-        const response = await fetch("http://localhost:8080/topicos");
+        const response = await fetch("http://localhost:8000/topicos");
         if (!response.ok) {
           throw new Error('Erro ao carregar tópicos');
         }

@@ -1,5 +1,7 @@
 <?php
 
+use palanik\lumen\Middleware\LumenCors;
+
 require_once __DIR__.'/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
@@ -78,7 +80,8 @@ $app->configure('app');
 
 $app->routeMiddleware([
      'auth' => App\Http\Middleware\Authenticate::class,
- ]);
+    \palanik\lumen\Middleware\LumenCors::class
+]);
 
 /*
 |--------------------------------------------------------------------------
