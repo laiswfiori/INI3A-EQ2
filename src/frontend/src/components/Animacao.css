@@ -1,0 +1,87 @@
+.svgContainer {
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin-top: 2rem;
+  }
+  
+  svg {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+  }
+  
+  @media (max-width: 500px) {
+    svg {
+      max-width: 220px;
+    }
+  }
+  
+    .cls-1 { fill: #00296b; }
+    .cls-2 { fill: #3da5d9; }
+    .cls-3, .cls-7 { stroke-miterlimit: 10; stroke-width: 2px; }
+    .cls-3 { fill: #3da5d9; stroke: #3da5d9; }
+    .cls-4 { fill: #797c7e; }
+    .cls-5 { fill: #efece8; }
+    .cls-6 { fill: #514f4d; }
+    .cls-7 { fill: #fbb03b; stroke: #aaa7a2; }
+
+    #shadow-r, #pen, #paper, .line { opacity: 0; }
+    #circle-r {
+      animation: show-circle 0.5s forwards;
+    }
+    @keyframes show-circle {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    #paper {
+      animation: show-paper 1s forwards;
+      animation-delay: 1s;
+    }
+    @keyframes show-paper {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    #pen {
+      animation: show-pen 2s forwards;
+      animation-delay: 2s;
+    }
+    @keyframes show-pen {
+      0% { transform: translate(200px, 200px); opacity: 0; }
+      5% { transform: translate(-160px, -110px); opacity: 1; }
+      10% { transform: translate(-60px, -110px); }
+      15% { transform: translate(-160px, -40px); }
+      20% { transform: translate(20px, -40px); }
+      25% { transform: translate(-160px, 10px); }
+      30% { transform: translate(20px, 10px); }
+      35% { transform: translate(-160px, 50px); }
+      40% { transform: translate(20px, 50px); }
+      45% { transform: translate(-160px, 90px); }
+      50% { transform: translate(20px, 90px); }
+      55% { transform: translate(-160px, 140px); }
+      60% { transform: translate(20px, 140px); }
+      65% { transform: translate(0, 160px); }
+      100% { opacity: 1; }
+    }
+
+    .line {
+      stroke-dasharray: 600;
+      stroke-dashoffset: 600;
+      animation: draw-line 0.5s linear forwards;
+      stroke: #000;
+    }
+
+    .line1 { animation-delay: 2.2s; }
+    .line2 { animation-delay: 2.7s; }
+    .line3 { animation-delay: 3.2s; }
+
+    @keyframes draw-line {
+      to {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+    }
+

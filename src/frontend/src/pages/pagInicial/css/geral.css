@@ -7,7 +7,7 @@
 #body {
     height: auto;
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 2fr 2fr 2fr 1fr;
     height: 100vh;
 }
 
@@ -70,15 +70,17 @@ section {
 }
 
 #computador {
-    width: 50% !important;
+    width: 100%;
 }
 
 #s2 {
     grid-row: 2 / 3;
+    grid-template-rows: 1fr;
 }
 
-#divCelular {
+#divCaneta {
     grid-column: 1 / 2;
+    grid-row: 1 / 2;
     display: flex; 
     width: 100%;
     justify-content: center;
@@ -87,13 +89,20 @@ section {
 
 #divFraquezas {
     grid-column: 2 / 3;
-    display: grid; 
-    grid-template-rows: 1fr 1fr;
+    grid-row: 1 / 2;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: 0;
 }
 
 #s3 {
     grid-row: 3 / 4;
+}
+
+#celular {
+    width: 30%;
 }
 
 #divAlcance {
@@ -103,7 +112,7 @@ section {
     padding: 0;
 }
 
-#divConteudos {
+#divCelConteudos {
     grid-row: 2 / 3;
     display: flex; 
     width: 100%;
@@ -113,9 +122,17 @@ section {
 
 #s4 {
     grid-row: 4 / 5;
+    width: 100%;
+    padding: 5% 0;
+    overflow-x: hidden;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 #divMateria {
+    width: 100%;
     grid-row: 1 / 2;
     display: grid; 
     grid-template-rows: 1fr 1fr;
@@ -126,20 +143,21 @@ section {
     grid-row: 2 / 3;
     display: flex; 
     flex-direction: row;
-    gap: 5%;
-    width: 100%;
+    width: 50%;
     justify-content: center;
     align-items: center;
+    overflow-x: auto;
 }
 
 .materiasCarousel {
     display: flex;
+    gap: 5%;
     overflow-x: auto;
     scroll-behavior: smooth;
-    max-width: 50%;
     padding: 10px 0;
     -webkit-overflow-scrolling: touch; 
     scroll-snap-type: x mandatory; 
+    width: 100%;
 }
 
 .materia {
@@ -152,6 +170,7 @@ section {
     align-items: center;
     flex: 0 0 auto;
     scroll-snap-align: start; 
+    min-width: 160px;
 }
 
 .divCarousel {
@@ -159,7 +178,6 @@ section {
     align-items: center;
     justify-content: center;
     width: 100%;
-    position: relative;
 }
   
 .materiasCarousel::-webkit-scrollbar {

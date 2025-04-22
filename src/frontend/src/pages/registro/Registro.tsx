@@ -1,6 +1,8 @@
 import React from 'react';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/react';
-import './registro.css';
+import './css/geral.css';
+import './css/layout.css';
+import './css/ui.css';
 
 const Registro: React.FC = () => {
   return (

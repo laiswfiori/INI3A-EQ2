@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IonHeader, IonToolbar, IonImg, IonTabButton, IonIcon, IonLabel } from '@ionic/react';
-import { calendar, star, documentText, personCircle, menu, close } from 'ionicons/icons';
+import { home, calendar, star, documentText, personCircle } from 'ionicons/icons';
 import './css/ui.css';
 import './css/geral.css';
 import './css/layouts.css';
@@ -10,6 +10,9 @@ const Header: React.FC = () => {
   const history = useHistory();
   const [menuAberto, setMenuAberto] = useState(false);
 
+  const navHome = () => {
+    history.push('/pagInicial/home');
+  }
   const navAgenda = () => {
     history.push('/agenda/agenda');
   }
@@ -31,7 +34,13 @@ const Header: React.FC = () => {
     <IonHeader>
       <IonToolbar>
         <div id="header" className="azul">
-          <IonImg src="/imgs/logo1.png" alt="Logo FSMR" id="logo"/>
+          <div id="logoHome">
+            <IonImg src="/imgs/logo1.png" alt="Logo FSMR" id="logo"/>
+            <IonTabButton className="azul" tab="home" onClick={navHome}>
+                <IonIcon icon={home} className="icones"/>
+                <IonLabel className="iconesTxt">Início</IonLabel>
+            </IonTabButton>
+          </div>
 
           <div id="nav" className="azul">
               <div>
@@ -60,9 +69,7 @@ const Header: React.FC = () => {
                   <IonLabel className="iconesTxt">Perfil</IonLabel>
             </IonTabButton>
           </div>     
-
         </div>
-
         <div id="headerMobile" className="azul">
           <IonImg src="/imgs/logo1.png" alt="Logo FSMR" id="logoMobile"/>
 

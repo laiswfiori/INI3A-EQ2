@@ -3,7 +3,9 @@ import { IonPage, IonContent, IonImg, IonIcon, IonLabel } from '@ionic/react';
 import { library, brush, book, school, accessibility, earth, leaf, batteryCharging, planet, calculator } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
+import './css/layout.css';
 import Header from '../../components/Header';
+import AnimacaoSVG from '../../components/AnimacaoSVG';
 
 const Home: React.FC = () => {
   const carouselRef = useRef<HTMLDivElement | null>(null);
@@ -68,15 +70,15 @@ const Home: React.FC = () => {
             </div>
           </section>
 
-          <section id="s2">
-            <div id="divCelular">
-            {/*<IonImg src="/imgs/computador.png" id="computador" alt="Celular com flashcard"/> Colocar ft de celular + flashcard */}
-            </div>
-
+          <section id="s2">  
             <div id="divFraquezas">
               <div className="titulo1"><h1 className="titulo">Aprender a identificar suas fraquezas.</h1></div>
               <div className="titulo2"><h2 className="subtitulo">Revisando todo dia, você assimila seus erros e consolida seus acertos.</h2></div>
             </div> 
+
+            <div id="divCaneta">
+              <AnimacaoSVG />
+            </div>
           </section>
 
           <section id="s3">
@@ -86,7 +88,7 @@ const Home: React.FC = () => {
             </div>
 
             <div id="divCelConteudos">
-            {/*<IonImg src="/imgs/computador.png" id="computador" alt="Computador com conteudos"/> Colocar ft de web + conteudos */}
+              <IonImg src="/imgs/celular.png" id="celular" alt="Celular com conteudos"/>
             </div>
           </section>
 
