@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { IonPage, IonContent, IonList, IonItem, IonLabel, IonBadge } from '@ionic/react';
 import './css/geral.css';
 import Header from '../../../components/Header';
+import API from '../../../lib/api';
 
 interface Topico {
   id: number;
@@ -19,15 +20,21 @@ const Conteudos: React.FC = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+
+    let api = new API();
     const fetchTopicos = async () => {
       try {
-        const response = await fetch("http://localhost:8000/topicos");
+        let r = await api.get("topicos");
+        console.log(r);
+
+        /*const response = await fetch("http://localhost:8000/topicos");
         if (!response.ok) {
           throw new Error('Erro ao carregar tópicos');
         }
         const data = await response.json();
         setTopicos(data);
-      } catch (err) {
+        */
+      } catch (err:any) {
         setError(err.message);
       } finally {
         setLoading(false);

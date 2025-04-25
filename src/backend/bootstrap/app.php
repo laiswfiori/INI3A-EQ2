@@ -1,6 +1,6 @@
 <?php
 
-use palanik\lumen\Middleware\LumenCors;
+use \App\Http\Middleware\CorsMiddleware; //acrescente essa linha
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -80,7 +80,7 @@ $app->configure('app');
 
 $app->routeMiddleware([
      'auth' => App\Http\Middleware\Authenticate::class,
-    \palanik\lumen\Middleware\LumenCors::class
+     CorsMiddleware::class, //acrescente essa linha
 ]);
 
 /*
