@@ -2,7 +2,7 @@
 
 use \App\Http\Middleware\CorsMiddleware; //acrescente essa linha
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
@@ -79,8 +79,8 @@ $app->configure('app');
 // ]);
 
 $app->routeMiddleware([
-     'auth' => App\Http\Middleware\Authenticate::class,
-     CorsMiddleware::class, //acrescente essa linha
+    'auth' => App\Http\Middleware\Authenticate::class,
+    App\Http\Middleware\CorsMiddleware::class
 ]);
 
 /*
@@ -95,8 +95,10 @@ $app->routeMiddleware([
 */
 
 // $app->register(App\Providers\AppServiceProvider::class);
- $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\CatchAllOptionsRequestsProvider::class);
+
 
 /*
 |--------------------------------------------------------------------------
@@ -112,7 +114,7 @@ $app->routeMiddleware([
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
+    require __DIR__ . '/../routes/web.php';
 });
 
 return $app;

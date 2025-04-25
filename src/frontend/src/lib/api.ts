@@ -7,7 +7,7 @@ export default class API {
     apiUrl:string = "";
 
     constructor(){
-        this.apiUrl = prod ? 'API_PROD' : 'http://10.153.0.107:8000' ; // URL base da sua API
+        this.apiUrl = prod ? 'API_PROD' : 'http://localhost:8000' ; // URL base da sua API
     }
     
     async makeRequest(method:string, endpoint:string, data = null, token = null) {

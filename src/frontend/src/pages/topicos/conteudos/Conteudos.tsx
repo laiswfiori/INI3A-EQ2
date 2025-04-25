@@ -25,7 +25,7 @@ const Conteudos: React.FC = () => {
     const fetchTopicos = async () => {
       try {
         let r = await api.get("topicos");
-        console.log(r);
+        setTopicos(r);
 
         /*const response = await fetch("http://localhost:8000/topicos");
         if (!response.ok) {
