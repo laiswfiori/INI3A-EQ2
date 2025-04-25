@@ -3,6 +3,8 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from 
 import './css/geral.css';
 import './css/layout.css';
 import './css/ui.css';
+import './../../components/Animacao.css';
+
 
 const Registro: React.FC = () => {
   return (
@@ -25,7 +27,7 @@ const Registro: React.FC = () => {
               <input type="password" placeholder="Digite sua senha" /><br /><br />
               <IonButton className="botao"><b>Cadastrar</b></IonButton><br />
               <h4>Já possui uma conta?
-                <a href="/login/login"><b>Faça login!</b></a>
+                <a href="/login/login"><b> Faça login!</b></a>
               </h4>
             </div>
 
@@ -34,10 +36,11 @@ const Registro: React.FC = () => {
               <div className="bola bola1"></div>
               <div className="bola bola2"></div>
               <div className="bola bola3"></div>
-
+              <div id="org">
               <h1>Seja bem-vindo à <b>melhor</b> plataforma de estudos!</h1>
               <div id="img">
                 <img src="/imgs/logoSemFundo.png" alt="Logo png" />
+              </div>
               </div>
             </div>
           </div>

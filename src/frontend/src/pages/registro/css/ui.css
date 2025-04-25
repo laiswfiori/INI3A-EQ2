@@ -1,0 +1,30 @@
+.cadastro-container{
+    .div1{
+        background-color: white;
+        border-radius: 2%;
+    }
+    .div2{
+        background-color: white;
+        color: rgb(0, 0, 0);
+        border-radius: 2%;
+    }
+}
+.botao{
+    color: #622c02;
+    --background: #ea7317;
+}
+
+#body{
+    background-color: #00296b;
+}
+
+  .bola {
+    border-radius: 50%;
+    background: linear-gradient(45deg, #00296b, #3da5d9);
+    opacity: 0.6;
+  }
+
+  input{
+    border-radius: 8%;
+    background: #f7d868;
+  }

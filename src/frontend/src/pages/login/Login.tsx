@@ -1,6 +1,9 @@
 import React from 'react';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonRow, IonLabel } from '@ionic/react';
-import './login.css';
+import './css/geral.css';
+import './css/ui.css';
+import './css/layout.css';
+import './css/animation.css';
 
 const Login: React.FC = () => {
   return (

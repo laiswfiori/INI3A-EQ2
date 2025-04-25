@@ -85,3 +85,35 @@
       }
     }
 
+    .bola {
+      animation: moverEGradiente 10s infinite ease-in-out alternate;
+    }
+  
+    .bola1 {
+      animation-delay: 0s;
+    }
+    
+    .bola2 {
+      animation-delay: 2s;
+    }
+    
+    .bola3 {
+      animation-delay: 4s;
+    }
+    
+    /* Animação que move a bola em direção ao centro e muda o gradiente */
+    @keyframes moverEGradiente {
+      0% {
+        transform: translate(0, 0) scale(1);
+        background: linear-gradient(45deg, #00296b, #3da5d9);
+      }
+      50% {
+        transform: translate(100px, 100px) scale(1.2);
+        background: linear-gradient(225deg, #3da5d9, #00296b);
+      }
+      100% {
+        transform: translate(0px, 0px) scale(1);
+        background: linear-gradient(45deg, #00296b, #3da5d9);
+      }
+    }
+
