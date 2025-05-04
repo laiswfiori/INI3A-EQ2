@@ -1,0 +1,57 @@
+.linhaHorizontal {
+    border-bottom: 2px solid #c0c0c0;  
+    margin-bottom: 5%; 
+  }
+  
+.titulo {
+    font-family: Gill Sans, sans-serif;
+    font-weight: 700;
+    padding: 0 !important;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 2% !important;
+    font-size: 3rem;
+}
+
+ion-modal.modalAdd {
+    --max-height: 45%;
+    height: auto;
+}
+
+#pagAdicionar {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+}
+
+.input {
+    font-size: 1rem;
+    margin-top: 2%;
+}
+
+ion-button.btnSalvar {
+    --background: #00296b; 
+    --color: #fff;        
+  }
+
+ion-input .label-text {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 22px !important;
+}
+  
+ion-textarea .label-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 2%;
+}
+  
+ion-select::part(label) {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 2%;
+}
+  

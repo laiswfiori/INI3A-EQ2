@@ -1,17 +1,24 @@
-/* Estilos para a página de conteúdos */
-.container {
-    padding: 16px;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
-  .titulo {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 24px;
-    color: #333;
-  }
-  
+.pagina {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.icone {
+  font-size: 20rem !important;
+  width: 20rem !important;
+  height: 20rem !important;
+}
+
+.icone::part(icon) {
+  width: 20rem !important;
+  height: 20rem !important;
+}
+
+ion-button {
+  text-transform: none;
+}
+
   .topicos-list {
     background: transparent;
   }
@@ -44,4 +51,22 @@
     color: #e74c3c;
     text-align: center;
     margin-top: 20px;
+  }
+
+  .botao-adicionar {
+    position: fixed;  /* Fixa o botão na tela */
+    bottom: 20px;     /* Distância da parte inferior da tela */
+    right: 20px;      /* Distância da parte direita da tela */
+    width: 60px;      /* Largura do botão */
+    height: 60px;     /* Altura do botão */
+    border-radius: 50%;  /* Torna o botão redondo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+  
+  .botao-adicionar .ion-icon {
+    font-size: 30px;  /* Tamanho do ícone */
+    color: white;     /* Cor do ícone */
   }
