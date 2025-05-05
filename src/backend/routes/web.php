@@ -38,3 +38,8 @@ $router->group(['prefix' => 'atividades'], function() use($router)
     $router->put('/{id}', 'AtividadesController@update');
     $router->delete('/{id}', 'AtividadesController@destroy');
 });
+
+$router->group(['prefix' => 'auth'], function () use ($router) {
+    $router->post('register', 'AuthController@register');
+    $router->post('login', 'AuthController@login');
+});
