@@ -79,9 +79,6 @@ const Conteudos: React.FC = () => {
                   <h2>{topico.titulo}</h2>
                   <p>{topico.descricao}</p>
                 </IonLabel>
-                <IonBadge slot="end" color="primary">
-                  {Math.floor(Math.random() * 10) + 1} atividades
-                </IonBadge>
               </IonItem>
             ))}
           </IonList>
@@ -93,15 +90,15 @@ const Conteudos: React.FC = () => {
           shape="round"
           color="primary"
           onClick={() => setShowModal(true)}
-        >
-          <IonIcon icon={add} className="icone" style={{ fontSize: '20rem', width: '20rem', height: '20rem' }} />
+        > +
         </IonButton>
 
         <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalAdd">
           <IonContent className="ion-padding">
             <div id="pagAdicionar">
+              
+              <p className="label">Nome do Tópico</p>
               <IonInput
-                label="Nome do Tópico"
                 labelPlacement="stacked"
                 placeholder="Digite o nome do tópico"
                 value={novoTopico.nome}
@@ -109,8 +106,8 @@ const Conteudos: React.FC = () => {
                 className="input"
               />
 
+              <p className="label">Matéria</p>
               <IonSelect
-                label="Matéria"
                 labelPlacement="stacked"
                 placeholder="Selecione a matéria"
                 value={novoTopico.materia}
@@ -121,20 +118,21 @@ const Conteudos: React.FC = () => {
                 <IonSelectOption value="Matéria Y">Matéria Y</IonSelectOption>
               </IonSelect>
 
+              <p className="label">Status</p>
               <IonSelect
-                label="Status"
                 labelPlacement="stacked"
                 placeholder="Selecione o status"
                 value={novoTopico.status}
                 onIonChange={(e) => handleInputChange('status', e.detail.value!)}
                 className="input"
               >
+                <IonSelectOption value="Em andamento">Não iniciado</IonSelectOption>
                 <IonSelectOption value="Em andamento">Em andamento</IonSelectOption>
                 <IonSelectOption value="Concluído">Concluído</IonSelectOption>
               </IonSelect>
 
+              <p className="label">Descrição</p>
               <IonTextarea
-                label="Descrição"
                 labelPlacement="stacked"
                 placeholder="Escreva uma breve descrição"
                 value={novoTopico.descricao}

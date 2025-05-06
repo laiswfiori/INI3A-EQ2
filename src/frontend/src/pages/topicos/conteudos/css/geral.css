@@ -4,48 +4,67 @@
   height: 100vh;
 }
 
-.icone {
-  font-size: 20rem !important;
-  width: 20rem !important;
-  height: 20rem !important;
-}
-
-.icone::part(icon) {
-  width: 20rem !important;
-  height: 20rem !important;
-}
-
 ion-button {
   text-transform: none;
 }
 
-  .topicos-list {
-    background: transparent;
-  }
-  
-  .topico-item {
-    --padding-start: 0;
-    --inner-padding-end: 0;
-    margin-bottom: 12px;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-  }
-  
-  .topico-item:hover {
-    transform: translateY(-2px);
-  }
-  
-  .topico-item ion-label h2 {
-    font-weight: 600;
-    color: #2c3e50;
-  }
-  
-  .topico-item ion-label p {
-    color: #7f8c8d;
-    font-size: 14px;
-  }
+.topicos-list {
+  display: flex;
+  justify-content: flex-start;
+  gap: 5%;
+  margin-right: 15%;
+  margin-left: 15%;
+}
+
+.topico-item {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 12px;
+  background-color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  min-height: 50%;
+  width: 100%;
+  cursor: pointer;
+}
+
+.topico-item .icon-placeholder {
+  width: 40px;
+  height: 40px;
+  background-color: #ddd;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topico-item h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.topico-item p {
+  margin: 2px 0 12px;
+  font-size: 14px;
+  color: #444;
+}
+
+.topico-item .progress-bar {
+  height: 6px;
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.topico-item .progress-bar-fill {
+  height: 100%;
+  width: 40%; /* exemplo: ajustar dinamicamente */
+  background-color: #000;
+}
+
   
   .error-message {
     color: #e74c3c;
@@ -64,9 +83,32 @@ ion-button {
     justify-content: center;
     align-items: center;
     padding: 0;
+    font-size: 2rem;
+    background-color: white !important;
+    color: #00296b !important; 
+    border-color: #00296b !important; 
   }
   
-  .botao-adicionar .ion-icon {
-    font-size: 30px;  /* Tamanho do ícone */
-    color: white;     /* Cor do ícone */
+  ion-button.botao-adicionar {
+    --background: white !important; 
+    --color: #00296b !important;   
+    border-color: #00296b !important;      
+  }
+
+  ion-button.botao-adicionar::part(native) {
+    background-color: white !important;
+    color: #00296b !important; 
+    border-color: #00296b !important; 
+  }
+
+  ion-button.botao-adicionar::part(native):hover {
+    background-color: #3da5d9 !important;
+    color: white !important;
+    cursor: pointer;
+  }
+
+  .icone::part(icon) {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
   }

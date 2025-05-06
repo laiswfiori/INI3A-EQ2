@@ -12,9 +12,18 @@
     margin-left: 2%;
 }
 
+
 .iconesMobile {
     font-size: 1.5rem; 
     color: white;
+}
+
+.icones:hover {
+    color: #3da5d9;
+}
+
+.icones:hover + .iconesTxt {
+    color: #3da5d9;
 }
 
 #menu {
