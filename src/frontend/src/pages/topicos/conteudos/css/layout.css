@@ -1,0 +1,19 @@
+@media (max-width: 767px) {
+    .topico-item {
+        height: 60%;
+        margin-top: 5%;
+    }
+}
+
+@media (max-width: 768px) {
+    .topico-item {
+        width: 100%;
+    }
+}
+
+@media (min-width: 798px) {
+    .topico-item {
+        width: 45%;
+    }
+}
+

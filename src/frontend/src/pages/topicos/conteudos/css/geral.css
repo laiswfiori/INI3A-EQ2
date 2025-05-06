@@ -11,6 +11,7 @@ ion-button {
 .topicos-list {
   display: flex;
   justify-content: flex-start;
+  flex-wrap: wrap;
   gap: 5%;
   margin-right: 15%;
   margin-left: 15%;
@@ -23,10 +24,21 @@ ion-button {
   border-radius: 12px;
   padding: 12px;
   background-color: white;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
   min-height: 50%;
-  width: 100%;
   cursor: pointer;
+  margin-top: 2%;
+}
+
+.containerTopico {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 5%;
+}
+
+.td {
+  display: flex;
+  flex-direction: column;
 }
 
 .topico-item .icon-placeholder {
@@ -52,16 +64,10 @@ ion-button {
   color: #444;
 }
 
-.topico-item .progress-bar {
-  height: 6px;
-  background-color: #e0e0e0;
-  border-radius: 3px;
-  overflow: hidden;
-}
 
 .topico-item .progress-bar-fill {
   height: 100%;
-  width: 40%; /* exemplo: ajustar dinamicamente */
+  width: 40%; 
   background-color: #000;
 }
 

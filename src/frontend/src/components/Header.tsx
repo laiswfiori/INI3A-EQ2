@@ -35,11 +35,7 @@ const Header: React.FC = () => {
       <IonToolbar>
         <div id="header" className="azul">
           <div id="logoHome">
-            <IonImg src="/imgs/logo1.png" alt="Logo FSMR" id="logo"/>
-            <IonTabButton className="azul" tab="home" onClick={navHome}>
-                <IonIcon icon={home} className="icones"/>
-                <IonLabel className="iconesTxt">Início</IonLabel>
-            </IonTabButton>
+            <IonImg src="/imgs/logoInicio.png" alt="Logo FSMR" id="logo" onClick={navHome}/>
           </div>
 
           <div id="nav" className="azul">

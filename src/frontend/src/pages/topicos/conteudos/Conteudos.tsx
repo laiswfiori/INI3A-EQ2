@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { IonPage, IonContent, IonList, IonItem, IonLabel, IonBadge, IonIcon, IonButton, IonModal, IonHeader, IonToolbar, IonTitle, IonInput, IonSelect, IonSelectOption, IonTextarea } from '@ionic/react';
-import { add } from 'ionicons/icons';
+import { book } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
+import './css/layout.css';
 import Header from '../../../components/Header';
 import API from '../../../lib/api';
 
@@ -54,6 +55,19 @@ const Conteudos: React.FC = () => {
     setShowModal(false);
   };
 
+  const barraProgresso = (status: string): number => {
+    switch (status.toLowerCase()) {
+      case 'não iniciado':
+        return 0;
+      case 'em andamento':
+        return 50;
+      case 'concluído':
+        return 100;
+      default:
+        return 0;
+    }
+  };
+
   return (
     <IonPage className={`pagina ${showModal ? 'desfocado' : ''}`}>
       <Header />
@@ -76,8 +90,19 @@ const Conteudos: React.FC = () => {
                 detail
               >
                 <IonLabel>
-                  <h2>{topico.titulo}</h2>
-                  <p>{topico.descricao}</p>
+                  <div className="containerTopico">
+                    <IonIcon icon={book} className="livro"/>
+                    <div className="td">
+                      <h2>{topico.titulo}</h2>
+                      <p>{topico.descricao}</p>
+                    </div>
+                  </div>
+                  <div className="barra">
+                    <div
+                      className="barraStatus"
+                      style={{ width: `${barraProgresso(topico.status)}%` }}
+                    ></div>
+                  </div>
                 </IonLabel>
               </IonItem>
             ))}
