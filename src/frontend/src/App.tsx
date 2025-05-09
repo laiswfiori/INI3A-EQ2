@@ -3,6 +3,8 @@ import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/pagInicial/Home';
 import Conteudos from './pages/topicos/conteudos/Conteudos';
+import Atividades from './pages/topicos/atividades/Atividades';
+import Matérias from './pages/topicos/matérias/Materias';
 import Login from './pages/login/Login';
 import Registro from './pages/registro/Registro';
 import Configuracoes from './pages/configuracoes/Configuracoes';
@@ -48,6 +50,8 @@ const App: React.FC = () => (
       <IonRouterOutlet>
         <Route path="/pagInicial/home" component={Home} exact />
         <Route path="/topicos/conteudos" component={Conteudos} exact />
+        <Route path="/topicos/atividades" component={Atividades} exact />
+        <Route path="/topicos/materias" component={Matérias} exact />
         <Route path="/login/login" component={Login} exact />
         <Route path="/registro/registro" component={Registro} exact />
         <Route path="/configuracoes/configuracoes" component={Configuracoes} exact />

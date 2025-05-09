@@ -17,6 +17,20 @@ h1 {
     font-size: 3rem;
 }
 
+ion-button#config {
+  --background: #fff; 
+  --color: black;  
+}
+
+ion-button#config::part(native) {
+  all: unset;   
+  font-weight: 700;
+}
+
+ion-button#config::part(native):hover {
+  cursor: pointer;
+}
+
 ion-modal.modalAdd {
     --max-height: 60%;
     height: auto;
@@ -30,6 +44,12 @@ ion-modal.modalAdd::part(content) {
     display: flex;
     flex-direction: column;
     height: auto;
+}
+
+ion-item.topico-item {
+  --border-width: 0;
+  --inner-border-width: 0;
+  padding: 0;
 }
 
 ion-input.input input {

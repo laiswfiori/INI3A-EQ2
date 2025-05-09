@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { IonPage, IonContent, IonImg, IonIcon, IonLabel } from '@ionic/react';
+import { useHistory } from 'react-router-dom';
+import { IonPage, IonContent, IonImg, IonIcon, IonLabel, IonButton } from '@ionic/react';
 import { library, brush, book, school, accessibility, earth, leaf, batteryCharging, planet, calculator } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
@@ -52,6 +53,11 @@ const Home: React.FC = () => {
     return () => clearInterval(interval);
 }, []);
 
+  const history = useHistory();
+  const navPerfil = () => {
+    history.push('/registro/registro');
+  }
+
   return (
   <IonPage className="pagina">
       <Header />
@@ -63,10 +69,14 @@ const Home: React.FC = () => {
             <div id="divTxtHome">
               <div className="titulo1"><h1 className="titulo">Pronto para começar seus estudos?</h1></div>
               <div className="titulo2"><h2 className="subtitulo">Turbine seus estudos ao criar um cronograma de estudos adaptado a sua rotina.</h2></div>
+              <div id="btnContainer">
+                <IonButton id="btnLogin" onClick={navPerfil}>Login</IonButton>
+              </div>
             </div>
 
-            <div id="divComputador">
-              <IonImg src="/imgs/computador.png" id="computador" alt="Computador com calendário"/>
+            <div id="divCartas">
+              <IonImg src="/imgs/card1.png" id="card1" className="carta" alt="Card 1"/>
+              <IonImg src="/imgs/card2.png" id="card2" className="carta" alt="Card 2"/>
             </div>
           </section>
 

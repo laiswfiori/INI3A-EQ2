@@ -16,8 +16,9 @@
     }
 
     #celular {
-        width: 60% !important;
+        width: 90%;
     }
+
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -45,15 +46,15 @@
     .iconesTxtM {
         font-size: 2rem !important; 
     }
+
+    #celular {
+        width: 40% ;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
     #s3 {
         grid-template-rows: 1fr 1fr;
-    }
-
-    #celular {
-        width: 60% !important;
     }
 }
 
@@ -82,5 +83,105 @@
 
     .iconesTxtM {
         font-size: 2rem !important; 
+    }
+}
+
+@media (min-width: 1440px) {
+    #s1 {
+        padding-bottom: 15%;
+    }
+    #card1 {
+        left: 35% !important;
+        top: 5% !important;
+    }
+    #card2 {
+        left: 10% !important;
+        top: 35% !important;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+    #s1 {
+        padding-bottom: 7%;
+    }
+    #card1 {
+        left: 35% !important;
+        top: 15% !important;
+    }
+    #card2 {
+        left: 10% !important;
+        top: 35% !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    #s1 {
+        padding-bottom: 0;
+    }
+    #card1 {
+        left: 35% !important;
+        top: 25% !important;
+    }
+    #card2 {
+        left: 10% !important;
+        top: 35% !important;
+    }
+
+    .carta {
+        width: 100%;
+    }
+}
+
+@media (min-width: 425px) and (max-width: 767px) {
+    #s1 {
+        padding-bottom: 70%;
+    }
+    #card1 {
+        left: 20% !important;
+        top: 0 !important;
+    }
+    #card2 {
+        left: -15% !important;
+        top: 15% !important;
+    }
+
+    .carta {
+        width: 90%;
+    }
+}
+
+@media (min-width: 375px) and (max-width: 424px) {
+    #s1 {
+        padding-bottom: 70%;
+    }
+    #card1 {
+        left: 20% !important;
+        top: -20px !important;
+    }
+    #card2 {
+        left: -15% !important;
+        top: 5% !important;
+    }
+
+    .carta {
+        width: 90%;
+    }
+}
+
+@media (max-width: 374px) {
+    #s1 {
+        padding-bottom: 80%;
+    }
+    #card1 {
+        left: 15% !important;
+        top: -20px !important;
+    }
+    #card2 {
+        left: -20% !important;
+        top: 5px !important;
+    }
+
+    .carta {
+        width: 100%;
     }
 }

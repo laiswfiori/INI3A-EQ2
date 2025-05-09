@@ -87,9 +87,9 @@ const Conteudos: React.FC = () => {
                 key={topico.id}
                 className="topico-item"
                 routerLink={`/conteudos/${topico.id}`}
-                detail
               >
                 <IonLabel>
+                <div id="containerConfig"><IonButton id="config">...</IonButton></div>
                   <div className="containerTopico">
                     <IonIcon icon={book} className="livro"/>
                     <div className="td">
