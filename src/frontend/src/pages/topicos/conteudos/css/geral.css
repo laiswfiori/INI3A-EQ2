@@ -4,6 +4,38 @@
   height: 100vh;
 }
 
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+}
+
+.loader {
+  width: 40px;
+  aspect-ratio: .577;
+  clip-path: polygon(0 0,100% 100%,0 100%,100% 0);
+  position: relative;
+  animation: l19 2s infinite linear; 
+  overflow: hidden;
+}
+
+.loader:before {
+  content: "";
+  position: absolute;
+  inset: -150% -150%;
+  background: repeating-conic-gradient(from 30deg,#ff7215 0 60deg,#70ccf7 0 120deg,#ffe137 0 180deg);
+  animation: inherit;
+  animation-direction: reverse; 
+}
+
+@keyframes l19 {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
 
 #containerConfig{
   display: flex;
@@ -94,12 +126,12 @@ ion-item.topico-item ion-label {
   }
 
   .botao-adicionar {
-    position: fixed;  /* Fixa o botão na tela */
-    bottom: 20px;     /* Distância da parte inferior da tela */
-    right: 20px;      /* Distância da parte direita da tela */
-    width: 60px;      /* Largura do botão */
-    height: 60px;     /* Altura do botão */
-    border-radius: 50%;  /* Torna o botão redondo */
+    position: fixed; 
+    bottom: 20px;     
+    right: 20px;    
+    width: 60px;     
+    height: 60px;    
+    border-radius: 50%;  
     display: flex;
     justify-content: center;
     align-items: center;
@@ -107,7 +139,7 @@ ion-item.topico-item ion-label {
     font-size: 2rem;
     background-color: white !important;
     color: #00296b !important; 
-    border-color: #00296b !important; 
+    border: #00296b 2px solid !important; 
   }
   
   ion-button.botao-adicionar {
@@ -133,3 +165,26 @@ ion-item.topico-item ion-label {
     width: 28px;
     height: 28px;
   }
+
+  .modalOpcoes {
+    z-index: 9999 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    --max-width: 10% !important;
+    --height: auto;
+    align-self: flex-start;
+    justify-content: flex-start;
+    display: flex !important;
+    align-content: center !important;
+    justify-content: center !important;
+  }
+
+  ion-popover::part(content) {
+    width: 10% !important;
+    padding: 0.5% !important;
+    max-width: unset !important; 
+    display: flex !important;
+    align-content: center !important;
+    justify-content: center !important;
+  }
+  

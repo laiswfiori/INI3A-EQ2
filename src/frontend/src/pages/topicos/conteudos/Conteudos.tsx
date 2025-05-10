@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { IonPage, IonContent, IonList, IonItem, IonLabel, IonBadge, IonIcon, IonButton, IonModal, IonHeader, IonToolbar, IonTitle, IonInput, IonSelect, IonSelectOption, IonTextarea } from '@ionic/react';
-import { book } from 'ionicons/icons';
+import React, { useEffect, useState, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
+import { IonPage, IonContent, IonList, IonItem, IonLabel, IonBadge, IonIcon, IonButton, IonModal, IonPopover, IonHeader, IonToolbar, IonTitle, IonInput, IonSelect, IonSelectOption, IonTextarea } from '@ionic/react';
+import { book, pencil, trash, flash, checkmarkDone } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -22,6 +23,13 @@ const Conteudos: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [showPopover, setShowPopover] = useState(false);
+  const [topicoSelecionado, setTopicoSelecionado] = useState<Topico | null>(null);
+  const configButtonRef = useRef<HTMLIonButtonElement | null>(null);
+
+
+  const history = useHistory();
+
 
   const [novoTopico, setNovoTopico] = useState({
     nome: '',
@@ -68,6 +76,55 @@ const Conteudos: React.FC = () => {
     }
   };
 
+  const handleEditar = () => {
+    if (topicoSelecionado) {
+      setNovoTopico({
+        nome: topicoSelecionado.titulo,
+        materia: '', 
+        status: topicoSelecionado.status,
+        descricao: topicoSelecionado.descricao,
+      });
+    }
+    setShowModal(true);  
+    setShowPopover(false);  
+  };
+
+  const handleExcluir = async () => {
+    if (topicoSelecionado) {
+      try {
+        setShowPopover(false);  
+        console.log('Tópico excluído');
+      } catch (err) {
+        console.error('Erro ao excluir tópico:', err);
+      }
+    }
+  };
+
+  const handleIniciar = async () => {
+    if (topicoSelecionado) {
+      try {
+        const updatedTopico = { ...topicoSelecionado, status: 'Em andamento' };
+        setShowPopover(false); 
+        console.log('Tópico iniciado');
+      } catch (err) {
+        console.error('Erro ao iniciar tópico:', err);
+      }
+    }
+  };
+
+  const handleConcluir = async () => {
+    if (topicoSelecionado) {
+      try {
+        const updatedTopico = { ...topicoSelecionado, status: 'Concluído' };
+        setShowPopover(false);  
+        console.log('Tópico concluído');
+      } catch (err) {
+        console.error('Erro ao concluir tópico:', err);
+      }
+    }
+  };
+  
+
   return (
     <IonPage className={`pagina ${showModal ? 'desfocado' : ''}`}>
       <Header />
@@ -77,7 +134,9 @@ const Conteudos: React.FC = () => {
         <div className="linhaHorizontal"></div>
 
         {loading ? (
-          <p>Carregando tópicos...</p>
+          <div className="loader-container">
+            <div className="loader"></div>
+          </div>
         ) : error ? (
           <p className="error-message">{error}</p>
         ) : (
@@ -86,10 +145,21 @@ const Conteudos: React.FC = () => {
               <IonItem
                 key={topico.id}
                 className="topico-item"
-                routerLink={`/conteudos/${topico.id}`}
+                button onClick={() => history.push(`/conteudos/${topico.id}`)}
               >
                 <IonLabel>
-                <div id="containerConfig"><IonButton id="config">...</IonButton></div>
+                <div id="containerConfig">
+                <IonButton
+                   id={`config-btn-${topico.id}`}
+                   className="config"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setTopicoSelecionado(topico);
+                    setShowPopover(true);
+                  }}
+                >...
+                </IonButton>
+                </div>
                   <div className="containerTopico">
                     <IonIcon icon={book} className="livro"/>
                     <div className="td">
@@ -171,6 +241,30 @@ const Conteudos: React.FC = () => {
               </div>
           </IonContent>
         </IonModal>
+        <IonPopover
+          isOpen={showPopover}
+          onDidDismiss={() => setShowPopover(false)}
+          trigger={`config-btn-${topicoSelecionado?.id}`} // use o mesmo id do botão
+          side="bottom"
+          alignment="center"
+        >
+          <IonButton expand="block" onClick={handleEditar} className="opcoes" id="btnLapis">
+            <IonIcon icon={pencil} className="iconesPopover" id="lapis"/>
+            Editar
+          </IonButton>
+          <IonButton expand="block" color="danger" onClick={handleExcluir} className="opcoes" id="btnLixo">
+            <IonIcon icon={trash} className="iconesPopover" id="lixo"/>
+            Excluir
+          </IonButton>
+          <IonButton expand="block" onClick={handleIniciar} className="opcoes" id="btnRaio">
+            <IonIcon icon={flash} className="iconesPopover" id="raio"/>
+            Iniciar
+          </IonButton>
+          <IonButton expand="block" onClick={handleConcluir} className="opcoes" id="btnCheck">
+            <IonIcon icon={checkmarkDone} className="iconesPopover" id="check"/>
+            Concluir
+          </IonButton>
+        </IonPopover>
       </IonContent>
     </IonPage>
   );

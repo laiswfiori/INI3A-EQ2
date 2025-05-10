@@ -17,17 +17,17 @@ h1 {
     font-size: 3rem;
 }
 
-ion-button#config {
+ion-button.config {
   --background: #fff; 
   --color: black;  
 }
 
-ion-button#config::part(native) {
+ion-button.config::part(native) {
   all: unset;   
   font-weight: 700;
 }
 
-ion-button#config::part(native):hover {
+ion-button.config::part(native):hover {
   cursor: pointer;
 }
 
@@ -111,4 +111,74 @@ ion-button.btnSalvar {
 
 .livro {
   font-size: 3rem;
+}
+
+ion-button.opcoes {
+  width: 100%;
+  display: flex;
+  align-content: flex-start !important;
+  justify-content: flex-start;
+  background-color: white;
+  border-radius: 20px;
+  border-color: beige;
+  gap: 5%;
+}
+
+ion-button.opcoes::part(native) {
+  width: 100%;
+  display: flex !important;
+  align-content: space-around !important;
+  justify-content: flex-start;
+  background-color: white;
+  border-radius: 10px;
+  border: rgb(204, 204, 184) 1px solid;
+  color: black;
+  box-shadow: none;
+}
+
+.iconesPopover {
+  margin-right: 5%;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+#lapis {
+  color: #3da5d9;
+}
+
+ion-button#btnLapis::part(native):hover {
+  color: #3da5d9 !important;
+  background-color: rgb(231, 224, 224) !important;
+  cursor: pointer;
+}
+
+#lixo {
+  color: #00296b;
+}
+
+ion-button#btnLixo::part(native):hover {
+  color: #00296b !important;
+  background-color: rgb(231, 224, 224) !important;
+  cursor: pointer;
+}
+
+#raio {
+  color: #fec601;
+}
+
+ion-button#btnRaio::part(native):hover {
+  color: #fec601 !important;
+  background-color: rgb(231, 224, 224) !important;
+  cursor: pointer;
+}
+
+#check {
+  color: #ea7317;
+  z-index: 9999999999;
+}
+
+ion-button#btnCheck::part(native):hover {
+  color: #ea7317 !important;
+  background-color: rgb(231, 224, 224) !important;
+  cursor: pointer;
 }
