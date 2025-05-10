@@ -4,10 +4,21 @@ import Header from '../../components/Header';
 
 const Flashcards: React.FC = () => {
   return (
-    <IonPage>
+    <IonPage className="pagina">
       <Header />
       <IonContent>
-        {/* Aqui vai o conteúdo dos flashcards */}
+        <div id="body">
+          <div className="flashcardContainer">
+            <div className="titulo card">
+              <div className="conteudo">
+                <div className="frente">
+                </div>
+                <div className="verso">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </IonContent>
     </IonPage>
   );
