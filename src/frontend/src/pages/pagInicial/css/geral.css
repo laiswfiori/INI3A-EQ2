@@ -7,7 +7,7 @@
 #body {
     height: auto;
     display: grid;
-    grid-template-rows: 2fr 2fr 2fr 1fr;
+    grid-template-rows: 2fr 2fr 1fr 1fr;
     height: 100vh;
 }
 
@@ -124,6 +124,7 @@ ion-button#btnLogin::part(native):hover {
 #s2 {
     grid-row: 2 / 3;
     grid-template-rows: 1fr;
+    padding-bottom: 5%;
 }
 
 #divCaneta {

@@ -113,29 +113,6 @@ ion-button.btnSalvar {
   font-size: 3rem;
 }
 
-ion-button.opcoes {
-  width: 100%;
-  display: flex;
-  align-content: flex-start !important;
-  justify-content: flex-start;
-  background-color: white;
-  border-radius: 20px;
-  border-color: beige;
-  gap: 5%;
-}
-
-ion-button.opcoes::part(native) {
-  width: 100%;
-  display: flex !important;
-  align-content: space-around !important;
-  justify-content: flex-start;
-  background-color: white;
-  border-radius: 10px;
-  border: rgb(204, 204, 184) 1px solid;
-  color: black;
-  box-shadow: none;
-}
-
 .iconesPopover {
   margin-right: 5%;
   font-weight: 700;

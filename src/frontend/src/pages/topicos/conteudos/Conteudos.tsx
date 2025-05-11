@@ -244,7 +244,7 @@ const Conteudos: React.FC = () => {
         <IonPopover
           isOpen={showPopover}
           onDidDismiss={() => setShowPopover(false)}
-          trigger={`config-btn-${topicoSelecionado?.id}`} // use o mesmo id do botão
+          trigger={`config-btn-${topicoSelecionado?.id}`} 
           side="bottom"
           alignment="center"
         >

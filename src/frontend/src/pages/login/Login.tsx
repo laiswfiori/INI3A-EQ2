@@ -8,35 +8,38 @@ import './css/animation.css';
 const Login: React.FC = () => {
   return (
     <IonPage>
-
       <IonContent>
-      <div id="body">
-        <div className="login-container">
+      <div id="bodyLogin">
+        <div className="loginContainer">
             <div className="div1">
                 <IonRow><h1><b>Sentimos saudades!</b></h1></IonRow>
                 <IonRow><h3>Pronto para começar?</h3></IonRow>
                 <div id="img">
                 <img src="/imgs/logoSemFundo.png" alt="Logo png" />
-                </div>
-
+              </div>
                 <div className="bola bola1"></div>
                 <div className="bola bola2"></div>
                 <div className="bola bola3"></div>
             </div>
 
             <div className="div2">
-                <h1><b>✨Login</b></h1>
-                <h4>Não possui uma conta?
-                  <a href="/registro/registro"><b>Cadastre-se!</b></a>
+                <h1 className="sizeLogin"><b>Login!</b></h1>
+                <h4 className="size">Não possui uma conta?
+                  <a href="/registro/registro" id="preto"><b>Cadastre-se!</b></a>
                 </h4>
-                <IonLabel><h3><b>Email</b></h3></IonLabel>
-                <input type="email" placeholder="Digite seu email" />
-                <IonLabel><h3><b>Senha</b></h3></IonLabel>
-                <input type="password" placeholder="Digite sua senha" />
-                <h4>Esqueci minha senha</h4>
-                <IonButton className="botao">Entrar</IonButton>
-                <h3>ou</h3>
-                <IonButton className="botao">Continuar com Google</IonButton>
+                <p><b>Email</b></p>
+                <input type="email" placeholder="@ Digite seu email" className="inputForm"/>
+                <p><b>Senha</b></p>
+                <input type="password" placeholder="Digite sua senha" className="inputForm"/>
+                <h4 id="senha">Esqueci minha senha</h4>
+                <IonButton className="botaoLogin">Entrar</IonButton>
+                <div id="ou">
+                  <div className="linhaOu"></div>
+                  <h3 id="txtOu" >Ou</h3>
+                  <div className="linhaOu"></div>
+                </div>
+                
+                <IonButton className="botaoGoogle">Continuar com Google</IonButton>
             </div>
         </div>
       </div>

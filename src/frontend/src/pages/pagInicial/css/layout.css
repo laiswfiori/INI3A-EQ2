@@ -19,6 +19,14 @@
         width: 90%;
     }
 
+    .lupa {
+        align-items: flex-start;
+        margin-top: 8%;
+    }
+
+    .cardFraquezas {
+        display: none;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -26,14 +34,8 @@
         display: grid;
     }
 
-    #s1, #s2 {
-        grid-template-columns: 1fr 1fr;
-    }
-    #s3 {
-        grid-template-rows: 1fr 3fr;
-    }
-    #s4{
-        grid-template-rows: 1fr 1fr; 
+    #s1 {
+       grid-template-columns: 1fr 1fr;
     }
 
     .titulo {
@@ -50,11 +52,14 @@
     #celular {
         width: 40% ;
     }
-}
 
-@media (min-width: 768px) and (max-width: 1023px) {
-    #s3 {
-        grid-template-rows: 1fr 1fr;
+    .lupa {
+        align-items: flex-start;
+        margin-top: -10%;
+    }
+
+    .book {
+        display: none;
     }
 }
 
@@ -67,11 +72,8 @@
     #s1, #s2 {
         grid-template-columns: 1fr 1fr;
     }
-    #s3 {
-        grid-template-rows: 1fr 3fr;
-    }
-    #s4{
-        grid-template-rows: 1fr 1fr; 
+    #s3, #s4 {
+        grid-template-rows: 1fr 1fr;
     }
 
     .titulo {
@@ -83,6 +85,14 @@
 
     .iconesTxtM {
         font-size: 2rem !important; 
+    }
+
+    .lupa {
+        align-items: flex-end;
+    }
+
+    .book {
+        display: none;
     }
 }
 
@@ -112,6 +122,10 @@
         left: 10% !important;
         top: 35% !important;
     }
+
+    .cardFraquezas {
+        width: 70% !important;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
@@ -130,19 +144,23 @@
     .carta {
         width: 100%;
     }
+
+    .cardFraquezas {
+        width: 90% !important;
+    }
 }
 
 @media (min-width: 425px) and (max-width: 767px) {
     #s1 {
-        padding-bottom: 70%;
+        padding-bottom: 90%;
     }
     #card1 {
         left: 20% !important;
-        top: 0 !important;
+        top: 45px !important;
     }
     #card2 {
         left: -15% !important;
-        top: 15% !important;
+        top: 70px !important;
     }
 
     .carta {
@@ -152,15 +170,15 @@
 
 @media (min-width: 375px) and (max-width: 424px) {
     #s1 {
-        padding-bottom: 70%;
+        padding-bottom: 80%;
     }
     #card1 {
         left: 20% !important;
-        top: -20px !important;
+        top: -7px !important;
     }
     #card2 {
         left: -15% !important;
-        top: 5% !important;
+        top: 30px !important;
     }
 
     .carta {

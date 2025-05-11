@@ -118,9 +118,8 @@ ion-item.topico-item ion-label {
   background-color: #000;
 }
 
-  
   .error-message {
-    color: #e74c3c;
+    color: #000000;
     text-align: center;
     margin-top: 20px;
   }
@@ -166,25 +165,38 @@ ion-item.topico-item ion-label {
     height: 28px;
   }
 
-  .modalOpcoes {
-    z-index: 9999 !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    --max-width: 10% !important;
-    --height: auto;
-    align-self: flex-start;
-    justify-content: flex-start;
-    display: flex !important;
-    align-content: center !important;
-    justify-content: center !important;
-  }
+ion-button.opcoes {
+  display: flex;
+  justify-content: flex-start;
+  border-radius: 20px;
+  gap: 5%;
+  color: black;
+}
+
+ion-button.opcoes::part(native) {
+  white-space: nowrap;
+  background-color: white;
+  border-radius: 10px;
+  border: rgb(204, 204, 184) 1px solid;
+  font-weight: 550;
+  color: black;
+  box-shadow: none;
+  padding-left: 0;
+  padding-right: 0;
+}
 
   ion-popover::part(content) {
-    width: 10% !important;
     padding: 0.5% !important;
-    max-width: unset !important; 
     display: flex !important;
     align-content: center !important;
     justify-content: center !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: max-content !important;
+    min-width: unset !important;
+    max-width: unset !important;
   }
   
+ion-popover::part(backdrop) {
+  background: transparent !important;
+}
