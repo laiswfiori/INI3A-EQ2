@@ -10,7 +10,7 @@ import Registro from './pages/registro/Registro';
 import Configuracoes from './pages/configuracoes/Configuracoes';
 import Agenda from './pages/agenda/Agenda';
 import Flashcards from './pages/flashcards/Flashcards';
-
+import TelaInicialFlashcards from './pages/flashcards/TelaInicialFlashcards';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -57,6 +57,7 @@ const App: React.FC = () => (
         <Route path="/configuracoes/configuracoes" component={Configuracoes} exact />
         <Route path="/agenda/agenda" component={Agenda} exact />
         <Route path="/flashcards/flashcards" component={Flashcards} exact />
+        <Route path="/flashcards/telainicialflashcards" component={TelaInicialFlashcards} exact />
 
         {}
         <Route exact path="/">

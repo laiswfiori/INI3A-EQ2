@@ -17,7 +17,7 @@ const Header: React.FC = () => {
     history.push('/agenda/agenda');
   }
   const navFlashcards = () => {
-    history.push('/flashcards/flashcards');
+    history.push('/flashcards/telainicialflashcards');
   }
   const navConteudos = () => {
     history.push('/topicos/conteudos');

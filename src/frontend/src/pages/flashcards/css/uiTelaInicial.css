@@ -1,0 +1,84 @@
+#bodyTelaInicialFlashcards {
+    background-color: white;
+}
+
+.txtGeral {
+    font-family: Gill Sans, sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.revisaoGeral {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+    background-color: #ea7317;
+    border: 8px solid #fec601;
+    color: white;
+    gap: 8px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    height: 40%;
+  }
+
+  ion-button.revisaoGeral::part(native) {
+    background-color: #ea7317;
+    box-shadow: none;
+}
+
+  .text {
+    font-size: 1.5em;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .svg {
+    padding-top: 5px;
+    height: 100%;
+    width: fit-content;
+  }
+  .svg svg {
+    width: 50px;
+    height: 30px;
+  }
+  .revisaoGeral:hover {
+    border: 8px solid #c29800;
+    background-color: #d45c00;
+  }
+  .revisaoGeral:active {
+    border: 5px solid #af4c00;
+  }
+  .revisaoGeral:hover .svg svg {
+    animation: jello-vertical 0.9s both;
+    transform-origin: left;
+  }
+  
+  @keyframes jello-vertical {
+    0% {
+      transform: scale3d(1, 1, 1);
+    }
+    30% {
+      transform: scale3d(0.75, 1.25, 1);
+    }
+    40% {
+      transform: scale3d(1.25, 0.75, 1);
+    }
+    50% {
+      transform: scale3d(0.85, 1.15, 1);
+    }
+    65% {
+      transform: scale3d(1.05, 0.95, 1);
+    }
+    75% {
+      transform: scale3d(0.95, 1.05, 1);
+    }
+    100% {
+      transform: scale3d(1, 1, 1);
+    }
+  }
+  
+
+ 

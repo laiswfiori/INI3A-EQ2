@@ -1,0 +1,41 @@
+#bodyTelaInicialFlashcards {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2%;
+}
+
+#revisao, #decks {
+    margin-right: 10%;
+    margin-left: 10%;
+}
+
+#linhaDivisao {
+    margin-top: 1%;
+    width: 100%;
+    border-bottom: 2px solid #c0c0c0;
+}
+
+#revisao {
+    display: flex;
+    flex-direction: row;
+}
+
+#d1 {
+    margin-left: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#iconeCapelo {
+    font-size: 6rem;
+    color: white;
+    background-color: #00296b;
+    padding: 1%;
+    border-radius: 20px;
+}
+
+#decks {
+    
+}
