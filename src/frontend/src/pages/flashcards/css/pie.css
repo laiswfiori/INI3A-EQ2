@@ -1,16 +1,11 @@
-svg {
-    width: 100%;
-    height: auto;
-    max-width: 10%;
-  }
-  
-
 circle.fg {
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
   }
 
   .circular-progress {
+    --size: 50%;
+    --progress: 70;
     --half-size: calc(var(--size) / 2);
     --stroke-width: 20px;
     --radius: calc((var(--size) - var(--stroke-width)) / 2);
@@ -36,5 +31,5 @@ circle.fg {
     transform-origin: var(--half-size) var(--half-size);
     stroke-dasharray: var(--dash) calc(var(--circumference) - var(--dash));
     transition: stroke-dasharray 0.3s linear 0s;
-    stroke: #00296b;
+    stroke: #3da5d9;
   }
