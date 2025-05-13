@@ -1,39 +1,5 @@
-/* Garantir que o conteúdo da página tenha a mesma altura das páginas anteriores */
-#body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* altura total da tela */
-    padding: 0 20px;
-  }
- 
-  .swiper-container {
-    width: 100%;
-    height: auto;  /* ajuste de altura */
-  }
- 
-  /* Os botões de navegação devem ter margens semelhantes ao layout anterior */
-  .navigation-buttons {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;  /* ajusta o espaço dos botões acima do swiper */
-  }
- 
-  .navigation-buttons .ion-button {
-    margin: 0 10px;  /* Ajusta o espaçamento entre os botões */
-  }
- 
-  /* Aumentando o tamanho da navegação (pontinhos) e ajustando sua cor */
-  .swiper-pagination {
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
-    text-align: center;
-    z-index: 10;
-  }
- 
   .swiper-pagination-bullet {
-    background: #888;
+    background-color: #ffe99d;
     opacity: 0.7;
     width: 12px;
     height: 12px;
@@ -41,7 +7,7 @@
   }
  
   .swiper-pagination-bullet-active {
-    background: #000;
+    background-color: #ea7317;
     opacity: 1;
     width: 16px;  /* Aumenta o tamanho do ponto ativo */
     height: 16px; /* Aumenta o tamanho do ponto ativo */

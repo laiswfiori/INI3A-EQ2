@@ -5,8 +5,12 @@ import './css/ui.css';
 import './css/layout.css';
 import './css/animation.css';
 
+interface LoginProps {
+  goToCadastro: () => void;
+}
 
-const Login: React.FC = () => {
+const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
+
   return (
       <div id="bodyLogin">
         <div className="loginContainer">
@@ -25,7 +29,7 @@ const Login: React.FC = () => {
             <div className="div2">
                 <h1 className="sizeLogin"><b>Login!</b></h1>
                 <h4 className="size">Não possui uma conta?
-                  <a href="/registro/registro" id="preto"><b>Cadastre-se!</b></a>
+                <IonButton onClick={goToCadastro}>Cadastre-se</IonButton>
                 </h4>
                 <p><b>Email</b></p>
                 <input type="email" placeholder="@ Digite seu email" className="inputForm"/>

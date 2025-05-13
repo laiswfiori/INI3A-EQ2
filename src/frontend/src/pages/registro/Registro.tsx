@@ -5,13 +5,15 @@ import './css/layout.css';
 import './css/ui.css';
 import './../../components/Animacao.css';
 
+interface RegistroProps {
+  goToLogin: () => void;
+}
 
-
-
-const Registro: React.FC = () => {
+const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
   return (
         <div id="body">
           <div className="cadastro-container">
+
             {/* div1 - formulário */}
             <div className="div1">
               <h1><b>Cadastre-se em nossa plataforma!</b></h1><br />
@@ -21,12 +23,10 @@ const Registro: React.FC = () => {
               <input type="password" placeholder="Digite sua senha" /><br /><br />
               <IonButton className="botao"><b>Cadastrar</b></IonButton><br />
               <h4>Já possui uma conta?
-                <a href="/login/login"><b> Faça login!</b></a>
+              <IonButton className="botaoLogin" onClick={goToLogin}>Faça login</IonButton>
               </h4>
             </div>
 
-
-            {/* ✅ div2 - animação com texto */}
             <div className="div2">
               <div className="bola bola1"></div>
               <div className="bola bola2"></div>
