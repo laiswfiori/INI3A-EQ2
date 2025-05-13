@@ -52,3 +52,19 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
     $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
 });
+
+$router->group(['prefix' => 'flahscards'], function() use($router)
+{   $router->get('/', 'FlashcardsController@index');
+    $router->post('/', 'FlashcardsController@store');
+    $router->get('/{id}', 'FlashcardsController@show');
+    $router->put('/{id}', 'FlashcardsController@update');
+    $router->delete('/{id}', 'FlashcardsController@destroy');
+});
+
+$router->group(['prefix' => 'cards'], function() use($router)
+{   $router->get('/', 'CardsController@index');
+    $router->post('/', 'CardsController@store');
+    $router->get('/{id}', 'CardsController@show');
+    $router->put('/{id}', 'CardsController@update');
+    $router->delete('/{id}', 'CardsController@destroy');
+});
