@@ -12,6 +12,7 @@
 
 .revisaoGeral {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     padding: 16px 32px;
@@ -22,7 +23,8 @@
     border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s;
-    height: 20%;
+    width: 100%;
+    height: 25%;
   }
 
   ion-button.revisaoGeral::part(native) {
@@ -45,7 +47,7 @@
 
  #btnIniciar svg {
     width: 20%;
-    height: fit-content;
+    height: 10%;
   }
   .revisaoGeral:hover {
     border: 8px solid #c29800;
@@ -55,6 +57,7 @@
     border: 5px solid #af4c00;
   }
   .revisaoGeral:hover #btnIniciar svg {
+    all: unset;
     animation: jello-vertical 0.9s both;
     transform-origin: left;
   }
@@ -83,5 +86,25 @@
     }
   }
   
+#btnAlerta {
+  all: unset;
+  cursor: pointer;
+  z-index: 999999999;
+}
 
+ion-button#btnAlerta::part(native) {
+  all: unset;
+  cursor: pointer;
+  z-index: 999999999;
+}
+
+#iconeAlerta {
+  font-size: 1.5rem;
+  color: #3da5d9;
+  cursor: pointer;
+}
+
+ion-button#btnAlerta:hover {
+  cursor: pointer;
+}
  

@@ -3,11 +3,21 @@
     display: flex;
     flex-direction: column;
     margin-top: 2%;
+    
+}
+
+#btnAlerta, .revisaoGeral {
+    pointer-events: auto; 
 }
 
 #revisao, #decks {
     margin-right: 10%;
     margin-left: 10%;
+}
+
+#dCapelo {
+    max-width: fit-content;
+    padding: 1%;
 }
 
 #linhaDivisao {
@@ -20,21 +30,47 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    height: 20%;
 }
 
 #d1 {
-    margin-left: 2%;
+    margin-left: 1%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
 }
 
 #iconeCapelo {
-    font-size: 6rem;
+    font-size: 7rem;
     color: white;
     background-color: #00296b;
-    padding: 1%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    padding-left: 2%;
+    padding-right: 3%;
     border-radius: 20px;
+}
+
+.colFlex {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+.popoverGeral {
+    width: 40%;
+    background-color: transparent;
+}
+
+#branco {
+    width: 40%;
+    background-color: white;
+}
+
+ion-popover.popoverGeral::part(content) {
+    background-color: transparent;
+    width: 40%;
+    min-width: unset !important;
+    max-width: unset !important;
 }
 
 #decks {
