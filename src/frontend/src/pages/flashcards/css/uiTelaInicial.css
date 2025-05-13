@@ -22,7 +22,7 @@
     border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s;
-    height: 40%;
+    height: 20%;
   }
 
   ion-button.revisaoGeral::part(native) {
@@ -30,19 +30,22 @@
     box-shadow: none;
 }
 
-  .text {
+  .textIniciar {
     font-size: 1.5em;
     font-weight: 700;
     letter-spacing: 1px;
+    padding-right: 10%;
   }
-  .svg {
+
+  #btnIniciar {
     padding-top: 5px;
     height: 100%;
     width: fit-content;
   }
-  .svg svg {
-    width: 50px;
-    height: 30px;
+
+ #btnIniciar svg {
+    width: 20%;
+    height: fit-content;
   }
   .revisaoGeral:hover {
     border: 8px solid #c29800;
@@ -51,7 +54,7 @@
   .revisaoGeral:active {
     border: 5px solid #af4c00;
   }
-  .revisaoGeral:hover .svg svg {
+  .revisaoGeral:hover #btnIniciar svg {
     animation: jello-vertical 0.9s both;
     transform-origin: left;
   }

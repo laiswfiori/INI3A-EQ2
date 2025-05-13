@@ -6,23 +6,17 @@ import './css/ui.css';
 import './../../components/Animacao.css';
 
 
+
+
 const Registro: React.FC = () => {
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Cadastro</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
-      <IonContent>
         <div id="body">
           <div className="cadastro-container">
             {/* div1 - formulário */}
             <div className="div1">
               <h1><b>Cadastre-se em nossa plataforma!</b></h1><br />
               <IonButton className="botao"><b>Continue com o Google</b></IonButton><br />
-              <p><h3>ou:</h3></p><br />
+              <h3>ou:</h3><br />
               <input type="email" placeholder="Digite seu email" /><br /><br />
               <input type="password" placeholder="Digite sua senha" /><br /><br />
               <IonButton className="botao"><b>Cadastrar</b></IonButton><br />
@@ -30,6 +24,7 @@ const Registro: React.FC = () => {
                 <a href="/login/login"><b> Faça login!</b></a>
               </h4>
             </div>
+
 
             {/* ✅ div2 - animação com texto */}
             <div className="div2">
@@ -45,9 +40,8 @@ const Registro: React.FC = () => {
             </div>
           </div>
         </div>
-      </IonContent>
-    </IonPage>
   );
 };
+
 
 export default Registro;

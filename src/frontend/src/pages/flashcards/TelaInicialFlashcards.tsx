@@ -14,13 +14,14 @@ const TelaInicialFlashcards: React.FC = () => {
       <IonContent>
         <div id="bodyTelaInicialFlashcards">
           <div id="revisao">
+            <div>
             <IonIcon icon={school} id="iconeCapelo"/>
             <div id="d1">
                 <p className="txtGeral">Revisão do dia!</p>
                 <IonButton className="revisaoGeral">
-                    <span className="text">Iniciar</span>
+                    <span className="textIniciar">Iniciar</span>
                     <span className="svg">
-                        <svg
+                        <svg id="btnIniciar"
                         xmlns="http://www.w3.org/2000/svg"
                         width="50"
                         height="20"
@@ -34,6 +35,8 @@ const TelaInicialFlashcards: React.FC = () => {
                     </span>
                 </IonButton>
             </div>
+            </div>
+            <div>
                 <svg viewBox="0 0 250 250" className="circular-progress">
                     <circle className="bg"
                         cx="125" cy="125" r="115" fill="none" stroke="#ddd" stroke-width="20"
@@ -43,6 +46,7 @@ const TelaInicialFlashcards: React.FC = () => {
                         stroke-dasharray="361.25 361.25"
                     ></circle>
                 </svg>
+            </div>
           </div>
           <div id="linhaDivisao"></div>
           <div id="decks">

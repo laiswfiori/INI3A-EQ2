@@ -6,19 +6,23 @@ import Conteudos from './pages/topicos/conteudos/Conteudos';
 import Atividades from './pages/topicos/atividades/Atividades';
 import Matérias from './pages/topicos/matérias/Materias';
 import Login from './pages/login/Login';
+import LoginCadastro from './pages/loginCadastro/loginCadastro';
 import Registro from './pages/registro/Registro';
 import Configuracoes from './pages/configuracoes/Configuracoes';
 import Agenda from './pages/agenda/Agenda';
 import Flashcards from './pages/flashcards/Flashcards';
 import TelaInicialFlashcards from './pages/flashcards/TelaInicialFlashcards';
 
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
+
 
 /* Basic CSS for apps built with Ionic */
 import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
+
 
 /* Optional CSS utils that can be commented out */
 import '@ionic/react/css/padding.css';
@@ -28,6 +32,7 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
+
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
@@ -35,14 +40,18 @@ import '@ionic/react/css/display.css';
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
+
 /* import '@ionic/react/css/palettes/dark.always.css'; */
 /* import '@ionic/react/css/palettes/dark.class.css'; */
 import '@ionic/react/css/palettes/dark.system.css';
 
+
 /* Theme variables */
 import './theme/variables.css';
 
+
 setupIonicReact();
+
 
 const App: React.FC = () => (
   <IonApp>
@@ -58,6 +67,8 @@ const App: React.FC = () => (
         <Route path="/agenda/agenda" component={Agenda} exact />
         <Route path="/flashcards/flashcards" component={Flashcards} exact />
         <Route path="/flashcards/telainicialflashcards" component={TelaInicialFlashcards} exact />
+        <Route path="/logincadastro" component={LoginCadastro} exact />
+
 
         {}
         <Route exact path="/">
@@ -67,5 +78,6 @@ const App: React.FC = () => (
     </IonReactRouter>
   </IonApp>
 );
+
 
 export default App;

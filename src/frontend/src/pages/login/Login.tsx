@@ -5,10 +5,9 @@ import './css/ui.css';
 import './css/layout.css';
 import './css/animation.css';
 
+
 const Login: React.FC = () => {
   return (
-    <IonPage>
-      <IonContent>
       <div id="bodyLogin">
         <div className="loginContainer">
             <div className="div1">
@@ -21,6 +20,7 @@ const Login: React.FC = () => {
                 <div className="bola bola2"></div>
                 <div className="bola bola3"></div>
             </div>
+
 
             <div className="div2">
                 <h1 className="sizeLogin"><b>Login!</b></h1>
@@ -38,14 +38,13 @@ const Login: React.FC = () => {
                   <h3 id="txtOu" >Ou</h3>
                   <div className="linhaOu"></div>
                 </div>
-                
+               
                 <IonButton className="botaoGoogle">Continuar com Google</IonButton>
             </div>
         </div>
       </div>
-      </IonContent>
-    </IonPage>
   );
 };
+
 
 export default Login;
