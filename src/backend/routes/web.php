@@ -53,6 +53,11 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
     $router->post('login', 'AuthController@login');
 });
 
+$router->group(['prefix' => 'password'], function () use ($router) {
+    $router->post('request-reset', 'PasswordResetController@requestReset');
+    $router->post('reset', 'PasswordResetController@resetPassword');
+});
+
 $router->group(['prefix' => 'flahscards'], function() use($router)
 {   $router->get('/', 'FlashcardsController@index');
     $router->post('/', 'FlashcardsController@store');
