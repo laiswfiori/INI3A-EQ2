@@ -20,10 +20,19 @@
     padding: 1%;
 }
 
-#linhaDivisao {
+#divisoes {
+    display: flex;
+    flex-direction: column;
+}
+
+#linhaDecks {
     margin-top: 1%;
+    padding: 0;
     width: 100%;
-    border-bottom: 2px solid #c0c0c0;
+    background-color:  #3da5d9;
+    border-top: 2px solid #c0c0c0;
+    display: flex;
+    justify-content: center;
 }
 
 #revisao {
@@ -62,6 +71,7 @@
 }
 
 #branco {
+    padding-left: 1%;
     width: 40%;
     background-color: white;
 }

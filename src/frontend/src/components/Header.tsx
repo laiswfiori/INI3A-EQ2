@@ -20,7 +20,7 @@ const Header: React.FC = () => {
     history.push('/flashcards/telainicialflashcards');
   }
   const navConteudos = () => {
-    history.push('/topicos/conteudos');
+    history.push('/topicos/materias');
   }
   const navPerfil = () => {
     history.push('/registro/registro');
@@ -54,7 +54,7 @@ const Header: React.FC = () => {
               <div>
                 <IonTabButton className="azul" tab="conteudos" onClick={navConteudos}>
                     <IonIcon icon={documentText} className="icones"/>
-                    <IonLabel className="iconesTxt">Conteúdos</IonLabel>
+                    <IonLabel className="iconesTxt">Matérias</IonLabel>
                   </IonTabButton>
               </div>
           </div>

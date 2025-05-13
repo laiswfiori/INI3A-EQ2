@@ -13,12 +13,12 @@ return new class extends Migration
     { 
         Schema::create('cards', function (Blueprint $table) { 
             $table->increments('id'); 
-            $table->unsignedBigInteger('flahscard_id');
+            $table->unsignedBigInteger('flashcard_id'); // Corrigido aqui
             $table->jsonb('conteudo_frente'); 
             $table->jsonb('conteudo_verso'); 
             $table->enum('nivel', ['muito fácil', 'fácil', 'médio','difícil','muito difícil'])->nullable(); 
             
-            $table->foreign('flashcard_id')->references('id')->on('flashcards')->onDelete('cascade');
+            $table->foreign('flashcard_id')->references('id')->on('flashcards')->onDelete('cascade'); // Corrigido aqui
 
             $table->timestamps(); 
         }); 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void 
     { 
-        Schema::dropIfExists('atividades'); 
+        Schema::dropIfExists('cards'); 
     } 
 };

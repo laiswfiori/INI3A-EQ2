@@ -61,11 +61,11 @@ const TelaInicialFlashcards: React.FC = () => {
                 className="popoverGeral"
               >
                 <div id="branco">
-                  <IonButton onClick={closePopover}>
+                  <IonButton onClick={closePopover} id="btnFechar">
                     <IonIcon icon={close} id="iconeFechar" />
                   </IonButton>        
                   <p>O modo de revisão geral apresenta todos os flashcards do dia que devem ser revisados
-                     (indepente da matéria), para que você possa treinar todas as matérias!</p>          
+                     (independente da matéria), para que você possa treinar todas as matérias!</p>          
                 </div>
               </IonPopover>
             </IonCol>
@@ -93,9 +93,11 @@ const TelaInicialFlashcards: React.FC = () => {
               </svg>
             </IonCol>
           </IonRow>
-          <IonRow>
+          <IonRow id="divisoes">
             <IonCol>
-              <div id="linhaDivisao"></div>
+              <div id="linhaDecks">
+                <p id="pDecks">Decks atuais</p>
+              </div>
             </IonCol>
           </IonRow>
           <IonRow>

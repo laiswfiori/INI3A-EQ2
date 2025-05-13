@@ -86,7 +86,7 @@
     }
   }
   
-#btnAlerta {
+#btnAlerta, #btnFechar {
   all: unset;
   cursor: pointer;
   z-index: 999999999;
@@ -108,3 +108,24 @@ ion-button#btnAlerta:hover {
   cursor: pointer;
 }
  
+#iconeFechar {
+  font-size: 1.5rem;
+  color: #ce2711;
+  cursor: pointer;
+}
+
+ion-button#btnFechar::part(native) {
+  all: unset;
+  cursor: pointer;
+  z-index: 999999999;
+}
+
+#btnFechar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#pDecks {
+  font-size: 1.2rem;
+  font-weight: 700;
+}

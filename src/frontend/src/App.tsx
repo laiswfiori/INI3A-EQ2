@@ -69,6 +69,7 @@ const App: React.FC = () => (
         <Route path="/flashcards/telainicialflashcards" component={TelaInicialFlashcards} exact />
         <Route path="/logincadastro" component={LoginCadastro} exact />
 
+        <Route path="/materias/:id" component={Conteudos} exact />
 
         {}
         <Route exact path="/">

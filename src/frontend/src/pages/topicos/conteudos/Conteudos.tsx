@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { IonPage, IonContent, IonList, IonItem, IonLabel, IonBadge, IonIcon, IonButton, IonModal, IonPopover, IonHeader, IonToolbar, IonTitle, IonInput, IonSelect, IonSelectOption, IonTextarea } from '@ionic/react';
 import { book, pencil, trash, flash, checkmarkDone } from 'ionicons/icons';
 import './css/geral.css';
@@ -13,7 +13,7 @@ interface Topico {
   titulo: string;
   descricao: string;
   status: string;
-  usuario_id: number;
+  materia_id: number;
   created_at: string;
   updated_at: string;
 }
@@ -26,9 +26,16 @@ const Conteudos: React.FC = () => {
   const [showPopover, setShowPopover] = useState(false);
   const [topicoSelecionado, setTopicoSelecionado] = useState<Topico | null>(null);
   const configButtonRef = useRef<HTMLIonButtonElement | null>(null);
+  const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
 
+  
+  const { id } = useParams<{ id: string }>();
 
   const history = useHistory();
+
+  useEffect(() => {
+    fetchTopicos();
+  }, [id]);
 
 
   const [novoTopico, setNovoTopico] = useState({
@@ -38,21 +45,21 @@ const Conteudos: React.FC = () => {
     descricao: '',
   });
 
-  useEffect(() => {
-    let api = new API();
-    const fetchTopicos = async () => {
-      try {
-        let r = await api.get("topicos");
-        setTopicos(r);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const api = new API();
 
-    fetchTopicos();
-  }, []);
+  const fetchTopicos = async () => {
+    const api = new API();
+    try {
+      let r = await api.get("topicos");
+      const topicosDaMateria = r.filter((topico: Topico) => topico.materia_id === parseInt(id));
+      setTopicos(topicosDaMateria);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
   const handleInputChange = (field: string, value: string) => {
     setNovoTopico({ ...novoTopico, [field]: value });
@@ -152,9 +159,10 @@ const Conteudos: React.FC = () => {
                 <IonButton
                    id={`config-btn-${topico.id}`}
                    className="config"
-                  onClick={(e) => {
+                    onClick={(e) => {
                     e.stopPropagation();
                     setTopicoSelecionado(topico);
+                    setPopoverEvent(e.nativeEvent);
                     setShowPopover(true);
                   }}
                 >...
@@ -242,11 +250,12 @@ const Conteudos: React.FC = () => {
           </IonContent>
         </IonModal>
         <IonPopover
-          isOpen={showPopover}
-          onDidDismiss={() => setShowPopover(false)}
-          trigger={`config-btn-${topicoSelecionado?.id}`} 
-          side="bottom"
-          alignment="center"
+         isOpen={showPopover}
+         event={popoverEvent}
+         onDidDismiss={() => {
+           setShowPopover(false);
+           setPopoverEvent(undefined);
+         }}
         >
           <IonButton expand="block" onClick={handleEditar} className="opcoes" id="btnLapis">
             <IonIcon icon={pencil} className="iconesPopover" id="lapis"/>
