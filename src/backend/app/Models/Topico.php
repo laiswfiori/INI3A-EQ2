@@ -8,7 +8,7 @@ class Topico extends Model
 {
     protected $table = "topicos";
     protected $fillable = [
-         'usuario_id',
+         'materia_id',
          'titulo',
          'descricao',
          'status',

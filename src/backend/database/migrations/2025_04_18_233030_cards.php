@@ -11,16 +11,15 @@ return new class extends Migration
      */ 
     public function up(): void 
     { 
-        Schema::create('topicos', function (Blueprint $table) { 
+        Schema::create('cards', function (Blueprint $table) { 
             $table->increments('id'); 
-            $table->unsignedBigInteger('materia_id');
-            $table->string('titulo', 255); 
-            $table->string('descricao', 255)->nullable(); 
-            $table->enum('status', ['concluído', 'em andamento', 'não iniciado']); 
+            $table->unsignedBigInteger('flahscard_id');
+            $table->jsonb('conteudo_frente'); 
+            $table->jsonb('conteudo_verso'); 
             $table->enum('nivel', ['muito fácil', 'fácil', 'médio','difícil','muito difícil'])->nullable(); 
-
-            $table->foreign('materia_id')->references('id')->on('materias')->onDelete('cascade');
             
+            $table->foreign('flashcard_id')->references('id')->on('flashcards')->onDelete('cascade');
+
             $table->timestamps(); 
         }); 
     } 
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void 
     { 
-        Schema::dropIfExists('topicos'); 
+        Schema::dropIfExists('atividades'); 
     } 
 };
