@@ -13,13 +13,13 @@ return new class extends Migration
     { 
         Schema::create('topicos', function (Blueprint $table) { 
             $table->increments('id'); 
-            $table->unsignedBigInteger('usuario_id');
+            $table->unsignedBigInteger('materia_id');
             $table->string('titulo', 255); 
             $table->string('descricao', 255)->nullable(); 
             $table->enum('status', ['concluído', 'em andamento', 'não iniciado']); 
             $table->enum('nivel', ['muito fácil', 'fácil', 'médio','difícil','muito difícil'])->nullable(); 
 
-            $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
+            $table->foreign('materia_id')->references('id')->on('materias')->onDelete('cascade');
             
             $table->timestamps(); 
         }); 

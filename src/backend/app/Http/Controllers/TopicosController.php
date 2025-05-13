@@ -32,13 +32,13 @@ class TopicosController extends Controller
     public function store(Request $request)
     {
         
-        $dados = $request->only(['titulo', 'descricao', 'status', 'usuario_id']); //adicionei o usuario id so pq nao da para autenticar ainda
+        $dados = $request->only(['titulo', 'descricao', 'status', 'materia_id']); //adicionei o materia id so pq nao da para autenticar ainda
 
         $topico = Topico::create([
             'titulo'     => $dados['titulo'],
             'descricao'  => $dados['descricao'],
             'status'     => $dados['status'],
-            'usuario_id'     => $dados['usuario_id'],
+            'materia_id'     => $dados['materia_id'],
             //'usuario_id' => Auth::id(), // pega o id do usuário autenticado
         ]);
 
