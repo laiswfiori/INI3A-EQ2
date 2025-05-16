@@ -97,20 +97,33 @@ const Conteudos: React.FC = () => {
   };
 
   const handleExcluir = async () => {
-    if (topicoSelecionado) {
-      try {
-        setShowPopover(false);  
-        console.log('Tópico excluído');
-      } catch (err) {
-        console.error('Erro ao excluir tópico:', err);
+      if (topicoSelecionado) {
+        let api = new API();
+        try {
+          await api.delete(`materias/${topicoSelecionado.id}`);
+          setShowPopover(false);
+          setTopicos((prev) => prev.filter(m => m.id !== topicoSelecionado.id));
+          console.log('Tópico excluído');
+        } catch (err) {
+          console.error('Erro ao excluir tópico:', err);
+        }
       }
-    }
   };
 
   const handleIniciar = async () => {
     if (topicoSelecionado) {
       try {
         const updatedTopico = { ...topicoSelecionado, status: 'Em andamento' };
+  
+        await fetch(`/api/topicos/${topicoSelecionado.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedTopico),
+        });
+  
+        setTopicoSelecionado(updatedTopico); 
         setShowPopover(false); 
         console.log('Tópico iniciado');
       } catch (err) {
@@ -189,7 +202,6 @@ const Conteudos: React.FC = () => {
 
         <IonButton
           className="botao-adicionar"
-          expand="fixed"
           shape="round"
           color="primary"
           onClick={() => setShowModal(true)}

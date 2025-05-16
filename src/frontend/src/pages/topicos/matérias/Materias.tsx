@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal, IonPopover, IonInput } from '@ionic/react';
-import { book, pencil, trash, flash } from 'ionicons/icons';
+import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal, IonPopover, IonInput, IonRow, IonCol } from '@ionic/react';
+import { book, pencil, trash } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -46,6 +46,9 @@ const Materias: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const [materiaSelecionada, setMateriaSelecionada] = useState<Materia | null>(null);
+  const [modoModal, setModoModal] = useState<'adicionar' | 'editar'>('adicionar');
+  const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
+
 
   const history = useHistory();
 
@@ -95,24 +98,71 @@ const Materias: React.FC = () => {
     setNovaMateria({ ...novaMateria, [field]: value });
   };
 
-  const handleSalvar = () => {
-    setShowModal(false);
+  const handleSalvar = async () => {
+    const url = modoModal === 'editar'
+      ? `http://localhost:8000/materias/${materiaSelecionada?.id}`
+      : `http://localhost:8000/materias`;
+    const method = modoModal === 'editar' ? 'PUT' : 'POST';
+  
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ nome: novaMateria.nome }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Erro ao ${modoModal === 'editar' ? 'editar' : 'adicionar'} matéria`);
+      }
+  
+      const data = await response.json();
+      console.log(`Matéria ${modoModal === 'editar' ? 'atualizada' : 'adicionada'}:`, data);
+  
+      if (modoModal === 'editar') {
+        setMaterias((prev) =>
+          prev.map((m) =>
+            m.id === materiaSelecionada?.id ? { ...data, topicos: m.topicos || [] } : m
+          )
+        );
+      } else {
+        setMaterias((prev) => [...prev, { ...data, topicos: [] }]);
+      }
+  
+      setShowModal(false);
+      setShowPopover(false);
+    } catch (error) {
+      console.error(`Erro ao ${modoModal === 'editar' ? 'editar' : 'adicionar'} matéria:`, error);
+    }
   };
+  
 
   const handleEditar = () => {
     if (materiaSelecionada) {
       setNovaMateria({
         nome: materiaSelecionada.nome,
       });
+      setModoModal('editar');
+      setShowModal(true);
+      setShowPopover(false);
     }
+  };
+
+  const handleAdicionar = () => {
+    setNovaMateria({ nome: '' });
+    setModoModal('adicionar');
     setShowModal(true);
-    setShowPopover(false);
   };
 
   const handleExcluir = async () => {
     if (materiaSelecionada) {
+      let api = new API();
       try {
+        await api.delete(`materias/${materiaSelecionada.id}`);
         setShowPopover(false);
+        setMaterias((prev) => prev.filter(m => m.id !== materiaSelecionada.id));
         console.log('Matéria excluída');
       } catch (err) {
         console.error('Erro ao excluir matéria:', err);
@@ -142,32 +192,33 @@ const Materias: React.FC = () => {
                 <IonItem
                   key={materia.id}
                   className="materia-item"
-                  button onClick={() => history.push(`/materias/${materia.id}`)}
+                  button
+                  onClick={() => history.push(`/materias/${materia.id}`)}
                 >
                   <IonLabel>
-                    <div id="containerConfig">
+                    <IonRow id="containerConfig">
                       <IonButton
                         id={`config-btn-${materia.id}`}
                         className="config"
                         onClick={(e) => {
                           e.stopPropagation();
                           setMateriaSelecionada(materia);
+                          setPopoverEvent(e.nativeEvent);
                           setShowPopover(true);
                         }}
-                      >...</IonButton>
-                    </div>
-                    <div className="containerMateria">
-                      <IonIcon icon={book} className="livro"/>
-                      <div className="td">
+                      >
+                        ...
+                      </IonButton>
+                    </IonRow>
+                    <IonRow className="containerMateria">
+                      <IonIcon icon={book} className="livro" />
+                      <IonCol className="td">
                         <h2>{materia.nome}</h2>
-                      </div>
-                    </div>
-                    <div className="barra">
-                      <div
-                        className="barraStatus"
-                        style={{ width: `${progresso}%` }}
-                      ></div>
-                    </div>
+                      </IonCol>
+                    </IonRow>
+                    <IonRow className="barra">
+                      <div className="barraStatus" style={{ width: `${progresso}%` }}></div>
+                    </IonRow>
                   </IonLabel>
                 </IonItem>
               );
@@ -175,13 +226,8 @@ const Materias: React.FC = () => {
           </IonList>
         )}
 
-        <IonButton
-          className="botao-adicionar"
-          expand="fixed"
-          shape="round"
-          color="primary"
-          onClick={() => setShowModal(true)}
-        > +
+        <IonButton className="botao-adicionar" shape="round" color="primary" onClick={handleAdicionar}>
+          +
         </IonButton>
 
         <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalAdd">
@@ -196,7 +242,11 @@ const Materias: React.FC = () => {
                 className="input"
               />
 
-              <IonButton expand="block" onClick={handleSalvar} className="btnSalvar">
+              <IonButton
+                expand="block"
+                onClick={handleSalvar}
+                className="btnSalvar"
+              >
                 Salvar
               </IonButton>
             </div>
@@ -204,18 +254,16 @@ const Materias: React.FC = () => {
         </IonModal>
 
         <IonPopover
-          isOpen={showPopover}
-          onDidDismiss={() => setShowPopover(false)}
-          trigger={`config-btn-${materiaSelecionada?.id}`}
-          side="bottom"
-          alignment="center"
+           isOpen={showPopover}
+            event={popoverEvent}
+            onDidDismiss={() => setShowPopover(false)}
         >
           <IonButton expand="block" onClick={handleEditar} className="opcoes" id="btnLapis">
-            <IonIcon icon={pencil} className="iconesPopover" id="lapis"/>
+            <IonIcon icon={pencil} className="iconesPopover" id="lapis" />
             Editar
           </IonButton>
           <IonButton expand="block" color="danger" onClick={handleExcluir} className="opcoes" id="btnLixo">
-            <IonIcon icon={trash} className="iconesPopover" id="lixo"/>
+            <IonIcon icon={trash} className="iconesPopover" id="lixo" />
             Excluir
           </IonButton>
         </IonPopover>

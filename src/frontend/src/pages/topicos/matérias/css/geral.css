@@ -56,7 +56,7 @@ ion-button {
   margin-left: 15%;
 }
 
-.materias-item {
+.materia-item {
   display: flex;
   flex-direction: column;
   border: 1px solid #ddd;

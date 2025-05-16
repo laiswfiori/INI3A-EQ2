@@ -33,11 +33,11 @@ class MateriasController extends Controller
     {
         
         $dados = $request->only(['nome', 'usuario_id']); //adicionei o usuario id so pq nao da para autenticar ainda
-
+        $id =  Auth::id();
         $materia = Materia::create([
-            'usuario_id'     => $dados['usuario_id'],
+            // 'usuario_id'     => $dados['usuario_id'],
             'nome'     => $dados['nome'],
-            //'usuario_id' => Auth::id(), // pega o id do usuário autenticado
+            'usuario_id' => $id // pega o id do usuário autenticado
         ]);
 
         return response()->json($materia, 201); // 201 = código https que significa created; criado c sucesso
@@ -67,5 +67,11 @@ class MateriasController extends Controller
         $materia = Materia::findOrFail($id);
         $materia->delete();// Delete = lumen eloquent-> deleta o tópico do bdd
         return response()->json(['message' => 'Matéria deletada com sucesso.'], 200); // 200 = OK; Retorna uma mensagem de sucesso
+    }
+
+    public function perfil()
+    {
+        $user = auth()->user();
+        return response()->json($user);
     }
 }
