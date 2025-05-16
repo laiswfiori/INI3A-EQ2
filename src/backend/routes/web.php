@@ -22,13 +22,13 @@ $router->get('/', function () {
     return 'Hello, world!';
 });
 
-$router->group(['prefix' => 'materias'], function() use($router)
+$router->group(['prefix' => 'materias', 'middleware' => 'auth'], function() use($router)
 {
-    $router->get('/', 'MateriasController@index'); //get=lê/busca dados
-    $router->post('/', 'MateriasController@store'); //cria recurso
+    $router->get('/', 'MateriasController@index');
+    $router->post('/', 'MateriasController@store');
     $router->get('/{id}', 'MateriasController@show');
-    $router->put('/{id}', 'MateriasController@update'); //Put tualiza todos os dados; PATCH atualiza parcialmente (só os enviados)
-    $router->delete('/{id}', 'MateriasController@destroy');//a$router->group (['prefix'=>'atividades'], function() use[$router])paga recurso
+    $router->put('/{id}', 'MateriasController@update');
+    $router->delete('/{id}', 'MateriasController@destroy');
 });
 
 $router->group(['prefix' => 'topicos'], function() use($router)

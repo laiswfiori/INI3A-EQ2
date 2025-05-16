@@ -21,7 +21,7 @@ class PasswordResetController extends Controller
         }
 
         $token = Str::random(60);
-
+        
         DB::table('password_resets')->updateOrInsert(
             ['email' => $request->email],
             [
