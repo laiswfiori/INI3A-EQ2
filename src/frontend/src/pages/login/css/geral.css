@@ -17,6 +17,8 @@
     overflow: hidden;
 }
 
+
+
 .div1{
   height: 100%;
         background-color: white;
@@ -27,7 +29,7 @@
         align-items: center;
         justify-content: center;
 
-        h1,h3, img{
+        h1,h2,h3, img{
             position: relative;
             z-index: 2;
             text-align: center;
@@ -48,17 +50,16 @@
       h1, h4 {
         text-align: center;
       }
-
-      #preto {
-        color: black;
-        margin-bottom: 5%;
-      }
     }
 
-#senha {
+.info { /*esqueci minha senha*/
   text-align: end;
   font-size: 1rem;
   font-weight: 550;
+}
+
+#conta{
+  text-align: center;
 }
 
 #ou {
@@ -95,20 +96,4 @@
     top: 50%;
     left: -150px;
     animation-delay: 4s;
-  }
-  
-  /* Keyframes da animação */
-  @keyframes moverEGradiente {
-    0% {
-      transform: translate(0, 0) scale(1);
-      background: linear-gradient(45deg, #00296b, #3da5d9);
-    }
-    50% {
-      transform: translate(100px, 100px) scale(1.2);
-      background: linear-gradient(225deg, #3da5d9, #00296b);
-    }
-    100% {
-      transform: translate(0px, 0px) scale(1);
-      background: linear-gradient(45deg, #00296b, #3da5d9);
-    }
   }

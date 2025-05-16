@@ -3,12 +3,11 @@
         display: grid;
         place-items: center;
         grid-template-columns: 1fr 4fr 4fr 1fr;
-        grid-column-gap: 0.2rem;
-
         .div1{
             grid-column-start: 2;
             height: 100%;
-            border: 1px solid #fec601;
+            border-top-left-radius: 5%;
+            border-bottom-left-radius: 5%;
         }
         .div2{
             grid-column-start: 3;
@@ -17,11 +16,13 @@
             align-items: center;
             justify-content: center;
             height: 100%;
+            border-top-right-radius: 5%;
+            border-bottom-right-radius: 5%;
         }
     }
 }
 
-@media (min-width: 768px) and (max-width: 1024px) { /*laptop*/
+@media (min-width: 768px) and (max-width: 1024px) { /*laptop e tablet*/
     .cadastro-container{
         display: grid;
         place-items: center;
@@ -31,6 +32,8 @@
         .div1{
             grid-column-start: 2;
             height: 100%;
+            border-top-left-radius: 5%;
+            border-bottom-left-radius: 5%;
         }
         .div2{
             grid-column-start: 3;
@@ -39,40 +42,50 @@
             align-items: center;
             justify-content: center;
             height: 100%;
+            border-top-right-radius: 5%;
+            border-bottom-right-radius: 5%;
         }
     }
 }
 
-@media (max-width: 767px) { /*tablet*/
+@media (max-width: 767px) { /*mobile*/
     .cadastro-container{
         display: grid;
         place-items: center;
         grid-template-rows: 1fr 4fr 4fr 1fr;
         grid-template-columns: 1fr 15fr 1fr;
-
-        grid-gap: 7%;
-        margin: 0;
+        grid-gap: 2px;
         height: 100vh;
         .div2{
             grid-row-start: 2;
             grid-column-start: 2;
             display: flex;
             align-items: center;
-            justify-content: space-around;
             flex-direction: row;
-            margin: 5%;
-            height: 100%;
+            height: 100%; 
+            border-top-right-radius: 5%;
+            border-top-left-radius: 5%;
+            border-bottom-right-radius: 0%;
+            border-bottom-left-radius: 0%;
             #org{
-                display: grid;
-                grid-template-columns: 3fr 2fr;
-                h1{
-                    font-size: 15px;
-                    text-align: center;
-                }
+                display: flex;
+                align-items: center;
+                
                 #img{
                     display: flex;
                     align-items: center;
+                    width: 200%;
                 }
+            }
+
+            h1{
+                font-size: 1.5rem !important;
+            }
+            h2{
+                font-size: 1.2rem !important;
+            }
+            h3{
+                font-size: 1.0rem !important;
             }
         }
         .div1{
@@ -80,6 +93,14 @@
             grid-column-start: 2;
             margin: 3%;
             max-width: 100%;
+            border-bottom-right-radius: 5%;
+            border-bottom-left-radius: 5%;
+            border-top-right-radius: 0%;
+            border-top-left-radius: 0%;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+
             h1{
                 font-size: 20px;
             }

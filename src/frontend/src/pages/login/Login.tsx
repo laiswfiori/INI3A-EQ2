@@ -3,7 +3,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonRow
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
-import './css/animation.css';
+import Animacao from '../../components/Animacao';
 
 interface LoginProps {
   goToCadastro: () => void;
@@ -15,8 +15,10 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
       <div id="bodyLogin">
         <div className="loginContainer">
             <div className="div1">
+                <div id="apresentacao">
                 <IonRow><h1><b>Sentimos saudades!</b></h1></IonRow>
-                <IonRow><h3>Pronto para começar?</h3></IonRow>
+                <IonRow><h2>Pronto para começar?</h2></IonRow>
+                </div>
                 <div id="img">
                 <img src="/imgs/logoSemFundo.png" alt="Logo png" />
               </div>
@@ -25,25 +27,24 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
                 <div className="bola bola3"></div>
             </div>
 
-
             <div className="div2">
-                <h1 className="sizeLogin"><b>Login!</b></h1>
-                <h4 className="size">Não possui uma conta?
-                <IonButton onClick={goToCadastro}>Cadastre-se</IonButton>
-                </h4>
+                <h1><b>Login</b></h1>
+                <h3 id="conta"> Não possui uma conta?
+                <IonButton onClick={goToCadastro} className="btnCadastrar">Cadastre-se</IonButton>
+                </h3>
                 <p><b>Email</b></p>
-                <input type="email" placeholder="@ Digite seu email" className="inputForm"/>
+                <input type="email" placeholder="Digite seu email" className="inputForm"/>
                 <p><b>Senha</b></p>
                 <input type="password" placeholder="Digite sua senha" className="inputForm"/>
-                <h4 id="senha">Esqueci minha senha</h4>
-                <IonButton className="botaoLogin">Entrar</IonButton>
+                <h3 className="info">Esqueci minha senha</h3>
+                <IonButton className="btnEntrar">Entrar</IonButton>
                 <div id="ou">
-                  <div className="linhaOu"></div>
+                  <div className="linhas"></div>
                   <h3 id="txtOu" >Ou</h3>
-                  <div className="linhaOu"></div>
+                  <div className="linhas"></div>
                 </div>
                
-                <IonButton className="botaoGoogle">Continuar com Google</IonButton>
+                <IonButton className="btnGoogle">Continuar com Google</IonButton>
             </div>
         </div>
       </div>

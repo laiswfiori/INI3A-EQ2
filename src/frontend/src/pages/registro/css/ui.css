@@ -1,20 +1,10 @@
 .cadastro-container{
     .div1{
         background-color: white;
-        border-top-left-radius: 5%;
-        border-bottom-left-radius: 5%;
     }
     .div2{
         background-color: white;
-        color: rgb(0, 0, 0);
-        border-top-right-radius: 5%;
-        border-bottom-right-radius: 5%;
     }
-}
-
-.botao{
-  color: #ffe99d;
-  --background: #ea7317;
 }
 
 #body{
@@ -31,3 +21,44 @@
     background: #f7d868;
     padding: 2%;
   }
+
+  
+.btnLogin {
+  width: 100%;
+}
+
+  ion-button.btnLogin::part(native) {
+    margin: 20px 0 10px 0;
+    background-color: #3da5d9 ;
+    border: 1.5px solid #00296b;
+    box-shadow: none;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    padding: 5%;
+}
+
+.btnLogin::part(native):hover {
+background-color: #00296b;
+border: 1.5px solid #3da5d9;
+}
+
+.btnCadastrar {
+width: 100%;
+}
+
+ion-button.btnCadastrar::part(native) {
+    margin: 20px 0 10px 0;
+    background-color: #3da5d9 ;
+    border: 1.5px solid #00296b;
+    box-shadow: none;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    padding: 5%;
+}
+
+.btnCadastrar::part(native):hover {
+background-color: #00296b;
+border: 1.5px solid #3da5d9;
+}

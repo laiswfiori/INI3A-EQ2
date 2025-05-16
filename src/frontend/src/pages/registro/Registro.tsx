@@ -13,17 +13,15 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
   return (
         <div id="body">
           <div className="cadastro-container">
-
-            {/* div1 - formulário */}
             <div className="div1">
               <h1><b>Cadastre-se em nossa plataforma!</b></h1><br />
-              <IonButton className="botao"><b>Continue com o Google</b></IonButton><br />
+              <IonButton className="btnGoogle"><b>Continue com o Google</b></IonButton><br />
               <h3>ou:</h3><br />
               <input type="email" placeholder="Digite seu email" /><br /><br />
               <input type="password" placeholder="Digite sua senha" /><br /><br />
-              <IonButton className="botao"><b>Cadastrar</b></IonButton><br />
+              <IonButton className="btnCadastrar"><b>Cadastrar</b></IonButton><br />
               <h4>Já possui uma conta?
-              <IonButton className="botaoLogin" onClick={goToLogin}>Faça login</IonButton>
+              <IonButton className="btnLogin" onClick={goToLogin}>Faça login</IonButton>
               </h4>
             </div>
 

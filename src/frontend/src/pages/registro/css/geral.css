@@ -4,17 +4,16 @@
     }
     .div2{
         display: flex;
-        padding: 10%;
-        height: 77%; 
         position: relative;
         overflow: hidden;
-        padding: 2rem;
 
         h1, #img{
             position: relative;
             z-index: 2;
             text-align: center;
         }
+
+        
     }
 }
 

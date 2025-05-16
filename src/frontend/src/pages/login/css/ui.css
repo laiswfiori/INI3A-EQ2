@@ -1,56 +1,60 @@
-p {
-    padding: 0;
-}
-
-.size {
-    font-size: 1.2rem;
-}
-
-.sizeLogin {
-    font-size: 1.5rem;
+.div1{
+  border-bottom: 2px solid #00296b;
 }
 
 .inputForm {
   border: 1.5px solid #ecedec;
   border-radius: 10px;
-  height: 8%;
   width: 100%;
   display: flex;
   align-items: center;
   padding-left: 10px;
+  padding: 3%;
   transition: 0.2s ease-in-out;
   background-color: white;
 }
 
-.input:focus {
-  outline: none;
-}
-
-.inputForm:focus-within {
-  border: 1.5px solid #2d79f3;
-}
-
-.botaoLogin {
+.btnEntrar {
     width: 100%;
 }
 
-ion-button.botaoLogin::part(native) {
+ion-button.btnEntrar::part(native) {
   margin: 20px 0 10px 0;
-  background-color: #ea7317;
+  background-color: #3da5d9 ;
+  border: 1.5px solid #00296b;
   box-shadow: none;
   color: white;
-  font-size: 15px;
-  font-weight: 500;
   border-radius: 20px;
-  height: 50px;
   cursor: pointer;
+  padding: 5%;
 }
 
-.botaoLogin::part(native):hover {
-  background-color: #974900;
+.btnEntrar::part(native):hover {
+  background-color: #00296b;
+  border: 1.5px solid #3da5d9;
 }
 
-.linhaOu {
+.btnCadastrar {
+  width: 100%;
+}
+
+ion-button.btnCadastrar::part(native) {
+  margin: 20px 0 10px 0;
+  background-color: #3da5d9 ;
+  border: 1.5px solid #00296b;
+  box-shadow: none;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  padding: 5%;
+}
+
+.btnCadastrar::part(native):hover {
+  background-color: #00296b;
+  border: 1.5px solid #3da5d9;
+}
+
+.linhas {
     border-bottom: rgb(155, 155, 155) 2px solid;
     width: 40%;
 }
@@ -61,24 +65,24 @@ ion-button.botaoLogin::part(native) {
     font-size: 1rem;
 }
 
-.botaoGoogle {
+.btnGoogle {
     width: 100%;
 }
 
-ion-button.botaoGoogle::part(native) {
+ion-button.btnGoogle::part(native) {
   margin: 20px 0 10px 0;
   border: #ea7317 2px solid;
   background-color: white;
   box-shadow: none;
   color: white;
-  font-size: 15px;
-  font-weight: 500;
   border-radius: 20px;
-  height: 50px;
   cursor: pointer;
-  color: black;s
+  color: black;
+  padding: 5%;
 }
 
-.botaoGoogle::part(native):hover {
-  background-color: #974900;
+.btnGoogle::part(native):hover {
+  background-color: #ea7317;
+  border: 1.5px solid #974200;
+  color: white;
 }
