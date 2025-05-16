@@ -3,14 +3,13 @@
     display: flex;
     flex-direction: column;
     margin-top: 2%;
-    
 }
 
 #btnAlerta, .revisaoGeral {
     pointer-events: auto; 
 }
 
-#revisao, #decks {
+#revisao {
     margin-right: 10%;
     margin-left: 10%;
 }
@@ -83,6 +82,25 @@ ion-popover.popoverGeral::part(content) {
     max-width: unset !important;
 }
 
-#decks {
-    
-}
+.topico-box {
+    background-color: #f8f8f8;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    list-style: none;
+  }
+  
+  .topico-box:hover {
+    background-color: #e6edff;
+  }
+
+  .listaTopicos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+  }

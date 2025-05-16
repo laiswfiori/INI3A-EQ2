@@ -10,8 +10,8 @@ import LoginCadastro from './pages/loginCadastro/loginCadastro';
 import Registro from './pages/registro/Registro';
 import Configuracoes from './pages/configuracoes/Configuracoes';
 import Agenda from './pages/agenda/Agenda';
-import Flashcards from './pages/flashcards/Flashcards';
-import TelaInicialFlashcards from './pages/flashcards/TelaInicialFlashcards';
+import Flashcards from './pages/flashcards/flashcard/Flashcards';
+import TelaInicialFlashcards from './pages/flashcards/telaInicial/TelaInicialFlashcards';
 
 
 /* Core CSS required for Ionic components to work properly */
