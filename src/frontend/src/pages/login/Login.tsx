@@ -1,17 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonRow, IonLabel } from '@ionic/react';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
-import Animacao from '../../components/Animacao';
+import './../../components/Animacao.css';
+import Header from '../../components/Header';
 
 interface LoginProps {
   goToCadastro: () => void;
 }
 
 const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
+  const [email, setEmail] = useState('');
+  const [password, setSenha] = useState('');
+  const [erro, setErro] = useState('');
+  
+
+  const handleLogar = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Usuário logado com sucesso:', data);
+        
+      } else {
+        setErro(data.mensagem || 'Erro ao fazer login');
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      setErro('Erro de conexão com o servidor.');
+    }
+  };
 
   return (
+    <IonPage>
+    <Header />
       <div id="bodyLogin">
         <div className="loginContainer">
             <div className="div1">
@@ -33,11 +64,19 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
                 <IonButton onClick={goToCadastro} className="btnCadastrar">Cadastre-se</IonButton>
                 </h3>
                 <p><b>Email</b></p>
-                <input type="email" placeholder="Digite seu email" className="inputForm"/>
+                <input
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="inputForm"/>
                 <p><b>Senha</b></p>
-                <input type="password" placeholder="Digite sua senha" className="inputForm"/>
+                <input
+                  type="password" 
+                  value={password}
+                  onChange={(e) => setSenha(e.target.value)}
+                  className="inputForm"/>
                 <h3 className="info">Esqueci minha senha</h3>
-                <IonButton className="btnEntrar">Entrar</IonButton>
+                <IonButton className="btnEntrar" onClick={handleLogar}>Entrar</IonButton>
                 <div id="ou">
                   <div className="linhas"></div>
                   <h3 id="txtOu" >Ou</h3>
@@ -48,6 +87,7 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
             </div>
         </div>
       </div>
+      </IonPage>
   );
 };
 

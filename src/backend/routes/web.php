@@ -48,7 +48,8 @@ $router->group(['prefix' => 'atividades'], function() use($router)
     $router->delete('/{id}', 'AtividadesController@destroy');
 });
 
-$router->group(['prefix' => 'auth'], function () use ($router) {
+$router->group(['prefix' => 'auth','middleware' => 'auth:api',], function () use ($router) 
+{   
     $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
 });

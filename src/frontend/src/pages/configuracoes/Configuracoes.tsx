@@ -5,16 +5,11 @@ import './configuracoes.css';
 const Configuracoes: React.FC = () => {
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Configurações</IonTitle>
-        </IonToolbar>
-      </IonHeader>
       <IonContent>
         <div id="body">
         <div className="configuracoes-container">
           <div className="div1">
-            <h1><b>✨Agradecemos por se juntar a nós!</b></h1>
+            <h1><b>Agradecemos por se juntar a nós!</b></h1>
             <h4>Seu cadastro foi efetivado! Você está quase lá!</h4><br />
             <h3><b>Configurações de seu plano de estudos</b></h3>
             <h4> *Lembre-se de criar um plano que se adeque a sua rotina.*</h4>

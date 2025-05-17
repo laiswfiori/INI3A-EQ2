@@ -23,7 +23,7 @@ const Header: React.FC = () => {
     history.push('/topicos/materias');
   }
   const navPerfil = () => {
-    history.push('/registro/registro');
+    history.push('/logincadastro/logincadastro');
   }
 
   const toggleMenu = () => {

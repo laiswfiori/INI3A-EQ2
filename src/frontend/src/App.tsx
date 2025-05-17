@@ -67,7 +67,7 @@ const App: React.FC = () => (
         <Route path="/agenda/agenda" component={Agenda} exact />
         <Route path="/flashcards/flashcards" component={Flashcards} exact />
         <Route path="/flashcards/telainicialflashcards" component={TelaInicialFlashcards} exact />
-        <Route path="/logincadastro" component={LoginCadastro} exact />
+        <Route path="/logincadastro/logincadastro" component={LoginCadastro} exact />
 
         <Route path="/materias/:id" component={Conteudos} exact />
 

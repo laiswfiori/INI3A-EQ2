@@ -9,22 +9,20 @@ use Illuminate\Http\Request;
 class MateriasController extends Controller
 {
     
-    // :: => operador de resolução de escopo; acessa o model (estático)
+    //:: => operador de resolução de escopo; acessa o model (estático)
     public function __construct()
     {
        
     }
 
-    //Auth::user() retorna o objeto do usuário logado
+   // Auth::user() // retorna o objeto do usuário logado
     //Auth::id() retorna o ID do usuário autenticado
     public function index()
     {
-        //$usuarioId = Auth::id(); // pega o ID do usuário autenticado
-        //$materias = Topico::where('usuario_id', $usuarioId)->get();
-        //return response()->json($materias);
-
-        $materias = Materia::all();
-
+        $user = auth()->user(); // pega o usuário autenticado
+        $userId = $user->id;
+        
+        $materias = Materia::where('usuario_id', $userId)->get();
         return response()->json($materias);
     }
 

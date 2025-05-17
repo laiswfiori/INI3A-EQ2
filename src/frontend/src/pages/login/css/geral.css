@@ -10,14 +10,11 @@
 }
 
 .loginContainer{
-    height: 65%;
     display: grid;
     place-items: center;  
     border-radius: 20px !important;
     overflow: hidden;
 }
-
-
 
 .div1{
   height: 100%;
