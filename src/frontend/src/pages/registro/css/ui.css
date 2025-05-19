@@ -1,10 +1,25 @@
 .cadastro-container{
     .div1{
-        background-color: white;
+        background-color: #f7d868;
     }
     .div2{
         background-color: white;
     }
+}
+
+.linhas {
+  border-bottom: rgb(155, 155, 155) 2px solid;
+  width: 40%;
+  height: 10px;
+}
+.txtLinha {
+display: none;
+}
+
+#txtOu {
+padding-left: 5%;
+padding-right: 5%;
+font-size: 1rem;
 }
 
 #body{
@@ -18,11 +33,17 @@
   }
 
   input{
-    background: #f7d868;
-    padding: 2%;
+    border: 1.5px solid #ecedec;
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    padding: 3%;
+    transition: 0.2s ease-in-out;
+    background-color: white;
   }
 
-  
 .btnLogin {
   width: 100%;
 }
@@ -39,12 +60,12 @@
 }
 
 .btnLogin::part(native):hover {
-background-color: #00296b;
-border: 1.5px solid #3da5d9;
+  background-color: #00296b;
+  border: 1.5px solid #3da5d9;
 }
 
 .btnCadastrar {
-width: 100%;
+  width: 100%;
 }
 
 ion-button.btnCadastrar::part(native) {

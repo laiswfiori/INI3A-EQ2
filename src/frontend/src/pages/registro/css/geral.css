@@ -57,6 +57,24 @@ h1,h3,h4{
     margin: 0;
 }
 
+#ou {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#label1{
+  margin-bottom: 12px;
+  display: flex;
+  text-align: left;
+  width: 100%;
+}
+
+#direita{
+  text-align: right;
+}
+
 #img{
     display: flex;
     align-items: flex-end;
