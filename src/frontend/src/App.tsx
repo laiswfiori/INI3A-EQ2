@@ -8,6 +8,7 @@ import Matérias from './pages/topicos/matérias/Materias';
 import Login from './pages/login/Login';
 import LoginCadastro from './pages/loginCadastro/loginCadastro';
 import Registro from './pages/registro/Registro';
+import Perfil from './pages/perfil/Perfil';
 import Configuracoes from './pages/configuracoes/Configuracoes';
 import Agenda from './pages/agenda/Agenda';
 import Flashcards from './pages/flashcards/flashcard/Flashcards';
@@ -63,6 +64,7 @@ const App: React.FC = () => (
         <Route path="/topicos/materias" component={Matérias} exact />
         <Route path="/login/login" component={Login} exact />
         <Route path="/registro/registro" component={Registro} exact />
+        <Route path="/perfil/perfil" component={Perfil} exact />
         <Route path="/configuracoes/configuracoes" component={Configuracoes} exact />
         <Route path="/agenda/agenda" component={Agenda} exact />
         <Route path="/flashcards/flashcards" component={Flashcards} exact />

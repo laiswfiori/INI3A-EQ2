@@ -50,8 +50,8 @@ $router->group(['prefix' => 'atividades'], function() use($router)
 
 $router->group(['prefix' => 'auth','middleware' => 'auth:api',], function () use ($router) 
 {   
-    $router->post('register', 'AuthController@register');
-    $router->post('login', 'AuthController@login');
+    $router->post('register', 'Auth\AuthController@register');
+    $router->post('login', 'Auth\AuthController@login');
 });
 
 $router->group(['prefix' => 'password'], function () use ($router) {
