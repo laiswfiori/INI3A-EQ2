@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonPage, IonContent, IonCol, IonRow, IonIcon, IonButton } from '@ionic/react';
-import { personCircle } from 'ionicons/icons';
+import { caretForward, personCircle } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -13,19 +13,24 @@ const Perfil: React.FC = () => {
                 <IonContent>
                     <IonRow className="pagPerfil">
                         <IonCol className="ladoPerfil">
-                            <div id="img">
+                            <IonRow id="img">
                                 <IonIcon icon={personCircle} id="iconePerfil"/>
                                 <div id="txtOi">
                                     <p>Olá, <span>nome</span>.</p>
                                 </div>
-                            </div>
-                            <div id="configs">
+                            </IonRow>
+                            <IonRow id="linhaDivisora"></IonRow>
+                            <IonRow id="configs">
                                 <h1>Configurações gerais</h1>
-                                <h1>Configurações avançadas de estudo</h1>
-                                <IonButton>X</IonButton>
-                                <h1>Configurações de perfil</h1>
-                                <IonButton>Y</IonButton>
-                            </div>
+                                <IonRow className="containerConfig">
+                                    <IonButton className="btnConfigg">Configurações avançadas de estudo</IonButton>
+                                <IonIcon icon={caretForward} className="iconesSeta"/>
+                                </IonRow>
+                                <IonRow className="containerConfig">
+                                    <IonButton className="btnConfigg">Configurações de perfil</IonButton> 
+                                    <IonIcon icon={caretForward} className="iconesSeta"/>
+                                </IonRow>
+                            </IonRow>
                         </IonCol>
                         <IonCol className="ladoConfig">
                             <div id="infos">

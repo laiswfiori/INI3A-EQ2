@@ -27,14 +27,31 @@
   
   #iconePerfil {
     align-self: flex-start;
-    font-size: 5rem;
+    font-size: 10rem;
     color: white;
     margin: 0;
     padding: 0;
   }
 
+#linhaDivisora {
+  height: 5px;
+  width: 100%;
+  border-bottom: 2px solid white;
+  margin-bottom: 4%;
+}
+
 #configs {
     padding-left: 2%;
+}
+
+.containerConfig {
+  text-align: center;
+  padding: 0;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .ladoConfig {
