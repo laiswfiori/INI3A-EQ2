@@ -2,7 +2,6 @@
     display: grid;
 	grid-template-columns: 15% 70% 15%;
     grid-template-rows: 1fr;
-    line-height: 1rem;
     height: auto;
     z-index: 0;
 }

@@ -14,6 +14,7 @@
     flex-direction: column;
     justify-content: flex-start !important;
     align-items: flex-start !important;
+    pointer-events: none;
 }
 
   #img {
@@ -42,7 +43,52 @@
 
 #configs {
     padding-left: 2%;
+    display: flex;
+    flex-direction: column;
 }
+
+.rowContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  max-height: 10%;
+}
+
+.contConfig {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-right: 5%;
+  height: 100%;
+}
+
+.cor {
+  width: 6px;
+  height: 80%;
+}
+
+#tema {
+  background-color: rgb(20, 197, 197);
+}
+
+#som {
+  background-color: rgb(20, 147, 197);
+}
+
+#idioma {
+  background-color: rgb(197, 171, 20);
+}
+
+#notificacoes {
+  background-color: rgb(46, 163, 0);
+}
+
+#resetar {
+  background-color: rgb(197, 32, 20);
+}
+
 
 .containerConfig {
   text-align: center;
