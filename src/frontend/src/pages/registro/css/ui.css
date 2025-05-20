@@ -1,16 +1,23 @@
 .cadastro-container{
     .div1{
         background-color: #f7d868;
+        padding: 10%;
+        padding-top: 5%;
     }
     .div2{
         background-color: white;
     }
 }
 
+@media (min-width: 768px){
+  #body{
+    padding: 5%;
+  }
+}
+
 .linhas {
   border-bottom: rgb(155, 155, 155) 2px solid;
   width: 40%;
-  height: 10px;
 }
 .txtLinha {
 display: none;
@@ -42,6 +49,7 @@ font-size: 1rem;
     padding: 3%;
     transition: 0.2s ease-in-out;
     background-color: white;
+    margin-bottom: 2px;
   }
 
 .btnLogin {
@@ -82,4 +90,26 @@ ion-button.btnCadastrar::part(native) {
 .btnCadastrar::part(native):hover {
 background-color: #00296b;
 border: 1.5px solid #3da5d9;
+}
+
+.btnGoogle {
+  width: 100%;
+}
+
+ion-button.btnGoogle::part(native) {
+  margin: 20px 0 10px 0;
+  border: #ea7317 2px solid;
+  background-color: white;
+  box-shadow: none;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  color: black;
+  padding: 5%;
+}
+
+.btnGoogle::part(native):hover {
+  background-color: #ea7317;
+  border: 1.5px solid #974200;
+  color: white;
 }

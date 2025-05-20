@@ -4,6 +4,7 @@ import './css/geral.css';
 import './css/layout.css';
 import './css/ui.css';
 import './../../components/Animacao.css';
+import Header from '../../components/Header';
 
 interface RegistroProps {
   goToLogin: () => void;
@@ -48,38 +49,40 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
 
   
   return (
+   // <IonPage>
+     // <Header />
         <div id="body">
           <div className="cadastro-container">
             <div className="div1">
               <h1><b>Cadastre-se em nossa plataforma!</b></h1><br />
               <IonButton className="btnGoogle"><b>Continue com o Google</b></IonButton><br />
+              <br></br>
               <div id="ou">
-                  <div className="linhas"><p className="txtLinha">la</p></div>
+                  <div className="linhas"></div>
                   <h3 id="txtOu">Ou</h3>
                   <div className="linhas"></div>
-              </div>
+              </div><br></br>
               <p id="label1"><b>Nome</b></p>
               <input 
                 type="text"
                 value={name}
                 onChange={(e) => setNome(e.target.value)}
-                /><br /><br />
+                /><br />
               <p id="label1"><b>Email</b></p>
               <input
                 type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                /><br /><br />
+                /><br />
               <p id="label1"><b>Senha</b></p>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setSenha(e.target.value)}
-                /><br /><br />
+                /><br />
               <IonButton className="btnCadastrar" onClick={handleCadastrar}><b>Cadastrar</b></IonButton><br />
-              <h3 id="direita">Já possui uma conta?
+              <h3 id="direita">Já possui uma conta?</h3>
               <IonButton className="btnLogin" onClick={goToLogin}>Faça login</IonButton>
-              </h3>
             </div>
 
             <div className="div2">
@@ -95,6 +98,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
             </div>
           </div>
         </div>
+     //   </IonPage>
   );
 };
 

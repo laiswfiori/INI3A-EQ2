@@ -1,17 +1,12 @@
-.div1{
-  border-bottom: 2px solid #00296b;
+@media (min-width: 768px){
+  .loginContainer{
+    margin-top: 7%;
+    margin-bottom: 7%;
+  }
 }
 
-.inputForm {
-  border: 1.5px solid #ecedec;
-  border-radius: 10px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  padding-left: 10px;
-  padding: 3%;
-  transition: 0.2s ease-in-out;
-  background-color: white;
+h1{
+  color: black !important;
 }
 
 .btnEntrar {

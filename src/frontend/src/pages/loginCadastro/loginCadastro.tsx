@@ -27,6 +27,7 @@ const LoginCadastro: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
+        <div id="conteudo">
         <Swiper
           ref={swiperRef}
           pagination={{ clickable: true }}
@@ -42,6 +43,7 @@ const LoginCadastro: React.FC = () => {
             <Login goToCadastro={goToCadastro} />
           </SwiperSlide>
         </Swiper>
+        </div>
       </IonContent>
     </IonPage>
   );

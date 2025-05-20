@@ -1,6 +1,9 @@
 .cadastro-container{
     .div1{
-        padding: 10%;
+        padding-top: 20%;
+        padding-bottom: 20%;
+        padding-right: 5%;
+        padding-left: 5%;
     }
     .div2{
         display: flex;
@@ -11,61 +14,21 @@
             position: relative;
             z-index: 2;
             text-align: center;
-        }
-
-        
+        }        
     }
 }
 
-.botaoLogin {
-  width: 100%;
-}
-
-ion-button.botaoLogin::part(native) {
-margin: 20px 0 10px 0;
-background-color: #3da5d9;
-box-shadow: none;
-color: white;
-border-radius: 20px;
-height: 50px;
-cursor: pointer;
-border: 1px solid #00296b;
-}
-
-.botaoLogin::part(native):hover {
-background-color: #00296b;
-color: #3da5d9;
-}
-
-ion-button.botao::part(native) {
-  margin: 20px 0 10px 0;
-  background-color: #ea7317;
-  box-shadow: none;
-  color: white;
-  border-radius: 20px;
-  height: 50px;
-  cursor: pointer;
-  border: 1px solid #fec601;
-  }
-  
-  .botao::part(native):hover {
-  background-color: #fec601;
-  color: #ea7317;
-  }
-
-h1,h3,h4{
-    margin: 0;
-}
 
 #ou {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 #label1{
   margin-bottom: 12px;
+  margin-top: 0;
   display: flex;
   text-align: left;
   width: 100%;
@@ -80,12 +43,6 @@ h1,h3,h4{
     align-items: flex-end;
     height: 100%;
 }
-
-.conteudo {
-    position: relative;
-    z-index: 2; /* texto por cima das bolas */
-    text-align: center;
-  }
 
   .bola {
     position: absolute;
