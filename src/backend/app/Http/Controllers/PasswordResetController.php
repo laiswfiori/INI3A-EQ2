@@ -10,7 +10,7 @@ use App\Models\User;
 use Carbon\Carbon;
 
 class PasswordResetController extends Controller
-{
+{   
     public function requestReset(Request $request)
     {
         $request->validate(['email' => 'required|email']);

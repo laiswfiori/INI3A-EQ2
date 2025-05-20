@@ -1,4 +1,3 @@
-
 <?php
 
 return [
@@ -9,7 +8,7 @@ return [
 
     'guards' => [
         'api' => [
-            'driver' => 'jwt',
+            'driver' => 'jwt',  // 'jwt' no lugar de 'token' pq estamos usando jwt
             'provider' => 'users',
         ],
     ],
@@ -17,7 +16,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\User::class
+            'model' => App\Models\User::class,
         ],
     ],
 
