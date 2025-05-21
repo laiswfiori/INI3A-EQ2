@@ -1,5 +1,5 @@
 .pagPerfil {
-    height: 100vh;
+    height: auto;
     display: grid;
     grid-template-columns: 1fr 3fr;
     grid-template-rows: 1fr;
@@ -12,9 +12,10 @@
     grid-row-end: 2;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start !important;
-    align-items: flex-start !important;
+    align-items: flex-start;   
+    justify-content: center;   
     pointer-events: none;
+    height: 100%;
 }
 
   #img {
@@ -44,7 +45,18 @@
 #configs {
     padding-left: 2%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+}
+
+#dBranco {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-height: fit-content;
+  height: fit-content; /* ou auto, mas vamos forçar fit-content */
+  overflow: hidden;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .rowContainer {
@@ -52,7 +64,8 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  max-height: 10%;
+  height: 5%;
+  max-height: 5%;
 }
 
 .contConfig {
@@ -66,7 +79,7 @@
 
 .cor {
   width: 6px;
-  height: 80%;
+  height: 40px;
 }
 
 #tema {
