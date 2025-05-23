@@ -4,26 +4,27 @@
 
 #txtOi {
     color: white;
-    font-size: 1.5rem;
+    font-size: 3rem;
     font-weight: 600;
 }
 
 h1 {
     color: white !important;
-    font-size: 1rem !important;
+    font-size: 1.5rem !important;
     font-weight: 600;
 }
 
 .btnConfigg {
     all: unset;
     color: white;
-    font-size: 1rem !important;
+    font-size: 1.5rem !important;
     font-weight: 600;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 5%;
     padding: 0;
+    cursor: pointer !important;
 }
 
 ion-button.btnConfigg::part(native) {
@@ -34,6 +35,11 @@ ion-button.btnConfigg::part(native) {
     justify-content: center;
     align-items: center;
     padding: 0;
+    cursor: pointer !important;
+}
+
+.btnConfigg:hover {
+    color: #3da5d9;
 }
 
 .preto {
@@ -46,4 +52,15 @@ ion-button.btnConfigg::part(native) {
 
 .iconesSeta {
     color: white;
+}
+
+.titConfig {
+    font-size: 1.5rem !important;
+    margin: 0 !important;
+}
+
+#dBranco {
+    background-color: white;
+    padding-left: 3%;
+    border-radius: 20px;
 }
