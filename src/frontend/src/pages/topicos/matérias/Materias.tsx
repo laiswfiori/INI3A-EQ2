@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal, IonPopover, IonInput, IonRow, IonCol } from '@ionic/react';
+import {
+  IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal,
+  IonPopover, IonInput, IonRow, IonCol
+} from '@ionic/react';
 import { book, pencil, trash } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
@@ -48,29 +51,29 @@ const Materias: React.FC = () => {
   const [materiaSelecionada, setMateriaSelecionada] = useState<Materia | null>(null);
   const [modoModal, setModoModal] = useState<'adicionar' | 'editar'>('adicionar');
   const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
-
+  const [novaMateria, setNovaMateria] = useState({ nome: '' });
 
   const history = useHistory();
 
-  const [novaMateria, setNovaMateria] = useState({
-    nome: '',
-  });
-
   useEffect(() => {
     const fetchMaterias = async () => {
-      let api = new API();
+      const api = new API();
       try {
         const materiasResponse = await api.get("materias");
         const topicosResponse = await api.get("topicos");
         const atividadesResponse = await api.get("atividades");
 
         const topicosComAtividades = topicosResponse.map((topico: Topico) => {
-          const atividades = atividadesResponse.filter((atividade: Atividade) => atividade.topico_id === topico.id);
+          const atividades = atividadesResponse.filter(
+            (atividade: Atividade) => atividade.topico_id === topico.id
+          );
           return { ...topico, atividades };
         });
 
         const materiasComTopicos = materiasResponse.map((materia: Materia) => {
-          const topicos = topicosComAtividades.filter((topico: Topico) => topico.materia_id === materia.id);
+          const topicos = topicosComAtividades.filter(
+            (topico: Topico) => topico.materia_id === materia.id
+          );
           return { ...materia, topicos };
         });
 
@@ -99,51 +102,37 @@ const Materias: React.FC = () => {
   };
 
   const handleSalvar = async () => {
-    const url = modoModal === 'editar'
-      ? `http://localhost:8000/materias/${materiaSelecionada?.id}`
-      : `http://localhost:8000/materias`;
-    const method = modoModal === 'editar' ? 'PUT' : 'POST';
-  
+    const api = new API();
+    const endpoint = modoModal === 'editar'
+      ? `materias/${materiaSelecionada?.id}`
+      : `materias`;
+
+    const method = modoModal === 'editar' ? api.put : api.post;
+
     try {
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({ nome: novaMateria.nome }),
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Erro ao ${modoModal === 'editar' ? 'editar' : 'adicionar'} matéria`);
-      }
-  
-      const data = await response.json();
-      console.log(`Matéria ${modoModal === 'editar' ? 'atualizada' : 'adicionada'}:`, data);
-  
+      const data = await method.call(api, endpoint, { nome: novaMateria.nome });
+
       if (modoModal === 'editar') {
-        setMaterias((prev) =>
-          prev.map((m) =>
-            m.id === materiaSelecionada?.id ? { ...data, topicos: m.topicos || [] } : m
+        setMaterias(prev =>
+          prev.map(m => m.id === materiaSelecionada?.id
+            ? { ...data, topicos: m.topicos || [] }
+            : m
           )
         );
       } else {
-        setMaterias((prev) => [...prev, { ...data, topicos: [] }]);
+        setMaterias(prev => [...prev, { ...data, topicos: [] }]);
       }
-  
+
       setShowModal(false);
       setShowPopover(false);
     } catch (error) {
       console.error(`Erro ao ${modoModal === 'editar' ? 'editar' : 'adicionar'} matéria:`, error);
     }
   };
-  
 
   const handleEditar = () => {
     if (materiaSelecionada) {
-      setNovaMateria({
-        nome: materiaSelecionada.nome,
-      });
+      setNovaMateria({ nome: materiaSelecionada.nome });
       setModoModal('editar');
       setShowModal(true);
       setShowPopover(false);
@@ -158,11 +147,11 @@ const Materias: React.FC = () => {
 
   const handleExcluir = async () => {
     if (materiaSelecionada) {
-      let api = new API();
+      const api = new API();
       try {
         await api.delete(`materias/${materiaSelecionada.id}`);
         setShowPopover(false);
-        setMaterias((prev) => prev.filter(m => m.id !== materiaSelecionada.id));
+        setMaterias(prev => prev.filter(m => m.id !== materiaSelecionada.id));
         console.log('Matéria excluída');
       } catch (err) {
         console.error('Erro ao excluir matéria:', err);
@@ -178,9 +167,7 @@ const Materias: React.FC = () => {
         <div className="linhaHorizontal"></div>
 
         {loading ? (
-          <div className="loader-container">
-            <div className="loader"></div>
-          </div>
+          <div className="loader-container"><div className="loader"></div></div>
         ) : error ? (
           <p className="error-message">{error}</p>
         ) : (
@@ -241,12 +228,7 @@ const Materias: React.FC = () => {
                 onIonChange={(e) => handleInputChange('nome', e.detail.value!)}
                 className="input"
               />
-
-              <IonButton
-                expand="block"
-                onClick={handleSalvar}
-                className="btnSalvar"
-              >
+              <IonButton expand="block" onClick={handleSalvar} className="btnSalvar">
                 Salvar
               </IonButton>
             </div>
@@ -254,9 +236,9 @@ const Materias: React.FC = () => {
         </IonModal>
 
         <IonPopover
-           isOpen={showPopover}
-            event={popoverEvent}
-            onDidDismiss={() => setShowPopover(false)}
+          isOpen={showPopover}
+          event={popoverEvent}
+          onDidDismiss={() => setShowPopover(false)}
         >
           <IonButton expand="block" onClick={handleEditar} className="opcoes" id="btnLapis">
             <IonIcon icon={pencil} className="iconesPopover" id="lapis" />
@@ -272,4 +254,4 @@ const Materias: React.FC = () => {
   );
 };
 
-export default Materias;
+export default Materias

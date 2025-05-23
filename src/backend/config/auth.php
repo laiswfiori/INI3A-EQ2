@@ -14,11 +14,12 @@ return [
     ],
 
     'providers' => [
-        'users' => [
+    'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
     ],
+
 
     'passwords' => [
         'users' => [
