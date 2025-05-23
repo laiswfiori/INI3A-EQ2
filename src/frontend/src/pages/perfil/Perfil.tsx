@@ -1,6 +1,6 @@
-import React from 'react';
-import { IonPage, IonContent, IonCol, IonRow, IonIcon, IonButton, IonToggle } from '@ionic/react';
-import { caretForward, personCircle } from 'ionicons/icons';
+import React, { useState } from 'react';
+import { IonPage, IonContent, IonCol, IonRow, IonIcon, IonButton, IonInput, IonCheckbox  } from '@ionic/react';
+import { caretForward, personCircle, warning } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -8,6 +8,36 @@ import './css/switch.css';
 import Header from '../../components/Header';
 
 const Perfil: React.FC = () => {
+    const [isChecked, setIsChecked] = useState(false);
+    const [view, setView] = useState<'perfil' | 'estudo'>('perfil');
+
+    const handleCheckboxChange = (e: CustomEvent) => {
+        setIsChecked(e.detail.checked);
+    };
+
+    const diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+
+    const [diasSelecionados, setDiasSelecionados] = useState<string[]>([]);
+    const [horariosEstudo, setHorariosEstudo] = useState<{ [key: string]: string }>({});
+    const [materias, setMaterias] = useState<string[]>(['Matéria 1', 'Matéria 2']);
+    const [novaMateria, setNovaMateria] = useState('');
+
+    const toggleDia = (dia: string) => {
+        setDiasSelecionados(prev => {
+          let novoArray: string[];
+          if (prev.includes(dia)) {
+            novoArray = prev.filter(d => d !== dia);
+          } else {
+            novoArray = [...prev, dia];
+          }
+          return Array.from(new Set(novoArray));
+        });
+      };
+    
+    const handleHorarioChange = (dia: string, valor: string) => {
+        setHorariosEstudo(prev => ({ ...prev, [dia]: valor }));
+    };
+
     return (
         <IonPage>
             <Header />
@@ -108,20 +138,167 @@ const Perfil: React.FC = () => {
                                     </IonRow>
                                 </IonRow>
                                 <IonRow className="containerConfig">
-                                    <IonButton className="btnConfigg">Configurações avançadas de estudo</IonButton>
-                                <IonIcon icon={caretForward} className="iconesSeta"/>
+                                    <IonButton className="btnConfigg" onClick={(e) => {
+                                        e.stopPropagation(); 
+                                        setView('perfil');
+                                    }}>Configurações de perfil</IonButton>
+                                    <IonIcon icon={caretForward} className="iconesSeta"/>
                                 </IonRow>
                                 <IonRow className="containerConfig">
-                                    <IonButton className="btnConfigg">Configurações de perfil</IonButton> 
-                                    <IonIcon icon={caretForward} className="iconesSeta"/>
+                                <IonButton className="btnConfigg" type="button" onClick={(e) => {
+                                        e.stopPropagation();
+                                        setView('estudo');
+                                        }}>Configurações avançadas de estudo</IonButton>
+                                    <IonIcon icon={caretForward} className="iconesSeta md" />
                                 </IonRow>
                             </IonRow>
                         </IonCol>
-                        <IonCol className="ladoConfig">
-                            <div id="infos">
-                                <h1 className="preto" id="h1Titulo">Informações do perfil</h1>
-                            </div>
-                        </IonCol>
+                        {view === 'perfil' && (
+                            <IonCol className="ladoConfig">
+                                <div id="infos">
+                                    <h1 className="preto" id="h1Titulo">Confgurações de perfil</h1>
+                                </div>
+                                <div id="flexColunas">
+                                <IonCol className="colunasConfig">
+                                    <p className="labelBio">Nome</p>
+                                    <IonInput
+                                        labelPlacement="stacked"
+                                        className="inputBio"
+                                    />
+                                    <p className="labelBio">Sobrenome</p>
+                                    <IonInput
+                                        labelPlacement="stacked"
+                                        className="inputBio"
+                                    />
+                                    <p className="labelBio">Email</p>
+                                    <IonInput
+                                        labelPlacement="stacked"
+                                        className="inputBio"
+                                    />
+                                    <p className="labelBio">Biografia</p>
+                                    <IonInput
+                                        labelPlacement="stacked"
+                                        className="inputBio"
+                                    />
+                                    <IonButton className="btnConfigBio" id="btnSalvarBio">Salvar</IonButton>
+                                </IonCol>
+                                <IonCol className="colunasConfig" id="col2">
+                                    <p className="labelBio">Alterar senha</p>
+                                    <IonInput
+                                        placeholder= "Senha atual"
+                                        labelPlacement="stacked"
+                                        className="inputBioSenha"
+                                    />
+                                    <IonInput
+                                        placeholder= "Nova senha"
+                                        labelPlacement="stacked"
+                                        className="inputBioSenha"
+                                    />
+                                    <IonInput
+                                        placeholder= "Cofirmar senha"
+                                        labelPlacement="stacked"
+                                        className="inputBioSenha"
+                                    />
+                                    <IonButton className="btnConfigBio" id="btnAlterarBio">Alterar</IonButton>
+                                    <div id="excSenha">
+                                        <IonRow className="msmLinha">
+                                            <IonCheckbox checked={isChecked} onIonChange={handleCheckboxChange} id="check"/>
+                                            <p className="excp" id="boldExc">Deseja excluir sua conta?</p>
+                                        </IonRow>
+                                        <IonRow className="msmLinha">
+                                            <IonIcon icon={warning} className="iconesBio"/>
+                                            <p className="excp">ATENÇÃO: essa ação não pode ser desfeita.</p>
+                                        </IonRow>
+                                        <IonRow>
+                                            <p className="excp">Ao confirmar essa ação, sua conta será apagada permanentemente e não poderá ser recuperada.</p>
+                                        </IonRow>
+                                        <IonRow>
+                                            <IonButton className="btnConfigBio">Confirmar</IonButton>
+                                        </IonRow>
+                                    </div>
+                                </IonCol>
+                                </div>
+                            </IonCol> 
+                        )} 
+                        {view === 'estudo' && (
+                            <IonCol className="ladoEstudo">
+                                <h1 className="preto" id="h1Titulo">Configurações avançadas de estudo</h1>
+                                <div id="flexColunasEstudo">
+                                <IonCol id="colDias">
+                                    <p className="pEstudo">Dias para o estudo semanal</p>
+                                    <IonRow>
+                                    <IonCol>
+                                        {diasSemana.slice(0, 3).map(dia => (
+                                        <IonRow key={dia} className="msmLinha">
+                                            <IonCheckbox
+                                            checked={diasSelecionados.includes(dia)}
+                                            onIonChange={() => toggleDia(dia)}
+                                            />
+                                            <p className="pDiaMat">{dia}</p>
+                                        </IonRow>
+                                        ))}
+                                    </IonCol>
+                                    <IonCol>
+                                        {diasSemana.slice(3).map(dia => (
+                                        <IonRow key={dia} className="msmLinha">
+                                            <IonCheckbox
+                                            checked={diasSelecionados.includes(dia)}
+                                            onIonChange={() => toggleDia(dia)}
+                                            />
+                                            <p className="pDiaMat">{dia}</p>
+                                        </IonRow>
+                                        ))}
+                                    </IonCol>
+                                    </IonRow>
+                                    <IonRow>
+                                    <IonCol>
+                                        {diasSelecionados.slice(0, 3).map(dia => (
+                                        <IonRow key={dia}>
+                                            <p>Horário - {dia}</p>
+                                            <IonInput
+                                            placeholder="Ex: 14h - 16h"
+                                            value={horariosEstudo[dia] || ''}
+                                            onIonChange={e => handleHorarioChange(dia, e.detail.value!)}
+                                            />
+                                        </IonRow>
+                                        ))}
+                                    </IonCol>
+                                    <IonCol>
+                                        {diasSelecionados.slice(3).map(dia => (
+                                        <IonRow key={dia}>
+                                            <p>Horário - {dia}</p>
+                                            <IonInput
+                                            placeholder="Ex: 14h - 16h"
+                                            value={horariosEstudo[dia] || ''}
+                                            onIonChange={e => handleHorarioChange(dia, e.detail.value!)}
+                                            />
+                                        </IonRow>
+                                        ))}
+                                    </IonCol>
+                                    </IonRow>
+
+                                    <IonRow>
+                                    <IonButton className="btnAddDM">+ Adicionar dia</IonButton>
+                                    </IonRow>
+                                </IonCol>
+
+                                <div id="linhaVertical">&nbsp;</div>
+
+                                <IonCol id="colMats">
+                                    <p className="pEstudo">Matérias cadastradas</p>
+                                    {materias.map((materia, index) => (
+                                    <IonRow key={index} className="msmLinha">
+                                        <IonCheckbox checked={true} />
+                                        <p className="pDiaMat">{materia}</p>
+                                    </IonRow>
+                                    ))}
+                                    <IonRow>
+                                    <IonButton className="btnAddDM">+ Adicionar</IonButton>
+                                    </IonRow>
+                                </IonCol>
+                                </div>
+                            </IonCol>
+                            )}        
                     </IonRow>    
                 </IonContent>
         </IonPage>

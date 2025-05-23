@@ -7,11 +7,12 @@
 }
 
 .icones {
-    font-size: 3rem; 
+    font-size: 2.5rem; 
     color: white;
 }
 
 .iconesTxt {
+    font-size: 1.1rem !important; 
     color: white;
     margin-left: 2%;
 }
