@@ -18,7 +18,7 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
 
   const handleLogar = async () => {
     try {
-      const response = await fetch('http://localhost:8000/auth/login', {
+      const response = await fetch('http://localhost:8000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,7 +30,8 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
 
       if (response.ok) {
         console.log('Usuário logado com sucesso:', data);
-        
+        localStorage.setItem('token', data.token); 
+
       } else {
         setErro(data.mensagem || 'Erro ao fazer login');
       }

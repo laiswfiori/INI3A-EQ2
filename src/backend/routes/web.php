@@ -2,27 +2,29 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use function Ramsey\Uuid\v1;
+
 $router->get('/', function () {
     return 'Hello, world!';
 });
 
-// Rotas públicas para registro e login (sem middleware)
-$router->group(['prefix' => 'auth'], function () use ($router) {
-    $router->post('register', 'AuthController@register');
+// Rotas públicas para registro e login
+
+$router->group(['prefix' => 'api'], function () use ($router) {
+    // Matches "/api/register
+   $router->post('register', 'AuthController@register');
+     // Matches "/api/login
     $router->post('login', 'AuthController@login');
-});
 
-// Rotas protegidas por autenticação JWT (middleware 'auth')
-$router->group(['middleware' => 'auth'], function () use ($router) {
-    $router->group(['prefix' => 'materias'], function () use ($router) {
-        $router->get('/', 'MateriasController@index');
-        $router->post('/', 'MateriasController@store');
-        $router->get('/{id}', 'MateriasController@show');
-        $router->put('/{id}', 'MateriasController@update');
-        $router->delete('/{id}', 'MateriasController@destroy');
-    });
+    // Matches "/api/profile
+    $router->get('profile', 'UserController@profile');
 
-    // Aqui pode colocar outras rotas protegidas, se quiser
+    // Matches "/api/users/1
+    //get one user by id
+    $router->get('users/{id}', 'UserController@singleUser');
+
+    // Matches "/api/users
+    $router->get('users', 'UserController@allUsers');
 });
 
 // Rotas públicas (sem middleware) — você pode proteger se desejar
@@ -33,6 +35,21 @@ $router->group(['prefix' => 'topicos'], function () use ($router) {
     $router->put('/{id}', 'TopicosController@update');
     $router->delete('/{id}', 'TopicosController@destroy');
 });
+
+$router->group(['middleware' => 'auth'], function () use ($router) {
+    $router->get('/materias', 'MateriasController@index');
+    $router->post('/materias', 'MateriasController@store');
+    $router->get('/materias/{id}', 'MateriasController@show');
+    $router->put('/materias/{id}', 'MateriasController@update');
+    $router->delete('/materias/{id}', 'MateriasController@destroy');
+});
+
+$router->get('/teste-auth', ['middleware' => 'auth', function () use ($router) {
+    return response()->json([
+        'authenticated' => true,
+        'user' => auth()->user()  // ou Auth::user() se estiver usando facade
+    ]);
+}]);
 
 $router->group(['prefix' => 'atividades'], function () use ($router) {
     $router->get('/', 'AtividadesController@index');

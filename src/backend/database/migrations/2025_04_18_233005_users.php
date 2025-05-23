@@ -13,7 +13,7 @@ return new class extends Migration
         { 
             $table->increments('id'); 
             $table->string('name', 255); 
-            $table->string('email', 255); 
+            $table->string('email', 255)->unique(); 
             $table->string('password', 255);
             $table->string('biography', 255)->nullable(); 
             
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void 
     { 
-        Schema::dropIfExists('usuarios'); 
+        Schema::dropIfExists('users'); 
     } 
 };
