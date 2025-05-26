@@ -1,9 +1,11 @@
 .altura {
   height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .pagPerfil {
-    height: 100% !important;
+  flex: 1; 
     display: grid;
     grid-template-columns: 1fr 3fr;
     grid-template-rows: 1fr;
@@ -37,9 +39,14 @@
     width: 100%;
     padding: 5%;
     display: flex;
-    align-items: flex-start;   
-    justify-content: space-around;   
+    align-items: center;   
+    justify-content: center;   
     height: fit-content;
+  }
+
+  .txtPading {
+    padding: 0 !important;
+    margin: 0 !important;
   }
   
   #iconePerfil {
@@ -66,7 +73,6 @@
 #dBranco {
   display: flex;
   flex-direction: column;
-  width: 90%;
   max-height: fit-content;
   height: fit-content; 
   overflow: hidden;

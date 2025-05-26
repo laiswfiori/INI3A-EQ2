@@ -41,13 +41,13 @@ const Perfil: React.FC = () => {
     return (
         <IonPage>
             <Header />
-                <IonContent  className="altura">
+                <IonContent fullscreen  className="altura">
                     <IonRow className="pagPerfil">
                         <IonCol className="ladoPerfil">
                             <IonRow id="img">
                                 <IonIcon icon={personCircle} id="iconePerfil"/>
                                 <div id="txtOi">
-                                    <p>Olá, <span>nome</span>.</p>
+                                    <p className="txtPading">Olá, <span>nome</span>.</p>
                                 </div>
                             </IonRow>
                             <IonRow id="linhaDivisora"></IonRow>
@@ -167,7 +167,7 @@ const Perfil: React.FC = () => {
                         {view === 'perfil' && (
                             <IonCol className="ladoConfig">
                                 <div id="infos">
-                                    <h1 className="preto" id="h1Titulo">Confgurações de perfil</h1>
+                                    <h1 className="preto" id="h1Titulo">Configurações de perfil</h1>
                                 </div>
                                 <div id="flexColunas">
                                 <IonCol className="colunasConfig">

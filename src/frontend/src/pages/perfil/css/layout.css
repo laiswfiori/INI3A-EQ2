@@ -1,0 +1,80 @@
+@media (max-width: 767px) {
+    #dBranco {
+        width: 100%;
+    }
+    .titConfig {
+        font-size: 1rem !important;
+    }
+    .pagPerfil { 
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+    }
+    .ladoPerfil {
+        grid-row-start: 1;
+        grid-row-end: 2;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 2fr;
+    }
+    #img {
+        grid-row-start: 1;
+        grid-row-end: 2;
+    }
+    .ladoConfig {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    h1 {
+        font-size: 1.3rem !important;
+    }
+    .btnConfigg {
+        font-size: 1.3rem !important;
+    }
+    .txtPading {
+        font-size: 2rem;
+    }
+    .btnAddDM {
+        width: 60% !important;
+    }
+    #dBranco {
+        width: 100%;
+    }
+    .titConfig {
+        font-size: 1.2rem !important;
+    }
+    .rowContainer {
+        height: fit-content !important;
+        max-height: fit-content !important;
+        padding: 0;
+    }
+    .switch {
+        height: 2em !important;
+        width: 4em !important;
+        font-size: 15px !important;
+    }
+    .toggleSwitch {
+        height: 1.2rem !important;
+        width: 1.2rem !important;
+    }
+    .containerNotif {
+        width: 1.8rem !important;
+        padding-bottom: 1%;
+    }
+    .buttonPref {
+        width: 2rem !important;
+        height: 2rem !important;
+        left: 6% !important;
+    }
+}
+
+@media (min-width: 1025px) {
+    #dBranco {
+        width: 90%;
+    }
+    .titConfig {
+        font-size: 1.5rem !important;
+    }
+}

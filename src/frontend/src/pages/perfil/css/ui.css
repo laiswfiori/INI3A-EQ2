@@ -6,6 +6,8 @@
     color: white;
     font-size: 3rem;
     font-weight: 600;
+    align-self: center;
+    text-align: center;
 }
 
 h1 {
@@ -68,7 +70,6 @@ ion-button.btnConfigg::part(native) {
 }
 
 .titConfig {
-    font-size: 1.5rem !important;
     margin: 0 !important;
 }
 

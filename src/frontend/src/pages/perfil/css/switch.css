@@ -95,12 +95,11 @@
   
 
 
-/* The switch - the box around the speaker */
 .toggleSwitch {
-    width: 10vw;              /* Usa viewport width para ser responsivo */
-    max-width: 50px;          /* Limita o tamanho máximo */
+    width: 10vw;              
+    max-width: 50px;         
     height: 10vw;
-    max-height: 50px;         /* Limita a altura máxima */
+    max-height: 50px;      
     position: relative;
     display: flex;
     align-items: center;
@@ -265,7 +264,7 @@
 
 .containerNotif {
     --color: #a5a5b0;
-    width: 30px;
+    width: 2.2rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -388,8 +387,8 @@
 
 
   .buttonPref {
-    width: 50px;
-    height: 50px;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
     background-color: rgb(20, 20, 20);
     border: none;
