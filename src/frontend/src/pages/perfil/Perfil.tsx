@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IonPage, IonContent, IonCol, IonRow, IonIcon, IonButton, IonInput, IonCheckbox  } from '@ionic/react';
-import { caretForward, personCircle, warning } from 'ionicons/icons';
+import { caretForward, personCircle, warning, logOut } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -41,7 +41,7 @@ const Perfil: React.FC = () => {
     return (
         <IonPage>
             <Header />
-                <IonContent>
+                <IonContent  className="altura">
                     <IonRow className="pagPerfil">
                         <IonCol className="ladoPerfil">
                             <IonRow id="img">
@@ -141,15 +141,26 @@ const Perfil: React.FC = () => {
                                     <IonButton className="btnConfigg" onClick={(e) => {
                                         e.stopPropagation(); 
                                         setView('perfil');
-                                    }}>Configurações de perfil</IonButton>
-                                    <IonIcon icon={caretForward} className="iconesSeta"/>
+                                    }}>Configurações de perfil
+                                        <IonIcon icon={caretForward} className="iconesSeta"/>
+                                    </IonButton>
+                                    
                                 </IonRow>
                                 <IonRow className="containerConfig">
                                 <IonButton className="btnConfigg" type="button" onClick={(e) => {
                                         e.stopPropagation();
                                         setView('estudo');
-                                        }}>Configurações avançadas de estudo</IonButton>
-                                    <IonIcon icon={caretForward} className="iconesSeta md" />
+                                        }}>Configurações avançadas de estudo
+                                            <IonIcon icon={caretForward} className="iconesSeta" />
+                                        </IonButton>
+                                </IonRow>
+                                <IonRow className="containerConfig">
+                                    <IonButton className="btnConfigg" type="button" onClick={(e) => {
+                                        e.stopPropagation();
+                                        }}>
+                                            <IonIcon icon={logOut} className="iconeSair" />
+                                            Sair
+                                    </IonButton>
                                 </IonRow>
                             </IonRow>
                         </IonCol>

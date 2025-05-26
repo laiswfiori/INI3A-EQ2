@@ -22,7 +22,6 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 5%;
     padding: 0;
     cursor: pointer !important;
     pointer-events: auto;
@@ -42,6 +41,12 @@ ion-button.btnConfigg::part(native) {
 
 .btnConfigg:hover {
     color: #00296b;
+    .iconeSair {
+        color:  #00296b;;
+    }
+    .iconesSeta {
+        color:  #00296b;;
+    }
 }
 
 .preto {
@@ -54,6 +59,12 @@ ion-button.btnConfigg::part(native) {
 
 .iconesSeta {
     color: white;
+    font-size: 1.5rem;
+}
+
+.iconeSair {
+    color: white;
+    font-size: 2rem;
 }
 
 .titConfig {
