@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonRow } from '@ionic/react';
 import './css/geral.css';
 import './css/layout.css';
 import './css/ui.css';
@@ -49,8 +49,8 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
 
   
   return (
-   // <IonPage>
-     // <Header />
+   //<IonPage>
+     //<Header/>
         <div id="body">
           <div className="cadastro-container">
             <div className="div1">
@@ -98,7 +98,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
             </div>
           </div>
         </div>
-     //   </IonPage>
+    //</IonPage>
   );
 };
 

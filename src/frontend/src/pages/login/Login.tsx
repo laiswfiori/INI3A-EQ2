@@ -48,7 +48,7 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
         <div className="loginContainer">
             <div className="div1">
                 <div id="apresentacao">
-                <IonRow><h1><b>Sentimos saudades!</b></h1></IonRow>
+                <IonRow><h1 className="preto"><b>Sentimos saudades!</b></h1></IonRow>
                 <IonRow><h2>Pronto para começar?</h2></IonRow>
                 </div>
                 <div id="img">
@@ -60,7 +60,7 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
             </div>
 
             <div className="div2">
-                <h1><b>Login</b></h1>
+                <h1 className="preto"><b>Login</b></h1>
                 <h3 id="conta"> Não possui uma conta?
                 <IonButton onClick={goToCadastro} className="btnCadastrar">Cadastre-se</IonButton>
                 </h3>

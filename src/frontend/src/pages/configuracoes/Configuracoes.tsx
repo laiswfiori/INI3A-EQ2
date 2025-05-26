@@ -11,13 +11,13 @@ const Configuracoes: React.FC = () => {
           <div className="div1">
             <h1><b>Agradecemos por se juntar a nós!</b></h1>
             <h4>Seu cadastro foi efetivado! Você está quase lá!</h4><br />
-            <h3><b>Configurações de seu plano de estudos</b></h3>
+            <h3><b>Configure seu plano de estudos</b></h3>
             <h4> *Lembre-se de criar um plano que se adeque a sua rotina.*</h4>
             <div>
                 <h4><b>Dias para o estudo semanal</b></h4>
                 <input type = "text" placeholder="+ Adicionar dias"/>
                 <h4><b>Horários de estudo dia X</b></h4>
-                <input type = "text" placeholder="w-h horas"/>
+                <input type = "text" placeholder="10-12 horas"/>
                 <h4><b>Matérias cadastradas</b></h4>
                 <input type = "text" placeholder="+ Adicionar matérias"/><br />
                 <IonButton className="botao">Salvar</IonButton>
