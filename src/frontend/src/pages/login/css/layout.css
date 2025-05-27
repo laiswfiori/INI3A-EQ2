@@ -49,16 +49,31 @@
         border-bottom-right-radius: 5%;
     }
 
+    
     h1{
+        font-size: 1.5rem !important;
         color:black !important;
+    }
+    h2{
+        font-size: 1.1rem !important;
+    }
+    h3{
+        font-size: 0.9rem !important;
     }
 }
 
 @media (min-width: 425px) and (max-width: 767px){
     .loginContainer{
         height: fit-content;
+        margin-top: 18% !important;
     }
-    
+    .div2{
+        margin-top: 12%;
+    }
+    .div1{
+        border-top-left-radius: 10%;
+    }
+ 
 }
 
 @media (max-width: 767px) {
@@ -66,11 +81,12 @@
         grid-template-rows: 1fr 1fr;  
         grid-template-columns: 1fr;
         height: fit-content;
-        gap: 0;
         border-radius: 20px !important;
         height: 100vh;
         padding: 5%;
         padding-bottom: 25%;
+        margin-top: 5%;
+        margin-bottom: 14%;
     }
 
     .div1{
@@ -85,6 +101,7 @@
         border-top-left-radius: 5%;
         border-top-right-radius: 5%;
         width: 100%;
+        margin-top: 10%;
 
         #img{
             display: flex;
@@ -105,13 +122,16 @@
         border-bottom-right-radius: 5%;
         border-bottom-left-radius: 5%;
         width: 100%;
+        margin-bottom: 10%;
+        padding-top: 7%;
     }
+    
     h1{
         font-size: 1.5rem !important;
         color:black !important;
     }
     h2{
-        font-size: 1.2rem !important;
+        font-size: 1.1rem !important;
     }
     h3{
         font-size: 0.9rem !important;
@@ -120,7 +140,7 @@
 
 @media (max-width: 320px) {
     .loginContainer{
-        grid-template-rows: 1fr 4fr 4fr 1fr;  
+        grid-template-rows: 4fr 4fr;  
         grid-template-columns: 1fr;
         height: fit-content;
         border-radius: 20px !important;
@@ -128,7 +148,7 @@
     }
 
     .div1{
-        grid-row-start: 2;
+        grid-row-start: 1;
         grid-column-start: 1;
         display: flex;
         align-items: center;
@@ -139,6 +159,7 @@
         border-top-left-radius: 5%;
         border-top-right-radius: 5%;
         width: 100%;
+        padding-bottom: 5px;
 
         #img{
             display: flex;
@@ -151,21 +172,27 @@
             flex-direction: column;
             align-items: center;
         }
+        h2{
+            padding-left: 0.1%;
+        }
     }
     .div2{
-        grid-row-start: 3;
+        grid-row-start: 2;
         grid-column-start: 1;
         height: 100%;
         border-bottom-right-radius: 5%;
         border-bottom-left-radius: 5%;
         width: 85%;
+        .preto{
+            padding-top: 8%;
+        }
     }
     h1{
         font-size: 1.5rem !important;
         color:black !important;
     }
     h2{
-        font-size: 1.2rem !important;
+        font-size: 1.0rem !important;
     }
     h3{
         font-size: 0.9rem !important;
