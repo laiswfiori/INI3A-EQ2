@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonRow, IonLabel } from '@ionic/react';
 import './css/geral.css';
 import './css/ui.css';
@@ -11,6 +12,7 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
+  const history = useHistory();
   const [email, setEmail] = useState('');
   const [password, setSenha] = useState('');
   const [erro, setErro] = useState('');
@@ -31,7 +33,8 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
       if (response.ok) {
         console.log('Usuário logado com sucesso:', data);
         localStorage.setItem('token', data.token); 
-
+        history.push('/pagInicial/home');
+        window.location.reload();
       } else {
         setErro(data.mensagem || 'Erro ao fazer login');
       }

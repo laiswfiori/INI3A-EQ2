@@ -19,10 +19,11 @@ class MateriasController extends Controller
     //Auth::id() retorna o ID do usuário autenticado
     public function index()
     {
-        $user = auth()->user(); // pega o usuário autenticado
-        $userId = $user->id;
-        
+        $userId = Auth::id(); // ID do usuário logado
+
+        // Filtra apenas as matérias daquele usuário
         $materias = Materia::where('usuario_id', $userId)->get();
+
         return response()->json($materias);
     }
 
