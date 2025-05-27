@@ -1,6 +1,20 @@
 @media (max-width: 767px) {
+    #lDesktop {
+        display: none;
+    }
+    .pagPerfil {
+        flex: 1; 
+        display: flex;
+        flex-direction: column;
+    }
     #dBranco {
         width: 100%;
+        border: 2px solid #3da5d9;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    h1 {
+        color: black;
     }
     .titConfig {
         font-size: 1rem !important;
@@ -10,23 +24,16 @@
         grid-template-columns: 1fr;
         grid-template-rows: 1fr;
     }
-    .ladoPerfil {
+    .img {
         grid-row-start: 1;
         grid-row-end: 2;
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 2fr;
-    }
-    #img {
-        grid-row-start: 1;
-        grid-row-end: 2;
-    }
-    .ladoConfig {
-        display: none;
     }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
+    #lMobile {
+        display: none;
+    }
     h1 {
         font-size: 1.3rem !important;
     }
@@ -71,6 +78,9 @@
 }
 
 @media (min-width: 1025px) {
+    #lMobile {
+        display: none;
+    }
     #dBranco {
         width: 90%;
     }
