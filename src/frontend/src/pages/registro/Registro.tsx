@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonRow } from '@ionic/react';
 import './css/geral.css';
 import './css/layout.css';
@@ -11,6 +12,7 @@ interface RegistroProps {
 }
 
 const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
+  const history = useHistory();
   const [name, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [password, setSenha] = useState('');
@@ -29,7 +31,6 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
         },
         body: JSON.stringify({ name, email, password }),
       });
-      console.log(password);
 
       const data = await response.json();
 
@@ -39,6 +40,8 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
         setEmail('');
         setSenha('');
         localStorage.setItem('token', data.token); 
+        history.push('/pagInicial/home');
+        window.location.reload();
       } else {
         setErro(data.mensagem || 'Erro ao cadastrar usuário.');
       }

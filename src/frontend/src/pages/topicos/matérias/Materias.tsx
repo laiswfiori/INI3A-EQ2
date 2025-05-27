@@ -140,7 +140,7 @@ const Materias: React.FC = () => {
   };
 
   const handleAdicionar = () => {
-    setNovaMateria({ nome: '' });
+    setNovaMateria({ nome: novaMateria.nome });
     setModoModal('adicionar');
     setShowModal(true);
   };
