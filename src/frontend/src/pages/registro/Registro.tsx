@@ -22,7 +22,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
     setMensagem('');
 
     try {
-      const response = await fetch('http://localhost:8000/auth/register', {
+      const response = await fetch('http://localhost:8000/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,6 +38,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
         setNome('');
         setEmail('');
         setSenha('');
+        localStorage.setItem('token', data.token); 
       } else {
         setErro(data.mensagem || 'Erro ao cadastrar usuário.');
       }

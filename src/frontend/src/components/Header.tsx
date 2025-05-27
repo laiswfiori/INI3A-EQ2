@@ -10,21 +10,46 @@ const Header: React.FC = () => {
   const history = useHistory();
   const [menuAberto, setMenuAberto] = useState(false);
 
+  const isAuthenticated = () => {
+    const token = localStorage.getItem('token');
+    return !!token;
+  };
+
   const navHome = () => {
-    history.push('/pagInicial/home');
-  }
+      history.push('/pagInicial/home');
+  };
+
   const navAgenda = () => {
-    history.push('/agenda/agenda');
-  }
+    if (isAuthenticated()) {
+      history.push('/agenda/agenda');
+    } else {
+      history.push('/logincadastro/logincadastro');
+    }
+  };
+
   const navFlashcards = () => {
-    history.push('/flashcards/telainicialflashcards');
-  }
+    if (isAuthenticated()) {
+      history.push('/flashcards/telainicialflashcards');
+    } else {
+      history.push('/logincadastro/logincadastro');
+    }
+  };
+
   const navConteudos = () => {
-    history.push('/topicos/materias');
-  }
+    if (isAuthenticated()) {
+      history.push('/topicos/materias');
+    } else {
+      history.push('/logincadastro/logincadastro');
+    }
+  };
+
   const navPerfil = () => {
-    history.push('/logincadastro/logincadastro');
-  }
+    if (isAuthenticated()) {
+      history.push('/perfil/perfil');
+    } else {
+      history.push('/logincadastro/logincadastro');
+    }
+  };
 
   const toggleMenu = () => {
     setMenuAberto(!menuAberto);
