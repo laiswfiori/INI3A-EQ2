@@ -189,3 +189,59 @@
   background-color: #fff;
   font-weight: 600;
 }
+
+#confGerais, #confPerfil, #confSeg, #confEstudo {
+  margin-top: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.paddingConf {
+  padding-left: 5%;
+}
+
+.labelBioM {
+    color: black !important;
+    font-size: 1.2rem !important;
+    font-weight: bold;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+ion-input.inputBioM {
+    padding: 0;
+}
+
+.inputBioM {
+    font-size: 1rem;
+}
+
+.inputBioM {
+    border: 2px solid #d6d6d6; 
+    border-radius: 8px;        
+    padding-right: 1%;     
+    padding-left: 1%;
+    padding-top: 0 !important;    
+    padding-bottom: 0 !important;         
+    width: 90%;                
+    box-sizing: border-box; 
+    height: 1.5rem;    
+  }
+
+.contBtn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.inputBioSenhaM {
+  width: 90% !important;
+}
+
+.flexRow {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+}

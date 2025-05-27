@@ -125,7 +125,7 @@ ion-input.inputBio{
     box-sizing: border-box;     
   }
 
-.inputBioSenha {
+.inputBioSenha, .inputBioSenhaM {
     margin-bottom: 2%;
     border: 2px solid #d6d6d6; 
     border-radius: 8px;        
@@ -161,7 +161,7 @@ ion-button.btnConfigBio::part(native):hover {
     margin-bottom: 3%;
 }
 
-#excSenha {
+#excSenha, #excSenhaM {
     border-radius: 20px;
     background-color: #ea7317;
     padding-left: 5%;
@@ -169,14 +169,28 @@ ion-button.btnConfigBio::part(native):hover {
     padding-right: 2%;
 }
 
+#excSenhaM {
+    margin-right: 5% !important;
+}
+
 #boldExc {
     font-weight: 700;
     font-size: 1.4rem;
 }
 
+#boldExcM {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
 .excp {
     color: white;
     font-size: 1.2rem;
+}
+
+.excpM {
+    color: white;
+    font-size: 1rem;
 }
 
 .iconesBio {
@@ -186,6 +200,12 @@ ion-button.btnConfigBio::part(native):hover {
 
 #linhaVertical {
     width: 2px !important;
+    border-right: 2px dotted #ea7317;
+    margin-right: 2%;
+}
+
+#linhaHorizontal {
+    width: 100% !important;
     border-right: 2px dotted #ea7317;
     margin-right: 2%;
 }
@@ -222,3 +242,4 @@ ion-checkbox {
     --border-color-checked: #058f00 !important;
     --checkmark-color: white !important;
   }
+
