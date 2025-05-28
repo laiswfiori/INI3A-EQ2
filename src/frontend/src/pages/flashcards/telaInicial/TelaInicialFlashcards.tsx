@@ -1,11 +1,27 @@
-import React, { useState, useEffect} from 'react';
-import { IonPage, IonContent, IonIcon, IonButton, IonPopover, IonGrid, IonRow, IonCol } from '@ionic/react';
+import React, { useState, useEffect } from 'react';
+import {
+  IonPage,
+  IonContent,
+  IonIcon,
+  IonButton,
+  IonPopover,
+  IonGrid,
+  IonRow,
+  IonCol,
+} from '@ionic/react';
 import Header from '../../../components/Header';
-import { alertCircle, school, close, chevronDown, chevronUp } from 'ionicons/icons';
+import {
+  alertCircle,
+  school,
+  close,
+  chevronDown,
+  chevronUp,
+} from 'ionicons/icons';
 import './css/geralTelaInicial.css';
 import './css/uiTelaInicial.css';
 import './css/layoutsTelaInicial.css';
 import './css/pie.css';
+import API from '../../../lib/api';
 
 interface Topico {
   id: number;
@@ -22,6 +38,9 @@ interface Materia {
   usuario_id: number;
   topicos: Topico[];
 }
+
+// Crie a instância da API uma vez
+const api = new API();
 
 const TelaInicialFlashcards: React.FC = () => {
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
@@ -46,22 +65,34 @@ const TelaInicialFlashcards: React.FC = () => {
     }));
   };
 
+  // Busca dados da API
   useEffect(() => {
-    fetch('http://localhost:8000/materias')
-      .then((res) => res.json())
-      .then(setMaterias)
-      .catch((err) => console.error('Erro ao buscar matérias:', err));
-
-    fetch('http://localhost:8000/topicos')
-      .then((res) => res.json())
-      .then(setTopicos)
-      .catch((err) => console.error('Erro ao buscar tópicos:', err));
+    const fetchMaterias = async () => {
+      try {
+        const materiasData: Materia[] = await api.get('materias');
+        setMaterias(materiasData);
+      } catch (error) {
+        console.error('Erro ao buscar matérias:', error);
+      }
+    };
+  
+    const fetchTopicos = async () => {
+      try {
+        const topicosData: Topico[] = await api.get('topicos');
+        setTopicos(topicosData);
+      } catch (error) {
+        console.error('Erro ao buscar tópicos:', error);
+      }
+    };
+  
+    fetchMaterias();
+    fetchTopicos();
   }, []);
 
   return (
     <IonPage className="pagina">
       <Header />
-      <IonContent>
+      <IonContent style={{ background: '#fff' }}>
         <IonGrid id="bodyTelaInicialFlashcards">
           <IonRow id="revisao">
             <IonCol id="dCapelo">
@@ -71,9 +102,7 @@ const TelaInicialFlashcards: React.FC = () => {
               <p className="txtGeral">Revisão do dia!</p>
               <IonButton className="revisaoGeral">
                 <span className="textIniciar">Iniciar</span>
-                <span className="svg">
-                  {/* SVG omitido para brevidade */}
-                </span>
+                <span className="svg">{/* SVG omitido */}</span>
               </IonButton>
             </IonCol>
             <IonCol id="d2">
@@ -124,47 +153,55 @@ const TelaInicialFlashcards: React.FC = () => {
           </IonRow>
 
           <IonRow id="divisoes">
-            <IonRow id="linhaDecks">
-              <p id="pDecks">Decks atuais</p>
-            </IonRow>
+            <IonCol>
+              <div id="linhaDecks">
+                <p id="pDecks">Decks atuais</p>
+              </div>
+            </IonCol>
           </IonRow>
 
           <IonRow id="decks">
             <IonCol>
-              {materias.map((materia) => {
-                const topicosDaMateria = topicos.filter((t) => t.materia_id === materia.id);
+              {materias.length > 0 ? (
+                materias.map((materia) => {
+                  const topicosDaMateria = topicos.filter((t) => t.materia_id === materia.id);
 
-                return (
-                  <div key={materia.id}>
-                    <IonButton
-                      type="button"
-                      expand="block"
-                      onClick={() => toggleExpand(materia.id)}
-                      color="light"
-                      className="listaTopicos"
-                    >
-                      <span>{materia.nome}</span>
-                      <IonIcon icon={expandedMaterias[materia.id] ? chevronUp : chevronDown} />
-                    </IonButton>
+                  return (
+                    <div key={materia.id}>
+                      <IonButton
+                        type="button"
+                        expand="block"
+                        onClick={() => toggleExpand(materia.id)}
+                        color="light"
+                        className="listaTopicos"
+                      >
+                        <span>{materia.nome}</span>
+                        <IonIcon icon={expandedMaterias[materia.id] ? chevronUp : chevronDown} />
+                      </IonButton>
 
-                    {expandedMaterias[materia.id] && (
-                      <ul className="listaTopicos">
-                        {topicosDaMateria.length > 0 ? (
-                          topicosDaMateria.map((topico) => (
-                            <li key={topico.id}>
-                              <div className="topico-box">{topico.titulo}</div>
+                      {expandedMaterias[materia.id] && (
+                        <ul className="listaTopicos">
+                          {topicosDaMateria.length > 0 ? (
+                            topicosDaMateria.map((topico) => (
+                              <li key={topico.id}>
+                                <div className="topico-box">{topico.titulo}</div>
+                              </li>
+                            ))
+                          ) : (
+                            <li className="listaTopicos">
+                              <i>Sem tópicos criados :(</i>
                             </li>
-                          ))
-                        ) : (
-                          <li className="listaTopicos">
-                            <i>Sem tópicos criados :(</i>
-                          </li>
-                        )}
-                      </ul>
-                    )}
-                  </div>
-                );
-              })}
+                          )}
+                        </ul>
+                      )}
+                    </div>
+                  );
+                })
+              ) : (
+                <p style={{ padding: '1rem' }}>
+                  <i>Nenhuma matéria disponível.</i>
+                </p>
+              )}
             </IonCol>
           </IonRow>
         </IonGrid>
