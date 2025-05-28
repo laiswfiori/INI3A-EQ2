@@ -111,7 +111,7 @@
   padding-right: 5%;
 }
 
-.containerConfig {
+.containerConfig, .containerConfigM {
   text-align: center;
   padding: 0;
   display: flex;
@@ -119,6 +119,11 @@
   justify-content: flex-start;
   align-items: center;
   margin-top: 2%;
+}
+
+.containerConfigM {
+  width: 100%;
+  margin-left: 5%;
 }
 
 .ladoConfig, .ladoEstudo {
@@ -195,6 +200,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.txtCentro {
+  text-align: center;
 }
 
 .paddingConf {

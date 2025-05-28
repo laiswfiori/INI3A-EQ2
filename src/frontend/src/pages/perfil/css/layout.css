@@ -88,3 +88,19 @@
         font-size: 1.5rem !important;
     }
 }
+
+@media (max-width: 320px) {
+    .diasContainer {
+        display: none;
+    }
+    .diasContainer2 {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 321px) and (max-width: 425px) {
+    .diasContainer2 {
+        display: none;
+    }
+}

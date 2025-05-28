@@ -51,6 +51,46 @@ ion-button.btnConfigg::part(native) {
     }
 }
 
+.iconeSairM {
+    color: white;
+}
+
+.btnConfiggM:hover {
+    color: #00296b;
+    .iconeSairM {
+        color:  #00296b;;
+    }
+}
+
+.btnConfiggM {
+    all: unset;
+    color: white;
+    font-size: 1rem !important;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    cursor: pointer !important;
+    pointer-events: auto;
+    z-index: 1;
+    position: relative;
+    background-color: #3da5d9;
+    width: 20%;
+    height: 2.2rem;
+    border-radius: 20px;
+}
+
+ion-button.btnConfiggM::part(native) {
+    all: unset;
+    width: auto;
+    text-align: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
 .preto {
     color: black !important;
 }

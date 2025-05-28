@@ -187,7 +187,7 @@ const Perfil: React.FC = () => {
                                        e.stopPropagation();
                                        logout();
                                    }}>
-                                       <IonIcon icon={logOut} className="iconeSair" />
+                                    <IonIcon icon={logOut} className="iconeSair" />
                                        Sair
                                    </IonButton>
                                </IonRow>
@@ -540,7 +540,7 @@ const Perfil: React.FC = () => {
                        )}
                        {mobileView === 'estudo' && (
                        <IonRow id="confEstudo">
-                           <h1>Configurações avançadas de estudo</h1>
+                           <h1 className="txtCentro">Configurações avançadas de estudo</h1>
                            <IonRow className="flexRow">
                                <IonRow className="flexRow">
                                    <IonRow>
@@ -557,27 +557,56 @@ const Perfil: React.FC = () => {
                                        </IonRow>
                                        ))}
                                    </IonRow>
-                               </IonRow>
-
-
-                               {diasSelecionados.length > 0 && (
-                               <IonRow className="flexRow horariosContainer">
-                                   {diasSelecionados.map(dia => (
-                                   <IonRow key={`horario-${dia}`} className="horarioRow">
-                                       <p className="labelHorario">Horário - {dia}</p>
-                                       <IonInput
-                                       placeholder="Ex: 14h - 16h"
-                                       value={horariosEstudo[dia] || ''}
-                                       onIonChange={e => handleHorarioChange(dia, e.detail.value!)}
-                                       className="inputHorario"
-                                       />
+                                   <IonRow className="diasContainer2">
+                                        <IonRow>
+                                               {diasSemana.slice(0, 3).map(dia => (
+                                                   <IonRow key={dia} className="msmLinha">
+                                                       <IonCheckbox
+                                                           checked={diasSelecionados.includes(dia)}
+                                                           onIonChange={() => toggleDia(dia)}
+                                                       />
+                                                       <p className="pDiaMat">{dia}</p>
+                                                   </IonRow>
+                                               ))}
+                                        </IonRow>
+                                        <IonRow>
+                                               {diasSemana.slice(3).map(dia => (
+                                                   <IonRow key={dia} className="msmLinha">
+                                                       <IonCheckbox
+                                                           checked={diasSelecionados.includes(dia)}
+                                                           onIonChange={() => toggleDia(dia)}
+                                                       />
+                                                       <p className="pDiaMat">{dia}</p>
+                                                   </IonRow>
+                                               ))}
+                                        </IonRow>
                                    </IonRow>
-                                   ))}
                                </IonRow>
-                               )}
-
-
-                               <IonRow className="flexRow">
+                                    <IonCol>
+                                        {diasSelecionados.slice(0, 3).map(dia => (
+                                            <IonRow key={dia}>
+                                                <p>Horário - {dia}</p>
+                                                <IonInput
+                                                    placeholder="Ex: 14h - 16h"
+                                                    value={horariosEstudo[dia] || ''}
+                                                    onIonChange={e => handleHorarioChange(dia, e.detail.value!)}
+                                                />
+                                            </IonRow>
+                                        ))}
+                                    </IonCol>
+                                    <IonCol>
+                                        {diasSelecionados.slice(3).map(dia => (
+                                            <IonRow key={dia}>
+                                                <p>Horário - {dia}</p>
+                                                <IonInput
+                                                    placeholder="Ex: 14h - 16h"
+                                                    value={horariosEstudo[dia] || ''}
+                                                    onIonChange={e => handleHorarioChange(dia, e.detail.value!)}
+                                                />
+                                            </IonRow>
+                                        ))}
+                                    </IonCol>
+                              <IonRow className="flexRow">
                                <IonButton className="btnAddDM">+ Adicionar dia</IonButton>
                                </IonRow>
 
@@ -604,6 +633,15 @@ const Perfil: React.FC = () => {
                            </IonRow>
                            </IonRow>
                        )}
+                       <IonRow className="containerConfigM">
+                            <IonButton className="btnConfiggM" type="button" onClick={(e) => {
+                                e.stopPropagation();
+                                logout();
+                            }}>
+                            <IonIcon icon={logOut} className="iconeSairM" />
+                                Sair
+                            </IonButton>
+                        </IonRow>
                    </IonRow>
                </IonRow>
            </IonContent>

@@ -1,22 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {
-  IonPage,
-  IonContent,
-  IonIcon,
-  IonButton,
-  IonPopover,
-  IonGrid,
-  IonRow,
-  IonCol,
-} from '@ionic/react';
+import { IonPage, IonContent, IonIcon, IonButton, IonPopover, IonGrid, IonRow, IonCol } from '@ionic/react';
 import Header from '../../../components/Header';
-import {
-  alertCircle,
-  school,
-  close,
-  chevronDown,
-  chevronUp,
-} from 'ionicons/icons';
+import { alertCircle, school, close, chevronDown, chevronUp } from 'ionicons/icons';
 import './css/geralTelaInicial.css';
 import './css/uiTelaInicial.css';
 import './css/layoutsTelaInicial.css';
@@ -39,7 +24,6 @@ interface Materia {
   topicos: Topico[];
 }
 
-// Crie a instância da API uma vez
 const api = new API();
 
 const TelaInicialFlashcards: React.FC = () => {
@@ -65,7 +49,6 @@ const TelaInicialFlashcards: React.FC = () => {
     }));
   };
 
-  // Busca dados da API
   useEffect(() => {
     const fetchMaterias = async () => {
       try {
@@ -153,15 +136,13 @@ const TelaInicialFlashcards: React.FC = () => {
           </IonRow>
 
           <IonRow id="divisoes">
-            <IonCol>
-              <div id="linhaDecks">
+              <IonRow id="linhaDecks">
                 <p id="pDecks">Decks atuais</p>
-              </div>
-            </IonCol>
+              </IonRow>
           </IonRow>
 
-          <IonRow id="decks">
-            <IonCol>
+          <IonRow id="decks" className="p0">
+            <IonCol className="p0">
               {materias.length > 0 ? (
                 materias.map((materia) => {
                   const topicosDaMateria = topicos.filter((t) => t.materia_id === materia.id);
@@ -172,11 +153,11 @@ const TelaInicialFlashcards: React.FC = () => {
                         type="button"
                         expand="block"
                         onClick={() => toggleExpand(materia.id)}
-                        color="light"
-                        className="listaTopicos"
+                        className="listaTopicos botaoMateria"
                       >
-                        <span>{materia.nome}</span>
-                        <IonIcon icon={expandedMaterias[materia.id] ? chevronUp : chevronDown} />
+                        <span className="largura">{materia.nome}
+                          <IonIcon icon={expandedMaterias[materia.id] ? chevronUp : chevronDown} />
+                        </span>
                       </IonButton>
 
                       {expandedMaterias[materia.id] && (

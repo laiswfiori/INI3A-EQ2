@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: column;
     margin-top: 2%;
+    padding: 0;
 }
 
 #btnAlerta, .revisaoGeral {
@@ -23,6 +24,13 @@
     display: flex;
     flex-direction: column;
 }
+
+.p0 {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 
 #linhaDecks {
     margin-top: 1%;
@@ -98,9 +106,31 @@ ion-popover.popoverGeral::part(content) {
   }
 
   .listaTopicos {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    all: unset;
     padding: 0;
     margin: 0;
   }
+
+.listaTopicos::part(native) {
+    all: unset;
+    display: flex  !important;
+    justify-content: flex-start !important;
+    align-items: flex-start  !important;
+    background-color: #e9873c;
+    border: 4px solid #fde797;
+    width: 100%;
+}
+
+.botaoMateria::part(native) {
+    justify-content: flex-start !important;
+    text-align: left !important;
+  }
+
+.largura {
+    width: 100%;
+    padding-left: 0.5%;
+    height: 100%;
+    display: flex  !important;
+    justify-content: flex-start !important;
+    align-items: center  !important;
+}
