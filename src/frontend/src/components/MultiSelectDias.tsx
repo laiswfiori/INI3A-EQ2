@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import Select, { MultiValue } from 'react-select';
 
 type DiaSemanaOption = {
-    value: string;
-    label: string;
-  };
+  value: string;
+  label: string;
+};
 
 const opcoesDias = [
   { value: 'segunda', label: 'Segunda-feira' },
@@ -19,20 +19,24 @@ const opcoesDias = [
 const MultiSelectDias: React.FC = () => {
   const [diasSelecionados, setDiasSelecionados] = useState<MultiValue<DiaSemanaOption>>([]);
 
-  const handleChange = (selectedOptions:  MultiValue<DiaSemanaOption>) => {
+  const handleChange = (selectedOptions: MultiValue<DiaSemanaOption>) => {
     setDiasSelecionados(selectedOptions);
     console.log('Dias selecionados:', selectedOptions);
   };
 
   return (
-    <div style={{ padding: '16px' }}>
-      <label style={{ marginBottom: '8px', display: 'block' }}>Selecione os dias da semana:</label>
+    <div>
+      <h2 style={{ textAlign: 'left' }}>Selecione os dias da semana:</h2>
       <Select
-        isMulti 
+        isMulti
         options={opcoesDias}
         value={diasSelecionados}
         onChange={handleChange}
         placeholder="Escolha os dias..."
+        menuPortalTarget={document.body}
+        styles={{
+          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+        }}
       />
     </div>
   );
