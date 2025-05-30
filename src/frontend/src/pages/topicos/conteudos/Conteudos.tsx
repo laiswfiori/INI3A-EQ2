@@ -27,11 +27,17 @@ const Conteudos: React.FC = () => {
   const [topicoSelecionado, setTopicoSelecionado] = useState<Topico | null>(null);
   const configButtonRef = useRef<HTMLIonButtonElement | null>(null);
   const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
+  const [erro, setErro] = useState('');
+  const [mensagem, setMensagem] = useState('');
+  const [titulo, setTitulo] = useState('');
+  const [status, setStatus] = useState('');
+  const [descricao, setDescricao] = useState<string | null>(null);
+
+  const history = useHistory();
 
   
   const { id } = useParams<{ id: string }>();
 
-  const history = useHistory();
 
   useEffect(() => {
     fetchTopicos();
@@ -39,10 +45,10 @@ const Conteudos: React.FC = () => {
 
 
   const [novoTopico, setNovoTopico] = useState({
-    nome: '',
-    materia: '',
+    titulo: '',
+    materia_id: parseInt(id),
     status: '',
-    descricao: '',
+    descricao: descricao === '' ? null : descricao,
   });
 
   const api = new API();
@@ -65,9 +71,37 @@ const Conteudos: React.FC = () => {
     setNovoTopico({ ...novoTopico, [field]: value });
   };
 
-  const handleSalvar = () => {
+  const handleSalvar = async () =>  {
+
+    setErro ('');
+    setMensagem('');
+
     console.log('Salvando:', novoTopico);
-    setShowModal(false);
+
+    try {
+      const response = await fetch('http://localhost:8000/topicos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ titulo, status, descricao}),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMensagem('Cadastro realizado com sucesso!');
+        setTitulo('');
+        setStatus('');
+        setDescricao('');
+        window.location.reload();
+      } else {
+        setErro(data.mensagem || 'Erro ao cadastrar tópico.');
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      setErro('Erro de conexão com o servidor.');
+    }
   };
 
   const barraProgresso = (status: string): number => {
@@ -86,8 +120,8 @@ const Conteudos: React.FC = () => {
   const handleEditar = () => {
     if (topicoSelecionado) {
       setNovoTopico({
-        nome: topicoSelecionado.titulo,
-        materia: '', 
+        titulo: topicoSelecionado.titulo,
+        materia_id: topicoSelecionado.materia_id , 
         status: topicoSelecionado.status,
         descricao: topicoSelecionado.descricao,
       });
@@ -216,22 +250,10 @@ const Conteudos: React.FC = () => {
               <IonInput
                 labelPlacement="stacked"
                 placeholder="Digite o nome do tópico"
-                value={novoTopico.nome}
-                onIonChange={(e) => handleInputChange('nome', e.detail.value!)}
+                value={novoTopico.titulo}
+                onIonChange={(e) => handleInputChange('titulo', e.detail.value!)}
                 className="input"
               />
-
-              <p className="label">Matéria</p>
-              <IonSelect
-                labelPlacement="stacked"
-                placeholder="Selecione a matéria"
-                value={novoTopico.materia}
-                onIonChange={(e) => handleInputChange('materia', e.detail.value!)}
-                className="input"
-              >
-                <IonSelectOption value="Matéria X">Matéria X</IonSelectOption>
-                <IonSelectOption value="Matéria Y">Matéria Y</IonSelectOption>
-              </IonSelect>
 
               <p className="label">Status</p>
               <IonSelect

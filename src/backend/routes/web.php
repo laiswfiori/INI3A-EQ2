@@ -28,12 +28,12 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 });
 
 // Rotas públicas (sem middleware) — você pode proteger se desejar
-$router->group(['prefix' => 'topicos'], function () use ($router) {
-    $router->get('/', 'TopicosController@index');
-    $router->post('/', 'TopicosController@store');
-    $router->get('/{id}', 'TopicosController@show');
-    $router->put('/{id}', 'TopicosController@update');
-    $router->delete('/{id}', 'TopicosController@destroy');
+$router->group(['middleware' => 'auth'], function () use ($router) {
+    $router->get('/topicos', 'TopicosController@index');
+    $router->post('/topicos', 'TopicosController@store');
+    $router->get('/topicos/{id}', 'TopicosController@show');
+    $router->put('/topicos/{id}', 'TopicosController@update');
+    $router->delete('/topicos/{id}', 'TopicosController@destroy');
 });
 
 $router->group(['middleware' => 'auth'], function () use ($router) {
