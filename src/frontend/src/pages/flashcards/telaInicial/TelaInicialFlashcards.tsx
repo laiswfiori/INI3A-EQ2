@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { IonPage, IonContent, IonIcon, IonButton, IonPopover, IonGrid, IonRow, IonCol } from '@ionic/react';
+import { IonPage, IonContent, IonIcon, IonButton, IonPopover, IonGrid, IonRow, IonCol, IonLabel } from '@ionic/react';
 import Header from '../../../components/Header';
-import { alertCircle, school, close, chevronDown, chevronUp } from 'ionicons/icons';
+import { alertCircle, school, close, chevronDown, chevronUp, layers, time, library } from 'ionicons/icons';
 import './css/geralTelaInicial.css';
 import './css/uiTelaInicial.css';
 import './css/layoutsTelaInicial.css';
@@ -140,50 +140,102 @@ const TelaInicialFlashcards: React.FC = () => {
                 <p id="pDecks">Decks atuais</p>
               </IonRow>
           </IonRow>
-
+          <IonRow id="estatisticas">
+            <div className="estDivs">
+              <IonRow className="espDiv">
+                <IonCol className="altD">
+                  <p className="txtGrande">200</p>
+                </IonCol>
+                <IonCol className="altD iconFim">
+                  <IonIcon icon={layers} className="iconesTF" />
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <p className="txtTF">Total de cards</p>
+              </IonRow>
+            </div>
+            <div className="estDivs">
+              <IonRow className="espDiv">
+                <IonCol className="altD">
+                  <p className="txtGrande">3</p>                
+                </IonCol>
+                <IonCol className="altD iconFim">
+                  <IonIcon icon={library} className="iconesTF" />
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <p className="txtTF">Matérias para estudar</p>
+              </IonRow>
+            </div>
+            <div className="estDivs">
+              <IonRow className="espDiv">
+                <IonCol className="altD">
+                  <p className="txtGrande">16</p>                 
+                </IonCol>
+                <IonCol className="altD iconFim">
+                  <IonIcon icon={time} className="iconesTF" />
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <p className="txtTF">Para revisar hoje</p>
+              </IonRow>
+            </div>
+          </IonRow>
           <IonRow id="decks" className="p0">
-            <IonCol className="p0">
-              {materias.length > 0 ? (
-                materias.map((materia) => {
-                  const topicosDaMateria = topicos.filter((t) => t.materia_id === materia.id);
+            {materias.length > 0 ? (
+            materias.map((materia) => {
+              const topicosDaMateria = topicos.filter((t) => t.materia_id === materia.id);
+              const progresso = 50; 
 
-                  return (
-                    <div key={materia.id}>
+            return (
+              <div key={materia.id} className="materia-itemF">
+                <IonLabel>
+                  <IonRow className="containerMateria">
+                    <IonIcon icon={library} className="livroF" />
+                    <IonCol className="td centro">
+                      <h2>{materia.nome}</h2>
+                    </IonCol>
+                    <IonCol className="td">
                       <IonButton
-                        type="button"
-                        expand="block"
+                        fill="clear"
                         onClick={() => toggleExpand(materia.id)}
-                        className="listaTopicos botaoMateria"
                       >
-                        <span className="largura">{materia.nome}
-                          <IonIcon icon={expandedMaterias[materia.id] ? chevronUp : chevronDown} />
-                        </span>
                       </IonButton>
-
-                      {expandedMaterias[materia.id] && (
-                        <ul className="listaTopicos">
-                          {topicosDaMateria.length > 0 ? (
-                            topicosDaMateria.map((topico) => (
-                              <li key={topico.id}>
-                                <div className="topico-box">{topico.titulo}</div>
-                              </li>
-                            ))
-                          ) : (
-                            <li className="listaTopicos">
-                              <i>Sem tópicos criados :(</i>
-                            </li>
-                          )}
-                        </ul>
-                      )}
-                    </div>
-                  );
-                })
-              ) : (
-                <p style={{ padding: '1rem' }}>
-                  <i>Nenhuma matéria disponível.</i>
-                </p>
-              )}
-            </IonCol>
+                    </IonCol>
+                    <IonCol className="iconFim">
+                      <IonButton
+                      id={`config-btn-${materia.id}`}
+                      className="config"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPopoverEvent(e.nativeEvent);
+                        setPopoverVisible(true);
+                      }}
+                    >
+                      ...
+                    </IonButton>
+                    </IonCol>
+                  </IonRow>
+                  <IonRow className="espDC">
+                    <p className="txtWC">10 cards</p>
+                    <p className="txtWC" id="txtRevisar">5 para revisar</p>
+                  </IonRow>
+                  <IonRow className="barra">
+                    <div className="barraStatus" style={{ width: `${progresso}%` }}></div>
+                  </IonRow>            
+                  <IonRow className="larguraC">
+                    <IonButton id="btnEstudar">Estudar</IonButton>
+                    <IonButton id="btnMais">+</IonButton>
+                  </IonRow>
+                </IonLabel>
+              </div>
+            );
+              })
+            ) : (
+              <p style={{ padding: '1rem' }}>
+                <i>Nenhuma matéria disponível.</i>
+              </p>
+            )}
           </IonRow>
         </IonGrid>
       </IonContent>
