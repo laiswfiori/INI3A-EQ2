@@ -14,6 +14,7 @@ interface RegistroProps {
 const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
   const history = useHistory();
   const [name, setNome] = useState('');
+  const [surname, setSobrenome] = useState('');
   const [email, setEmail] = useState('');
   const [password, setSenha] = useState('');
   const [erro, setErro] = useState('');
@@ -33,7 +34,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, surname, email, password }),
       });
 
       const data = await response.json();
@@ -41,6 +42,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
       if (response.ok) {
         setMensagem('Cadastro realizado com sucesso!');
         setNome('');
+        setSobrenome('');
         setEmail('');
         setSenha('');
         localStorage.setItem('token', data.token); 
@@ -80,6 +82,12 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
                 type="text"
                 value={name}
                 onChange={(e) => setNome(e.target.value)}
+                /><br />
+              <p id="label1"><b>Sobrenome</b></p>
+              <input 
+                type="text"
+                value={surname}
+                onChange={(e) => setSobrenome(e.target.value)}
                 /><br />
               <p id="label1"><b>Email</b></p>
               <input

@@ -129,3 +129,57 @@ ion-button#btnFechar::part(native) {
   font-size: 1.2rem;
   font-weight: 700;
 }
+
+.txtGrande {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.estDivs {
+    border-radius: 20px;
+    background-color: #fff7d8;
+    padding: 2%;
+    padding-bottom: 0;
+}
+
+#txtRevisar {
+  font-weight: 600;
+  color: #00296b;
+}
+
+ion-button#btnEstudar::part(native) {
+  all: unset;
+  cursor: pointer;
+  z-index: 999999999;
+  background-color: #3da5d9;
+  width: 1000%;
+  border-radius: 15px;
+}
+
+#btnEstudar {
+  display: flex;
+  justify-content: flex-start;
+  width: 60%;
+}
+
+ion-button#btnMais::part(native) {
+  all: unset;
+  cursor: pointer;
+  z-index: 999999999;
+  border: 2px solid #3da5d9;
+  width: 100%;
+  border-radius: 15px;
+  color: black;
+  font-size: 1.2rem;
+}
+
+#btnMais {
+  display: flex;
+  justify-content: flex-start;
+  width: 20%;
+}
+
+.livroF {
+  font-size: 3rem;
+  color: #3da5d9;
+}

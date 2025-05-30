@@ -4,6 +4,7 @@
     flex-direction: column;
     margin-top: 2%;
     padding: 0;
+    pointer-events: none;
 }
 
 #btnAlerta, .revisaoGeral {
@@ -31,6 +32,14 @@
     padding: 0;
 }
 
+#decks {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+}
 
 #linhaDecks {
     margin-top: 1%;
@@ -88,6 +97,114 @@ ion-popover.popoverGeral::part(content) {
     width: 40%;
     min-width: unset !important;
     max-width: unset !important;
+}
+
+#estatisticas {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: fit-content;
+    width: 100%;
+}
+
+.altD {
+    height: 100%;
+}
+
+.estDivs {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 25%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.espDiv {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.iconFim {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.txtGrande {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.materia-itemF {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 12px;
+  padding-bottom: 0 !important;
+  background-color: white;
+  cursor: pointer;
+  margin-top: 2%;
+  width: calc(33.33% - 1rem);
+}
+
+ion-item.materia-itemF ion-label {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 0 !important;
+}
+
+.materia-itemF .icon-placeholder {
+  width: 40px;
+  height: 40px;
+  background-color: #ddd;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.materia-itemF h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.materia-itemF .progress-bar-fill {
+  height: 100%;
+  width: 40%; 
+  background-color: #000;
+}
+
+.iconesTF {
+    color: #3da5d9;
+    font-size: 3rem;
+}
+
+.txtTF {
+    font-size: 1.2rem;
+}
+
+.espDC {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.larguraC {
+    width: 100%;
+    gap: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.centro {
+    justify-content: center !important;
 }
 
 .topico-box {
