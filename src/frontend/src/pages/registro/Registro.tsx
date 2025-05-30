@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonRow } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonRow, IonImg } from '@ionic/react';
 import './css/geral.css';
 import './css/layout.css';
 import './css/ui.css';
@@ -18,6 +18,10 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
   const [password, setSenha] = useState('');
   const [erro, setErro] = useState('');
   const [mensagem, setMensagem] = useState('');
+
+  const navHome = () => {
+    history.push('/pagInicial/home');
+  };
 
   const handleCadastrar = async () => {
     setErro('');
@@ -57,6 +61,11 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
      //<Header/>
         <div id="body">
           <div className="cadastro-container">
+          <div className="voltar">
+            <IonImg src="/imgs/voltar.png" alt="Voltar png" onClick={navHome}/>
+            <IonImg src="/imgs/home.png" alt="Home png" onClick={navHome}/>
+          </div>
+          
             <div className="div1">
               <h1><b>Cadastre-se em nossa plataforma!</b></h1><br />
               <IonButton className="btnGoogle"><b>Continue com o Google</b></IonButton><br />

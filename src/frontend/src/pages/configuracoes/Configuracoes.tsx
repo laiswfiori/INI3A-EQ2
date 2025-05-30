@@ -1,6 +1,8 @@
 import React from 'react';
 import { IonPage, IonRow, IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/react';
 import './configuracoes.css';
+import MultiSelectMaterias from '../../components/MultiSelectMaterias';
+import MultiSelectDias from '../../components/MultiSelectDias';
 
 const Configuracoes: React.FC = () => {
   return (
@@ -14,12 +16,10 @@ const Configuracoes: React.FC = () => {
             <h3><b>Configure seu plano de estudos</b></h3>
             <h4> *Lembre-se de criar um plano que se adeque a sua rotina.*</h4>
             <div>
-                <h4><b>Dias para o estudo semanal</b></h4>
-                <input type = "text" placeholder="+ Adicionar dias"/>
+              <MultiSelectDias />
                 <h4><b>Horários de estudo dia X</b></h4>
                 <input type = "text" placeholder="10-12 horas"/>
-                <h4><b>Matérias cadastradas</b></h4>
-                <input type = "text" placeholder="+ Adicionar matérias"/><br />
+              <MultiSelectMaterias />
                 <IonButton className="botao">Salvar</IonButton>
             </div>
           </div>

@@ -1,4 +1,8 @@
 .cadastro-container{
+    .voltar{
+      display: flex;
+      flex-direction: row;
+    }
     .div1{
         padding-top: 20%;
         padding-bottom: 20%;
