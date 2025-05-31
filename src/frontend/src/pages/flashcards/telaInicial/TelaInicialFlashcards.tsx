@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { IonPage, IonContent, IonIcon, IonButton, IonPopover, IonGrid, IonRow, IonCol, IonLabel } from '@ionic/react';
+import { IonPage, IonContent, IonIcon, IonButton, IonGrid, IonRow, IonCol, IonLabel, IonPopover } from '@ionic/react';
 import Header from '../../../components/Header';
-import { alertCircle, school, close, chevronDown, chevronUp, layers, time, library } from 'ionicons/icons';
+import { alertCircle, school, close, layers, time, library, arrowForward } from 'ionicons/icons';
 import './css/geralTelaInicial.css';
 import './css/uiTelaInicial.css';
 import './css/layoutsTelaInicial.css';
@@ -27,27 +27,11 @@ interface Materia {
 const api = new API();
 
 const TelaInicialFlashcards: React.FC = () => {
-  const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
-  const [popoverEvent, setPopoverEvent] = useState<any>(undefined);
   const [materias, setMaterias] = useState<Materia[]>([]);
   const [topicos, setTopicos] = useState<Topico[]>([]);
-  const [expandedMaterias, setExpandedMaterias] = useState<{ [key: number]: boolean }>({});
-
-  const handlePopoverClick = (event: React.MouseEvent) => {
-    setPopoverEvent(event.nativeEvent);
-    setPopoverVisible(true);
-  };
-
-  const closePopover = () => {
-    setPopoverVisible(false);
-  };
-
-  const toggleExpand = (id: number) => {
-    setExpandedMaterias((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
+  const [materiaExpandidaId, setMateriaExpandidaId] = useState<number | null>(null);
+  const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
+  const [popoverEvent, setPopoverEvent] = useState<any>(undefined);
 
   useEffect(() => {
     const fetchMaterias = async () => {
@@ -58,7 +42,7 @@ const TelaInicialFlashcards: React.FC = () => {
         console.error('Erro ao buscar matérias:', error);
       }
     };
-  
+
     const fetchTopicos = async () => {
       try {
         const topicosData: Topico[] = await api.get('topicos');
@@ -67,15 +51,32 @@ const TelaInicialFlashcards: React.FC = () => {
         console.error('Erro ao buscar tópicos:', error);
       }
     };
-  
+
     fetchMaterias();
     fetchTopicos();
   }, []);
 
+  const toggleExpandirMateria = (materiaId: number) => {
+    if (materiaExpandidaId === materiaId) {
+      setMateriaExpandidaId(null);
+    } else {
+      setMateriaExpandidaId(materiaId);
+    }
+  };
+
+  const handlePopoverClick = (event: React.MouseEvent) => {
+    setPopoverEvent(event.nativeEvent);
+    setPopoverVisible(true);
+  };
+
+  const closePopover = () => {
+    setPopoverVisible(false);
+  };
+
   return (
     <IonPage className="pagina">
       <Header />
-      <IonContent style={{ background: '#fff' }}>
+      <IonContent>
         <IonGrid id="bodyTelaInicialFlashcards">
           <IonRow id="revisao">
             <IonCol id="dCapelo">
@@ -134,7 +135,6 @@ const TelaInicialFlashcards: React.FC = () => {
               </svg>
             </IonCol>
           </IonRow>
-
           <IonRow id="divisoes">
               <IonRow id="linhaDecks">
                 <p id="pDecks">Decks atuais</p>
@@ -183,58 +183,68 @@ const TelaInicialFlashcards: React.FC = () => {
           </IonRow>
           <IonRow id="decks" className="p0">
             {materias.length > 0 ? (
-            materias.map((materia) => {
-              const topicosDaMateria = topicos.filter((t) => t.materia_id === materia.id);
-              const progresso = 50; 
+              materias.map((materia) => {
+                const topicosDaMateria = topicos.filter(t => t.materia_id === materia.id);
+                const progresso = 50; 
+                const estaExpandida = materiaExpandidaId === materia.id;
 
-            return (
-              <div key={materia.id} className="materia-itemF">
-                <IonLabel>
-                  <IonRow className="containerMateria">
-                    <IonIcon icon={library} className="livroF" />
-                    <IonCol className="td centro">
-                      <h2>{materia.nome}</h2>
-                    </IonCol>
-                    <IonCol className="td">
-                      <IonButton
-                        fill="clear"
-                        onClick={() => toggleExpand(materia.id)}
-                      >
-                      </IonButton>
-                    </IonCol>
-                    <IonCol className="iconFim">
-                      <IonButton
-                      id={`config-btn-${materia.id}`}
-                      className="config"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setPopoverEvent(e.nativeEvent);
-                        setPopoverVisible(true);
-                      }}
-                    >
-                      ...
-                    </IonButton>
-                    </IonCol>
-                  </IonRow>
-                  <IonRow className="espDC">
-                    <p className="txtWC">10 cards</p>
-                    <p className="txtWC" id="txtRevisar">5 para revisar</p>
-                  </IonRow>
-                  <IonRow className="barra">
-                    <div className="barraStatus" style={{ width: `${progresso}%` }}></div>
-                  </IonRow>            
-                  <IonRow className="larguraC">
-                    <IonButton id="btnEstudar">Estudar</IonButton>
-                    <IonButton id="btnMais">+</IonButton>
-                  </IonRow>
-                </IonLabel>
-              </div>
-            );
+                return (
+                  <IonCol key={materia.id} className="materia-itemF">
+                    <IonLabel>
+                      <IonRow className="containerMateria">
+                        <IonIcon icon={library} className="livroF" />
+                        <IonCol className="td centro">
+                          <h2>{materia.nome}</h2>
+                        </IonCol>
+                        <IonCol className="iconFim">
+                          <IonButton
+                            id={`config-btn-${materia.id}`}
+                            className="verTopicos"
+                            onClick={() => toggleExpandirMateria(materia.id)}
+                          >
+                            {estaExpandida ? 'Esconder tópicos' : 'Ver tópicos'}
+                          </IonButton>
+                        </IonCol>
+                      </IonRow>
+                      <IonRow className="espDC">
+                        <p className="txtWC">10 cards</p>
+                        <p className="txtWC" id="txtRevisar">5 para revisar</p>
+                      </IonRow>
+                      <IonRow className="barra">
+                        <div className="barraStatus" style={{ width: `${progresso}%` }}></div>
+                      </IonRow>
+                      <IonRow className="larguraC">
+                        <IonButton id="btnEstudar" onClick={(e) => {e.stopPropagation()}}>Estudar</IonButton>
+                        <IonButton id="btnMais" onClick={(e) => {e.stopPropagation()}}>+</IonButton>
+                      </IonRow>
+                    </IonLabel>
+
+                    {estaExpandida && (
+                      <div className="listaTopicos">
+                        {topicosDaMateria.length > 0 ? (
+                          topicosDaMateria.map(topico => (
+                            <IonRow className="contSetaTopico"
+                              key={topico.id} 
+                            >
+                              <IonIcon 
+                                icon={arrowForward} 
+                                className="setaTopico"  
+                              />
+                              <p className="txtTopico">
+                                {topico.titulo}
+                              </p>
+                            </IonRow>
+                          ))
+                        ) : (
+                          <p>Você ainda não criou nenhum tópico :(</p>
+                        )}
+                      </div>
+                    )}
+                  </IonCol>
+                );
               })
             ) : (
-              <p style={{ padding: '1rem' }}>
-                <i>Nenhuma matéria disponível.</i>
-              </p>
+              <p>Nenhuma matéria disponível.</p>
             )}
           </IonRow>
         </IonGrid>
