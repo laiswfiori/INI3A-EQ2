@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal,
-  IonPopover, IonInput, IonRow, IonCol
-} from '@ionic/react';
+import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal, IonPopover, IonInput, IonRow, IonCol } from '@ionic/react';
 import { book, pencil, trash } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';

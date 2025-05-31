@@ -102,6 +102,7 @@ ion-button#btnAlerta::part(native) {
   font-size: 1.5rem;
   color: #3da5d9;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 ion-button#btnAlerta:hover {
@@ -150,22 +151,29 @@ ion-button#btnFechar::part(native) {
 ion-button#btnEstudar::part(native) {
   all: unset;
   cursor: pointer;
-  z-index: 999999999;
+  pointer-events: auto;
   background-color: #3da5d9;
-  width: 1000%;
+  width: 100%;
+  max-width: 100% !important;
   border-radius: 15px;
 }
 
 #btnEstudar {
   display: flex;
   justify-content: flex-start;
-  width: 60%;
+  width: 75%;
+  overflow: hidden;
+  position: relative;
+}
+
+ion-button#btnEstudar::part(native):hover {
+  background-color: #00296b;
 }
 
 ion-button#btnMais::part(native) {
   all: unset;
   cursor: pointer;
-  z-index: 999999999;
+  pointer-events: auto;
   border: 2px solid #3da5d9;
   width: 100%;
   border-radius: 15px;
@@ -177,9 +185,50 @@ ion-button#btnMais::part(native) {
   display: flex;
   justify-content: flex-start;
   width: 20%;
+  overflow: hidden;
+  position: relative;
+}
+
+ion-button#btnMais::part(native):hover {
+  background-color: #00296b;
+  color: white;
 }
 
 .livroF {
   font-size: 3rem;
   color: #3da5d9;
+}
+
+ion-button.verTopicos::part(native) {
+  all: unset;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 999999999;
+  background-color: #00296b;
+  width: 100%;
+  border-radius: 15px;
+  color: black;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.verTopicos {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+ion-button.verTopicos::part(native):hover {
+  background-color: #3da5d9;
+}
+
+.setaTopico {
+  font-size: 2rem;
+  color: #3da5d9;
+}
+
+.txtTopico {
+  font-size: 1.2rem;
+  padding: 0;
+  margin: 0;
 }

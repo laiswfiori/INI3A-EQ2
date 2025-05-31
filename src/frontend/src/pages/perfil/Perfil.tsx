@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonCol, IonRow, IonIcon, IonButton, IonInput, IonCheckbox } from '@ionic/react';
 import { caretForward, personCircle, warning, logOut } from 'ionicons/icons';
@@ -7,21 +7,27 @@ import './css/ui.css';
 import './css/layout.css';
 import './css/switch.css';
 import Header from '../../components/Header';
+import API from '../../lib/api';
 
+interface User {
+    id: number;
+    name: string;
+    surname: string;
+    email: string;
+    password: string;
+    biography: string;
+  }
 
 const Perfil: React.FC = () => {
    const history = useHistory();
    const [isChecked, setIsChecked] = useState(false);
    const [view, setView] = useState<'perfil' | 'estudo'>('perfil');
    const [mobileView, setMobileView] = useState<'gerais' | 'perfil' | 'seguranca' | 'estudo'>('gerais');
-
-
-
+   const [nomeUsuario, setNomeUsuario] = useState('');
 
    const handleCheckboxChange = (e: CustomEvent) => {
        setIsChecked(e.detail.checked);
    };
-
 
    const diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
 
@@ -55,9 +61,6 @@ const Perfil: React.FC = () => {
        history.push('/logincadastro/logincadastro');
    };
 
-
-
-
    return (
        <IonPage>
            <Header />
@@ -68,7 +71,7 @@ const Perfil: React.FC = () => {
                            <IonRow id="img">
                                <IonIcon icon={personCircle} id="iconePerfil" />
                                <div id="txtOi">
-                                   <p className="txtPading">Olá, <span>nome</span>.</p>
+                                   <p className="txtPading">Olá, <span>{nomeUsuario}</span>.</p>
                                </div>
                            </IonRow>
                            <IonRow id="linhaDivisora"></IonRow>
