@@ -63,46 +63,47 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
      //<Header/>
         <div id="body">
           <div className="cadastro-container">
+
           <div className="voltar">
-            <IonImg src="/imgs/voltar.png" alt="Voltar png" onClick={navHome}/>
-            <IonImg src="/imgs/home.png" alt="Home png" onClick={navHome}/>
+            <IonImg className="imgSize" src="/imgs/voltar.png" alt="Voltar png" onClick={navHome}/>
+            <IonImg className="imgSize"src="/imgs/home.png" alt="Home png" onClick={navHome}/>
           </div>
-          
+
             <div className="div1">
-              <h1><b>Cadastre-se em nossa plataforma!</b></h1><br />
-              <IonButton className="btnGoogle"><b>Continue com o Google</b></IonButton><br />
+              <h1 className="h1"><b>Cadastre-se em nossa plataforma!</b></h1><br />
+              <IonButton className="btnGoogle"><h3 className="h3"><b>Continue com o Google</b></h3></IonButton><br />
               <br></br>
               <div id="ou">
                   <div className="linhas"></div>
-                  <h3 id="txtOu">Ou</h3>
+                  <h3 className="h3">Ou</h3>
                   <div className="linhas"></div>
               </div><br></br>
-              <p id="label1"><b>Nome</b></p>
+              <h2 className="h2"><b>Nome</b></h2>
               <input 
                 type="text"
                 value={name}
                 onChange={(e) => setNome(e.target.value)}
                 /><br />
-              <p id="label1"><b>Sobrenome</b></p>
+              <h2 className="h2"><b>Sobrenome</b></h2>
               <input 
                 type="text"
                 value={surname}
                 onChange={(e) => setSobrenome(e.target.value)}
                 /><br />
-              <p id="label1"><b>Email</b></p>
+              <h2 className="h2"><b>Email</b></h2>
               <input
                 type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 /><br />
-              <p id="label1"><b>Senha</b></p>
+              <h2 className="h2"><b>Senha</b></h2>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setSenha(e.target.value)}
                 /><br />
-              <IonButton className="btnCadastrar" onClick={handleCadastrar}><b>Cadastrar</b></IonButton><br />
-              <h3 id="direita">Já possui uma conta?</h3>
+              <IonButton className="h3 btnCadastrar" onClick={handleCadastrar}><b>Cadastrar</b></IonButton><br />
+              <h3 className="h3" id="direita">Já possui uma conta?</h3>
               <IonButton className="btnLogin" onClick={goToLogin}>Faça login</IonButton>
             </div>
 
@@ -111,7 +112,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
               <div className="bola bola2"></div>
               <div className="bola bola3"></div>
               <div id="org">
-              <h1>Seja bem-vindo à <b>melhor</b> plataforma de estudos!</h1>
+              <h1 className="h1">Seja bem-vindo à <b>melhor</b> plataforma de estudos!</h1>
               <div id="img">
                 <img src="/imgs/logoSemFundo.png" alt="Logo png" />
               </div>

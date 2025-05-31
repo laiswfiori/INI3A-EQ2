@@ -1,14 +1,4 @@
 .cadastro-container{
-    .voltar{
-      display: flex;
-      flex-direction: row;
-    }
-    .div1{
-        padding-top: 20%;
-        padding-bottom: 20%;
-        padding-right: 5%;
-        padding-left: 5%;
-    }
     .div2{
         display: flex;
         position: relative;
@@ -20,8 +10,12 @@
             text-align: center;
         }        
     }
+    .voltar{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+    }
 }
-
 
 #ou {
   display: flex;
@@ -30,7 +24,7 @@
   width: 100%;
 }
 
-#label1{
+.h2{
   margin-bottom: 12px;
   margin-top: 0;
   display: flex;
