@@ -4,11 +4,6 @@
     flex-direction: column;
     margin-top: 2%;
     padding: 0;
-    pointer-events: none !important;
-}
-
-* {
-    pointer-events: none !important;
 }
 
 #btnAlerta, .revisaoGeral {
