@@ -85,7 +85,7 @@
       }
     }
 
-    .bola {
+    .bola  {
       animation: moverEGradiente 10s infinite ease-in-out alternate;
     }
   
@@ -116,7 +116,6 @@
         background: linear-gradient(45deg, #00296b, #3da5d9);
       }
     }
-
 
 
 .lupa {

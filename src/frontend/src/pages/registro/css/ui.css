@@ -5,7 +5,7 @@
     .div2{
         background-color: white;
     }
-    .h1{
+    .h1, .h1e{
         color: black !important;  
     }
 }
@@ -93,18 +93,17 @@ border: 1.5px solid #3da5d9;
 
 ion-button.btnGoogle::part(native) {
   margin: 20px 0 10px 0;
-  border: #ea7317 2px solid;
-  background-color: white;
+  background-color: #ea7317;
+  border: 1.5px solid #974200;
   box-shadow: none;
   color: white;
   border-radius: 20px;
   cursor: pointer;
-  color: black;
   padding: 5%;
 }
 
 .btnGoogle::part(native):hover {
-  background-color: #ea7317;
-  border: 1.5px solid #974200;
-  color: white;
+  border: #ea7317 2px solid;
+  background-color: white;
+  color: black;
 }

@@ -1,13 +1,17 @@
-@media (min-width: 768px){
-  .loginContainer{
-    margin-top: 7%;
-    margin-bottom: 7%;
-  }
+.div22{
+  background-color: #f7d868;
 }
-
-h1{
+.div11{
+  background-color: white;
+}
+.h11{
   color: black !important;
 }
+  .bolas {
+    border-radius: 50%;
+    background: linear-gradient(45deg, #00296b, #3da5d9);
+    opacity: 0.6;
+  }
 
 .btnEntrar {
     width: 100%;
@@ -29,11 +33,11 @@ ion-button.btnEntrar::part(native) {
   border: 1.5px solid #3da5d9;
 }
 
-.btnCadastrar {
+.btnCadastrar1 {
   width: 100%;
 }
 
-ion-button.btnCadastrar::part(native) {
+ion-button.btnCadastrar1::part(native) {
   margin: 20px 0 10px 0;
   background-color: #3da5d9 ;
   border: 1.5px solid #00296b;
@@ -44,40 +48,39 @@ ion-button.btnCadastrar::part(native) {
   padding: 5%;
 }
 
-.btnCadastrar::part(native):hover {
+.btnCadastrar1::part(native):hover {
   background-color: #00296b;
   border: 1.5px solid #3da5d9;
 }
 
-.linhas {
+.linhass {
     border-bottom: rgb(155, 155, 155) 2px solid;
     width: 40%;
 }
 
-#txtOu {
+#txtOu1 {
     padding-left: 5%;
     padding-right: 5%;
     font-size: 1rem;
 }
 
-.btnGoogle {
+.btnGoogle1 {
     width: 100%;
 }
 
-ion-button.btnGoogle::part(native) {
+ion-button.btnGoogle1::part(native) {
   margin: 20px 0 10px 0;
-  border: #ea7317 2px solid;
-  background-color: white;
+  background-color: #ea7317;
+  border: 1.5px solid #974200;
   box-shadow: none;
-  color: white;
   border-radius: 20px;
   cursor: pointer;
-  color: black;
+  color: white;
   padding: 5%;
 }
 
-.btnGoogle::part(native):hover {
-  background-color: #ea7317;
-  border: 1.5px solid #974200;
-  color: white;
+.btnGoogle1::part(native):hover {
+    border: #ea7317 2px solid;
+  background-color: white;
+  color: black;
 }
