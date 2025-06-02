@@ -25,6 +25,38 @@ const Perfil: React.FC = () => {
    const [mobileView, setMobileView] = useState<'gerais' | 'perfil' | 'seguranca' | 'estudo'>('gerais');
    const [nomeUsuario, setNomeUsuario] = useState('');
 
+    useEffect(() => {
+    const buscarNomeUsuario = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+        setNomeUsuario('Usuário');
+        return;
+        }
+
+        try {
+        const response = await fetch('http://localhost:8000/api/profile', {
+            method: 'GET',
+            headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro na requisição');
+        }
+
+        const usuario = await response.json();
+        setNomeUsuario(usuario.user?.name ?? 'Usuário');
+        } catch (error) {
+        console.error('Erro ao buscar usuário:', error);
+        setNomeUsuario('Usuário');
+        }
+    };
+
+    buscarNomeUsuario();
+    }, []);
+
    const handleCheckboxChange = (e: CustomEvent) => {
        setIsChecked(e.detail.checked);
    };
@@ -71,7 +103,7 @@ const Perfil: React.FC = () => {
                            <IonRow id="img">
                                <IonIcon icon={personCircle} id="iconePerfil" />
                                <div id="txtOi">
-                                   <p className="txtPading">Olá, <span>{nomeUsuario}</span>.</p>
+                                   <p className="txtPading">Olá, {nomeUsuario}.</p>
                                </div>
                            </IonRow>
                            <IonRow id="linhaDivisora"></IonRow>
@@ -158,13 +190,22 @@ const Perfil: React.FC = () => {
                                    <IonRow className="rowContainer">
                                        <div className="contConfig">
                                            <div className="cor" id="resetar"></div>
-                                           <p className="titConfig">Resetar preferências:</p>
+                                           <p className="titConfig">Resetar:</p>
                                        </div>
-                                       <button className="buttonPref">
-                                           <svg viewBox="0 0 448 512" className="iconX">
-                                               <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-                                           </svg>
-                                       </button>
+                                       <button className="bin-button">
+                                        <svg className="bin-top" viewBox="0 0 39 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <line y1={5} x2={39} y2={5} stroke="white" strokeWidth={4} />
+                                        <line x1={12} y1="1.5" x2="26.0357" y2="1.5" stroke="white" strokeWidth={3} />
+                                        </svg>
+                                        <svg className="bin-bottom" viewBox="0 0 33 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <mask id="path-1-inside-1_8_19" fill="white">
+                                            <path d="M0 0H33V35C33 37.2091 31.2091 39 29 39H4C1.79086 39 0 37.2091 0 35V0Z" />
+                                        </mask>
+                                        <path d="M0 0H33H0ZM37 35C37 39.4183 33.4183 43 29 43H4C-0.418278 43 -4 39.4183 -4 35H4H29H37ZM4 43C-0.418278 43 -4 39.4183 -4 35V0H4V35V43ZM37 0V35C37 39.4183 33.4183 43 29 43V35V0H37Z" fill="white" mask="url(#path-1-inside-1_8_19)" />
+                                        <path d="M12 6L12 29" stroke="white" strokeWidth={4} />
+                                        <path d="M21 6V29" stroke="white" strokeWidth={4} />
+                                        </svg>
+                                    </button>
                                    </IonRow>
                                </IonRow>
                                <IonRow className="containerConfig">
@@ -345,7 +386,7 @@ const Perfil: React.FC = () => {
                        <IonRow id="imgM">
                            <IonIcon icon={personCircle} id="iconePerfil" />
                            <div id="txtOi">
-                               <p className="txtPading">Olá, <span>nome</span>.</p>
+                               <p className="txtPading">Olá, {nomeUsuario}.</p>
                            </div>
                        </IonRow>
                        <IonRow id="contOpsConfig">
@@ -458,11 +499,20 @@ const Perfil: React.FC = () => {
                                        <div className="cor" id="resetar"></div>
                                        <p className="titConfig">Resetar preferências:</p>
                                    </div>
-                                   <button className="buttonPref">
-                                       <svg viewBox="0 0 448 512" className="iconX">
-                                           <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-                                       </svg>
-                                   </button>
+                                   <button className="bin-button">
+                                        <svg className="bin-top" viewBox="0 0 39 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <line y1={5} x2={39} y2={5} stroke="white" strokeWidth={4} />
+                                        <line x1={12} y1="1.5" x2="26.0357" y2="1.5" stroke="white" strokeWidth={3} />
+                                        </svg>
+                                        <svg className="bin-bottom" viewBox="0 0 33 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <mask id="path-1-inside-1_8_19" fill="white">
+                                            <path d="M0 0H33V35C33 37.2091 31.2091 39 29 39H4C1.79086 39 0 37.2091 0 35V0Z" />
+                                        </mask>
+                                        <path d="M0 0H33H0ZM37 35C37 39.4183 33.4183 43 29 43H4C-0.418278 43 -4 39.4183 -4 35H4H29H37ZM4 43C-0.418278 43 -4 39.4183 -4 35V0H4V35V43ZM37 0V35C37 39.4183 33.4183 43 29 43V35V0H37Z" fill="white" mask="url(#path-1-inside-1_8_19)" />
+                                        <path d="M12 6L12 29" stroke="white" strokeWidth={4} />
+                                        <path d="M21 6V29" stroke="white" strokeWidth={4} />
+                                        </svg>
+                                    </button>
                                </IonRow>
                            </IonRow>
                        </IonRow>

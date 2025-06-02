@@ -17,14 +17,32 @@ h1 {
     font-size: 3rem;
 }
 
+.txtTitMat {
+  font-size: 1.2rem !important;
+}
+
+.config {
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start !important;
+}
+
 ion-button.config {
   --background: #fff; 
   --color: black;  
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start !important;
 }
 
 ion-button.config::part(native) {
   all: unset;   
   font-weight: 700;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start !important;
 }
 
 ion-button.config::part(native):hover {
@@ -110,7 +128,13 @@ ion-button.btnSalvar {
 }
 
 .livro {
-  font-size: 3rem;
+  font-size: 3.2rem;
+  color: #3da5d9;
+}
+
+#txtConc {
+  font-weight: 600;
+  color: #00296b;
 }
 
 .iconesPopover {

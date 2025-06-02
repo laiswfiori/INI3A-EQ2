@@ -86,7 +86,12 @@
     }
   }
   
-#btnAlerta, #btnFechar {
+#btnAlerta {
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+#btnAlerta {
   all: unset;
   cursor: pointer;
   z-index: 999999999;
@@ -109,21 +114,35 @@ ion-button#btnAlerta:hover {
   cursor: pointer;
 }
  
-#iconeFechar {
+.iconeFechar, .iconeFecharM {
   font-size: 1.5rem;
   color: #ce2711;
   cursor: pointer;
 }
 
-ion-button#btnFechar::part(native) {
+ion-button.verTopicos::part(native) {
   all: unset;
-  cursor: pointer;
+  cursor: pointer !important;
   z-index: 999999999;
 }
 
 #btnFechar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-end !important;
+  align-items: flex-end  !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background-color: white;
+}
+
+ion-button#btnFechar::part(native) {
+  background-color: white;
+  display: flex;
+  justify-content: flex-end !important;
+}
+
+.iconeFechar {
+  margin-left: auto;
 }
 
 #pDecks {

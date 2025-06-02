@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IonPage, IonContent, IonIcon, IonButton, IonGrid, IonRow, IonCol, IonLabel, IonPopover } from '@ionic/react';
+import { IonPage, IonContent, IonIcon, IonButton, IonGrid, IonRow, IonCol, IonLabel, IonPopover, IonModal, IonSelect, IonSelectOption, IonTextarea} from '@ionic/react';
 import Header from '../../../components/Header';
 import { alertCircle, school, close, layers, time, library, arrowForward } from 'ionicons/icons';
 import './css/geralTelaInicial.css';
@@ -32,6 +32,12 @@ const TelaInicialFlashcards: React.FC = () => {
   const [materiaExpandidaId, setMateriaExpandidaId] = useState<number | null>(null);
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
   const [popoverEvent, setPopoverEvent] = useState<any>(undefined);
+  const [showModal, setShowModal] = useState(false);
+  const [titulo, setTitulo] = useState('');
+  const [conteudoFrente, setConteudoFrente] = useState('{}');
+  const [conteudoVerso, setConteudoVerso] = useState('{}');
+  const [modalMateria, setmodalMateria] = useState<Materia | null>(null);
+
 
   useEffect(() => {
     const fetchMaterias = async () => {
@@ -73,6 +79,13 @@ const TelaInicialFlashcards: React.FC = () => {
     setPopoverVisible(false);
   };
 
+  const abrirModal = () => {
+    setTitulo('');
+    setConteudoFrente('');
+    setConteudoVerso('');
+    setShowModal(true);
+  };
+
   return (
     <IonPage className="pagina">
       <Header />
@@ -96,12 +109,13 @@ const TelaInicialFlashcards: React.FC = () => {
               <IonPopover
                 isOpen={popoverVisible}
                 event={popoverEvent}
+                trigger="btnAlerta"
                 onDidDismiss={closePopover}
                 className="popoverGeral"
               >
                 <div id="branco">
                   <IonButton onClick={closePopover} id="btnFechar">
-                    <IonIcon icon={close} id="iconeFechar" />
+                    <IonIcon icon={close} className="iconeFechar" />
                   </IonButton>
                   <p>
                     O modo de revisão geral apresenta todos os flashcards do dia que devem ser
@@ -177,7 +191,7 @@ const TelaInicialFlashcards: React.FC = () => {
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Para revisar hoje</p>
+                <p className="txtTF">Cards para revisar hoje</p>
               </IonRow>
             </div>
           </IonRow>
@@ -194,7 +208,7 @@ const TelaInicialFlashcards: React.FC = () => {
                       <IonRow className="containerMateria">
                         <IonIcon icon={library} className="livroF" />
                         <IonCol className="td centro">
-                          <h2>{materia.nome}</h2>
+                          <h2 className="txtTitMat">{materia.nome}</h2>
                         </IonCol>
                         <IonCol className="iconFim">
                           <IonButton
@@ -215,7 +229,12 @@ const TelaInicialFlashcards: React.FC = () => {
                       </IonRow>
                       <IonRow className="larguraC">
                         <IonButton id="btnEstudar" onClick={(e) => {e.stopPropagation()}}>Estudar</IonButton>
-                        <IonButton id="btnMais" onClick={(e) => {e.stopPropagation()}}>+</IonButton>
+                        <IonButton id="btnMais" onClick={(e) => {
+                          e.preventDefault();   
+                          e.stopPropagation();
+                          abrirModal();
+                          setModalMateria(materia);
+                        }}>+</IonButton>
                       </IonRow>
                     </IonLabel>
 
@@ -248,6 +267,51 @@ const TelaInicialFlashcards: React.FC = () => {
             )}
           </IonRow>
         </IonGrid>
+        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalFlashcards">
+          <div className="modalConteudo">
+            <IonRow className="contFecharModal">
+              <IonIcon icon={close} className="iconeFecharM" onClick={() => setShowModal(false)}/>
+            </IonRow>
+            <IonRow className="centroModal">
+              <h2 className="label">Criar novo card</h2>
+            </IonRow>
+            <IonSelect
+              value={titulo}
+              placeholder="Escolha o tópico"
+              onIonChange={(e) => setTitulo(e.detail.value)}
+              className="input iFlashcard"
+            >
+              {modalMateria?.topicos.map(topico => (
+                <IonSelectOption key={topico.id} value={topico.titulo}>
+                  {topico.titulo}
+                </IonSelectOption>
+              ))}
+            </IonSelect>
+            <IonTextarea
+              placeholder="Conteúdo da frente"
+              value={conteudoFrente}
+              onIonChange={(e) => setConteudoFrente(e.detail.value!)}
+              className="input iFlashcard"
+            />
+            <IonTextarea
+              placeholder="Conteúdo do verso"
+              value={conteudoVerso}
+              onIonChange={(e) => setConteudoVerso(e.detail.value!)}
+              className="input"
+            />
+
+            <IonButton expand="block" className="btnSalvar bntSFlashcard" onClick={() => {
+              console.log({
+                titulo,
+                conteudo_frente: JSON.parse(conteudoFrente),
+                conteudo_verso: JSON.parse(conteudoVerso),
+              });
+              setShowModal(false);
+            }}>
+              Salvar
+            </IonButton>
+          </div>
+        </IonModal>
       </IonContent>
     </IonPage>
   );

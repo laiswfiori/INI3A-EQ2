@@ -20,11 +20,19 @@ h1 {
 ion-button.config {
   --background: #fff; 
   --color: black;  
+  /* display: flex;
+  justify-content: flex-end;
+  align-items: flex-start !important;
+  overflow: hidden; */
 }
 
 ion-button.config::part(native) {
   all: unset;   
   font-weight: 700;
+  /* display: flex;
+  justify-content: flex-end;
+  align-items: flex-start !important;
+  overflow: hidden; */
 }
 
 ion-button.config::part(native):hover {

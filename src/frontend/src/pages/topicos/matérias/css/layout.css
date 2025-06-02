@@ -46,3 +46,9 @@
         min-width: 70%;
     }
 }
+
+@media (max-width: 320px) {
+    .txtTitMat {
+        font-size: 1rem !important;
+    }
+}

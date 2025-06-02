@@ -41,6 +41,7 @@
   display: flex;
   width: 100%;
   justify-content: flex-end;
+  align-items: flex-start !important;
 }
 
 ion-button {
@@ -73,6 +74,7 @@ ion-button {
   flex-direction: row;
   justify-content: flex-start;
   gap: 5%;
+  padding-top: 2%;
 }
 
 .td {
@@ -111,6 +113,13 @@ ion-item.materia-item ion-label {
   background-color: #000;
 }
 
+.totalAtividades {
+  margin-top: 1%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none !important;
+}
   .error-message {
     color: #000000;
     text-align: center;

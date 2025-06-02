@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal, IonPopover, IonInput, IonRow, IonCol } from '@ionic/react';
-import { book, pencil, trash } from 'ionicons/icons';
+import { book, pencil, trash, close } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -85,13 +85,14 @@ const Materias: React.FC = () => {
     fetchMaterias();
   }, []);
 
-  const calcularProgresso = (topicos: Topico[]): number => {
+  const calcularProgresso = (topicos: Topico[]) => {
     const totalAtividades = topicos.reduce((acc, topico) => acc + topico.atividades.length, 0);
     const atividadesConcluidas = topicos.reduce(
       (acc, topico) => acc + topico.atividades.filter(atividade => atividade.status === 'concluído').length,
       0
     );
-    return totalAtividades > 0 ? (atividadesConcluidas / totalAtividades) * 100 : 0;
+    const progresso = totalAtividades > 0 ? (atividadesConcluidas / totalAtividades) * 100 : 0;
+    return { totalAtividades, atividadesConcluidas, progresso };
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -170,7 +171,7 @@ const Materias: React.FC = () => {
         ) : (
           <IonList className="materias-list">
             {materias.map((materia) => {
-              const progresso = calcularProgresso(materia.topicos);
+              const { totalAtividades, atividadesConcluidas, progresso } = calcularProgresso(materia.topicos);
 
               return (
                 <IonItem
@@ -180,25 +181,29 @@ const Materias: React.FC = () => {
                   onClick={() => history.push(`/materias/${materia.id}`)}
                 >
                   <IonLabel>
-                    <IonRow id="containerConfig">
-                      <IonButton
-                        id={`config-btn-${materia.id}`}
-                        className="config"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setMateriaSelecionada(materia);
-                          setPopoverEvent(e.nativeEvent);
-                          setShowPopover(true);
-                        }}
-                      >
-                        ...
-                      </IonButton>
-                    </IonRow>
                     <IonRow className="containerMateria">
                       <IonIcon icon={book} className="livro" />
                       <IonCol className="td">
-                        <h2>{materia.nome}</h2>
+                        <h2 className="txtTitMat">{materia.nome}</h2>
                       </IonCol>
+                      <IonCol id="containerConfig">
+                        <IonButton
+                          id={`config-btn-${materia.id}`}
+                          className="config"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setMateriaSelecionada(materia);
+                            setPopoverEvent(e.nativeEvent);
+                            setShowPopover(true);
+                          }}
+                        >
+                          ...
+                        </IonButton>
+                      </IonCol>
+                    </IonRow>
+                    <IonRow className="totalAtividades">
+                      <p>{totalAtividades} atividades</p>
+                      <p id="txtConc">{atividadesConcluidas} concluídas</p>
                     </IonRow>
                     <IonRow className="barra">
                       <div className="barraStatus" style={{ width: `${progresso}%` }}></div>
@@ -216,8 +221,13 @@ const Materias: React.FC = () => {
 
         <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalAdd">
           <IonContent className="ion-padding">
+            <IonRow className="contFecharModal">
+              <IonIcon icon={close} className="iconeFecharM" onClick={() => setShowModal(false)}/>
+            </IonRow>
+            <IonRow className="centroModal">
+              <h2 className="label">Adicionar matéria</h2>
+            </IonRow>
             <div id="pagAdicionar">
-              <p className="label">Nome da Matéria</p>
               <IonInput
                 labelPlacement="stacked"
                 placeholder="Digite o nome da matéria"

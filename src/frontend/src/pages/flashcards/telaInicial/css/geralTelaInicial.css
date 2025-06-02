@@ -150,6 +150,7 @@ ion-popover.popoverGeral::part(content) {
   margin-left: 1%;
   margin-right: 1%;
   width: calc(33.33% - 1rem);
+  max-width:  calc(33.33% - 1rem);
   pointer-events: none !important;
 }
 
@@ -253,3 +254,35 @@ ion-item.materia-itemF ion-label {
     justify-content: flex-start !important;
     align-items: center  !important;
 }
+
+.contFecharModal {
+    display: flex  !important;
+    justify-content: flex-end !important;
+}
+
+.centroModal {
+    width: 100%;
+    display: flex  !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-bottom: 1%;
+}
+
+ion-modal.modalFlashcards {
+    --max-height: 35%;
+    height: auto;
+}
+
+ion-modal.modalFlashcards::part(content) {
+    border-radius: 16px; 
+    padding: 1%;
+  }
+
+.iFlashcard {
+    margin-bottom: 1%;
+}
+
+.bntSFlashcard {
+    margin-top: 2% !important;
+}
+
