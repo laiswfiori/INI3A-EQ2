@@ -7,7 +7,7 @@ import 'swiper/css/pagination';
 
 import Registro from '../registro/Registro';
 import Login from '../login/Login';
-import './LoginCadastro.css';
+import './loginCadastro.css';
 
 SwiperCore.use([Pagination]);
 

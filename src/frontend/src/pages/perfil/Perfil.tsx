@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonCol, IonRow, IonIcon, IonButton, IonInput, IonCheckbox } from '@ionic/react';
-import { caretForward, personCircle, warning, logOut } from 'ionicons/icons';
+import { caretForward, personCircle, warning, logOut, chevronDown } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -24,6 +24,16 @@ const Perfil: React.FC = () => {
    const [view, setView] = useState<'perfil' | 'estudo'>('perfil');
    const [mobileView, setMobileView] = useState<'gerais' | 'perfil' | 'seguranca' | 'estudo'>('gerais');
    const [nomeUsuario, setNomeUsuario] = useState('');
+   const [materias, setMaterias] = useState<string[]>(['Matéria 1', 'Matéria 2']);
+    const [materiasAbertas, setMateriasAbertas] = useState<{ [key: string]: boolean }>({});
+
+
+    const toggleMateriaAberta = (materia: string) => {
+    setMateriasAbertas(prev => ({
+        ...prev,
+        [materia]: !prev[materia]
+    }));
+};
 
     useEffect(() => {
     const buscarNomeUsuario = async () => {
@@ -66,21 +76,18 @@ const Perfil: React.FC = () => {
 
    const [diasSelecionados, setDiasSelecionados] = useState<string[]>([]);
    const [horariosEstudo, setHorariosEstudo] = useState<{ [key: string]: string }>({});
-   const [materias, setMaterias] = useState<string[]>(['Matéria 1', 'Matéria 2']);
    const [novaMateria, setNovaMateria] = useState('');
 
 
-   const toggleDia = (dia: string) => {
-       setDiasSelecionados(prev => {
-           let novoArray: string[];
-           if (prev.includes(dia)) {
-               novoArray = prev.filter(d => d !== dia);
-           } else {
-               novoArray = [...prev, dia];
-           }
-           return Array.from(new Set(novoArray));
-       });
-   };
+   const toggleDia = (diaCompleto: string) => {
+    setDiasSelecionados(prev => {
+        if (prev.includes(diaCompleto)) {
+            return prev.filter(d => d !== diaCompleto);
+        } else {
+            return [...prev, diaCompleto];
+        }
+    });
+};
 
 
    const handleHorarioChange = (dia: string, valor: string) => {
@@ -366,17 +373,48 @@ const Perfil: React.FC = () => {
                                    </IonCol>
                                    <div id="linhaVertical">&nbsp;</div>
                                    <IonCol id="colMats">
-                                       <p className="pEstudo">Matérias cadastradas</p>
-                                       {materias.map((materia, index) => (
-                                           <IonRow key={index} className="msmLinha">
-                                               <IonCheckbox checked={true} />
-                                               <p className="pDiaMat">{materia}</p>
-                                           </IonRow>
-                                       ))}
-                                       <IonRow>
-                                           <IonButton className="btnAddDM">+ Adicionar matéria</IonButton>
-                                       </IonRow>
-                                   </IonCol>
+                                        <p className="pEstudo">Matérias por dia</p>
+
+                                        {materias.map((materia, index) => (
+                                            <div key={index}>
+                                                <IonRow className="msmLinha">
+                                                    <p className="pDiaMat">{materia}</p>
+                                                    <IonIcon
+                                                        icon={chevronDown}
+                                                        onClick={() => toggleMateriaAberta(materia)}
+                                                        className="iconeChevron"
+                                                    />
+                                                </IonRow>
+
+                                                {materiasAbertas[materia] && (
+                                                    <IonRow className="diasMateria">
+                                                        <IonCol>
+                                                            {diasSemana.slice(0, 3).map(dia => (
+                                                                <IonRow key={dia} className="msmLinha">
+                                                                    <IonCheckbox
+                                                                        checked={diasSelecionados.includes(`${materia}-${dia}`)}
+                                                                        onIonChange={() => toggleDia(`${materia}-${dia}`)}
+                                                                    />
+                                                                    <p className="pDiaMat">{dia}</p>
+                                                                </IonRow>
+                                                            ))}
+                                                        </IonCol>
+                                                        <IonCol>
+                                                            {diasSemana.slice(3).map(dia => (
+                                                                <IonRow key={dia} className="msmLinha">
+                                                                    <IonCheckbox
+                                                                        checked={diasSelecionados.includes(`${materia}-${dia}`)}
+                                                                        onIonChange={() => toggleDia(`${materia}-${dia}`)}
+                                                                    />
+                                                                    <p className="pDiaMat">{dia}</p>
+                                                                </IonRow>
+                                                            ))}
+                                                        </IonCol>
+                                                    </IonRow>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </IonCol>
                                </div>
                            </IonCol>
                        )}
@@ -497,7 +535,7 @@ const Perfil: React.FC = () => {
                                <IonRow className="rowContainer">
                                    <div className="contConfig">
                                        <div className="cor" id="resetar"></div>
-                                       <p className="titConfig">Resetar preferências:</p>
+                                       <p className="titConfig">Resetar:</p>
                                    </div>
                                    <button className="bin-button">
                                         <svg className="bin-top" viewBox="0 0 39 7" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -668,19 +706,48 @@ const Perfil: React.FC = () => {
 
 
                                <IonRow className="flexRow">
-                                   <IonRow>
-                                           <p className="pEstudo">Matérias cadastradas</p>
+                                   <IonRow className="centro">
+                                        <p className="pEstudo">Matérias para estudo semanal</p>
                                    </IonRow>
-                               <IonRow className="materiasContainer flexRow">
+                               <IonRow className="materiasContainer flexColumn">
                                    {materias.map((materia, index) => (
-                                   <IonRow key={index} className="msmLinha">
-                                       <IonCheckbox checked={true} />
-                                       <p className="pDiaMat">{materia}</p>
+                                   <IonRow key={index} className="msmLinha larguraMat">
+                                        <IonRow className="msmLinha larguraMat">
+                                                <p className="pDiaMat">{materia}</p>
+                                                <IonIcon
+                                                    icon={chevronDown}
+                                                    onClick={() => toggleMateriaAberta(materia)}
+                                                    className="iconeChevron"
+                                            />
+                                        </IonRow>
+                                        {materiasAbertas[materia] && (
+                                                    <IonRow className="diasMateria larguraDias">
+                                                        <IonCol>
+                                                            {diasSemana.slice(0, 3).map(dia => (
+                                                                <IonRow key={dia} className="msmLinha">
+                                                                    <IonCheckbox
+                                                                        checked={diasSelecionados.includes(`${materia}-${dia}`)}
+                                                                        onIonChange={() => toggleDia(`${materia}-${dia}`)}
+                                                                    />
+                                                                    <p className="pDiaMat">{dia}</p>
+                                                                </IonRow>
+                                                            ))}
+                                                        </IonCol>
+                                                        <IonCol>
+                                                            {diasSemana.slice(3).map(dia => (
+                                                                <IonRow key={dia} className="msmLinha">
+                                                                    <IonCheckbox
+                                                                        checked={diasSelecionados.includes(`${materia}-${dia}`)}
+                                                                        onIonChange={() => toggleDia(`${materia}-${dia}`)}
+                                                                    />
+                                                                    <p className="pDiaMat">{dia}</p>
+                                                                </IonRow>
+                                                            ))}
+                                                        </IonCol>
+                                                    </IonRow>
+                                                )}
                                    </IonRow>
                                    ))}
-                               </IonRow>
-                               <IonRow className="flexRow">
-                                   <IonButton className="btnAddDM">+ Adicionar matéria</IonButton>
                                </IonRow>
                                </IonRow>
                            </IonRow>

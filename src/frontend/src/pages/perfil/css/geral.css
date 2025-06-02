@@ -254,3 +254,33 @@ ion-input.inputBioM {
   width: 100%;
   justify-content: center;
 }
+
+.centro {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.larguraMat {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+.larguraDias {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  margin-left: 1%;
+}
