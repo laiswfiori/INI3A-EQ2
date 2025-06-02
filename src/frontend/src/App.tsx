@@ -2,7 +2,7 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/pagInicial/Home';
-import Conteudos from './pages/conteudos/topicos/Topicos';
+import Topicos from './pages/conteudos/topicos/Topicos';
 import Atividades from './pages/conteudos/atividades/Atividades';
 import Matérias from './pages/conteudos/matérias/Materias';
 import Login from './pages/login/Login';
