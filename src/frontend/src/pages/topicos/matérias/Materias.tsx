@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal, IonPopover, IonInput, IonRow, IonCol } from '@ionic/react';
-import { book, pencil, trash, close } from 'ionicons/icons';
+import { book, pencil, trash, close, arrowForward } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -177,8 +177,6 @@ const Materias: React.FC = () => {
                 <IonItem
                   key={materia.id}
                   className="materia-item"
-                  button
-                  onClick={() => history.push(`/materias/${materia.id}`)}
                 >
                   <IonLabel>
                     <IonRow className="containerMateria">
@@ -208,6 +206,12 @@ const Materias: React.FC = () => {
                     <IonRow className="barra">
                       <div className="barraStatus" style={{ width: `${progresso}%` }}></div>
                     </IonRow>
+                    <IonRow className="contIrTopicos">
+                      <IonButton className="btnIrTopicos" onClick={() => history.push(`/materias/${materia.id}`)}>
+                        Ir para tópicos
+                        <IonIcon icon={arrowForward} className="setaMat" />
+                      </IonButton>
+                    </IonRow>
                   </IonLabel>
                 </IonItem>
               );
@@ -225,7 +229,7 @@ const Materias: React.FC = () => {
               <IonIcon icon={close} className="iconeFecharM" onClick={() => setShowModal(false)}/>
             </IonRow>
             <IonRow className="centroModal">
-              <h2 className="label">Adicionar matéria</h2>
+              <h2 className="label">Matéria</h2>
             </IonRow>
             <div id="pagAdicionar">
               <IonInput

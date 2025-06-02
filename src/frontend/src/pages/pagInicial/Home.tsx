@@ -145,7 +145,7 @@ const Home: React.FC = () => {
                         Terminal
                       </p>
 
-                      <button className="copy_toggle" tabindex="-1" type="button">
+                      <button className="copy_toggle" type="button">
                         <svg
                           width="16px"
                           height="16px"

@@ -37,7 +37,7 @@ const Header: React.FC = () => {
 
   const navConteudos = () => {
     if (isAuthenticated()) {
-      history.push('/topicos/materias');
+      history.push('/conteudos/materias');
     } else {
       history.push('/logincadastro/logincadastro');
     }

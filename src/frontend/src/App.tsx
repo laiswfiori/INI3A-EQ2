@@ -2,9 +2,9 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/pagInicial/Home';
-import Conteudos from './pages/topicos/conteudos/Conteudos';
-import Atividades from './pages/topicos/atividades/Atividades';
-import Matérias from './pages/topicos/matérias/Materias';
+import Conteudos from './pages/conteudos/topicos/Topicos';
+import Atividades from './pages/conteudos/atividades/Atividades';
+import Matérias from './pages/conteudos/matérias/Materias';
 import Login from './pages/login/Login';
 import LoginCadastro from './pages/loginCadastro/loginCadastro';
 import Registro from './pages/registro/Registro';
@@ -59,9 +59,9 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonRouterOutlet>
         <Route path="/pagInicial/home" component={Home} exact />
-        <Route path="/topicos/conteudos" component={Conteudos} exact />
-        <Route path="/topicos/atividades" component={Atividades} exact />
-        <Route path="/topicos/materias" component={Matérias} exact />
+        <Route path="/conteudos/topicos" component={Topicos} exact />
+        <Route path="/conteudos/atividades" component={Atividades} exact />
+        <Route path="/conteudos/materias" component={Matérias} exact />
         <Route path="/login/login" component={Login} exact />
         <Route path="/registro/registro" component={Registro} exact />
         <Route path="/perfil/perfil" component={Perfil} exact />
@@ -71,7 +71,7 @@ const App: React.FC = () => (
         <Route path="/flashcards/telainicialflashcards" component={TelaInicialFlashcards} exact />
         <Route path="/logincadastro/logincadastro" component={LoginCadastro} exact />
 
-        <Route path="/materias/:id" component={Conteudos} exact />
+        <Route path="/materias/:id" component={Topicos} exact />
 
         {}
         <Route exact path="/">

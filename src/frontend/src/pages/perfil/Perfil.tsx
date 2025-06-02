@@ -26,6 +26,8 @@ const Perfil: React.FC = () => {
    const [nomeUsuario, setNomeUsuario] = useState('');
    const [materias, setMaterias] = useState<string[]>(['Matéria 1', 'Matéria 2']);
     const [materiasAbertas, setMateriasAbertas] = useState<{ [key: string]: boolean }>({});
+    const [diasSelecionados, setDiasSelecionados] = useState<string[]>([]);
+   const [horariosEstudo, setHorariosEstudo] = useState<{ [key: string]: string }>({});
 
 
     const toggleMateriaAberta = (materia: string) => {
@@ -72,12 +74,6 @@ const Perfil: React.FC = () => {
    };
 
    const diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
-
-
-   const [diasSelecionados, setDiasSelecionados] = useState<string[]>([]);
-   const [horariosEstudo, setHorariosEstudo] = useState<{ [key: string]: string }>({});
-   const [novaMateria, setNovaMateria] = useState('');
-
 
    const toggleDia = (diaCompleto: string) => {
     setDiasSelecionados(prev => {

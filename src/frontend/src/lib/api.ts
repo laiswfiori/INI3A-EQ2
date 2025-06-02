@@ -55,31 +55,4 @@ export default class API {
   async delete(endpoint: string, token: string | null = null) {
     return this.makeRequest('DELETE', endpoint, null, token);
   }
-
-  async makeUnsplashRequest(query: string) {
-    const endpoint = `https://api.unsplash.com/search/photos?query=${query}`;
-    const accessKey = 'SXW2jdYh2hAuEnmOQ7PnD6mp6KPEvxFuZMelO4xa20Q';
-
-    const options: RequestInit = {
-      method: 'GET',
-      headers: {
-        Authorization: `Client-ID ${accessKey}`,
-      },
-    };
-
-    try {
-      const response = await fetch(endpoint, options);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return await response.json();
-    } catch (error) {
-      console.error('Erro ao fazer requisição Unsplash:', error);
-      throw error;
-    }
-  }
-
-  async unsplashGet(query: string) {
-    return this.makeUnsplashRequest(query);
-  }
 }

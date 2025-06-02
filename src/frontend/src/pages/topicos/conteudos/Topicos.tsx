@@ -18,7 +18,7 @@ interface Topico {
   updated_at: string;
 }
 
-const Conteudos: React.FC = () => {
+const Topicos: React.FC = () => {
   const [topicos, setTopicos] = useState<Topico[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -313,4 +313,4 @@ const Conteudos: React.FC = () => {
   );
 };
 
-export default Conteudos;
+export default Topicos;

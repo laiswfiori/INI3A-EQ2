@@ -65,7 +65,7 @@ ion-button {
   padding: 12px;
   background-color: white;
   min-height: 50%;
-  cursor: pointer;
+  cursor: default;
   margin-top: 2%;
 }
 
@@ -201,4 +201,37 @@ ion-button.opcoes::part(native) {
   
 ion-popover::part(backdrop) {
   background: transparent !important;
+}
+
+.contIrTopicos {
+  display: flex !important;
+  justify-content: flex-end !important;
+  padding-top: 2%;
+  width: 100%;
+}
+
+.btnIrTopicos {
+  display: flex !important;
+  justify-content: space-around !important;
+  all: unset;
+  cursor: pointer;
+  color: white;
+  background-color: #00296b;
+  width: 30%;
+  border-radius: 20px;
+}
+
+.btnIrTopicos::part(native) {
+  color: white;
+  background-color: #00296b;
+  border-radius: 20px;
+}
+
+.btnIrTopicos::part(native):hover {
+  color: white;
+  background-color: #3DA5D9;
+}
+
+.setaMat {
+  margin-left: 2%;
 }
