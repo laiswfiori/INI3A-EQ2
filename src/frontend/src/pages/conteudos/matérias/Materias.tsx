@@ -73,7 +73,6 @@ const Materias: React.FC = () => {
           );
           return { ...materia, topicos };
         });
-
         setMaterias(materiasComTopicos);
       } catch (err: any) {
         setError(err.message);
@@ -86,13 +85,15 @@ const Materias: React.FC = () => {
   }, []);
 
   const calcularProgresso = (topicos: Topico[]) => {
-    const totalAtividades = topicos.reduce((acc, topico) => acc + topico.atividades.length, 0);
-    const atividadesConcluidas = topicos.reduce(
-      (acc, topico) => acc + topico.atividades.filter(atividade => atividade.status === 'concluído').length,
-      0
-    );
-    const progresso = totalAtividades > 0 ? (atividadesConcluidas / totalAtividades) * 100 : 0;
-    return { totalAtividades, atividadesConcluidas, progresso };
+    const totalTopicos = topicos.length;
+
+    const topicosConcluidos = topicos.filter(topico =>
+      topico.status === 'concluído'
+    ).length;
+
+    const progresso = totalTopicos > 0 ? (topicosConcluidos / totalTopicos) * 100 : 0;
+
+    return { totalTopicos, topicosConcluidos, progresso };
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -171,7 +172,7 @@ const Materias: React.FC = () => {
         ) : (
           <IonList className="materias-list">
             {materias.map((materia) => {
-              const { totalAtividades, atividadesConcluidas, progresso } = calcularProgresso(materia.topicos);
+              const { totalTopicos, topicosConcluidos, progresso } = calcularProgresso(materia.topicos);
 
               return (
                 <IonItem
@@ -200,8 +201,8 @@ const Materias: React.FC = () => {
                       </IonCol>
                     </IonRow>
                     <IonRow className="totalAtividades">
-                      <p>{totalAtividades} atividades</p>
-                      <p id="txtConc">{atividadesConcluidas} concluídas</p>
+                      <p>{totalTopicos} tópicos</p>
+                      <p id="txtConc">{topicosConcluidos} concluídos</p>
                     </IonRow>
                     <IonRow className="barra">
                       <div className="barraStatus" style={{ width: `${progresso}%` }}></div>

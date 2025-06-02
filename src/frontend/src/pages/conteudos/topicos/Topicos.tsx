@@ -1,12 +1,27 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { IonPage, IonContent, IonList, IonItem, IonLabel, IonBadge, IonIcon, IonButton, IonModal, IonPopover, IonHeader, IonToolbar, IonTitle, IonInput, IonSelect, IonSelectOption, IonTextarea } from '@ionic/react';
-import { book, pencil, trash, flash, checkmarkDone } from 'ionicons/icons';
+import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal, IonPopover,
+  IonInput, IonTextarea, IonRow, IonCol } from '@ionic/react';
+import { book, pencil, trash, arrowForward  } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
 import Header from '../../../components/Header';
 import API from '../../../lib/api';
+
+interface Atividade {
+  id: number;
+  topico_id: number;
+  materia_id: number;
+  titulo: string;
+  descricao: string;
+  conteudo: any;
+  status: string;
+  tipo: string;
+  nivel: string;
+  created_at: string;
+  updated_at: string;
+}
 
 interface Topico {
   id: number;
@@ -16,6 +31,7 @@ interface Topico {
   materia_id: number;
   created_at: string;
   updated_at: string;
+  atividades: Atividade[];
 }
 
 const Topicos: React.FC = () => {
@@ -25,95 +41,83 @@ const Topicos: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const [topicoSelecionado, setTopicoSelecionado] = useState<Topico | null>(null);
-  const configButtonRef = useRef<HTMLIonButtonElement | null>(null);
   const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
-  const [erro, setErro] = useState('');
-  const [mensagem, setMensagem] = useState('');
-  const [titulo, setTitulo] = useState('');
-  const [status, setStatus] = useState('');
-  const [descricao, setDescricao] = useState<string | null>(null);
-
-  const history = useHistory();
-
-  
-  const { id } = useParams<{ id: string }>();
-
-
-  useEffect(() => {
-    fetchTopicos();
-  }, [id]);
-
 
   const [novoTopico, setNovoTopico] = useState({
     titulo: '',
-    materia_id: parseInt(id),
-    status: '',
-    descricao: descricao === '' ? null : descricao,
+    materia_id: 0,
+    descricao: '',
   });
 
-  const api = new API();
+  const history = useHistory();
+  const { id } = useParams<{ id: string }>();
 
-  const fetchTopicos = async () => {
-    const api = new API();
-    try {
-      let r = await api.get("topicos");
-      const topicosDaMateria = r.filter((topico: Topico) => topico.materia_id === parseInt(id));
-      setTopicos(topicosDaMateria);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+  useEffect(() => {
+    setNovoTopico((prev) => ({ ...prev, materia_id: Number(id) }));
+  }, [id]);
+
+  useEffect(() => {
+    const fetchTopicos = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const api = new API();
+        const topicosResponse = await api.get('topicos');
+        const atividadesResponse = await api.get('atividades');
+
+        const topicosComAtividades = topicosResponse.map((topico: Topico) => {
+          const atividades = atividadesResponse.filter(
+            (atividade: Atividade) => atividade.topico_id === topico.id
+          );
+          return { ...topico, atividades };
+        });
+
+        const topicosFiltrados = topicosComAtividades.filter(
+          (topico: { materia_id: number; }) => topico.materia_id === Number(id)
+        );
+
+        setTopicos(topicosFiltrados);
+      } catch (err: any) {
+        setError(err.message || 'Erro ao carregar tópicos');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTopicos();
+  }, [id]);
+
+  const barraProgresso = (topico: Topico): number => {
+    const totalAtividades = topico.atividades?.length || 0;
+    const atividadesConcluidas =
+      topico.atividades?.filter((atividade) => atividade.status === 'concluído').length || 0;
+    return totalAtividades > 0 ? (atividadesConcluidas / totalAtividades) * 100 : 0;
   };
-  
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: keyof typeof novoTopico, value: string) => {
     setNovoTopico({ ...novoTopico, [field]: value });
   };
 
-  const handleSalvar = async () =>  {
-
-    setErro ('');
-    setMensagem('');
-
-    console.log('Salvando:', novoTopico);
-
+  const handleSalvar = async () => {
+    setError('');
     try {
       const response = await fetch('http://localhost:8000/topicos', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ titulo, status, descricao}),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(novoTopico),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setMensagem('Cadastro realizado com sucesso!');
-        setTitulo('');
-        setStatus('');
-        setDescricao('');
-        window.location.reload();
+        setShowModal(false);
+        setNovoTopico({ titulo: '', materia_id: Number(id), descricao: '' });
+        setTopicos((prev) => [...prev, { ...data, atividades: [] }]);
       } else {
-        setErro(data.mensagem || 'Erro ao cadastrar tópico.');
+        setError(data.mensagem || 'Erro ao cadastrar tópico');
       }
-    } catch (error) {
-      console.error('Erro na requisição:', error);
-      setErro('Erro de conexão com o servidor.');
-    }
-  };
-
-  const barraProgresso = (status: string): number => {
-    switch (status.toLowerCase()) {
-      case 'não iniciado':
-        return 0;
-      case 'em andamento':
-        return 50;
-      case 'concluído':
-        return 100;
-      default:
-        return 0;
+    } catch {
+      setError('Erro de conexão com o servidor.');
     }
   };
 
@@ -121,70 +125,32 @@ const Topicos: React.FC = () => {
     if (topicoSelecionado) {
       setNovoTopico({
         titulo: topicoSelecionado.titulo,
-        materia_id: topicoSelecionado.materia_id , 
-        status: topicoSelecionado.status,
-        descricao: topicoSelecionado.descricao,
+        materia_id: topicoSelecionado.materia_id,
+        descricao: topicoSelecionado.descricao || '',
       });
+      setShowModal(true);
+      setShowPopover(false);
     }
-    setShowModal(true);  
-    setShowPopover(false);  
   };
 
   const handleExcluir = async () => {
-      if (topicoSelecionado) {
-        let api = new API();
-        try {
-          await api.delete(`materias/${topicoSelecionado.id}`);
-          setShowPopover(false);
-          setTopicos((prev) => prev.filter(m => m.id !== topicoSelecionado.id));
-          console.log('Tópico excluído');
-        } catch (err) {
-          console.error('Erro ao excluir tópico:', err);
-        }
-      }
-  };
+    if (!topicoSelecionado) return;
 
-  const handleIniciar = async () => {
-    if (topicoSelecionado) {
-      try {
-        const updatedTopico = { ...topicoSelecionado, status: 'Em andamento' };
-  
-        await fetch(`/api/topicos/${topicoSelecionado.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(updatedTopico),
-        });
-  
-        setTopicoSelecionado(updatedTopico); 
-        setShowPopover(false); 
-        console.log('Tópico iniciado');
-      } catch (err) {
-        console.error('Erro ao iniciar tópico:', err);
-      }
+    try {
+      const api = new API();
+      await api.delete(`topicos/${topicoSelecionado.id}`);
+      setTopicos((prev) => prev.filter((t) => t.id !== topicoSelecionado.id));
+      setShowPopover(false);
+    } catch {
+      setError('Erro ao excluir tópico');
     }
   };
-
-  const handleConcluir = async () => {
-    if (topicoSelecionado) {
-      try {
-        const updatedTopico = { ...topicoSelecionado, status: 'Concluído' };
-        setShowPopover(false);  
-        console.log('Tópico concluído');
-      } catch (err) {
-        console.error('Erro ao concluir tópico:', err);
-      }
-    }
-  };
-  
 
   return (
     <IonPage className={`pagina ${showModal ? 'desfocado' : ''}`}>
       <Header />
-
       <IonContent className="body">
-        <h1 className="titulo">Conteúdos</h1>
+        <h1 className="titulo">Tópicos</h1>
         <div className="linhaHorizontal"></div>
 
         {loading ? (
@@ -195,42 +161,57 @@ const Topicos: React.FC = () => {
           <p className="error-message">{error}</p>
         ) : (
           <IonList className="topicos-list">
-            {topicos.map((topico) => (
-              <IonItem
-                key={topico.id}
-                className="topico-item"
-                button onClick={() => history.push(`/conteudos/${topico.id}`)}
-              >
-                <IonLabel>
-                <div id="containerConfig">
-                <IonButton
-                   id={`config-btn-${topico.id}`}
-                   className="config"
-                    onClick={(e) => {
-                    e.stopPropagation();
-                    setTopicoSelecionado(topico);
-                    setPopoverEvent(e.nativeEvent);
-                    setShowPopover(true);
-                  }}
-                >...
-                </IonButton>
-                </div>
-                  <div className="containerTopico">
-                    <IonIcon icon={book} className="livro"/>
-                    <div className="td">
-                      <h2>{topico.titulo}</h2>
-                      <p>{topico.descricao}</p>
-                    </div>
-                  </div>
-                  <div className="barra">
-                    <div
-                      className="barraStatus"
-                      style={{ width: `${barraProgresso(topico.status)}%` }}
-                    ></div>
-                  </div>
-                </IonLabel>
-              </IonItem>
-            ))}
+            {topicos.map((topico) => {
+              const totalAtividades = topico.atividades?.length || 0;
+              const atividadesConcluidas = topico.atividades?.filter(a => a.status === 'concluído').length || 0;
+
+              return (
+                <IonItem
+                  key={topico.id}
+                  className="topico-item"
+                >
+                  <IonLabel>
+                    <IonRow className="containerTopico">
+                      <IonIcon icon={book} className="livro" />
+                      <IonCol className="td">
+                        <h2 className="txtTitMat">{topico.titulo}</h2>
+                        <p>{topico.descricao}</p>
+                      </IonCol>
+                      <IonCol id="containerConfig">
+                        <IonButton
+                          id={`config-btn-${topico.id}`}
+                          className="config"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setTopicoSelecionado(topico);
+                            setPopoverEvent(e.nativeEvent);
+                            setShowPopover(true);
+                          }}
+                        >
+                          ...
+                      </IonButton>
+                    </IonCol>
+                    </IonRow>
+                    <IonRow className="totalAtividades">
+                      <p>{totalAtividades} atividades</p>
+                      <p id="txtConc">{atividadesConcluidas} concluídas</p>
+                    </IonRow>
+                    <IonRow className="barra">
+                      <div
+                        className="barraStatus"
+                        style={{ width: `${barraProgresso(topico)}%` }}
+                      />
+                    </IonRow>
+                    <IonRow className="contIrTopicos">
+                      <IonButton className="btnIrTopicos">
+                        Ir para atividades
+                        <IonIcon icon={arrowForward} className="setaMat" />
+                      </IonButton>
+                    </IonRow>                    
+                  </IonLabel>
+                </IonItem>
+              );
+            })}
           </IonList>
         )}
 
@@ -239,73 +220,52 @@ const Topicos: React.FC = () => {
           shape="round"
           color="primary"
           onClick={() => setShowModal(true)}
-        > +
+        >
+          +
         </IonButton>
 
-        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalAdd">
+        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalAddTop">
           <IonContent className="ion-padding">
+            <IonRow className="centroModal">
+              <h2 className="labelT">Tópico</h2>
+            </IonRow>            
             <div id="pagAdicionar">
-              
               <p className="label">Nome do Tópico</p>
               <IonInput
-                labelPlacement="stacked"
                 placeholder="Digite o nome do tópico"
                 value={novoTopico.titulo}
                 onIonChange={(e) => handleInputChange('titulo', e.detail.value!)}
                 className="input"
               />
-
-              <p className="label">Status</p>
-              <IonSelect
-                labelPlacement="stacked"
-                placeholder="Selecione o status"
-                value={novoTopico.status}
-                onIonChange={(e) => handleInputChange('status', e.detail.value!)}
-                className="input"
-              >
-                <IonSelectOption value="Em andamento">Não iniciado</IonSelectOption>
-                <IonSelectOption value="Em andamento">Em andamento</IonSelectOption>
-                <IonSelectOption value="Concluído">Concluído</IonSelectOption>
-              </IonSelect>
-
               <p className="label">Descrição</p>
               <IonTextarea
-                labelPlacement="stacked"
                 placeholder="Escreva uma breve descrição"
                 value={novoTopico.descricao}
                 onIonInput={(e) => handleInputChange('descricao', e.detail.value!)}
                 className="input"
               />
-
               <IonButton expand="block" onClick={handleSalvar} className="btnSalvar">
                 Salvar
               </IonButton>
-              </div>
+            </div>
           </IonContent>
         </IonModal>
+
         <IonPopover
-         isOpen={showPopover}
-         event={popoverEvent}
-         onDidDismiss={() => {
-           setShowPopover(false);
-           setPopoverEvent(undefined);
-         }}
+          isOpen={showPopover}
+          event={popoverEvent}
+          onDidDismiss={() => {
+            setShowPopover(false);
+            setPopoverEvent(undefined);
+          }}
         >
           <IonButton expand="block" onClick={handleEditar} className="opcoes" id="btnLapis">
-            <IonIcon icon={pencil} className="iconesPopover" id="lapis"/>
+            <IonIcon icon={pencil} className="iconesPopover" id="lapis" />
             Editar
           </IonButton>
           <IonButton expand="block" color="danger" onClick={handleExcluir} className="opcoes" id="btnLixo">
-            <IonIcon icon={trash} className="iconesPopover" id="lixo"/>
+            <IonIcon icon={trash} className="iconesPopover" id="lixo" />
             Excluir
-          </IonButton>
-          <IonButton expand="block" onClick={handleIniciar} className="opcoes" id="btnRaio">
-            <IonIcon icon={flash} className="iconesPopover" id="raio"/>
-            Iniciar
-          </IonButton>
-          <IonButton expand="block" onClick={handleConcluir} className="opcoes" id="btnCheck">
-            <IonIcon icon={checkmarkDone} className="iconesPopover" id="check"/>
-            Concluir
           </IonButton>
         </IonPopover>
       </IonContent>

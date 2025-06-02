@@ -39,12 +39,12 @@ ion-button.config::part(native):hover {
   cursor: pointer;
 }
 
-ion-modal.modalAdd {
-    --max-height: 60%;
+ion-modal.modalAddTop {
+    --max-height: 45%;
     height: auto;
 }
 
-ion-modal.modalAdd::part(content) {
+ion-modal.modalAddTop::part(content) {
     border-radius: 16px; 
   }
 
@@ -147,23 +147,10 @@ ion-button#btnLixo::part(native):hover {
   cursor: pointer;
 }
 
-#raio {
-  color: #fec601;
-}
-
-ion-button#btnRaio::part(native):hover {
-  color: #fec601 !important;
-  background-color: rgb(231, 224, 224) !important;
-  cursor: pointer;
-}
-
-#check {
-  color: #ea7317;
-  z-index: 9999999999;
-}
-
-ion-button#btnCheck::part(native):hover {
-  color: #ea7317 !important;
-  background-color: rgb(231, 224, 224) !important;
-  cursor: pointer;
+.labelT{
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding: 0 !important;
+    margin-bottom: 1% !important;
+    margin-top: 2% !important;
 }

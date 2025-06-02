@@ -50,7 +50,7 @@ ion-button.config::part(native):hover {
 }
 
 ion-modal.modalAdd {
-    --max-height: 25%;
+    --max-height: 30%;
     height: auto;
 }
 
@@ -151,6 +151,7 @@ ion-button#btnLapis::part(native):hover {
   color: #3da5d9 !important;
   background-color: rgb(231, 224, 224) !important;
   cursor: pointer;
+  width: 100% !important;
 }
 
 #lixo {
