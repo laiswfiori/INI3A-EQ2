@@ -9,6 +9,7 @@ class Topico extends Model
     protected $table = "topicos";
     protected $fillable = [
          'materia_id',
+         'usuario_id',
          'titulo',
          'descricao',
          'status',

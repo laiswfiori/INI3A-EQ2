@@ -42,6 +42,8 @@ const Topicos: React.FC = () => {
   const [showPopover, setShowPopover] = useState(false);
   const [topicoSelecionado, setTopicoSelecionado] = useState<Topico | null>(null);
   const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
+  const [modoModal, setModoModal] = useState<'adicionar' | 'editar'>('adicionar');
+  
 
   const [novoTopico, setNovoTopico] = useState({
     titulo: '',
@@ -53,7 +55,9 @@ const Topicos: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
-    setNovoTopico((prev) => ({ ...prev, materia_id: Number(id) }));
+    if (id) {
+      setNovoTopico((prev) => ({ ...prev, materia_id: Number(id) }));
+    }
   }, [id]);
 
   useEffect(() => {
@@ -99,52 +103,83 @@ const Topicos: React.FC = () => {
   };
 
   const handleSalvar = async () => {
-    setError('');
-    try {
-      const response = await fetch('http://localhost:8000/topicos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(novoTopico),
-      });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setShowModal(false);
-        setNovoTopico({ titulo: '', materia_id: Number(id), descricao: '' });
-        setTopicos((prev) => [...prev, { ...data, atividades: [] }]);
-      } else {
-        setError(data.mensagem || 'Erro ao cadastrar tópico');
-      }
-    } catch {
-      setError('Erro de conexão com o servidor.');
+    if (!novoTopico.titulo.trim()) {
+      alert('O título do tópico é obrigatório.');
+      return;
     }
-  };
-
-  const handleEditar = () => {
-    if (topicoSelecionado) {
-      setNovoTopico({
-        titulo: topicoSelecionado.titulo,
-        materia_id: topicoSelecionado.materia_id,
-        descricao: topicoSelecionado.descricao || '',
-      });
-      setShowModal(true);
-      setShowPopover(false);
+    if (!novoTopico.materia_id || novoTopico.materia_id <= 0) {
+      alert('Erro: ID da matéria inválido.');
+      return;
     }
-  };
-
-  const handleExcluir = async () => {
-    if (!topicoSelecionado) return;
-
-    try {
       const api = new API();
-      await api.delete(`topicos/${topicoSelecionado.id}`);
-      setTopicos((prev) => prev.filter((t) => t.id !== topicoSelecionado.id));
-      setShowPopover(false);
-    } catch {
-      setError('Erro ao excluir tópico');
-    }
-  };
+      const endpoint = modoModal === 'editar'
+        ? `topicos/${topicoSelecionado?.id}`
+        : `topicos`;
+  
+      const method = modoModal === 'editar' ? api.put : api.post;
+  
+      try {
+        console.log('Enntrou no try');
+        console.log('Enpoint: ', endpoint);
+        const data = await method.call(api, endpoint, {
+          titulo: novoTopico.titulo,
+          materia_id: novoTopico.materia_id,
+          descricao: novoTopico.descricao,
+        });
+  
+        if (modoModal === 'editar') {
+                  console.log('Enntrou no if');
+
+          setTopicos(prev =>
+            prev.map(t => t.id === topicoSelecionado?.id
+              ? { ...data, atividades: t.atividades || [] }
+              : t
+            )
+          );
+        } else {
+                  console.log('Enntrou no else');
+
+          setTopicos(prev => [...prev, { ...data, atividades: [] }]);
+        }
+  
+        setShowModal(false);
+        setShowPopover(false);
+      } catch (error: any) {
+        console.log('Enntrou no catch');
+        console.error('Erro ao salvar tópico:', error);
+        alert(error?.response?.data?.message || 'Erro desconhecido ao salvar tópico');
+      }
+    };
+  
+    const handleEditar = () => {
+      if (topicoSelecionado) {
+        setNovoTopico({ titulo: topicoSelecionado.titulo, materia_id: topicoSelecionado.materia_id, descricao: topicoSelecionado.descricao});
+        setModoModal('editar');
+        setShowModal(true);
+        setShowPopover(false);
+      }
+    };
+  
+    const handleAdicionar = () => {
+       setNovoTopico({ titulo: '',  materia_id: novoTopico.materia_id, descricao: '' });
+      setModoModal('adicionar');
+      setShowModal(true);
+    };
+  
+    const handleExcluir = async () => {
+      if (topicoSelecionado) {
+        const api = new API();
+        try {
+          await api.delete(`topicos/${topicoSelecionado.id}`);
+          setShowPopover(false);
+          setTopicos(prev => prev.filter(t => t.id !== topicoSelecionado.id));
+          console.log('Tópicos excluído');
+        } catch (err) {
+          console.error('Erro ao excluir tópico:', err);
+        }
+      }
+    };
 
   return (
     <IonPage className={`pagina ${showModal ? 'desfocado' : ''}`}>
@@ -203,7 +238,7 @@ const Topicos: React.FC = () => {
                       />
                     </IonRow>
                     <IonRow className="contIrTopicos">
-                      <IonButton className="btnIrTopicos">
+                      <IonButton className="btnIrTopicos" onClick={() => history.push(`/topicos/${topico.id}`)}>
                         Ir para atividades
                         <IonIcon icon={arrowForward} className="setaMat" />
                       </IonButton>
@@ -219,7 +254,7 @@ const Topicos: React.FC = () => {
           className="botao-adicionar"
           shape="round"
           color="primary"
-          onClick={() => setShowModal(true)}
+          onClick={() => handleAdicionar()}
         >
           +
         </IonButton>

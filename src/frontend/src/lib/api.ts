@@ -27,8 +27,13 @@ export default class API {
       headers,
       body: data ? JSON.stringify(data) : null,
     };
+    
 
     try {
+      console.log("entrou no try 2");
+      console.log(this.apiUrl);
+      console.log(url);
+      console.log(options);
       const response = await fetch(url, options);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
