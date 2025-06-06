@@ -2,9 +2,10 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/pagInicial/Home';
+import Matérias from './pages/conteudos/matérias/Materias';
 import Topicos from './pages/conteudos/topicos/Topicos';
 import Atividades from './pages/conteudos/atividades/Atividades';
-import Matérias from './pages/conteudos/matérias/Materias';
+import Atividade from './pages/conteudos/atividadeVisualizacao/Atividade';
 import Login from './pages/login/Login';
 import LoginCadastro from './pages/loginCadastro/loginCadastro';
 import Registro from './pages/registro/Registro';
@@ -13,6 +14,9 @@ import Configuracoes from './pages/configuracoes/Configuracoes';
 import Agenda from './pages/agenda/Agenda';
 import Flashcards from './pages/flashcards/flashcard/Flashcards';
 import TelaInicialFlashcards from './pages/flashcards/telaInicial/TelaInicialFlashcards';
+import Confirmar from './pages/senha/confirmar/Confirmar';
+import Concluir from './pages/senha/concluir/Concluir';
+import Alterar from './pages/senha/alterar/Alterar';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -59,9 +63,10 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonRouterOutlet>
         <Route path="/pagInicial/home" component={Home} exact />
+        <Route path="/conteudos/materias" component={Matérias} exact />
         <Route path="/conteudos/topicos" component={Topicos} exact />
         <Route path="/conteudos/atividades" component={Atividades} exact />
-        <Route path="/conteudos/materias" component={Matérias} exact />
+        <Route path="/conteudos/atividade" component={Atividade} exact />
         <Route path="/login/login" component={Login} exact />
         <Route path="/registro/registro" component={Registro} exact />
         <Route path="/perfil/perfil" component={Perfil} exact />
@@ -70,8 +75,13 @@ const App: React.FC = () => (
         <Route path="/flashcards/flashcards" component={Flashcards} exact />
         <Route path="/flashcards/telainicialflashcards" component={TelaInicialFlashcards} exact />
         <Route path="/logincadastro/logincadastro" component={LoginCadastro} exact />
+        <Route path="/senha/confirmar" component={Flashcards} exact />
+        <Route path="/senha/concluir" component={Flashcards} exact />
+        <Route path="/senha/alterar" component={Flashcards} exact />
 
         <Route path="/materias/:id" component={Topicos} exact />
+        <Route path="/topicos/:id" component={Atividades} exact />
+        <Route path="/atividades/:id" component={Atividade} exact />
 
         {}
         <Route exact path="/">

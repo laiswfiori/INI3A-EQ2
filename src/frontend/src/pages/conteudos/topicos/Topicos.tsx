@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal, IonPopover,
   IonInput, IonTextarea, IonRow, IonCol } from '@ionic/react';
-import { book, pencil, trash, arrowForward  } from 'ionicons/icons';
+import { layers, pencil, trash, arrowForward  } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -207,7 +207,7 @@ const Topicos: React.FC = () => {
                 >
                   <IonLabel>
                     <IonRow className="containerTopico">
-                      <IonIcon icon={book} className="livro" />
+                      <IonIcon icon={layers} className="livro" />
                       <IonCol className="td">
                         <h2 className="txtTitMat">{topico.titulo}</h2>
                         <p>{topico.descricao}</p>
@@ -262,12 +262,14 @@ const Topicos: React.FC = () => {
         <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalAddTop">
           <IonContent className="ion-padding">
             <IonRow className="centroModal">
-              <h2 className="labelT">Tópico</h2>
+              <h2 className="labelT">
+                {modoModal === 'adicionar' ? 'Adicionar tópico' : 'Editar tópico'}
+              </h2>
             </IonRow>            
             <div id="pagAdicionar">
-              <p className="label">Nome do Tópico</p>
+              <p className="label">Título</p>
               <IonInput
-                placeholder="Digite o nome do tópico"
+                placeholder="Digite o título do tópico"
                 value={novoTopico.titulo}
                 onIonChange={(e) => handleInputChange('titulo', e.detail.value!)}
                 className="input"

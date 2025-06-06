@@ -35,7 +35,12 @@
   }
 }
 
-
+.atividade-item {
+  --padding-start: 0;
+  --padding-end: 0;
+  --inner-padding-end: 0;
+  --inner-padding-start: 0;
+}
 
 #containerConfig{
   display: flex;
@@ -44,11 +49,15 @@
   align-items: flex-start !important;
 }
 
+.btnIC {
+  width: 40% !important;
+}
+
 ion-button {
   text-transform: none;
 }
 
-.materias-list {
+.atividades-list {
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
@@ -57,19 +66,22 @@ ion-button {
   margin-left: 15%;
 }
 
-.materia-item {
+.atividade-item {
   display: flex;
   flex-direction: column;
   border: 1px solid #ddd;
   border-radius: 12px;
   padding: 12px;
+  padding-right: 2% !important;
+  padding-left: 2% !important;
   background-color: white;
   min-height: 50%;
   cursor: default;
   margin-top: 2%;
 }
 
-.containerMateria {
+.containerAtividade {
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -82,7 +94,7 @@ ion-button {
   flex-direction: column;
 }
 
-ion-item.materia-item ion-label {
+ion-item.atividade-item ion-label {
   margin-bottom: 5% !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
@@ -90,7 +102,7 @@ ion-item.materia-item ion-label {
   padding: 0 !important;
 }
 
-.materia-item .icon-placeholder {
+.atividade-item .icon-placeholder {
   width: 40px;
   height: 40px;
   background-color: #ddd;
@@ -101,13 +113,20 @@ ion-item.materia-item ion-label {
   justify-content: center;
 }
 
-.materia-item h2 {
+.atividade-item h2 {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
 }
 
-.materia-item .progress-bar-fill {
+.atividade-item p {
+  margin: 0;
+  margin-top: 0.5px;
+  font-size: 14px;
+  color: #444;
+}
+
+.atividade-item .progress-bar-fill {
   height: 100%;
   width: 40%; 
   background-color: #000;
@@ -167,7 +186,7 @@ ion-item.materia-item ion-label {
     height: 28px;
   }
 
-ion-button.opcoes {
+ion-button.opcoes, ion-button.btnIC {
   display: flex;
   justify-content: flex-start;
   border-radius: 20px;
@@ -175,7 +194,7 @@ ion-button.opcoes {
   color: black;
 }
 
-ion-button.opcoes::part(native) {
+ion-button.opcoes::part(native), ion-button.btnIC::part(native) {
   white-space: nowrap;
   background-color: white;
   border-radius: 10px;
@@ -217,7 +236,7 @@ ion-popover::part(backdrop) {
   cursor: pointer;
   color: white;
   background-color: #00296b;
-  width: 35%;
+  width: 40%;
   border-radius: 20px;
 }
 
@@ -234,4 +253,10 @@ ion-popover::part(backdrop) {
 
 .setaMat {
   margin-left: 2%;
+}
+
+.flexInicio {
+  display: flex;
+  justify-content: flex-start;
+  gap: 5%;
 }

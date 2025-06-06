@@ -38,6 +38,7 @@ class AuthController extends Controller
 
         return $this->respondWithToken($token);
     }
+    
     public function login(Request $request)
     {
           //validate incoming request

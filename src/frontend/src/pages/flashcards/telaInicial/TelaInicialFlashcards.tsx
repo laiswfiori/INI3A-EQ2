@@ -233,7 +233,7 @@ const TelaInicialFlashcards: React.FC = () => {
                           e.preventDefault();   
                           e.stopPropagation();
                           abrirModal();
-                          setModalMateria(materia);
+                          setmodalMateria(materia);
                         }}>+</IonButton>
                       </IonRow>
                     </IonLabel>

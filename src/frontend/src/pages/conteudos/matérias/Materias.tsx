@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal, IonPopover, IonInput, IonRow, IonCol } from '@ionic/react';
-import { book, pencil, trash, close, arrowForward } from 'ionicons/icons';
+import { library, pencil, trash, close, arrowForward } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -181,7 +181,7 @@ const Materias: React.FC = () => {
                 >
                   <IonLabel>
                     <IonRow className="containerMateria">
-                      <IonIcon icon={book} className="livro" />
+                      <IonIcon icon={library} className="livro" />
                       <IonCol className="td">
                         <h2 className="txtTitMat">{materia.nome}</h2>
                       </IonCol>
@@ -230,7 +230,9 @@ const Materias: React.FC = () => {
               <IonIcon icon={close} className="iconeFecharM" onClick={() => setShowModal(false)}/>
             </IonRow>
             <IonRow className="centroModal">
-              <h2 className="label">Matéria</h2>
+              <h2 className="labelT">
+                {modoModal === 'adicionar' ? 'Adicionar matéria' : 'Editar matéria'}
+              </h2>
             </IonRow>
             <div id="pagAdicionar">
               <IonInput
