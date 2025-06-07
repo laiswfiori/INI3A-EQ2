@@ -5,42 +5,50 @@ namespace App\Http\Controllers;
 use App\Models\Atividade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
 
 class AtividadesController extends Controller
 {
     public function index()
     {
-        // Retorna todas as atividades cujos tópicos pertencem ao usuário autenticado
-        //$usuarioId = Auth::id();]
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Usuário não autenticado.'], 401);
+        }
         
         $atividades = Atividade::all();
-
-        /* $atividades = Atividade::whereHas('topico', function ($query) use ($usuarioId) {
-            $query->where('usuario_id', $usuarioId);
-        })->get(); */
 
         return response()->json($atividades);
     }
 
-    public function store(Request $request)
-    {
-        // Pega os dados diretamente da requisição
-        $dados = $request->only([
-            'topico_id',
-            'titulo',
-            'descricao',
-            'conteudo',
-            'status',
-            'tipo',
-            'nivel'
-        ]);
 
-        // Cria uma nova atividade no banco de dados
-        $atividade = Atividade::create($dados);
+public function store(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'titulo' => 'required|string',
+        'descricao' => 'nullable|string',
+        'topico_id' => 'required|integer',
+        'status' => 'required|string',
+        'tipo' => 'required|string',
+        'conteudo' => 'nullable|array',
+        'conteudo.*.tipo' => 'required|in:texto,imagem,arquivo',
+        'conteudo.*.valor' => 'required|string',
+        'conteudo.*.nome' => 'nullable|string',
+    ]);
 
-        // Retorna a atividade criada como resposta com código 201 (Created)
-        return response()->json($atividade, 201);
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
     }
+
+    $data = $validator->validated();
+
+    $data['conteudo'] = json_encode($data['conteudo']);
+
+    $atividade = Atividade::create($data);
+
+    return response()->json($atividade, 201);
+}
+
 
 
     public function show($id)
