@@ -79,3 +79,25 @@ $router->group(['prefix' => 'cards'], function () use ($router) {
     $router->put('/{id}', 'CardsController@update');
     $router->delete('/{id}', 'CardsController@destroy');
 });
+
+$router->group(['prefix' => 'password'], function () use ($router) {
+    $router->post('request-reset', 'PasswordResetController@requestReset');
+    $router->post('reset', 'PasswordResetController@resetPassword');
+});
+$router->group(['prefix' => 'api'], function () use ($router) {
+    $router->post('register', 'AuthController@register');
+    $router->post('login', 'AuthController@login');
+});
+
+// Rotas protegidas da API (precisam de login via middleware 'auth')
+$router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($router) {
+    // --- Rotas de Gerenciamento de Conta do Usuário ---
+    $router->get('profile', 'UserController@profile');
+    $router->put('profile', 'UserController@updateProfile');
+    $router->put('usuario/alterar-senha', 'UserController@changePassword');
+    $router->delete('user', 'UserController@deleteAccount'); // <-- ROTA DE EXCLUSÃO ADICIONADA
+
+    // --- Rotas de Listagem de Usuários ---
+    $router->get('users/{id}', 'UserController@singleUser');
+    $router->get('users', 'UserController@allUsers');
+});
