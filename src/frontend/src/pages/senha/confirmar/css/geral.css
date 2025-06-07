@@ -9,6 +9,10 @@
     width: 100%;
 }
 
+* {
+    overflow: hidden !important;
+}
+
 .pagS {
     width: 100%;
     height: 100%;
@@ -17,6 +21,7 @@
 .whs {
     width: 100%;
     height: 100%;
+    overflow: hidden !important;
 }
 
 .centroS {
@@ -53,4 +58,5 @@
 #imgInicio {
     width: 100%;
     height: 100%;
+    overflow: hidden !important;
 }

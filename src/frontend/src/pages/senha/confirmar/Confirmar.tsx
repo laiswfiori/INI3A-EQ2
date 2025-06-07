@@ -1,14 +1,25 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonRow, IonCol, IonIcon, IonInput, IonButton } from '@ionic/react';
-import { mail } from 'ionicons/icons';
+import { mail, returnDownBack } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layouts.css';
 
 const Confirmar: React.FC = () => {
+  const history = useHistory();
+
+  const navLogin = () => {
+    history.push('/logincadastro/logincadastro');
+  } 
+
   return (
     <IonPage className="paginaSenha">
-      <IonContent className="pagS">
+      <IonContent className="pagS" scrollY={false}>
+        <IonRow className="msmLinha">
+            <IonIcon icon={returnDownBack } className="email" id="voltar" onClick={navLogin}/>
+            <p>Voltar para login</p>
+          </IonRow>
         <IonRow className='whs'>
           <IonCol className="centroS configM">
             <h1 className="preto titSenha">Esqueceu sua senha?</h1>

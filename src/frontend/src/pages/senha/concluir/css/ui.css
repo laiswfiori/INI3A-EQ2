@@ -1,0 +1,22 @@
+.titSenha {
+    font-size: 2rem !important;
+    font-weight: 700;
+    text-align: center;
+}
+
+.pSenhaConc {
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    font-size: 1.5rem !important;
+    font-weight: 700;
+    color: rgb(94, 94, 94);
+}
+
+
+#imgFim {
+    background-image:  url('/imgs/pessoaFim.jpeg');
+    background-repeat: no-repeat; 
+    background-size: cover;       
+    background-position: center;
+}

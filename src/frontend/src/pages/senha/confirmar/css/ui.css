@@ -28,6 +28,10 @@
     font-size: 1.5rem !important;
 }
 
+#voltar {
+    cursor: pointer;
+}
+
 .btnSenhas {
     width: 100% !important;
 }
