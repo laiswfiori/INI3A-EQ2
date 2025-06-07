@@ -1,8 +1,6 @@
 import API from './api';
 
-
 const api = new API();
-
 
 export const getUserProfile = async () => {
   try {
@@ -14,7 +12,6 @@ export const getUserProfile = async () => {
   }
 };
 
-
 export const updateUserProfile = async (userData: { name: string, surname: string, email: string, biography: string | null }) => {
   try {
     const response = await api.put('api/profile', userData);
@@ -24,7 +21,6 @@ export const updateUserProfile = async (userData: { name: string, surname: strin
     throw error;
   }
 };
-
 
 export const changeUserPassword = async (passwordData: any) => {
   try {
@@ -36,10 +32,9 @@ export const changeUserPassword = async (passwordData: any) => {
   }
 };
 
-
 export const deleteUserAccount = async () => {
   try {
-    const response = await api.delete('api/user');
+    const response = await api.delete('api/user'); 
     return response;
   } catch (error) {
     console.error("Erro no endpoint deleteUserAccount:", error);
