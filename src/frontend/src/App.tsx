@@ -75,9 +75,9 @@ const App: React.FC = () => (
         <Route path="/flashcards/flashcards" component={Flashcards} exact />
         <Route path="/flashcards/telainicialflashcards" component={TelaInicialFlashcards} exact />
         <Route path="/logincadastro/logincadastro" component={LoginCadastro} exact />
-        <Route path="/senha/confirmar" component={Flashcards} exact />
-        <Route path="/senha/concluir" component={Flashcards} exact />
-        <Route path="/senha/alterar" component={Flashcards} exact />
+        <Route path="/senha/confirmar" component={Confirmar} exact />
+        <Route path="/senha/concluir" component={Concluir} exact />
+        <Route path="/senha/alterar" component={Alterar} exact />
 
         <Route path="/materias/:id" component={Topicos} exact />
         <Route path="/topicos/:id" component={Atividades} exact />
