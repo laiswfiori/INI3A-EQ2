@@ -51,12 +51,12 @@ $router->get('/teste-auth', ['middleware' => 'auth', function () use ($router) {
     ]);
 }]);
 
-$router->group(['prefix' => 'atividades'], function () use ($router) {
-    $router->get('/', 'AtividadesController@index');
-    $router->post('/', 'AtividadesController@store');
-    $router->get('/{id}', 'AtividadesController@show');
-    $router->put('/{id}', 'AtividadesController@update');
-    $router->delete('/{id}', 'AtividadesController@destroy');
+$router->group(['middleware' => 'auth'], function () use ($router) {
+    $router->get('/atividades', 'AtividadesController@index');
+    $router->post('/atividades', 'AtividadesController@store');
+    $router->get('/atividades/{id}', 'AtividadesController@show');
+    $router->put('/atividades/{id}', 'AtividadesController@update');
+    $router->delete('/atividades/{id}', 'AtividadesController@destroy');
 });
 
 $router->group(['prefix' => 'password'], function () use ($router) {

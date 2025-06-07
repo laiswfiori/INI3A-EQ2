@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, 
-  IonModal, IonPopover, IonInput, IonTextarea, IonRow, IonCol, IonBadge } from '@ionic/react';
+  IonModal, IonPopover, IonInput, IonTextarea, IonRow, IonCol, IonBadge, IonSelect, IonSelectOption} from '@ionic/react';
 import { pencil, trash, flash, checkmarkDone, close, checkmark, arrowForward, documentText, images, documentAttach  } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
@@ -15,7 +15,7 @@ interface Atividade {
   materia_id: number;
   titulo: string;
   descricao: string;
-  conteudo: any;
+  conteudo: string | { tipo: 'texto' | 'imagem' | 'arquivo', valor: string, nome?: string }[];
   status: string;
   tipo: string;
   nivel: string;
@@ -32,7 +32,49 @@ const Atividades: React.FC = () => {
   const [atividadeSelecionada, setAtividadeSelecionada] = useState<Atividade | null>(null);
   const [modoModal, setModoModal] = useState<'adicionar' | 'editar'>('adicionar');
   const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
+  const [textoTemp, setTextoTemp] = useState('');
+
   
+  const adicionarTextoAoConteudo = (texto: string) => {
+  setNovaAtividade(prev => ({
+    ...prev,
+    conteudo: [...prev.conteudo, { tipo: 'texto', valor: texto }]
+  }));
+};
+
+const adicionarImagemAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNovaAtividade(prev => ({
+        ...prev,
+        conteudo: [...prev.conteudo, { tipo: 'imagem', valor: reader.result as string }]
+      }));
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNovaAtividade(prev => ({
+        ...prev,
+        conteudo: [...prev.conteudo, {
+          tipo: 'arquivo',
+          valor: reader.result as string,
+          nome: file.name
+        }]
+      }));
+    };
+    reader.readAsDataURL(file); // ou envie para backend aqui
+  }
+};
+
+
   const alterarStatus = async (atividade: Atividade, novoStatus: string) => {
     const api = new API();
   
@@ -56,6 +98,7 @@ const Atividades: React.FC = () => {
     topico_id: 0,
     status: 'não iniciado',
     tipo: 'teórica',
+    conteudo: [] as { tipo: 'texto' | 'imagem' | 'arquivo', valor: string, nome?: string }[],
   });
 
   const history = useHistory();
@@ -129,6 +172,7 @@ const Atividades: React.FC = () => {
         topico_id: novaAtividade.topico_id,
         status: 'não iniciado',
         tipo: '',
+        conteudo: [],
       });
     } catch (error: any) {
       console.error(`Erro ao ${modoModal === 'editar' ? 'editar' : 'adicionar'} atividade:`, error);
@@ -143,6 +187,7 @@ const Atividades: React.FC = () => {
         topico_id: atividadeSelecionada.topico_id,
         status: atividadeSelecionada.status,
         tipo: atividadeSelecionada.tipo,
+        conteudo: atividadeSelecionada.conteudo as { tipo: 'texto' | 'imagem' | 'arquivo', valor: string, nome?: string }[],
       });
       setModoModal('editar');
       setShowModal(true);
@@ -157,6 +202,7 @@ const Atividades: React.FC = () => {
       topico_id: novaAtividade.topico_id,
       status: 'não iniciado',
       tipo: '',
+      conteudo: [],
     });
     setModoModal('adicionar');
     setShowModal(true);
@@ -178,6 +224,7 @@ const Atividades: React.FC = () => {
       }
     }
   };
+
 
   /* const formatarData = (dataISO: string) => {
     const data = new Date(dataISO);
@@ -301,19 +348,65 @@ const Atividades: React.FC = () => {
               />
               
               <p className="label">Tipo</p>
-              <IonInput
+              <IonSelect
                 value={novaAtividade.tipo}
                 className="input"
-                readonly
-              />
+                onIonChange={(e) => handleInputChange('tipo', e.detail.value!)}
+              >
+                <IonSelectOption value="resumo">Resumo</IonSelectOption>
+                <IonSelectOption value="lista">Lista</IonSelectOption>
+                <IonSelectOption value="mapa mental">Mapa Mental</IonSelectOption>
+                <IonSelectOption value="prova">Prova</IonSelectOption>
+                <IonSelectOption value="anotações">Anotações</IonSelectOption>
+                <IonSelectOption value="tarefa">Tarefa</IonSelectOption>
+                <IonSelectOption value="simulado">Simulado</IonSelectOption>
+              </IonSelect>
               
               <p className="label">Conteúdo</p>
+
               <IonTextarea
-                value={novaAtividade.tipo}
-                placeholder="Insira o conteúdo"
+                placeholder="Digite texto e clique fora para adicionar"
                 className="input"
-                readonly
+                rows={4}
+                value={textoTemp}
+                onIonChange={(e) => setTextoTemp(e.detail.value!)}
+                onIonBlur={() => {
+                  const texto = textoTemp.trim();
+                  if (texto) {
+                    adicionarTextoAoConteudo(texto);
+                    setTextoTemp('');
+                  }
+                }}
               />
+
+              <input
+                type="file"
+                accept="image/*"
+                onChange={adicionarImagemAoConteudo}
+                style={{ marginTop: '10px' }}
+              />
+
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx,.ppt,.pptx"
+                onChange={adicionarArquivoAoConteudo}
+                style={{ marginTop: '10px' }}
+              />
+
+              {/* Visualização do conteúdo */}
+              <div className="conteudo-preview" style={{ marginTop: '10px' }}>
+                {novaAtividade.conteudo.map((item, idx) => {
+                  if (item.tipo === 'texto') return <p key={idx}>{item.valor}</p>;
+                  if (item.tipo === 'imagem') return <img key={idx} src={item.valor} alt="imagem" style={{ maxWidth: '100%' }} />;
+                  if (item.tipo === 'arquivo') return (
+                    <p key={idx}>
+                      <a href={item.valor} download={item.nome}>{item.nome}</a>
+                    </p>
+                  );
+                  return null;
+                })}
+              </div>
+
 
               <IonRow className="flexInicio">
                 <IonIcon icon={images} className="iconesAdd"/>

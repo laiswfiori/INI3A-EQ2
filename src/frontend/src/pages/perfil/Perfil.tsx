@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonContent, IonCol, IonRow, IonIcon, IonButton, IonInput, IonCheckbox } from '@ionic/react';
+import { IonPage, IonContent, IonCol, IonRow, IonIcon, IonButton, IonInput, IonCheckbox, IonTextarea, IonAlert, IonSpinner } from '@ionic/react';
 import { caretForward, personCircle, warning, logOut, chevronDown } from 'ionicons/icons';
+import { getUserProfile, updateUserProfile, changeUserPassword, deleteUserAccount } from '../../lib/endpoints';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -16,85 +17,186 @@ interface User {
     email: string;
     password: string;
     biography: string;
-  }
+}
 
 const Perfil: React.FC = () => {
-   const history = useHistory();
-   const [isChecked, setIsChecked] = useState(false);
-   const [view, setView] = useState<'perfil' | 'estudo'>('perfil');
-   const [mobileView, setMobileView] = useState<'gerais' | 'perfil' | 'seguranca' | 'estudo'>('gerais');
-   const [nomeUsuario, setNomeUsuario] = useState('');
-   const [materias, setMaterias] = useState<string[]>(['Matéria 1', 'Matéria 2']);
+    const history = useHistory();
+
+    const [isChecked, setIsChecked] = useState(false);
+    const [view, setView] = useState<'perfil' | 'estudo'>('perfil');
+    const [mobileView, setMobileView] = useState<'gerais' | 'perfil' | 'seguranca' | 'estudo'>('gerais');
+    const [nomeUsuario, setNomeUsuario] = useState('');
+    const [userData, setUserData] = useState<User | null>(null);
+    const [showAlert, setShowAlert] = useState<{show: boolean, message: string}>({show: false, message: ''});
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [materias, setMaterias] = useState<string[]>(['Matéria 1', 'Matéria 2']);
     const [materiasAbertas, setMateriasAbertas] = useState<{ [key: string]: boolean }>({});
     const [diasSelecionados, setDiasSelecionados] = useState<string[]>([]);
-   const [horariosEstudo, setHorariosEstudo] = useState<{ [key: string]: string }>({});
+    const [horariosEstudo, setHorariosEstudo] = useState<{ [key: string]: string }>({});
+    const [passwordData, setPasswordData] = useState({
+        senha_atual: '',
+        nova_senha: '',
+        confirmar_senha: ''
+    });
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [authError, setAuthError] = useState(false);
 
 
     const toggleMateriaAberta = (materia: string) => {
-    setMateriasAbertas(prev => ({
-        ...prev,
-        [materia]: !prev[materia]
-    }));
-};
+        setMateriasAbertas(prev => ({
+            ...prev,
+            [materia]: !prev[materia]
+        }));
+    };
 
     useEffect(() => {
-    const buscarNomeUsuario = async () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-        setNomeUsuario('Usuário');
-        return;
-        }
+        const fetchUserProfile = async () => {
+            const token = localStorage.getItem('token');
 
-        try {
-        const response = await fetch('http://localhost:8000/api/profile', {
-            method: 'GET',
-            headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            },
+            if (!token) {
+                setAuthError(true);
+                setIsLoading(false);
+                history.push('/logincadastro/logincadastro');
+                return;
+            }
+
+            try {
+                const profileData = await getUserProfile();
+                setUserData(profileData);
+            } catch (error: any) {
+                if (error.message && error.message.includes('401')) {
+                    setAuthError(true);
+                    localStorage.removeItem('token');
+                    history.push('/logincadastro/logincadastro');
+                } else {
+                    console.error('Erro ao buscar perfil:', error);
+                    setShowAlert({ show: true, message: 'Não foi possível carregar os dados do perfil.' });
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchUserProfile();
+    }, [history]);
+
+
+    const handleCheckboxChange = (e: CustomEvent) => {
+        setIsChecked(e.detail.checked);
+    };
+
+    const diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+
+    const toggleDia = (diaCompleto: string) => {
+        setDiasSelecionados(prev => {
+            if (prev.includes(diaCompleto)) {
+                return prev.filter(d => d !== diaCompleto);
+            } else {
+                return [...prev, diaCompleto];
+            }
         });
+    };
 
-        if (!response.ok) {
-            throw new Error('Erro na requisição');
-        }
+    const handleHorarioChange = (dia: string, valor: string) => {
+        setHorariosEstudo(prev => ({ ...prev, [dia]: valor }));
+    };
 
-        const usuario = await response.json();
-        setNomeUsuario(usuario.user?.name ?? 'Usuário');
-        } catch (error) {
-        console.error('Erro ao buscar usuário:', error);
-        setNomeUsuario('Usuário');
+    const logout = () => {
+        localStorage.removeItem('token');
+        history.push('/logincadastro/logincadastro');
+    };
+
+    const handleInputChange = (event: any) => {
+        const { name, value } = event.target;
+        if (userData) {
+            setUserData({ ...userData, [name]: value });
         }
     };
 
-    buscarNomeUsuario();
-    }, []);
-
-   const handleCheckboxChange = (e: CustomEvent) => {
-       setIsChecked(e.detail.checked);
-   };
-
-   const diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
-
-   const toggleDia = (diaCompleto: string) => {
-    setDiasSelecionados(prev => {
-        if (prev.includes(diaCompleto)) {
-            return prev.filter(d => d !== diaCompleto);
-        } else {
-            return [...prev, diaCompleto];
+    const handleSaveProfile = async () => {
+        if (!userData) return;
+        try {
+            const response = await updateUserProfile(userData);
+            setUserData(response.user);
+            setShowAlert({ show: true, message: response.message || 'Perfil atualizado com sucesso!' });
+        } catch (error) {
+            console.error('Erro ao salvar o perfil:', error);
+            setShowAlert({ show: true, message: 'Não foi possível salvar as alterações.' });
         }
-    });
-};
+    };
 
+    const handlePasswordInputChange = (event: any) => {
+        const { name, value } = event.target;
+        setPasswordData(prevData => ({
+            ...prevData,
+            [name]: value
+        }));
+    };
 
-   const handleHorarioChange = (dia: string, valor: string) => {
-       setHorariosEstudo(prev => ({ ...prev, [dia]: valor }));
-   };
+    const handlePasswordChange = async () => {
+        if (passwordData.nova_senha !== passwordData.confirmar_senha) {
+            setShowAlert({ show: true, message: 'A nova senha e a confirmação não correspondem.' });
+            return;
+        }
+        if (!passwordData.nova_senha || !passwordData.senha_atual) {
+            setShowAlert({ show: true, message: 'Por favor, preencha todos os campos de senha.' });
+            return;
+        }
+        try {
+            const response = await changeUserPassword(passwordData);
+            setShowAlert({ show: true, message: response.message || 'Senha alterada com sucesso!' });
+            setPasswordData({
+                senha_atual: '',
+                nova_senha: '',
+                confirmar_senha: ''
+            });
+        } catch (error: any) {
+            console.error('Erro ao alterar a senha:', error);
+            const errorMessage = error.message || 'Não foi possível alterar a senha.';
+            setShowAlert({ show: true, message: errorMessage });
+        }
+    };
 
+    const handleDeleteClick = () => {
+        setShowDeleteConfirm(true);
+    };
 
-   const logout = () => {
-       localStorage.removeItem('token');
-       history.push('/logincadastro/logincadastro');
-   };
+    const executeAccountDeletion = async () => {
+        try {
+            await deleteUserAccount();
+            localStorage.removeItem('token');
+            history.push('/logincadastro/logincadastro');
+            alert('Sua conta foi excluída com sucesso.');
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || 'Não foi possível excluir a conta.';
+            setShowAlert({ show: true, message: errorMessage });
+        }
+    };
+
+    if (isLoading || authError) {
+        return (
+            <IonPage>
+                <Header />
+                <IonContent fullscreen className="ion-text-center ion-padding">
+                    <IonSpinner name="crescent" />
+                    <p>Carregando...</p>
+                </IonContent>
+            </IonPage>
+        );
+    }
+
+    if (!userData) {
+        return (
+            <IonPage>
+                <Header />
+                <IonContent fullscreen className="ion-text-center ion-padding">
+                    <p>Não foi possível carregar os dados do perfil.</p>
+                    <p>Por favor, tente recarregar a página.</p>
+                </IonContent>
+            </IonPage>
+        );
+    }
 
    return (
        <IonPage>
@@ -106,7 +208,7 @@ const Perfil: React.FC = () => {
                            <IonRow id="img">
                                <IonIcon icon={personCircle} id="iconePerfil" />
                                <div id="txtOi">
-                                   <p className="txtPading">Olá, {nomeUsuario}.</p>
+                                   <p className="txtPading">Olá, {userData?.name}.</p>
                                </div>
                            </IonRow>
                            <IonRow id="linhaDivisora"></IonRow>
@@ -248,62 +350,74 @@ const Perfil: React.FC = () => {
                                <div id="flexColunas">
                                    <IonCol className="colunasConfig">
                                        <p className="labelBio">Nome</p>
-                                       <IonInput
-                                           labelPlacement="stacked"
-                                           className="inputBio"
-                                       />
+                                       <IonInput name="name" value={userData.name} onIonChange={handleInputChange} className="inputBio" />
                                        <p className="labelBio">Sobrenome</p>
-                                       <IonInput
-                                           labelPlacement="stacked"
-                                           className="inputBio"
-                                       />
+                                       <IonInput name="surname" value={userData.surname} onIonChange={handleInputChange} className="inputBio" />
                                        <p className="labelBio">Email</p>
-                                       <IonInput
-                                           labelPlacement="stacked"
-                                           className="inputBio"
-                                       />
+                                       <IonInput type="email" name="email" value={userData.email} onIonChange={handleInputChange} className="inputBio" />
                                        <p className="labelBio">Biografia</p>
-                                       <IonInput
-                                           labelPlacement="stacked"
-                                           className="inputBio"
-                                       />
-                                       <IonButton className="btnConfigBio" id="btnSalvarBio">Salvar</IonButton>
+                                       <IonTextarea name="biography" value={userData.biography || ''} onIonChange={handleInputChange} className="inputBio" placeholder="Escreva sobre você..." />
+                                       <IonButton className="btnConfigBio" id="btnSalvarBio" onClick={handleSaveProfile}>Salvar</IonButton>
                                    </IonCol>
-                                   <IonCol className="colunasConfig" id="col2">
-                                       <p className="labelBio">Alterar senha</p>
-                                       <IonInput
-                                           placeholder="Senha atual"
-                                           labelPlacement="stacked"
-                                           className="inputBioSenha"
-                                       />
-                                       <IonInput
-                                           placeholder="Nova senha"
-                                           labelPlacement="stacked"
-                                           className="inputBioSenha"
-                                       />
-                                       <IonInput
-                                           placeholder="Confirmar senha"
-                                           labelPlacement="stacked"
-                                           className="inputBioSenha"
-                                       />
-                                       <IonButton className="btnConfigBio" id="btnAlterarBio">Alterar</IonButton>
-                                       <div id="excSenha">
-                                           <IonRow className="msmLinha">
-                                               <IonCheckbox checked={isChecked} onIonChange={handleCheckboxChange} id="check" />
-                                               <p className="excp" id="boldExc">Deseja excluir sua conta?</p>
-                                           </IonRow>
-                                           <IonRow className="msmLinha">
-                                               <IonIcon icon={warning} className="iconesBio" />
-                                               <p className="excp">ATENÇÃO: essa ação não pode ser desfeita.</p>
-                                           </IonRow>
-                                           <IonRow>
-                                               <p className="excp">Ao confirmar essa ação, sua conta será apagada permanentemente e não poderá ser recuperada.</p>
-                                           </IonRow>
-                                           <IonRow>
-                                               <IonButton className="btnConfigBio">Confirmar</IonButton>
-                                           </IonRow>
-                                       </div>
-                                   </IonCol>
+                                   {/* ----- INÍCIO DA SEÇÃO DE SENHA ATUALIZADA (DESKTOP) ----- */}
+                                    <IonCol className="colunasConfig" id="col2">
+                                        <p className="labelBio">Alterar senha</p>
+
+                                        {/* Input Senha Atual */}
+                                        <IonInput
+                                            className="inputBioSenha"
+                                            label="Senha atual"
+                                            labelPlacement="stacked"
+                                            type="password"
+                                            name="senha_atual"
+                                            value={passwordData.senha_atual}
+                                            onIonChange={handlePasswordInputChange}
+                                        />
+
+                                        {/* Input Nova Senha */}
+                                        <IonInput
+                                            className="inputBioSenha"
+                                            label="Nova senha"
+                                            labelPlacement="stacked"
+                                            type="password"
+                                            name="nova_senha"
+                                            value={passwordData.nova_senha}
+                                            onIonChange={handlePasswordInputChange}
+                                        />
+
+                                        {/* Input Confirmar Senha */}
+                                        <IonInput
+                                            className="inputBioSenha"
+                                            label="Confirmar senha"
+                                            labelPlacement="stacked"
+                                            type="password"
+                                            name="confirmar_senha"
+                                            value={passwordData.confirmar_senha}
+                                            onIonChange={handlePasswordInputChange}
+                                        />
+
+                                        {/* Botão Alterar com o onClick conectado */}
+                                        <IonButton className="btnConfigBio" id="btnAlterarBio" onClick={handlePasswordChange}>
+                                            Alterar
+                                        </IonButton>
+                                        <div id="excSenha">
+                                            <IonRow className="msmLinha">
+                                                <IonCheckbox checked={isChecked} onIonChange={handleCheckboxChange} id="check" />
+                                                <p className="excp" id="boldExc">Deseja excluir sua conta?</p>
+                                            </IonRow>
+                                            <IonRow className="msmLinha">
+                                                <IonIcon icon={warning} className="iconesBio" />
+                                                <p className="excp">ATENÇÃO: essa ação não pode ser desfeita.</p>
+                                            </IonRow>
+                                            <IonRow>
+                                                <p className="excp">Ao confirmar essa ação, sua conta será apagada permanentemente e não poderá ser recuperada.</p>
+                                            </IonRow>
+                                            <IonRow>
+                                               <IonButton className="btnConfigBio" disabled={!isChecked} onClick={handleDeleteClick}>Confirmar</IonButton>
+                                            </IonRow>
+                                        </div>
+                                    </IonCol>
+                                    {/* ----- FIM DA SEÇÃO DE SENHA ATUALIZADA (DESKTOP) ----- */}
                                </div>
                            </IonCol>
                        )}
@@ -556,75 +670,89 @@ const Perfil: React.FC = () => {
                            <h1>Configurações de estudo</h1>
                            <IonRow>
                                <IonRow className="paddingConf">
-                                   <p className="labelBioM">Nome</p>
-                                   <IonInput
-                                       labelPlacement="stacked"
-                                       className="inputBioM"
-                                   />
-                                   <p className="labelBioM">Sobrenome</p>
-                                   <IonInput
-                                       labelPlacement="stacked"
-                                       className="inputBioM"
-                                   />
-                                   <p className="labelBioM">Email</p>
-                                   <IonInput
-                                       labelPlacement="stacked"
-                                       className="inputBioM"
-                                   />
-                                   <p className="labelBioM">Biografia</p>
-                                   <IonInput
-                                       labelPlacement="stacked"
-                                       className="inputBioM"
-                                   />
+                                   <p className="labelBio">Nome</p>
+                                       <IonInput name="name" value={userData.name} onIonChange={handleInputChange} className="inputBio" />
+                                       <p className="labelBio">Sobrenome</p>
+                                       <IonInput name="surname" value={userData.surname} onIonChange={handleInputChange} className="inputBio" />
+                                       <p className="labelBio">Email</p>
+                                       <IonInput type="email" name="email" value={userData.email} onIonChange={handleInputChange} className="inputBio" />
+                                       <p className="labelBio">Biografia</p>
+                                       <IonTextarea name="biography" value={userData.biography || ''} onIonChange={handleInputChange} className="inputBio" placeholder="Escreva sobre você..." />                                       
                                </IonRow>
                                <IonRow className="contBtn">
-                                   <IonButton className="btnConfigBio" id="btnSalvarBio">Salvar</IonButton>
+                                   <IonButton className="btnConfigBio" id="btnSalvarBio" onClick={handleSaveProfile}>Salvar</IonButton>
                                </IonRow>                              
                            </IonRow>
                        </IonRow>
                        )}
-                       {mobileView === 'seguranca' && (
-                       <IonRow id="confSeg">
-                           <h1>Configurações de segurança</h1>
-                           <IonRow className="paddingConf">
-                               <p className="labelBioM">Alterar senha</p>
-                               <IonInput
-                                   placeholder="Senha atual"
-                                   labelPlacement="stacked"
-                                   className="inputBioSenhaM"
-                               />
-                               <IonInput
-                                   placeholder="Nova senha"
-                                   labelPlacement="stacked"
-                                   className="inputBioSenhaM"
-                               />
-                               <IonInput
-                                   placeholder="Confirmar senha"
-                                   labelPlacement="stacked"
-                                   className="inputBioSenhaM"
-                               />
-                               <IonRow className="contBtn">
-                                   <IonButton className="btnConfigBio" id="btnAlterarBio">Alterar</IonButton>
-                               </IonRow>      
-                               <div id="excSenhaM">
-                                   <IonRow className="msmLinha">
-                                       <IonCheckbox checked={isChecked} onIonChange={handleCheckboxChange} id="check" />
-                                       <p className="excpM" id="boldExcM">Deseja excluir sua conta?</p>
-                                   </IonRow>
-                                   <IonRow className="msmLinha">
-                                       <IonIcon icon={warning} className="iconesBio" />
-                                       <p className="excpM">ATENÇÃO: essa ação não pode ser desfeita.</p>
-                                   </IonRow>
-                                   <IonRow>
-                                       <p className="excpM">Ao confirmar essa ação, sua conta será apagada permanentemente e não poderá ser recuperada.</p>
-                                   </IonRow>
-                                   <IonRow>
-                                       <IonButton className="btnConfigBio">Confirmar</IonButton>
-                                   </IonRow>
-                               </div>
-                           </IonRow>
-                       </IonRow>
-                       )}
+                       {/* ----- INÍCIO DA SEÇÃO DE SEGURANÇA ATUALIZADA (MOBILE) ----- */}
+                        {mobileView === 'seguranca' && (
+                            <IonRow id="confSeg">
+                                <h1>Configurações de segurança</h1>
+                                <IonRow className="paddingConf">
+                                    <p className="labelBioM">Alterar senha</p>
+
+                                    {/* Input Senha Atual */}
+                                    <IonInput
+                                        className="inputBioSenhaM"
+                                        label="Senha atual"
+                                        labelPlacement="stacked"
+                                        type="password"
+                                        name="senha_atual"
+                                        value={passwordData.senha_atual}
+                                        onIonChange={handlePasswordInputChange}
+                                    />
+
+                                    {/* Input Nova Senha */}
+                                    <IonInput
+                                        className="inputBioSenhaM"
+                                        label="Nova senha"
+                                        labelPlacement="stacked"
+                                        type="password"
+                                        name="nova_senha"
+                                        value={passwordData.nova_senha}
+                                        onIonChange={handlePasswordInputChange}
+                                    />
+
+                                    {/* Input Confirmar Senha */}
+                                    <IonInput
+                                        className="inputBioSenhaM"
+                                        label="Confirmar senha"
+                                        labelPlacement="stacked"
+                                        type="password"
+                                        name="confirmar_senha"
+                                        value={passwordData.confirmar_senha}
+                                        onIonChange={handlePasswordInputChange}
+                                    />
+
+                                    <IonRow className="contBtn">
+                                        {/* Botão Alterar com o onClick conectado */}
+                                        <IonButton className="btnConfigBio" id="btnAlterarBio" onClick={handlePasswordChange}>
+                                            Alterar
+                                        </IonButton>
+                                    </IonRow>
+
+                                    <div id="excSenhaM">
+                                        <IonRow className="msmLinha">
+                                            <IonCheckbox checked={isChecked} onIonChange={handleCheckboxChange} id="check" />
+                                            <p className="excpM" id="boldExcM">Deseja excluir sua conta?</p>
+                                        </IonRow>
+                                        <IonRow className="msmLinha">
+                                            <IonIcon icon={warning} className="iconesBio" />
+                                            <p className="excpM">ATENÇÃO: essa ação não pode ser desfeita.</p>
+                                        </IonRow>
+                                        <IonRow>
+                                            <p className="excpM">Ao confirmar essa ação, sua conta será apagada permanentemente e não poderá ser recuperada.</p>
+                                        </IonRow>
+                                        <IonRow>
+                                            <IonButton 
+                                                className="btnConfigBio" disabled={!isChecked} onClick={handleDeleteClick}>Confirmar</IonButton>
+                                        </IonRow>
+                                    </div>
+                                </IonRow>
+                            </IonRow>
+                        )}
+                        {/* ----- FIM DA SEÇÃO DE SEGURANÇA ATUALIZADA (MOBILE) ----- */}
                        {mobileView === 'estudo' && (
                        <IonRow id="confEstudo">
                            <h1 className="txtCentro">Configurações avançadas de estudo</h1>
@@ -760,13 +888,54 @@ const Perfil: React.FC = () => {
                         </IonRow>
                    </IonRow>
                </IonRow>
-           </IonContent>
-       </IonPage>
-   );
+               {/* Alerta global para feedback */}
+                <IonAlert
+                    isOpen={showAlert.show}
+                    onDidDismiss={() => setShowAlert({ show: false, message: '' })}
+                    header={'Aviso'}
+                    message={showAlert.message}
+                    buttons={['OK']}
+                />
+
+                {/* Este é o novo alerta para confirmar a exclusão da conta */}
+                <IonAlert
+                isOpen={showDeleteConfirm}
+                onDidDismiss={() => setShowDeleteConfirm(false)}
+                header={'Atenção!'}
+                message={'Você tem certeza que deseja excluir sua conta permanentemente? Para confirmar, digite "excluir" abaixo.'}
+                inputs={[
+                    {
+                    name: 'confirmText', 
+                    type: 'text',
+                    placeholder: 'excluir'
+                    }
+                ]}
+
+                buttons={[
+                    {
+                    text: 'Cancelar',
+                    role: 'cancel', 
+                    },
+                    {
+                    text: 'Excluir Conta',
+                    cssClass: 'ion-color-danger',
+                    
+                    handler: (alertData) => {
+                        if (alertData.confirmText === 'excluir') {
+                        executeAccountDeletion();
+                        } else {
+                        setShowAlert({ show: true, message: 'Texto de confirmação inválido.' });
+                        }
+                    }
+                    }
+                ]}
+                />
+                        </IonContent>
+                    </IonPage>
+                );
 
 
-};
+                };
 
 
 export default Perfil;
-
