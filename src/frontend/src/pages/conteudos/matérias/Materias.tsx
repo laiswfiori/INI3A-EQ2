@@ -35,7 +35,6 @@ interface Topico {
 interface Materia {
   id: number;
   nome: string;
-  usuario_id: number;
   topicos: Topico[];
 }
 

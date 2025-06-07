@@ -1,0 +1,56 @@
+.paginaSenha {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5%;
+    padding-right: 10%;
+    padding-left: 10%;
+    height: 100vh;
+    width: 100%;
+}
+
+.pagS {
+    width: 100%;
+    height: 100%;
+}
+
+.whs {
+    width: 100%;
+    height: 100%;
+}
+
+.centroS {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.centroHorizontal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 3%;
+}
+
+.contInputEmail {
+    margin-top: 8%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border-radius: 20px;
+    border: 1px solid #00296b;
+}
+
+.larguraS {
+    width: 100%;
+    padding: 1%;
+}
+
+#imgInicio {
+    width: 100%;
+    height: 100%;
+}

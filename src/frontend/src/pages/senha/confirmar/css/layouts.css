@@ -1,0 +1,28 @@
+@media (max-width: 767px) {
+    .whs {
+        flex-direction: column;
+    }
+    #imgInicio {
+        width: 100%;
+        margin-top: 5%;
+    }
+    #txtS {
+        font-size: 0.8rem;
+    }
+    .configM {
+        height: fit-content; 
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .whs {
+        padding-top: 10%;
+        height: 80%;
+    }
+}
+
+@media (max-width: 320px) {
+    .whs {
+        margin-top: 2%;
+    }
+}
