@@ -12,6 +12,7 @@ const Flashcards: React.FC = () => {
             <div className="titulo card">
               <div className="conteudo">
                 <div className="frente">
+                  <p>LALALALA</p>
                 </div>
                 <div className="verso">
                 </div>
