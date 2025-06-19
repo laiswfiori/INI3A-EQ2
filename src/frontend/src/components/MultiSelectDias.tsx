@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Select, { MultiValue } from 'react-select';
+import './css/ui.css';
 
 type DiaSemanaOption = {
   value: string;
@@ -26,7 +27,7 @@ const MultiSelectDias: React.FC = () => {
 
   return (
     <div>
-      <h2 style={{ textAlign: 'left' }}>Selecione os dias da semana:</h2>
+      <h2 className="txtDias"><b>Selecione os dias da semana:</b></h2>
       <Select
         isMulti
         options={opcoesDias}

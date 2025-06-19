@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-    IonContent, IonList, IonItem, IonLabel, IonInput, IonButton, IonText, IonIcon
+    IonList, IonItem, IonLabel, IonInput, IonButton, IonText, IonIcon
 } from '@ionic/react';
 import IMask from 'imask';
 import { trash } from 'ionicons/icons';
+import './css/ui.css';
 
 type TimeRange = {
   start: string;
@@ -94,27 +95,15 @@ const HorasEstudo: React.FC = () => {
 
   return (
     <div>
-        <h2 style={{textAlign: 'left', marginBottom: "0px"}}>Selecione seus horários disponíveis:</h2>
+        <h2 className="txtAdd"><b>Selecione seus horários disponíveis:</b></h2>
       <IonList>
         {timeRanges.map((range, idx) => (
           <IonItem key={idx} style={{ flexWrap: 'nowrap' }}>
-            <IonLabel position="stacked" style={{marginBottom: "2%"}}>Horário {idx + 1}</IonLabel>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                width: '300px',
-                flexWrap: 'nowrap',
-              }}
-            >
+            <IonLabel className="lbl" position="stacked" style={{marginBottom: "3%"}}>Horário {idx + 1}</IonLabel>
+            <div className='divhr'>
               <IonInput 
-              style={{
-                    border: '2px solid #003366', // azul escuro
-                    borderRadius: '4px',
-                    padding: '6px 8px',
-                }}
-                placeholder="Início (09:07)"
+                className='input'
+                placeholder="  Início (09:07)"
                 value={range.start}
                 onIonChange={(e) =>
                   handleChange(idx, 'start', e.detail.value ?? '')
@@ -125,11 +114,8 @@ const HorasEstudo: React.FC = () => {
                 }}
               />
               <IonInput
-              style={{
-                    border: '2px solid #003366', 
-                    borderRadius: '4px',
-                }}
-                placeholder="Fim (11:15)"
+                className='input'
+                placeholder="  Fim (11:15)"
                 value={range.end}
                 onIonChange={(e) =>
                   handleChange(idx, 'end', e.detail.value ?? '')
@@ -140,10 +126,9 @@ const HorasEstudo: React.FC = () => {
                 }}
               />
               <IonButton
-              color="danger"
               size="small"
               onClick={() => handleRemoveRange(idx)}
-              style={{ marginLeft: '8px', height: '36px' }}
+              className='btn1'
             >
             <IonIcon icon={trash} />
             </IonButton>
@@ -158,7 +143,7 @@ const HorasEstudo: React.FC = () => {
         ))}
       </IonList>
 
-      <IonButton expand="block" onClick={handleAddRange}>
+      <IonButton expand="block" onClick={handleAddRange} className='btn2'>
         + Adicionar Horário
       </IonButton>
     </div>

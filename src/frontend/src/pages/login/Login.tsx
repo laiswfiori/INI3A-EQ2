@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonImg, IonButton, IonRow} from '@ionic/react';
+import { IonPage, IonImg, IonButton} from '@ionic/react';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -51,9 +51,9 @@ interface LoginProps {
       <div id="bodyLogin">
         <div className="loginContainer">
           <div className="voltar1">
-                      <IonImg className="imgSize1" src="/imgs/voltar.png" alt="Voltar png" onClick={navHome}/>
-                      <IonImg className="imgSize1"src="/imgs/home.png" alt="Home png" onClick={navHome}/>
-                    </div>
+            <IonImg className="imgSize1" src="/imgs/voltar.png" alt="Voltar png" onClick={navHome}/>
+            <IonImg className="imgSize1"src="/imgs/home.png" alt="Home png" onClick={navHome}/>
+          </div>
             <div className="div11">
                 <div id="apresentacao">
                 <h1 className="h11"><b>Sentimos saudades!</b></h1>

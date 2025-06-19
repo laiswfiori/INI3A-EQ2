@@ -51,8 +51,6 @@
     cursor: pointer;
 }
 
-/*botao*/
-
 .menu-line {
     fill: none;
     background-color: transparent;
@@ -87,4 +85,59 @@
 .opened .menu-line3 {
     stroke-dasharray: 90 207;
     stroke-dashoffset: -134;
+}
+.txtAdd{
+    text-align: left;
+    margin-bottom: -5px !important;
+    color: #ea7317;
+}
+.txtDias, .txtAdd{
+    margin-bottom: 10px;
+    color: #ea7317;
+}
+.input{
+    border: 1px solid;
+    border-radius: 8px;
+}
+.input2{
+    border: 2px solid rgb(213, 213, 213);
+    border-radius: 8px;
+    padding: 6px 8px;
+}
+
+.input, .input2 {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+ion-button.btn1::part(native){
+     margin-left: 8px; 
+     height: 36px;
+     background-color: #ea7317;
+     color: #ffe99d;
+     border: 1.5px solid #b82020;
+}
+
+.btn1::part(native):hover {
+  background-color: #b82020;
+  border: 1.5px solid #ea7317;
+}
+
+ion-button.btn2::part(native){
+     background-color: #3da5d9;
+     color: #00296b;
+}
+
+.btn2::part(native):hover {
+  background-color: #00296b;
+  color: white;
+  border: 3px solid #3da5d9;
+}
+
+.divhr {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  width: 100%;
 }

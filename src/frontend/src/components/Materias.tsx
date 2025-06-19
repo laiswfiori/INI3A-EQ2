@@ -8,7 +8,7 @@ import {
   IonText, 
   IonIcon
 } from '@ionic/react';
-
+import './css/ui.css';
 import { trash } from 'ionicons/icons';
 
 type Materia = {
@@ -51,40 +51,27 @@ const Materias: React.FC = () => {
 
   return (
     <div>
-      <h2 style={{ textAlign: 'left', marginBottom: '0px' }}>
-        Adicione suas matérias:
+      <h2 className="txtAdd">
+        <b>Adicione suas matérias:</b>
       </h2>
       <IonList>
         {materias.map((materia, idx) => (
           <IonItem key={idx} style={{ flexWrap: 'nowrap' }}>
-            <IonLabel position="stacked" style={{ marginBottom: '2%' }}>
+            <IonLabel position="stacked" style={{ marginBottom: '3%'}}>
               Matéria {idx + 1}
             </IonLabel>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                width: '300px',
-                flexWrap: 'nowrap',
-              }}
-            >
+            <div className='divhr'>
               <IonInput
-                style={{
-                  border: '2px solid #003366', // azul escuro
-                  borderRadius: '4px',
-                  padding: '6px 8px',
-                }}
-                placeholder="Nome da matéria"
+                className='input2'
+                placeholder="  Nome da matéria"
                 value={materia.name}
                 onIonChange={(e) => handleChange(idx, e.detail.value ?? '')}
                 onIonBlur={() => validateMateria(idx)}
               />
               <IonButton
-                color="danger"
                 size="small"
                 onClick={() => handleRemoveMateria(idx)}
-                style={{ marginLeft: '8px', height: '36px' }}
+                className='btn1'
               >
               <IonIcon icon={trash} />
               </IonButton>
@@ -97,7 +84,7 @@ const Materias: React.FC = () => {
         ))}
       </IonList>
 
-      <IonButton expand="block" onClick={handleAddMateria}>
+      <IonButton expand="block" onClick={handleAddMateria} className='btn2'>
         + Adicionar Matéria
       </IonButton>
     </div>
