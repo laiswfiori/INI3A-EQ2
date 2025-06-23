@@ -260,3 +260,17 @@ ion-popover::part(backdrop) {
   justify-content: flex-start;
   gap: 5%;
 }
+
+.iconesAdd {
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.iconesAdd:hover {
+  opacity: 0.7;
+}
+
+.iconesAdd:active {
+  transform: scale(0.9);
+  opacity: 0.5;
+}

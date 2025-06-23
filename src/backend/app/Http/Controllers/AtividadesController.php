@@ -15,7 +15,7 @@ class AtividadesController extends Controller
         if (!Auth::check()) {
             return response()->json(['message' => 'Usuário não autenticado.'], 401);
         }
-        
+
         $atividades = Atividade::all();
 
         return response()->json($atividades);
@@ -42,8 +42,6 @@ public function store(Request $request)
 
     $data = $validator->validated();
 
-    $data['conteudo'] = json_encode($data['conteudo']);
-
     $atividade = Atividade::create($data);
 
     return response()->json($atividade, 201);
@@ -69,11 +67,6 @@ public function store(Request $request)
     public function update(Request $request, $id)
     {
         $atividade = Atividade::findOrFail($id);
-
-        // if ($atividade->topico->usuario_id !== Auth::id()) {
-        //     return response()->json(['message' => 'Acesso negado'], 403);
-        // }
-
         $dados = $request->only([
             'titulo',
             'descricao',
@@ -83,8 +76,7 @@ public function store(Request $request)
             'nivel'
         ]);
 
-        $atividade->fill($dados);
-        $atividade->save();
+        $atividade->update($dados);
 
         return response()->json($atividade);
     }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, 
   IonModal, IonPopover, IonInput, IonTextarea, IonRow, IonCol, IonBadge, IonSelect, IonSelectOption} from '@ionic/react';
@@ -33,6 +33,9 @@ const Atividades: React.FC = () => {
   const [modoModal, setModoModal] = useState<'adicionar' | 'editar'>('adicionar');
   const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
   const [textoTemp, setTextoTemp] = useState('');
+  const inputImagemRef = useRef<HTMLInputElement>(null);
+  const inputArquivoRef = useRef<HTMLInputElement>(null);
+
 
   
   const adicionarTextoAoConteudo = (texto: string) => {
@@ -73,6 +76,13 @@ const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
     reader.readAsDataURL(file); // ou envie para backend aqui
   }
 };
+    const removerItemConteudo = (index: number) => {
+      setNovaAtividade(prev => ({
+        ...prev,
+        conteudo: prev.conteudo.filter((_, idx) => idx !== index)
+      }));
+    };
+
 
 
   const alterarStatus = async (atividade: Atividade, novoStatus: string) => {
@@ -383,34 +393,62 @@ const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
                 type="file"
                 accept="image/*"
                 onChange={adicionarImagemAoConteudo}
-                style={{ marginTop: '10px' }}
+                ref={inputImagemRef}
+                style={{ display: 'none' }}
               />
 
               <input
                 type="file"
                 accept=".pdf,.doc,.docx,.ppt,.pptx"
                 onChange={adicionarArquivoAoConteudo}
-                style={{ marginTop: '10px' }}
+                ref={inputArquivoRef}
+                style={{ display: 'none' }}
               />
 
               {/* Visualização do conteúdo */}
               <div className="conteudo-preview" style={{ marginTop: '10px' }}>
-                {novaAtividade.conteudo.map((item, idx) => {
-                  if (item.tipo === 'texto') return <p key={idx}>{item.valor}</p>;
-                  if (item.tipo === 'imagem') return <img key={idx} src={item.valor} alt="imagem" style={{ maxWidth: '100%' }} />;
-                  if (item.tipo === 'arquivo') return (
-                    <p key={idx}>
-                      <a href={item.valor} download={item.nome}>{item.nome}</a>
-                    </p>
-                  );
-                  return null;
-                })}
-              </div>
+                  {novaAtividade.conteudo.map((item, idx) => (
+                    <div key={idx} className="preview-item">
+                      {item.tipo === 'texto' && (
+                        <p>{item.valor}</p>
+                      )}
+                      {item.tipo === 'imagem' && (
+                        <div className="preview-img-container">
+                          <img src={item.valor} alt="imagem" className="preview-img"/>
+                          <IonIcon 
+                            icon={close} 
+                            className="icone-remover" 
+                            onClick={() => removerItemConteudo(idx)} 
+                          />
+                        </div>
+                      )}
+                      {item.tipo === 'arquivo' && (
+                        <div className="preview-arquivo">
+                          <a href={item.valor} download={item.nome}>{item.nome}</a>
+                          <IonIcon 
+                            icon={close} 
+                            className="icone-remover" 
+                            onClick={() => removerItemConteudo(idx)} 
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
 
 
               <IonRow className="flexInicio">
-                <IonIcon icon={images} className="iconesAdd"/>
-                <IonIcon icon={documentAttach} className="iconesAdd"/>
+                <IonIcon 
+                  icon={images} 
+                  className="iconesAdd" 
+                  onClick={() => inputImagemRef.current?.click()} 
+                />
+                <IonIcon 
+                  icon={documentAttach} 
+                  className="iconesAdd" 
+                  onClick={() => inputArquivoRef.current?.click()} 
+                />
               </IonRow>
 
               <IonButton 

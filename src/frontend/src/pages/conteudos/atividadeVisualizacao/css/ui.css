@@ -1,0 +1,44 @@
+.atividade-visualizacao {
+  padding: 16px;
+}
+
+.atividade-visualizacao .titulo {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.atividade-visualizacao .descricao {
+  margin-bottom: 8px;
+}
+
+.atividade-visualizacao .tipo {
+  margin-bottom: 16px;
+  color: #666;
+}
+
+.linhaHorizontal {
+  height: 2px;
+  background-color: var(--ion-color-primary);
+  margin: 12px 0;
+}
+
+.conteudo-item {
+  margin-bottom: 16px;
+}
+
+.imagemConteudo {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.iconeConteudo {
+  margin-right: 8px;
+  color: var(--ion-color-primary);
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+.btn-voltar {
+  margin: 10px;
+}

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Atividade extends Model 
+class Atividade extends Model
 {
 
     protected $table = "atividades";
@@ -16,6 +16,9 @@ class Atividade extends Model
         'status',
         'tipo',
         'nivel'
+    ];
+    protected $casts = [
+        'conteudo' => 'array',
     ];
     protected $primaryKey = 'id';
 
