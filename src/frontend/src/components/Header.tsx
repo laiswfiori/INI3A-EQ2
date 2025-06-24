@@ -17,7 +17,6 @@ const Header: React.FC = () => {
 
   const navHome = () => {
       history.push('/pagInicial/home');
-      window.location.reload();
   };
 
   const navAgenda = () => {
@@ -31,7 +30,6 @@ const Header: React.FC = () => {
   const navFlashcards = () => {
     if (isAuthenticated()) {
       history.push('/flashcards/telainicialflashcards');
-      window.location.reload();
     } else {
       history.push('/logincadastro/logincadastro');
     }
