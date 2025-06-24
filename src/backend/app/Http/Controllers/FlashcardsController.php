@@ -35,6 +35,11 @@ class FlashcardsController extends Controller
         // Cria uma nova atividade no banco de dados
         $flashcard = Flashcard::create($dados);
 
+        return response()->json([
+        'message' => 'Flashcard criado com sucesso.',
+        'flashcard' => $flashcard
+    ], 201);
+
     }
 
 

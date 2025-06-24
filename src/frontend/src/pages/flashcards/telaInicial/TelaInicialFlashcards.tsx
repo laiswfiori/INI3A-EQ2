@@ -61,12 +61,15 @@ const TelaInicialFlashcards: React.FC = () => {
   const [popoverEvent, setPopoverEvent] = useState<any>(undefined);
   const [showModal, setShowModal] = useState(false);
   const [novoFlashcardTitulo, setNovoFlashcardTitulo] = useState(''); // Renomeado para clareza
+  {/* 
   const [novoFlashcardConteudoFrente, setNovoFlashcardConteudoFrente] = useState(''); // Renomeado e tipo ajustado
   const [novoFlashcardConteudoVerso, setNovoFlashcardConteudoVerso] = useState('');   // Renomeado e tipo ajustado
+  */}
   const [modalMateriaSelecionada, setModalMateriaSelecionada] = useState<Materia | null>(null); // Renomeado para clareza
   const [topicoSelecionadoParaNovoFlashcard, setTopicoSelecionadoParaNovoFlashcard] = useState<number | null>(null); // Novo estado
   const history = useHistory();
   const [presentToast] = useIonToast(); // Inicializa o toast
+  {/* 
   const [conteudoFrente, setConteudoFrente] = useState<
     { tipo: 'texto' | 'imagem' | 'arquivo'; valor: string; nome?: string }[]
   >([]);
@@ -78,6 +81,7 @@ const TelaInicialFlashcards: React.FC = () => {
   const inputArquivoFrenteRef = useRef<HTMLInputElement>(null);
   const inputImagemVersoRef = useRef<HTMLInputElement>(null);
   const inputArquivoVersoRef = useRef<HTMLInputElement>(null);
+  */}
 
 
 
@@ -105,6 +109,7 @@ const TelaInicialFlashcards: React.FC = () => {
 
     fetchData();
   }, [presentToast]); // Adicionar presentToast como dependência para evitar warning
+  
 
   const toggleExpandirMateria = (materiaId: number) => {
     setMateriaExpandidaId(materiaExpandidaId === materiaId ? null : materiaId);
@@ -121,8 +126,10 @@ const TelaInicialFlashcards: React.FC = () => {
 
   const abrirModalCriarFlashcard = (materia: Materia) => {
     setNovoFlashcardTitulo('');
+    {/* 
     setNovoFlashcardConteudoFrente('');
     setNovoFlashcardConteudoVerso('');
+    */}
     setTopicoSelecionadoParaNovoFlashcard(null); // Limpar seleção de tópico
     setModalMateriaSelecionada(materia);
     setShowModal(true);
@@ -133,6 +140,14 @@ const TelaInicialFlashcards: React.FC = () => {
   };
 
   const handleSalvarFlashcard = async () => {
+    if (!topicoSelecionadoParaNovoFlashcard || novoFlashcardTitulo.trim() === '') {
+    presentToast({
+      message: 'Escolha um título para o seu flashcard.',
+      duration: 3000,
+      color: 'warning',
+    });
+    return;
+    {/* 
   if (!topicoSelecionadoParaNovoFlashcard || conteudoFrente.length === 0 || conteudoVerso.length === 0) {
     presentToast({
       message: 'Preencha conteúdo na frente e no verso do flashcard.',
@@ -140,6 +155,7 @@ const TelaInicialFlashcards: React.FC = () => {
       color: 'warning',
     });
     return;
+    */}
   }
 
   try {
@@ -155,9 +171,11 @@ const TelaInicialFlashcards: React.FC = () => {
 
     const novoCard = {
       topico_id: topico.id,
-      titulo: novoFlashcardTitulo || topico.titulo,
+      titulo: novoFlashcardTitulo,
+      /*}
       conteudo_frente: conteudoFrente,
       conteudo_verso: conteudoVerso,
+      */
     };
 
     await api.post('flashcards', novoCard);
@@ -170,8 +188,11 @@ const TelaInicialFlashcards: React.FC = () => {
     const updatedFlashcards = await api.get('flashcards');
     setFlashcards(updatedFlashcards);
     setShowModal(false);
+    window.location.reload();
+    /*
     setConteudoFrente([]);
     setConteudoVerso([]);
+    */
   } catch (error) {
     presentToast({
       message: 'Erro ao salvar flashcard.',
@@ -181,56 +202,75 @@ const TelaInicialFlashcards: React.FC = () => {
   }
 };
 
-  
+{/*
 const adicionarTexto = (lado: 'frente' | 'verso', texto: string) => {
-  const novoItem = { tipo: 'texto', valor: texto };
+  const novoItem = { tipo: 'texto' as const, valor: texto };
+
   if (lado === 'frente') {
-    setConteudoFrente([...conteudoFrente, novoItem]);
+    setConteudoFrente(prev => [...prev, novoItem]);
   } else {
-    setConteudoVerso([...conteudoVerso, novoItem]);
+    setConteudoVerso(prev => [...prev, novoItem]);
   }
 };
 
-const adicionarImagem = (e: React.ChangeEvent<HTMLInputElement>, lado: 'frente' | 'verso') => {
+
+const adicionarImagem = (
+  e: React.ChangeEvent<HTMLInputElement>,
+  lado: 'frente' | 'verso'
+) => {
   const file = e.target.files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const novoItem = { tipo: 'imagem', valor: reader.result as string };
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    const resultado = reader.result;
+    if (typeof resultado === 'string') {
+      const novoItem = {
+        tipo: 'imagem' as const,
+        valor: resultado,
+        nome: file.name,
+      };
+
       if (lado === 'frente') {
-        setConteudoFrente([...conteudoFrente, novoItem]);
+        setConteudoFrente(prev => [...prev, novoItem]);
       } else {
-        setConteudoVerso([...conteudoVerso, novoItem]);
+        setConteudoVerso(prev => [...prev, novoItem]);
       }
-    };
-    reader.readAsDataURL(file);
-  }
+    }
+  };
+  reader.readAsDataURL(file);
 };
 
-const adicionarArquivo = (e: React.ChangeEvent<HTMLInputElement>, lado: 'frente' | 'verso') => {
+
+const adicionarArquivo = (
+  e: React.ChangeEvent<HTMLInputElement>,
+  lado: 'frente' | 'verso'
+) => {
   const file = e.target.files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const novoItem = { tipo: 'arquivo', valor: reader.result as string, nome: file.name };
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    const resultado = reader.result;
+    if (typeof resultado === 'string') {
+      const novoItem = {
+        tipo: 'arquivo' as const,
+        valor: resultado,
+        nome: file.name,
+      };
+
       if (lado === 'frente') {
-        setConteudoFrente([...conteudoFrente, novoItem]);
+        setConteudoFrente(prev => [...prev, novoItem]);
       } else {
-        setConteudoVerso([...conteudoVerso, novoItem]);
+        setConteudoVerso(prev => [...prev, novoItem]);
       }
-    };
-    reader.readAsDataURL(file);
-  }
+    }
+  };
+
+  reader.readAsDataURL(file); // necessário para preview de PDF/Word via base64
 };
 
-const removerItem = (lado: 'frente' | 'verso', index: number) => {
-  if (lado === 'frente') {
-    setConteudoFrente(conteudoFrente.filter((_, idx) => idx !== index));
-  } else {
-    setConteudoVerso(conteudoVerso.filter((_, idx) => idx !== index));
-  }
-};
-
+*/}
 
   return (
     <IonPage className="pagina">
@@ -311,7 +351,7 @@ const removerItem = (lado: 'frente' | 'verso', index: number) => {
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Total de cards</p>
+                <p className="txtTF">Total de flashcards</p>
               </IonRow>
             </div>
             <div className="estDivs">
@@ -337,7 +377,7 @@ const removerItem = (lado: 'frente' | 'verso', index: number) => {
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Cards para revisar hoje</p>
+                <p className="txtTF">Flashcards para revisar hoje</p>
               </IonRow>
             </div>
           </IonRow>
@@ -372,7 +412,7 @@ const removerItem = (lado: 'frente' | 'verso', index: number) => {
                         </IonCol>
                       </IonRow>
                       <IonRow className="espDC">
-                        <p className="txtWC">{totalCardsMateria} cards</p>
+                        <p className="txtWC">{totalCardsMateria} flashcards</p>
                         <p className="txtWC" id="txtRevisar">{cardsParaRevisarMateria} para revisar</p>
                       </IonRow>
                       <IonRow className="barra">
@@ -422,7 +462,7 @@ const removerItem = (lado: 'frente' | 'verso', index: number) => {
                                   <IonIcon icon={arrowForward} className="setaTopico" />
                                   <p className="txtTopico">{topico.titulo}</p>
                                   <div className="contagem-flashcards">
-                                    <IonIcon icon={card} />
+                                    {/*<IonIcon icon={card} />*/}
                                     <span>{numFlashcards}</span>
                                   </div>
                                 </IonRow>
@@ -448,7 +488,7 @@ const removerItem = (lado: 'frente' | 'verso', index: number) => {
               <IonIcon icon={close} className="iconeFecharM" onClick={() => setShowModal(false)} />
             </IonRow>
             <IonRow className="centroModal">
-              <h2 className="label">Criar novo card</h2>
+              <h2 className="label">Crie um novo flashcard!</h2>
             </IonRow>
             <IonSelect
               value={topicoSelecionadoParaNovoFlashcard}
@@ -466,6 +506,15 @@ const removerItem = (lado: 'frente' | 'verso', index: number) => {
             </IonSelect>
 
             <IonTextarea
+              labelPlacement="stacked"
+              placeholder="Digite o título do flashcard"
+              value={novoFlashcardTitulo}
+              onIonInput={(e) => setNovoFlashcardTitulo(e.detail.value!)}
+              className="input"
+            />
+
+            {/* 
+            <IonTextarea
               placeholder="Conteúdo da frente"
               value={novoFlashcardConteudoFrente}
               onIonChange={(e) => setNovoFlashcardConteudoFrente(e.detail.value!)}
@@ -477,6 +526,7 @@ const removerItem = (lado: 'frente' | 'verso', index: number) => {
               onIonChange={(e) => setNovoFlashcardConteudoVerso(e.detail.value!)}
               className="input"
             />
+            */}
 
             <IonButton expand="block" className="btnSalvar bntSFlashcard" onClick={handleSalvarFlashcard}>
               Salvar

@@ -23,7 +23,6 @@ const Header: React.FC = () => {
   const navAgenda = () => {
     if (isAuthenticated()) {
       history.push('/agenda/agenda');
-      window.location.reload();
     } else {
       history.push('/logincadastro/logincadastro');
     }
@@ -41,7 +40,6 @@ const Header: React.FC = () => {
   const navConteudos = () => {
     if (isAuthenticated()) {
       history.push('/conteudos/materias');
-      window.location.reload();
     } else {
       history.push('/logincadastro/logincadastro');
     }
@@ -50,7 +48,6 @@ const Header: React.FC = () => {
   const navPerfil = () => {
     if (isAuthenticated()) {
       history.push('/perfil/perfil');
-      window.location.reload();
     } else {
       history.push('/logincadastro/logincadastro');
     }
