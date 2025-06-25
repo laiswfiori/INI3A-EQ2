@@ -1,11 +1,13 @@
 import React from 'react';
 import { IonPage, IonContent, IonRow, IonCol, IonIcon, IonInput, IonButton } from '@ionic/react';
-import { mail } from 'ionicons/icons';
+import { useHistory } from 'react-router-dom';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layouts.css';
 
 const Alterar: React.FC = () => {
+  const history = useHistory();
+
   return (
     <IonPage className="paginaSenha">
       <IonContent className="pagS">
@@ -23,7 +25,7 @@ const Alterar: React.FC = () => {
                     className="input btnSenhas"
                   />
             </IonRow>
-            <IonButton className="btnEnviar">Alterar</IonButton>
+            <IonButton className="btnEnviar" onClick={() => history.push('/senha/concluir')}>Alterar</IonButton>
           </IonCol>
         </IonRow>
       </IonContent>

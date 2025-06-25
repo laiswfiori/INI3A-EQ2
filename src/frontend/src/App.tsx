@@ -7,13 +7,14 @@ import Topicos from './pages/conteudos/topicos/Topicos';
 import Atividades from './pages/conteudos/atividades/Atividades';
 import Atividade from './pages/conteudos/atividadeVisualizacao/Atividade';
 import Login from './pages/login/Login';
-import LoginCadastro from './pages/loginCadastro/loginCadastro';
 import Registro from './pages/registro/Registro';
+import LoginCadastro from './pages/loginCadastro/loginCadastro';
 import Perfil from './pages/perfil/Perfil';
 import Configuracoes from './pages/configuracoes/Configuracoes';
 import Agenda from './pages/agenda/Agenda';
 import Flashcards from './pages/flashcards/flashcard/Flashcards';
 import TelaInicialFlashcards from './pages/flashcards/telaInicial/TelaInicialFlashcards';
+import Relatorio from './pages/flashcards/relatorio/Relatorio';
 import Confirmar from './pages/senha/confirmar/Confirmar';
 import Concluir from './pages/senha/concluir/Concluir';
 import Alterar from './pages/senha/alterar/Alterar';
@@ -69,12 +70,13 @@ const App: React.FC = () => (
         <Route path="/conteudos/atividade" component={Atividade} exact />
         <Route path="/login/login" component={Login} exact />
         <Route path="/registro/registro" component={Registro} exact />
+        <Route path="/logincadastro/logincadastro" component={LoginCadastro} exact />
         <Route path="/perfil/perfil" component={Perfil} exact />
         <Route path="/configuracoes/configuracoes" component={Configuracoes} exact />
         <Route path="/agenda/agenda" component={Agenda} exact />
         <Route path="/flashcards/flashcards" component={Flashcards} exact />
         <Route path="/flashcards/telainicialflashcards" component={TelaInicialFlashcards} exact />
-        <Route path="/logincadastro/logincadastro" component={LoginCadastro} exact />
+        <Route path="/flashcards/relatorio" component={Relatorio} exact />
         <Route path="/senha/confirmar" component={Confirmar} exact />
         <Route path="/senha/concluir" component={Concluir} exact />
         <Route path="/senha/alterar" component={Alterar} exact />

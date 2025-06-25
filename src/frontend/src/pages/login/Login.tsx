@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonImg, IonButton} from '@ionic/react';
+import { IonPage, IonImg, IonButton, IonRow, IonIcon} from '@ionic/react';
+import { returnDownBack } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -50,10 +51,10 @@ interface LoginProps {
     <IonPage>
       <div id="bodyLogin">
         <div className="loginContainer">
-          <div className="voltar1">
-            <IonImg className="imgSize1" src="/imgs/voltar.png" alt="Voltar png" onClick={navHome}/>
-            <IonImg className="imgSize1"src="/imgs/home.png" alt="Home png" onClick={navHome}/>
-          </div>
+          <IonRow className="contVoltar"  onClick={() => history.push('/pagInicial/home')}>
+             <IonIcon icon={returnDownBack} className="voltar"/>
+              <p className="txtVoltar">Voltar para home</p>
+          </IonRow>
             <div className="div11">
                 <div id="apresentacao">
                 <h1 className="h11"><b>Sentimos saudades!</b></h1>
@@ -83,7 +84,7 @@ interface LoginProps {
                   value={password}
                   onChange={(e) => setSenha(e.target.value)}
                   className="inputForm1"/>
-                <h3 className="h33 obs2">Esqueci minha senha</h3>
+                <h3 className="h33 obs2" onClick={() => history.push('/senha/confirmar')}>Esqueci minha senha</h3>
                 <IonButton className="btnEntrar" onClick={handleLogar}> <h3 className='h33'>Entrar</h3></IonButton>
                 <div id="ou1">
                   <div className="linhass"></div>

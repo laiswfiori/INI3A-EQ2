@@ -84,3 +84,7 @@ ion-button.btnGoogle1::part(native) {
   background-color: white;
   color: black;
 }
+
+.voltar, .txtVoltar {
+  color: white !important;
+}

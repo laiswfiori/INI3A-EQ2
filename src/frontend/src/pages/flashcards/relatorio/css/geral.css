@@ -1,0 +1,34 @@
+#bodyRelatorio {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2%;
+    padding: 0;
+}
+
+.rowsRelatorio {
+    width: 100%;
+}
+
+.centroRelatorio {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.espacoRelatorio {
+    justify-content: space-around;
+}
+
+.colDesempenho {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+p {
+    padding: 0;
+    margin: 1%;;
+}

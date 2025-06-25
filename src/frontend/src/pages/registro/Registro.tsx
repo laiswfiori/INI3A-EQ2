@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonRow, IonImg } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonRow, IonImg, IonIcon } from '@ionic/react';
+import { returnDownBack } from 'ionicons/icons';
 import './css/geral.css';
 import './css/layout.css';
 import './css/ui.css';
@@ -64,10 +65,10 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
         <div id="body">
           <div className="cadastro-container">
 
-          <div className="voltar">
-            <IonImg className="imgSize" src="/imgs/voltar.png" alt="Voltar png" onClick={navHome}/>
-            <IonImg className="imgSize"src="/imgs/home.png" alt="Home png" onClick={navHome}/>
-          </div>
+          <IonRow className="contVoltar"  onClick={() => history.push('/pagInicial/home')}>
+             <IonIcon icon={returnDownBack} className="voltar"/>
+              <p className="txtVoltar">Voltar para home</p>
+          </IonRow>
 
             <div className="div1">
               <h1 className="h1"><b>Cadastre-se em nossa plataforma!</b></h1><br />

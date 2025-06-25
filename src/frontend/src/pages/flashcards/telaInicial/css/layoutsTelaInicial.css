@@ -1,0 +1,45 @@
+@media (min-width: 1024px) {
+    .revisaoGeral {
+        height: 25% !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .fecharMobile, .botaoAbrirEstatisticas{
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    #revisao {
+        margin-right: 5%;
+        margin-left: 5%;
+    }
+    .colFlex {
+        display: none;
+    }
+    .botaoAbrirEstatisticas {
+        display: block;
+    }
+    #estatisticas {
+        position: relative;
+    }
+    .fecharMobile {
+        display: block;
+    }
+    #estatisticas {
+        padding-right: 5%;
+        padding-left: 5%;
+    }
+    .estDivs {
+        width: 100%;
+    }
+}
+
+@media (max-width: 375px) {
+    #dCapelo {
+        display: none;
+    }
+}
+
+

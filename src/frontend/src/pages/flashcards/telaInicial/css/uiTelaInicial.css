@@ -15,21 +15,21 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding: 16px 32px;
+    padding: 0.5rem 1.5rem;
     background-color: #ea7317;
-    border: 8px solid #fec601;
+    border: 5px solid #fec601;
     color: white;
-    gap: 8px;
     border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s;
     width: 100%;
-    height: 25%;
+    height: 35% !important;
   }
 
   ion-button.revisaoGeral::part(native) {
     background-color: #ea7317;
     box-shadow: none;
+    height: 100%;
 }
 
   .textIniciar {
@@ -39,18 +39,19 @@
     padding-right: 10%;
   }
 
-  #btnIniciar {
+  #revisaoGeral {
     padding-top: 5px;
     height: 100%;
     width: fit-content;
   }
 
- #btnIniciar svg {
-    width: 20%;
-    height: 10%;
+.svgIniciar {
+    width: 1.5rem !important;
+    height: auto !important;
   }
+
   .revisaoGeral:hover {
-    border: 8px solid #c29800;
+    border: 5px solid #c29800;
     background-color: #d45c00;
   }
   .revisaoGeral:active {
@@ -250,4 +251,37 @@ ion-button.verTopicos::part(native):hover {
   font-size: 1.2rem;
   padding: 0;
   margin: 0;
+}
+
+.fecharMobile {
+  display: flex !important;
+  align-items: center; 
+  justify-content: flex-start;
+  width: 100%;
+  z-index: 10;
+}
+
+.iconeFechar {
+  font-size: 2rem;
+  color: #ce2711;
+  margin: 0;
+}
+
+.botaoAbrirEstatisticas {
+  display: flex !important;
+  align-items: center; 
+  justify-content: flex-start;
+  width: 100%;
+  bottom: 1rem;
+  right: 1rem;
+  gap: 1%;
+  background-color: #fff;
+  padding: 12px;
+  z-index: 999;
+  cursor: pointer;
+}
+
+.botaoAbrirEstatisticas ion-icon {
+  font-size: 1.5rem;
+  color: #af4c00;
 }

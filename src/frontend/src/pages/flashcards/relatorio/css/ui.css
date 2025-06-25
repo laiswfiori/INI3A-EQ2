@@ -1,0 +1,33 @@
+h1 {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    text-align: center;
+}
+
+#pCentro {
+  text-align: center;
+}
+
+span {
+    font-weight: 700;
+}
+
+ion-button.btnRelatorio {
+    --background: #00296b; 
+    --color: #fff;    
+    width: 20%; 
+    font-size: 1.2rem;   
+  }
+
+  ion-button.btnRelatorio::part(native) {
+    border-radius: 12px;  
+  }
+
+  ion-button.btnRelatorio::part(native):hover {
+    background-color: #3da5d9;
+    cursor: pointer;
+  }
+
+.iconeImpressora {
+  padding: 1%;
+}
