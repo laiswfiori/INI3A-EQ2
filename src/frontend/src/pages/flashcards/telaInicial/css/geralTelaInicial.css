@@ -151,7 +151,6 @@ ion-popover.popoverGeral::part(content) {
   margin-right: 1%;
   width: calc(33.33% - 1rem);
   max-width:  calc(33.33% - 1rem);
-  pointer-events: none !important;
 }
 
 ion-item.materia-itemF ion-label {
@@ -269,7 +268,7 @@ ion-item.materia-itemF ion-label {
 }
 
 ion-modal.modalFlashcards {
-    --max-height: 35%;
+    --max-height: 100%;
     height: auto;
 }
 
@@ -286,3 +285,30 @@ ion-modal.modalFlashcards::part(content) {
     margin-top: 2% !important;
 }
 
+.listaCardsPreview {
+  margin-top: 1rem;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.listaCardsPreview ul {
+  padding-left: 1rem;
+  margin: 0;
+}
+
+.listaCardsPreview li {
+  margin-bottom: 0.75rem;
+}
+
+.scroll-modal {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 8px; /* espaço para scrollbar */
+}
+.info-cards {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 4px;
+}

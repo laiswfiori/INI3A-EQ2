@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Card;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class CardsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
         // Retorna todas as atividades cujos tópicos pertencem ao usuário autenticado
@@ -24,19 +29,29 @@ class CardsController extends Controller
 
     public function store(Request $request)
     {
-        // Pega os dados diretamente da requisição
-        $dados = $request->only([
-            'flashcard_id',
-            'conteudo_frente',
-            'conteudo_verso',
-            'nivel'
+
+        $validator = Validator::make($request->all(), [
+            'flashcard_id' => 'required|integer',
+            'conteudo_frente' => 'nullable|array',
+            'conteudo_frente.*.tipo' => 'required|in:texto,imagem,arquivo',
+            'conteudo_frente.*.valor' => 'required|string',
+            'conteudo_frente.*.nome' => 'nullable|string',
+            'conteudo_verso' => 'nullable|array',
+            'conteudo_verso.*.tipo' => 'required|in:texto,imagem,arquivo',
+            'conteudo_verso.*.valor' => 'required|string',
+            'conteudo_verso.*.nome' => 'nullable|string',
         ]);
 
-        // Cria uma nova atividade no banco de dados
-        $card = Card::create($dados);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
-        // Retorna a atividade criada como resposta com código 201 (Created)
+        $data = $validator->validated();
+
+        $card = Card::create($data);
+
         return response()->json($card, 201);
+
     }
 
 

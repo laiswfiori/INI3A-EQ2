@@ -1,0 +1,220 @@
+/* CardEditor.css - Versão ajustada para o modal */
+
+/* Container principal do modal */
+.card-editor-modal {
+  --width: 90%;
+  --max-width: 800px;
+  --height: 85%;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Container do conteúdo */
+.card-editor-container {
+  padding: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Cabeçalho do modal */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.close-button {
+  font-size: 1.5rem;
+  color: #666;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Layout dos lados (frente/verso) */
+.card-sides-container {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.card-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.side-label {
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+/* Área de visualização de conteúdo */
+.content-preview {
+  flex: 1;
+  min-height: 100px;
+  max-height: 300px;
+  border: 1px dashed #eaeaea;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 12px;
+  overflow-y: auto;
+  background-color: #fafafa;
+}
+
+.content-item {
+  position: relative;
+  margin-bottom: 8px;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  border-left: 3px solid #428cff;
+}
+
+.content-item p {
+  margin: 0;
+  color: #333;
+}
+
+.image-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 120px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview span {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 4px;
+  text-align: center;
+  word-break: break-all;
+}
+
+.remove-icon {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  color: #999;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  padding: 2px;
+  font-size: 0.9rem;
+}
+
+.remove-icon:hover {
+  color: #ff3b30;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Área de adição de conteúdo */
+.add-content-area {
+  border: 1px dashed #d1d1d1;
+  border-radius: 6px;
+  padding: 10px;
+  background: #fff;
+}
+
+.content-textarea {
+  background: #fff;
+  border-radius: 4px;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --highlight-color-focused: #428cff;
+  margin-bottom: 8px;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.image-button {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --color: #428cff;
+}
+
+/* Rodapé com botões de ação */
+.action-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.action-button {
+  --border-radius: 6px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  font-weight: 500;
+}
+
+/* Ajustes para mobile */
+@media (max-width: 768px) {
+  .card-editor-modal {
+    --width: 95%;
+    --height: 90%;
+  }
+  
+  .card-sides-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .card-side {
+    min-height: 200px;
+  }
+  
+  .content-preview {
+    max-height: 150px;
+  }
+}
+
+/* Garante que o modal não ultrapasse a altura da tela */
+ion-modal {
+  --height: auto;
+  --max-height: 90vh;
+}
+
+/* Remove padding extra do modal */
+ion-modal ion-content {
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}

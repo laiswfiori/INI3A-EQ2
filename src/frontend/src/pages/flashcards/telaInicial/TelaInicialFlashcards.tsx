@@ -9,6 +9,7 @@ import './css/uiTelaInicial.css';
 import './css/layoutsTelaInicial.css';
 import './css/pie.css';
 import API from '../../../lib/api';
+import CardEditor from '../components/CardEditor';
 
 interface Topico {
   id: number;
@@ -31,8 +32,19 @@ interface Flashcard {
   id: number;
   topico_id: number;
   titulo: string;
-  conteudo_frente: string; 
-  conteudo_verso: string; 
+  cards: Card[];
+}
+
+interface Card {
+  id?: number;
+  conteudo_frente: ConteudoItem[];
+  conteudo_verso: ConteudoItem[];
+}
+
+interface ConteudoItem {
+  tipo: 'texto' | 'imagem' | 'arquivo';
+  valor: string;
+  nome?: string;
 }
 
 const api = new API();
@@ -47,28 +59,12 @@ const TelaInicialFlashcards: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [novoFlashcardTitulo, setNovoFlashcardTitulo] = useState(''); 
   const [mostrarEstatisticas, setMostrarEstatisticas] = useState(true);
-
-  {/* 
-  const [novoFlashcardConteudoFrente, setNovoFlashcardConteudoFrente] = useState(''); 
-  const [novoFlashcardConteudoVerso, setNovoFlashcardConteudoVerso] = useState('');  
-  */}
   const [modalMateriaSelecionada, setModalMateriaSelecionada] = useState<Materia | null>(null); 
   const [topicoSelecionadoParaNovoFlashcard, setTopicoSelecionadoParaNovoFlashcard] = useState<number | null>(null); 
+  const [showCardEditor, setShowCardEditor] = useState(false);
+  const [cardsTemp, setCardsTemp] = useState<Card[]>([]);
   const history = useHistory();
-  const [presentToast] = useIonToast(); 
-  {/* 
-  const [conteudoFrente, setConteudoFrente] = useState<
-    { tipo: 'texto' | 'imagem' | 'arquivo'; valor: string; nome?: string }[]
-  >([]);
-
-  const [conteudoVerso, setConteudoVerso] = useState<
-    { tipo: 'texto' | 'imagem' | 'arquivo'; valor: string; nome?: string }[]
-  >([]);
-  const inputImagemFrenteRef = useRef<HTMLInputElement>(null);
-  const inputArquivoFrenteRef = useRef<HTMLInputElement>(null);
-  const inputImagemVersoRef = useRef<HTMLInputElement>(null);
-  const inputArquivoVersoRef = useRef<HTMLInputElement>(null);
-  */}
+  const [presentToast] = useIonToast();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,9 +74,16 @@ const TelaInicialFlashcards: React.FC = () => {
           api.get('topicos'),
           api.get('flashcards'),
         ]);
+        
+        // Adiciona cards vazios se não existirem (para compatibilidade)
+        const flashcardsComCards = flashcardsData.map((f: any) => ({
+          ...f,
+          cards: f.cards || []
+        }));
+        
         setMaterias(materiasData);
         setTopicos(topicosData);
-        setFlashcards(flashcardsData);
+        setFlashcards(flashcardsComCards);
       } catch (error) {
         console.error('Erro ao buscar dados iniciais:', error);
         presentToast({
@@ -103,8 +106,7 @@ const TelaInicialFlashcards: React.FC = () => {
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-}, []);
-  
+  }, []);
 
   const toggleExpandirMateria = (materiaId: number) => {
     setMateriaExpandidaId(materiaExpandidaId === materiaId ? null : materiaId);
@@ -121,10 +123,7 @@ const TelaInicialFlashcards: React.FC = () => {
 
   const abrirModalCriarFlashcard = (materia: Materia) => {
     setNovoFlashcardTitulo('');
-    {/* 
-    setNovoFlashcardConteudoFrente('');
-    setNovoFlashcardConteudoVerso('');
-    */}
+    setCardsTemp([]);
     setTopicoSelecionadoParaNovoFlashcard(null); 
     setModalMateriaSelecionada(materia);
     setShowModal(true);
@@ -136,141 +135,110 @@ const TelaInicialFlashcards: React.FC = () => {
 
   const handleSalvarFlashcard = async () => {
     if (!topicoSelecionadoParaNovoFlashcard || novoFlashcardTitulo.trim() === '') {
-    presentToast({
-      message: 'Escolha um título para o seu flashcard.',
-      duration: 3000,
-      color: 'warning',
-    });
-    return;
-    {/* 
-  if (!topicoSelecionadoParaNovoFlashcard || conteudoFrente.length === 0 || conteudoVerso.length === 0) {
-    presentToast({
-      message: 'Preencha conteúdo na frente e no verso do flashcard.',
-      duration: 3000,
-      color: 'warning',
-    });
-    return;
-    */}
-  }
-
-  try {
-    const topico = topicos.find(t => t.id === topicoSelecionadoParaNovoFlashcard);
-    if (!topico) {
       presentToast({
-        message: 'Tópico inválido.',
+        message: 'Preencha o título e selecione um tópico para o flashcard.',
         duration: 3000,
-        color: 'danger',
+        color: 'warning',
       });
       return;
     }
 
-    const novoCard = {
-      topico_id: topico.id,
-      titulo: novoFlashcardTitulo,
-      /*}
-      conteudo_frente: conteudoFrente,
-      conteudo_verso: conteudoVerso,
-      */
-    };
-
-    await api.post('flashcards', novoCard);
-    presentToast({
-      message: 'Flashcard criado com sucesso!',
-      duration: 2000,
-      color: 'success',
-    });
-
-    const updatedFlashcards = await api.get('flashcards');
-    setFlashcards(updatedFlashcards);
-    setShowModal(false);
-    /*
-    setConteudoFrente([]);
-    setConteudoVerso([]);
-    */
-  } catch (error) {
-    presentToast({
-      message: 'Erro ao salvar flashcard.',
-      duration: 3000,
-      color: 'danger',
-    });
-  }
-};
-
-{/*
-const adicionarTexto = (lado: 'frente' | 'verso', texto: string) => {
-  const novoItem = { tipo: 'texto' as const, valor: texto };
-
-  if (lado === 'frente') {
-    setConteudoFrente(prev => [...prev, novoItem]);
-  } else {
-    setConteudoVerso(prev => [...prev, novoItem]);
-  }
-};
-
-
-const adicionarImagem = (
-  e: React.ChangeEvent<HTMLInputElement>,
-  lado: 'frente' | 'verso'
-) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    const resultado = reader.result;
-    if (typeof resultado === 'string') {
-      const novoItem = {
-        tipo: 'imagem' as const,
-        valor: resultado,
-        nome: file.name,
-      };
-
-      if (lado === 'frente') {
-        setConteudoFrente(prev => [...prev, novoItem]);
-      } else {
-        setConteudoVerso(prev => [...prev, novoItem]);
-      }
+    if (cardsTemp.length === 0) {
+      presentToast({
+        message: 'Adicione pelo menos um card ao flashcard.',
+        duration: 3000,
+        color: 'warning',
+      });
+      return;
     }
-  };
-  reader.readAsDataURL(file);
-};
 
-
-const adicionarArquivo = (
-  e: React.ChangeEvent<HTMLInputElement>,
-  lado: 'frente' | 'verso'
-) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    const resultado = reader.result;
-    if (typeof resultado === 'string') {
-      const novoItem = {
-        tipo: 'arquivo' as const,
-        valor: resultado,
-        nome: file.name,
+    try {
+      const novoFlashcard = {
+        topico_id: topicoSelecionadoParaNovoFlashcard,
+        titulo: novoFlashcardTitulo,
       };
 
-      if (lado === 'frente') {
-        setConteudoFrente(prev => [...prev, novoItem]);
-      } else {
-        setConteudoVerso(prev => [...prev, novoItem]);
+      const flashcardCriado = await api.post('flashcards', novoFlashcard);
+
+      if (!flashcardCriado || !flashcardCriado.id) {
+        throw new Error('ID do flashcard não retornado');
       }
+
+      // Envia cada card para a API
+      for (const card of cardsTemp) {
+        await api.post('cards', {
+          flashcard_id: flashcardCriado.id,
+          conteudo_frente: card.conteudo_frente,
+          conteudo_verso: card.conteudo_verso,
+        });
+      }
+
+      presentToast({
+        message: 'Flashcard criado com sucesso!',
+        duration: 2000,
+        color: 'success',
+      });
+
+      // Atualiza a lista de flashcards
+      const flashcardsAtualizados = await api.get('flashcards');
+      setFlashcards(flashcardsAtualizados);
+      setShowModal(false);
+      setCardsTemp([]);
+      setNovoFlashcardTitulo('');
+    } catch (error) {
+      console.error('Erro ao salvar flashcard com cards:', error);
+      presentToast({
+        message: 'Erro ao salvar flashcard.',
+        duration: 3000,
+        color: 'danger',
+      });
     }
   };
 
-  reader.readAsDataURL(file); // necessário para preview de PDF/Word via base64
-};
+  const deletarFlashcard = async (id: number) => {
+    try {
+      await api.delete(`flashcards/${id}`);
+      presentToast({
+        message: 'Flashcard deletado com sucesso!',
+        duration: 2000,
+        color: 'success',
+      });
+      const flashcardsAtualizados = await api.get('flashcards');
+      setFlashcards(flashcardsAtualizados);
+    } catch (error) {
+      presentToast({
+        message: 'Erro ao deletar flashcard.',
+        duration: 3000,
+        color: 'danger',
+      });
+    }
+  };
 
-*/}
+  const adicionarCardComEditor = () => {
+    setShowCardEditor(true);
+  };
+
+  const salvarCardDoEditor = (frente: ConteudoItem[], verso: ConteudoItem[]) => {
+    setCardsTemp(prev => [
+      ...prev,
+      {
+        conteudo_frente: frente,
+        conteudo_verso: verso,
+      }
+    ]);
+    setShowCardEditor(false);
+  };
+
+  const removerCardTemp = (index: number) => {
+    setCardsTemp(prev => prev.filter((_, i) => i !== index));
+  };
 
   return (
     <IonPage className="pagina">
       <Header />
       <IonContent>
         <IonGrid id="bodyTelaInicialFlashcards">
+          {/* Seção de Revisão (mantida igual) */}
           <IonRow id="revisao">
             <IonCol id="dCapelo">
               <IonIcon icon={school} id="iconeCapelo" />
@@ -399,7 +367,7 @@ const adicionarArquivo = (
                 const flashcardsDaMateria = flashcards.filter(f =>
                   topicosDaMateria.some(t => t.id === f.topico_id)
                 );
-                const totalCardsMateria = flashcardsDaMateria.length;
+                const totalCardsMateria = flashcardsDaMateria.reduce((total, f) => total + (f.cards?.length || 0), 0);
                 const cardsParaRevisarMateria = 0; 
                 const progresso = totalCardsMateria > 0 ? (cardsParaRevisarMateria / totalCardsMateria) * 100 : 0;
                 const estaExpandida = materiaExpandidaId === materia.id;
@@ -423,7 +391,7 @@ const adicionarArquivo = (
                         </IonCol>
                       </IonRow>
                       <IonRow className="espDC">
-                        <p className="txtWC">{totalCardsMateria} flashcards</p>
+                        <p className="txtWC">{totalCardsMateria} cards</p>
                         <p className="txtWC" id="txtRevisar">{cardsParaRevisarMateria} para revisar</p>
                       </IonRow>
                       <IonRow className="barra">
@@ -461,23 +429,43 @@ const adicionarArquivo = (
 
                           if (topicosComFlashcardsNaMateria.length > 0) {
                             return topicosComFlashcardsNaMateria.map(topico => {
-                              const numFlashcards = flashcards.filter(f => f.topico_id === topico.id).length;
+                              const flashcardsDoTopico = flashcards.filter(f => f.topico_id === topico.id);
 
                               return (
-                                <IonRow
-                                  className="contSetaTopico clicavel"
-                                  key={topico.id}
-                                  onClick={() => estudarTopico(topico.id)}
-                                >
-                                  <IonIcon icon={arrowForward} className="setaTopico" />
-                                  <p className="txtTopico">{topico.titulo}</p>
-                                  <div className="contagem-flashcards">
-                                    {/*<IonIcon icon={card} />*/}
-                                    <span>{numFlashcards}</span>
-                                  </div>
-                                </IonRow>
+                                <div key={topico.id} className="topico-com-flashcards">
+                                  <IonRow className="contSetaTopico">
+                                    <IonIcon icon={arrowForward} className="setaTopico" />
+                                    <p className="txtTopico">{topico.titulo}</p>
+                                    <div className="contagem-flashcards">
+                                      <span>{flashcardsDoTopico.length}</span>
+                                    </div>
+                                  </IonRow>
+
+                                  {flashcardsDoTopico.map(flashcard => (
+                                    <IonRow key={flashcard.id} className="item-flashcard">
+                                      <IonCol size="8">
+                                        <p className="titulo-flashcard">{flashcard.titulo}</p>
+                                        <p className="info-cards">
+                                          {flashcard.cards?.length || 0} {flashcard.cards?.length === 1 ? 'card' : 'cards'}
+                                        </p>
+                                      </IonCol>
+                                      <IonCol size="4" className="botoes-flashcard">
+                                        <IonButton size="small" color="primary" onClick={() => history.push(`/flashcards/estudar/flashcard/${flashcard.id}`)}>
+                                          Estudar
+                                        </IonButton>
+                                        <IonButton size="small" color="medium" onClick={() => history.push(`/flashcards/editar/${flashcard.id}`)}>
+                                          Editar
+                                        </IonButton>
+                                        <IonButton size="small" color="danger" onClick={() => deletarFlashcard(flashcard.id)}>
+                                          Deletar
+                                        </IonButton>
+                                      </IonCol>
+                                    </IonRow>
+                                  ))}
+                                </div>
                               );
                             });
+
                           } else {
                             return <p className="sem-topicos-aviso">Nenhum tópico com flashcards nesta matéria.</p>;
                           }
@@ -492,14 +480,17 @@ const adicionarArquivo = (
             )}
           </IonRow>
         </IonGrid>
+
+        {/* Modal para criar novo flashcard */}
         <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalFlashcards">
-          <div className="modalConteudo">
+          <div className="modalConteudo scroll-modal">
             <IonRow className="contFecharModal">
               <IonIcon icon={close} className="iconeFecharM" onClick={() => setShowModal(false)} />
             </IonRow>
             <IonRow className="centroModal">
               <h2 className="label">Crie um novo flashcard!</h2>
             </IonRow>
+            
             <IonSelect
               value={topicoSelecionadoParaNovoFlashcard}
               placeholder="Escolha o tópico"
@@ -523,25 +514,89 @@ const adicionarArquivo = (
               className="input"
             />
 
-            {/* 
-            <IonTextarea
-              placeholder="Conteúdo da frente"
-              value={novoFlashcardConteudoFrente}
-              onIonChange={(e) => setNovoFlashcardConteudoFrente(e.detail.value!)}
-              className="input iFlashcard"
-            />
-            <IonTextarea
-              placeholder="Conteúdo do verso"
-              value={novoFlashcardConteudoVerso}
-              onIonChange={(e) => setNovoFlashcardConteudoVerso(e.detail.value!)}
-              className="input"
-            />
-            */}
+            <IonRow className="centroModal">
+              <h3>Adicionar cards</h3>
+            </IonRow>
 
-            <IonButton expand="block" className="btnSalvar bntSFlashcard" onClick={handleSalvarFlashcard}>
-              Salvar
+            <IonButton expand="block" onClick={adicionarCardComEditor} className="btnAdicionarCard">
+              Adicionar Card com Editor Avançado
+            </IonButton>
+
+            {/* Lista de cards adicionados */}
+            {cardsTemp.length > 0 && (
+              <div className="listaCardsPreview">
+                <h4>Cards adicionados:</h4>
+                {cardsTemp.map((card, index) => (
+                  <div key={index} className="cardPreviewItem">
+                    <div className="cardPreviewContent">
+                      <h5>Card {index + 1}</h5>
+                      <div className="cardPreviewSides">
+                        <div>
+                          <strong>Frente:</strong>
+                          {card.conteudo_frente.map((item, i) => (
+                            <div key={i}>
+                              {item.tipo === 'texto' && <p>{item.valor}</p>}
+                              {item.tipo === 'imagem' && <img src={item.valor} alt="frente" style={{ maxWidth: '100px' }} />}
+                              {item.tipo === 'arquivo' && <p>Arquivo: {item.nome}</p>}
+                            </div>
+                          ))}
+                        </div>
+                        <div>
+                          <strong>Verso:</strong>
+                          {card.conteudo_verso.map((item, i) => (
+                            <div key={i}>
+                              {item.tipo === 'texto' && <p>{item.valor}</p>}
+                              {item.tipo === 'imagem' && <img src={item.valor} alt="verso" style={{ maxWidth: '100px' }} />}
+                              {item.tipo === 'arquivo' && <p>Arquivo: {item.nome}</p>}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <IonButton 
+                      size="small" 
+                      color="danger" 
+                      onClick={() => removerCardTemp(index)}
+                      className="btnRemoverCard"
+                    >
+                      Remover
+                    </IonButton>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <IonButton 
+              expand="block" 
+              className="btnSalvar bntSFlashcard" 
+              onClick={handleSalvarFlashcard}
+              disabled={cardsTemp.length === 0}
+            >
+              Salvar Flashcard
             </IonButton>
           </div>
+        </IonModal>
+
+        {/* Modal para o CardEditor */}
+        <IonModal 
+          isOpen={showCardEditor} 
+          onDidDismiss={() => setShowCardEditor(false)}
+          className="card-editor-modal"
+        >
+          <div className="modal-header">
+            <h3 className="modal-title">Editor de Card</h3>
+            <button className="close-button" onClick={() => setShowCardEditor(false)}>
+              <IonIcon icon={close} />
+            </button>
+          </div>
+
+          <CardEditor
+            onSave={(frente, verso) => {
+              setCardsTemp([...cardsTemp, { conteudo_frente: frente, conteudo_verso: verso }]);
+              setShowCardEditor(false);
+            }}
+            onCancel={() => setShowCardEditor(false)}
+          />
         </IonModal>
       </IonContent>
     </IonPage>
