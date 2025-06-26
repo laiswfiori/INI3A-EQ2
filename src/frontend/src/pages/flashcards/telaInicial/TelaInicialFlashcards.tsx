@@ -10,6 +10,7 @@ import './css/layoutsTelaInicial.css';
 import './css/pie.css';
 import API from '../../../lib/api';
 import CardEditor from '../components/CardEditor';
+import { useIonViewWillEnter } from '@ionic/react';
 
 interface Topico {
   id: number;
@@ -39,6 +40,7 @@ interface Card {
   id?: number;
   conteudo_frente: ConteudoItem[];
   conteudo_verso: ConteudoItem[];
+  flashcard_id?: number;
 }
 
 interface ConteudoItem {
@@ -52,6 +54,7 @@ const api = new API();
 const TelaInicialFlashcards: React.FC = () => {
   const [materias, setMaterias] = useState<Materia[]>([]);
   const [topicos, setTopicos] = useState<Topico[]>([]);
+  const [cards, setCards] = useState<Card[]>([]);
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]); 
   const [materiaExpandidaId, setMateriaExpandidaId] = useState<number | null>(null);
   const [popoverVisible, setPopoverVisible] = useState<boolean>(false);
@@ -63,39 +66,70 @@ const TelaInicialFlashcards: React.FC = () => {
   const [topicoSelecionadoParaNovoFlashcard, setTopicoSelecionadoParaNovoFlashcard] = useState<number | null>(null); 
   const [showCardEditor, setShowCardEditor] = useState(false);
   const [cardsTemp, setCardsTemp] = useState<Card[]>([]);
+  const [flashcardIdParaEditar, setFlashcardIdParaEditar] = useState<number | null>(null);
+
   const history = useHistory();
   const [presentToast] = useIonToast();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [materiasData, topicosData, flashcardsData] = await Promise.all([
-          api.get('materias'),
-          api.get('topicos'),
-          api.get('flashcards'),
-        ]);
-        
-        // Adiciona cards vazios se não existirem (para compatibilidade)
-        const flashcardsComCards = flashcardsData.map((f: any) => ({
-          ...f,
-          cards: f.cards || []
-        }));
-        
-        setMaterias(materiasData);
-        setTopicos(topicosData);
-        setFlashcards(flashcardsComCards);
-      } catch (error) {
-        console.error('Erro ao buscar dados iniciais:', error);
-        presentToast({
-          message: 'Erro ao carregar dados. Tente novamente mais tarde.',
-          duration: 3000,
-          color: 'danger',
-        });
-      }
-    };
+  const fetchData = async () => {
+  try {
+    const [materiasDataRaw, topicosDataRaw, flashcardsDataRaw, cardsDataRaw] = await Promise.all([
+      api.get('materias'),
+      api.get('topicos'),
+      api.get('flashcards'),
+      api.get('cards'),
+    ]);
 
-    fetchData();
-  }, [presentToast]); 
+    const materiasData = materiasDataRaw as Materia[];
+    const topicosData = topicosDataRaw as Topico[];
+    const flashcardsData = flashcardsDataRaw as Flashcard[];
+    const cardsData = cardsDataRaw as Card[];
+
+    const flashcardsComCards = flashcardsData.map((flashcard: Flashcard) => ({
+      ...flashcard,
+      cards: cardsData.filter((card: Card) => card.flashcard_id === flashcard.id),
+    }));
+
+    setMaterias(materiasData);
+    setTopicos(topicosData);
+    setFlashcards(flashcardsComCards);
+    setCards(cardsData);
+
+  } catch (error) {
+    console.error('Erro ao buscar dados iniciais:', error);
+    presentToast({
+      message: 'Erro ao carregar dados. Tente novamente mais tarde.',
+      duration: 3000,
+      color: 'danger',
+    });
+  }
+};
+
+useIonViewWillEnter(() => {
+  fetchData();
+});
+
+const filtrarFlashcardsDoUsuario = (
+  materiasData: Materia[],
+  topicosData: Topico[],
+  flashcardsData: Flashcard[],
+  cardsData: Card[]
+): Flashcard[] => {
+  const materiaIds = materiasData.map((m: Materia) => m.id);
+  const topicoIds = topicosData
+    .filter((t: Topico) => materiaIds.includes(t.materia_id))
+    .map((t: Topico) => t.id);
+
+  const flashcardsUsuario = flashcardsData.filter((f: Flashcard) =>
+    topicoIds.includes(f.topico_id)
+  );
+
+  return flashcardsUsuario.map((f: Flashcard) => ({
+    ...f,
+    cards: cardsData.filter((c: Card) => c.flashcard_id === f.id),
+  }));
+};
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -133,101 +167,154 @@ const TelaInicialFlashcards: React.FC = () => {
     history.push(`/flashcards/estudar/${topicoId}`);
   };
 
-  const handleSalvarFlashcard = async () => {
-    if (!topicoSelecionadoParaNovoFlashcard || novoFlashcardTitulo.trim() === '') {
-      presentToast({
-        message: 'Preencha o título e selecione um tópico para o flashcard.',
-        duration: 3000,
-        color: 'warning',
-      });
-      return;
+
+const handleSalvarFlashcard = async (): Promise<void> => {
+  if (!topicoSelecionadoParaNovoFlashcard || novoFlashcardTitulo.trim() === '') {
+    presentToast({
+      message: 'Preencha o título e selecione um tópico para o flashcard.',
+      duration: 3000,
+      color: 'warning',
+    });
+    return;
+  }
+
+  if (cardsTemp.length === 0) {
+    presentToast({
+      message: 'Adicione pelo menos um card ao flashcard.',
+      duration: 3000,
+      color: 'warning',
+    });
+    return;
+  }
+
+  try {
+    const novoFlashcard = {
+      topico_id: topicoSelecionadoParaNovoFlashcard,
+      titulo: novoFlashcardTitulo,
+    };
+
+    const flashcardCriado: Flashcard = await api.post('flashcards', novoFlashcard);
+
+    if (!flashcardCriado || !flashcardCriado.id) {
+      throw new Error('ID do flashcard não retornado');
     }
 
-    if (cardsTemp.length === 0) {
-      presentToast({
-        message: 'Adicione pelo menos um card ao flashcard.',
-        duration: 3000,
-        color: 'warning',
-      });
-      return;
-    }
-
-    try {
-      const novoFlashcard = {
-        topico_id: topicoSelecionadoParaNovoFlashcard,
-        titulo: novoFlashcardTitulo,
-      };
-
-      const flashcardCriado = await api.post('flashcards', novoFlashcard);
-
-      if (!flashcardCriado || !flashcardCriado.id) {
-        throw new Error('ID do flashcard não retornado');
-      }
-
-      // Envia cada card para a API
-      for (const card of cardsTemp) {
-        await api.post('cards', {
-          flashcard_id: flashcardCriado.id,
-          conteudo_frente: card.conteudo_frente,
-          conteudo_verso: card.conteudo_verso,
-        });
-      }
-
-      presentToast({
-        message: 'Flashcard criado com sucesso!',
-        duration: 2000,
-        color: 'success',
-      });
-
-      // Atualiza a lista de flashcards
-      const flashcardsAtualizados = await api.get('flashcards');
-      setFlashcards(flashcardsAtualizados);
-      setShowModal(false);
-      setCardsTemp([]);
-      setNovoFlashcardTitulo('');
-    } catch (error) {
-      console.error('Erro ao salvar flashcard com cards:', error);
-      presentToast({
-        message: 'Erro ao salvar flashcard.',
-        duration: 3000,
-        color: 'danger',
+    for (const card of cardsTemp) {
+      await api.post('cards', {
+        flashcard_id: flashcardCriado.id,
+        conteudo_frente: card.conteudo_frente,
+        conteudo_verso: card.conteudo_verso,
       });
     }
-  };
 
-  const deletarFlashcard = async (id: number) => {
-    try {
-      await api.delete(`flashcards/${id}`);
-      presentToast({
-        message: 'Flashcard deletado com sucesso!',
-        duration: 2000,
-        color: 'success',
-      });
-      const flashcardsAtualizados = await api.get('flashcards');
-      setFlashcards(flashcardsAtualizados);
-    } catch (error) {
-      presentToast({
-        message: 'Erro ao deletar flashcard.',
-        duration: 3000,
-        color: 'danger',
-      });
-    }
-  };
+    presentToast({
+      message: 'Flashcard criado com sucesso!',
+      duration: 2000,
+      color: 'success',
+    });
+
+    const [materiasData, topicosData, flashcardsData, cardsData] = await Promise.all([
+      api.get('materias'),
+      api.get('topicos'),
+      api.get('flashcards'),
+      api.get('cards'),
+    ]);
+
+    const flashcardsAtualizados = filtrarFlashcardsDoUsuario(
+      materiasData,
+      topicosData,
+      flashcardsData,
+      cardsData
+    );
+
+    setMaterias(materiasData);
+    setTopicos(topicosData);
+    setFlashcards(flashcardsAtualizados);
+    setCards(cardsData);
+    setShowModal(false);
+    setCardsTemp([]);
+    setNovoFlashcardTitulo('');
+  } catch (error) {
+    console.error('Erro ao salvar flashcard com cards:', error);
+    presentToast({
+      message: 'Erro ao salvar flashcard.',
+      duration: 3000,
+      color: 'danger',
+    });
+  }
+};
+
+
+const deletarFlashcard = async (id: number): Promise<void> => {
+  try {
+    await api.delete(`flashcards/${id}`);
+
+    presentToast({
+      message: 'Flashcard deletado com sucesso!',
+      duration: 2000,
+      color: 'success',
+    });
+
+    const [materiasData, topicosData, flashcardsData, cardsData] = await Promise.all([
+      api.get('materias'),
+      api.get('topicos'),
+      api.get('flashcards'),
+      api.get('cards'),
+    ]);
+
+    const flashcardsAtualizados = filtrarFlashcardsDoUsuario(
+      materiasData,
+      topicosData,
+      flashcardsData,
+      cardsData
+    );
+
+    setMaterias(materiasData);
+    setTopicos(topicosData);
+    setFlashcards(flashcardsAtualizados);
+    setCards(cardsData);
+  } catch (error) {
+    console.error('Erro ao deletar flashcard:', error);
+    presentToast({
+      message: 'Erro ao deletar flashcard.',
+      duration: 3000,
+      color: 'danger',
+    });
+  }
+};
+
+const abrirModalEditarFlashcard = (id: number) => {
+  setFlashcardIdParaEditar(id);
+  setShowModal(true);
+};
 
   const adicionarCardComEditor = () => {
     setShowCardEditor(true);
   };
 
   const salvarCardDoEditor = (frente: ConteudoItem[], verso: ConteudoItem[]) => {
-    setCardsTemp(prev => [
-      ...prev,
-      {
-        conteudo_frente: frente,
-        conteudo_verso: verso,
-      }
-    ]);
-    setShowCardEditor(false);
-  };
+  const frentePreenchido = frente.some(item => item.valor.trim() !== '');
+  const versoPreenchido = verso.some(item => item.valor.trim() !== '');
+
+  if (!frentePreenchido || !versoPreenchido) {
+    presentToast({
+      message: 'Preencha tanto a frente quanto o verso do card.',
+      duration: 3000,
+      color: 'warning',
+    });
+    return;
+  }
+
+  setCardsTemp(prev => [
+    ...prev,
+    {
+      conteudo_frente: frente,
+      conteudo_verso: verso,
+    }
+  ]);
+  setShowCardEditor(false);
+};
+
 
   const removerCardTemp = (index: number) => {
     setCardsTemp(prev => prev.filter((_, i) => i !== index));
@@ -367,7 +454,10 @@ const TelaInicialFlashcards: React.FC = () => {
                 const flashcardsDaMateria = flashcards.filter(f =>
                   topicosDaMateria.some(t => t.id === f.topico_id)
                 );
-                const totalCardsMateria = flashcardsDaMateria.reduce((total, f) => total + (f.cards?.length || 0), 0);
+                const totalCardsMateria = flashcardsDaMateria.reduce((total, flashcard) => {
+                const numCards = Array.isArray(flashcard.cards) ? flashcard.cards.length : 0;
+                  return total + numCards;}, 0
+                );
                 const cardsParaRevisarMateria = 0; 
                 const progresso = totalCardsMateria > 0 ? (cardsParaRevisarMateria / totalCardsMateria) * 100 : 0;
                 const estaExpandida = materiaExpandidaId === materia.id;
@@ -412,11 +502,23 @@ const TelaInicialFlashcards: React.FC = () => {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
+
+                            const temTopico = topicos.some((topico) => topico.materia_id === materia.id);
+
+                            if (!temTopico) {
+                              presentToast({
+                                message: 'Você precisa criar um tópico antes de adicionar um flashcard.',
+                                duration: 3000,
+                                color: 'warning',
+                              });
+                              return;
+                            }
+
                             abrirModalCriarFlashcard(materia);
                           }}
                         >
                           +
-                        </IonButton>
+                      </IonButton>
                       </IonRow>
                     </IonLabel>
 
@@ -436,9 +538,6 @@ const TelaInicialFlashcards: React.FC = () => {
                                   <IonRow className="contSetaTopico">
                                     <IonIcon icon={arrowForward} className="setaTopico" />
                                     <p className="txtTopico">{topico.titulo}</p>
-                                    <div className="contagem-flashcards">
-                                      <span>{flashcardsDoTopico.length}</span>
-                                    </div>
                                   </IonRow>
 
                                   {flashcardsDoTopico.map(flashcard => (
@@ -453,9 +552,20 @@ const TelaInicialFlashcards: React.FC = () => {
                                         <IonButton size="small" color="primary" onClick={() => history.push(`/flashcards/estudar/flashcard/${flashcard.id}`)}>
                                           Estudar
                                         </IonButton>
-                                        <IonButton size="small" color="medium" onClick={() => history.push(`/flashcards/editar/${flashcard.id}`)}>
+
+                                        <IonButton size="small" color="medium" onClick={() => abrirModalEditarFlashcard(flashcard.id)}>
                                           Editar
                                         </IonButton>
+                                        {/*{showModal && flashcardIdParaEditar !== null && (
+                                          <EditarFlashcard
+                                            id={flashcardIdParaEditar}
+                                            onClose={() => {
+                                              setShowModal(false);
+                                              setFlashcardIdParaEditar(null);
+                                            }}
+                                          />                Mudar dps
+                                        )}*/}
+
                                         <IonButton size="small" color="danger" onClick={() => deletarFlashcard(flashcard.id)}>
                                           Deletar
                                         </IonButton>

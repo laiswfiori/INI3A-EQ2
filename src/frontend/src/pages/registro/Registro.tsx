@@ -6,7 +6,6 @@ import './css/geral.css';
 import './css/layout.css';
 import './css/ui.css';
 import './../../components/Animacao.css';
-import Header from '../../components/Header';
 
 interface RegistroProps {
   goToLogin: () => void;
@@ -29,32 +28,41 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
     setErro('');
     setMensagem('');
 
-    try {
-      const response = await fetch('http://localhost:8000/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, surname, email, password }),
-      });
+    if(password.length > 7){
+      try {
+        const response = await fetch('http://localhost:8000/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, surname, email, password }),
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (response.ok) {
-        setMensagem('Cadastro realizado com sucesso!');
-        setNome('');
-        setSobrenome('');
-        setEmail('');
-        setSenha('');
-        localStorage.setItem('token', data.token); 
-        history.push('/pagInicial/home');
-        window.location.reload();
-      } else {
-        setErro(data.mensagem || 'Erro ao cadastrar usuário.');
+        if (response.ok) {
+          setMensagem('Cadastro realizado com sucesso!');
+          setNome('');
+          setSobrenome('');
+          setEmail('');
+          setSenha('');
+          localStorage.setItem('token', data.token); 
+          history.push('/pagInicial/home');
+          window.location.reload();
+        } else {
+          setErro(data.mensagem || 'Erro ao cadastrar usuário.');
+        }
+      } catch (error) {
+        console.error('Erro na requisição:', error);
+        setErro('Erro de conexão com o servidor.');
       }
-    } catch (error) {
-      console.error('Erro na requisição:', error);
-      setErro('Erro de conexão com o servidor.');
+    }
+    else {
+      presentToast({
+        message: 'A senha deve ter pelo menos 8 algarismos.',
+        duration: 3000,
+        color: 'warning',
+      });
     }
   };
 
@@ -128,3 +136,9 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
 
 
 export default Registro;
+
+
+function presentToast(arg0: { message: string; duration: number; color: string; }) {
+  throw new Error('Function not implemented.');
+}
+

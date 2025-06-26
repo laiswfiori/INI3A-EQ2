@@ -154,12 +154,17 @@ const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNovaAtividade({ ...novaAtividade, [field]: value });
   };
 
-  const handleSalvar = async () => {
-    if (!novaAtividade.titulo.trim()) {
-      alert('O título da atividade é obrigatório');
-      return;
-    }
+const handleSalvar = async () => {
+  if (!novaAtividade.titulo.trim()) {
+    alert('O título da atividade é obrigatório');
+    return;
+  }
 
+  const conteudoFinal = textoTemp.trim()
+    ? [...novaAtividade.conteudo, { tipo: 'texto', valor: textoTemp.trim() }]
+    : novaAtividade.conteudo;
+
+  try {
     const api = new API();
     const endpoint = modoModal === 'editar'
       ? `atividades/${atividadeSelecionada?.id}`
@@ -167,32 +172,37 @@ const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
 
     const method = modoModal === 'editar' ? api.put : api.post;
 
-    try {
-      const data = await method.call(api, endpoint, novaAtividade);
+    const data = await method.call(api, endpoint, {
+      ...novaAtividade,
+      conteudo: conteudoFinal,
+    });
 
-      if (modoModal === 'editar') {
-        setAtividades(prev =>
-          prev.map(a => a.id === atividadeSelecionada?.id ? data : a)
-        );
-      } else {
-        setAtividades(prev => [...prev, data]);
-      }
-
-      setShowModal(false);
-      setShowPopover(false);
-      setNovaAtividade({
-        titulo: '',
-        descricao: '',
-        topico_id: novaAtividade.topico_id,
-        status: 'não iniciado',
-        tipo: '',
-        conteudo: [],
-      });
-    } catch (error: any) {
-      console.error(`Erro ao ${modoModal === 'editar' ? 'editar' : 'adicionar'} atividade:`, error);
-      alert(error?.response?.data?.message || 'Erro ao salvar atividade');
+    if (modoModal === 'editar') {
+      setAtividades(prev =>
+        prev.map(a => a.id === atividadeSelecionada?.id ? data : a)
+      );
+    } else {
+      setAtividades(prev => [...prev, data]);
     }
-  };
+
+    setTextoTemp('');
+    setNovaAtividade({
+      titulo: '',
+      descricao: '',
+      topico_id: novaAtividade.topico_id,
+      status: 'não iniciado',
+      tipo: '',
+      conteudo: [],
+    });
+
+    setShowModal(false);
+    setShowPopover(false);
+  } catch (error: any) {
+    console.error(`Erro ao ${modoModal === 'editar' ? 'editar' : 'adicionar'} atividade:`, error);
+    alert(error?.response?.data?.message || 'Erro ao salvar atividade');
+  }
+};
+
   const handleEditar = () => {
     if (atividadeSelecionada) {
       setNovaAtividade({

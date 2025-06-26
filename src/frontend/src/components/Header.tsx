@@ -17,6 +17,7 @@ const Header: React.FC = () => {
 
   const navHome = () => {
       history.push('/pagInicial/home');
+      window.location.reload();
   };
 
   const navAgenda = () => {

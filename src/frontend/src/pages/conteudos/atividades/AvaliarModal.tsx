@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IonModal, IonButton, IonRow, IonCol, IonInput, IonLabel } from '@ionic/react';
+import { IonModal, IonButton, IonRow, IonInput, IonLabel, IonSelect, IonSelectOption } from '@ionic/react';
 
 interface Atividade {
   id: number;
@@ -73,7 +73,11 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
         alert('Preencha nota e valor total');
         return;
       }
-      onSalvar({ nota, valor });
+      if (!nivel) {
+        alert('Selecione um nível');
+        return;
+      }
+      onSalvar({ nota, valor, nivel });
     } else {
       alert('Tipo de atividade não suportado para avaliação');
     }
@@ -87,29 +91,29 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
         {podeAvaliarNivel && (
           <IonRow style={{ justifyContent: 'center', gap: '30px', marginTop: 20, flexWrap: 'wrap' }}>
             {niveis.map(({ desc, emoji, cor }) => (
-                <div
+              <div
                 key={desc}
                 onClick={() => setNivel(desc)}
                 style={{
-                    backgroundColor: cor,
-                    borderRadius: '50%',
-                    width: '60px',
-                    height: '60px',
-                    fontSize: '28px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transform: nivel === desc ? 'scale(1.1)' : 'scale(1)',
-                    boxShadow: nivel === desc ? '0 0 0 3px #333' : 'none',
-                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                  backgroundColor: cor,
+                  borderRadius: '50%',
+                  width: '60px',
+                  height: '60px',
+                  fontSize: '28px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transform: nivel === desc ? 'scale(1.1)' : 'scale(1)',
+                  boxShadow: nivel === desc ? '0 0 0 3px #333' : 'none',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                 }}
                 title={desc}
-                >
+              >
                 {emoji}
-                </div>
+              </div>
             ))}
-            </IonRow>
+          </IonRow>
         )}
 
         {podeAvaliarLista && (
@@ -148,6 +152,18 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
               onIonChange={e => setValor(Number(e.detail.value))}
               min={0}
             />
+            <IonLabel>Nível</IonLabel>
+            <IonSelect
+              value={nivel ?? ''}
+              placeholder="Selecione um nível"
+              onIonChange={e => setNivel(e.detail.value)}
+            >
+              {niveis.map(({ desc, emoji, cor }) => (
+                <IonSelectOption key={desc} value={desc}>
+                  <span style={{ color: cor, marginRight: 8 }}>{emoji}</span> {desc}
+                </IonSelectOption>
+              ))}
+            </IonSelect>
           </>
         )}
 
