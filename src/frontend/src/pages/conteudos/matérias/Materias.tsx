@@ -223,7 +223,7 @@ const Materias: React.FC = () => {
           +
         </IonButton>
 
-        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalAdd">
+        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalAddMateria">
           <IonContent className="ion-padding">
             <IonRow className="contFecharModal">
               <IonIcon icon={close} className="iconeFecharM" onClick={() => setShowModal(false)}/>

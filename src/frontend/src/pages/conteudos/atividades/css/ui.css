@@ -49,12 +49,12 @@ ion-button.config::part(native):hover {
   cursor: pointer;
 }
 
-ion-modal.modalAdd {
+ion-modal.modalAddAtividade {
     --max-height: 30%;
     height: auto;
 }
 
-ion-modal.modalAdd::part(content) {
+ion-modal.modalAddAtividade::part(content) {
     border-radius: 16px; 
   }
 

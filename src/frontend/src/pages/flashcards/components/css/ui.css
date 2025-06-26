@@ -207,7 +207,6 @@
 
 /* Garante que o modal não ultrapasse a altura da tela */
 ion-modal {
-  --height: auto;
   --max-height: 90vh;
 }
 

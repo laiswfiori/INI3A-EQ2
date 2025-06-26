@@ -39,12 +39,12 @@ ion-button.config::part(native):hover {
   cursor: pointer;
 }
 
-ion-modal.modalAddTop {
+ion-modal.modalAddTopico {
     --max-height: 45%;
     height: auto;
 }
 
-ion-modal.modalAddTop::part(content) {
+ion-modal.modalAddTopico::part(content) {
     border-radius: 16px; 
   }
 

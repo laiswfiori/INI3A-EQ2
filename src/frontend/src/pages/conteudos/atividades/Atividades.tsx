@@ -8,6 +8,8 @@ import './css/ui.css';
 import './css/layout.css';
 import Header from '../../../components/Header';
 import API from '../../../lib/api';
+import AvaliarModal from './AvaliarModal'; 
+
 
 interface Atividade {
   id: number;
@@ -36,6 +38,8 @@ const Atividades: React.FC = () => {
   const inputImagemRef = useRef<HTMLInputElement>(null);
   const inputArquivoRef = useRef<HTMLInputElement>(null);
 
+  const [showModalAvaliar, setShowModalAvaliar] = useState(false);
+  const [atividadeAvaliar, setAtividadeAvaliar] = useState<Atividade | null>(null);
 
   
   const adicionarTextoAoConteudo = (texto: string) => {
@@ -73,7 +77,7 @@ const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
         }]
       }));
     };
-    reader.readAsDataURL(file); // ou envie para backend aqui
+    reader.readAsDataURL(file);
   }
 };
     const removerItemConteudo = (index: number) => {
@@ -235,11 +239,32 @@ const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
     }
   };
 
+  const abrirModalAvaliar = (atividade: Atividade) => {
+    setAtividadeAvaliar(atividade);
+    setShowModalAvaliar(true);
+  };
 
-  /* const formatarData = (dataISO: string) => {
-    const data = new Date(dataISO);
-    return data.toLocaleDateString('pt-BR'); 
-  }; */
+  const salvarAvaliacao = async (dados: any) => {
+    if (!atividadeAvaliar) return;
+
+    const api = new API();
+
+    try {
+      const atualizada = await api.put(`atividades/${atividadeAvaliar.id}`, {
+        ...atividadeAvaliar,
+        status: 'concluído',
+        ...dados,
+      });
+
+      setAtividades(prev =>
+        prev.map(a => (a.id === atividadeAvaliar.id ? atualizada : a))
+      );
+
+      setShowModalAvaliar(false);
+    } catch (error) {
+      alert('Erro ao salvar avaliação');
+    }
+  };
 
 
   return (
@@ -298,15 +323,39 @@ const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
                         </IonButton>
                       )}
 
-                      {(atividade.status === 'em andamento') && (
+                      {atividade.status === 'em andamento' && (
+                        <>
+                           <IonButton
+                              expand="block"
+                              className="btnIC"
+                              id="btnCheck"
+                              onClick={() => abrirModalAvaliar(atividade)}
+                            >
+                              <IonIcon icon={checkmarkDone} className="iconesPopover" id="check" />
+                              Concluir
+                            </IonButton>
+
+                          <IonButton
+                            expand="block"
+                            className="btnIC"
+                            id="btnVer"
+                            onClick={() => history.push(`/atividades/${atividade.id}`)}
+                          >
+                            <IonIcon icon={arrowForward} className="iconesPopover" />
+                            Ver
+                          </IonButton>
+                        </>
+                      )}
+
+                      {atividade.status === 'concluído' && (
                         <IonButton
                           expand="block"
                           className="btnIC"
-                          id="btnCheck"
-                          onClick={() => alterarStatus(atividade, 'concluído')}
+                          id="btnVer"
+                          onClick={() => history.push(`/atividadesVisualizacao/${atividade.id}`)}
                         >
-                          <IonIcon icon={checkmarkDone} className="iconesPopover" id="check"/>
-                          Concluir
+                          <IonIcon icon={arrowForward} className="iconesPopover" />
+                          Ver
                         </IonButton>
                       )}
                     </IonRow>
@@ -480,6 +529,12 @@ const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
             Excluir
           </IonButton>
         </IonPopover>
+        <AvaliarModal
+          isOpen={showModalAvaliar}
+          onClose={() => setShowModalAvaliar(false)}
+          atividade={atividadeAvaliar}
+          onSalvar={salvarAvaliacao}
+        />
       </IonContent>
     </IonPage>
   );

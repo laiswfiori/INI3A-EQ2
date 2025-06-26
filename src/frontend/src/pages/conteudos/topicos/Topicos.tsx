@@ -259,7 +259,7 @@ const Topicos: React.FC = () => {
           +
         </IonButton>
 
-        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalAddTop">
+        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalAddTopico">
           <IonContent className="ion-padding">
             <IonRow className="centroModal">
               <h2 className="labelT">
