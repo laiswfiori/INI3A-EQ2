@@ -1,6 +1,10 @@
-import API from './api';
+// Arquivo: src/lib/endpoints.ts
+
+import API from './api'; // Importa a classe do arquivo ao lado
 
 const api = new API();
+
+// --- FUNÇÕES EXPORTADAS PARA O APP ---
 
 export const getUserProfile = async () => {
   try {
@@ -38,6 +42,26 @@ export const deleteUserAccount = async () => {
     return response;
   } catch (error) {
     console.error("Erro no endpoint deleteUserAccount:", error);
+    throw error;
+  }
+};
+
+export const requestPasswordReset = async (email: string) => {
+  try {
+    const response = await api.post('/password/request-reset', { email });
+    return response;
+  } catch (error) {
+    console.error("Erro no endpoint requestPasswordReset:", error);
+    throw error;
+  }
+};
+
+export const resetPassword = async (data: { token: string; email: string; password: string; password_confirmation: string; }) => {
+  try {
+    const response = await api.post('/password/reset', data);
+    return response;
+  } catch (error) {
+    console.error("Erro no endpoint resetPassword:", error);
     throw error;
   }
 };
