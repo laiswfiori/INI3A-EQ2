@@ -1,6 +1,6 @@
 <?php
 
-use \App\Http\Middleware\CorsMiddleware; // acrescentada
+
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -20,11 +20,10 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
+
 $app->withFacades();
 
-// Alias para JWTAuth e JWTFactory (necessário para usar as Facades)
-class_alias(Tymon\JWTAuth\Facades\JWTAuth::class, 'JWTAuth');
-class_alias(Tymon\JWTAuth\Facades\JWTFactory::class, 'JWTFactory');
+
 
 $app->withEloquent();
 
@@ -51,7 +50,8 @@ $app->singleton(
 */
 
 $app->configure('app');
-$app->configure('auth'); // necessário para JWT funcionar
+$app->configure('auth');
+$app->configure('mail');
 
 /*
 |--------------------------------------------------------------------------
@@ -59,12 +59,12 @@ $app->configure('auth'); // necessário para JWT funcionar
 |--------------------------------------------------------------------------
 */
 
-// Middleware global - descomente o CORS se quiser liberar para todas as rotas
+
 $app->middleware([
-    // App\Http\Middleware\CorsMiddleware::class,
+    // \App\Http\Middleware\CorsMiddleware::class, // Descomente se precisar de CORS
 ]);
 
-// Middleware de rota
+
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
 ]);
@@ -75,13 +75,11 @@ $app->routeMiddleware([
 |--------------------------------------------------------------------------
 */
 
-// Registro dos Service Providers necessários
+
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
-
-// Registre outros providers se usar
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(Illuminate\Mail\MailServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
