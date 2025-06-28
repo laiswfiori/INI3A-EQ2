@@ -1,6 +1,7 @@
 @media (max-width: 767px) {
     .whs {
         flex-direction: column;
+        min-height: 50rem !important;
     }
     #imgInicio {
         width: 100%;
@@ -24,5 +25,11 @@
 @media (max-width: 320px) {
     .whs {
         margin-top: 2%;
+    }
+}
+
+@media (min-width: 1025px) {
+    #imgInicio {
+        min-height: 40rem;
     }
 }

@@ -285,3 +285,95 @@ ion-button.verTopicos::part(native):hover {
   font-size: 1.5rem;
   color: #af4c00;
 }
+
+.btnFlash {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border: 0.5px solid #00296b;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+  }
+
+  ion-button.btnFlash::part(native) {
+    background-color: #fff;
+    border: 0.5px solid #00296b;
+    color: black;
+    border-radius: 50px;
+    box-shadow: none;
+}
+
+.btnEstudar {
+  color: #fec601;
+}
+
+ion-button.btnEstudar::part(native):hover {
+  color: #fec601;
+}
+
+.btnEditar {
+  color: #3da5d9;
+}
+
+ion-button.btnEditar::part(native):hover {
+  color: #3da5d9;
+}
+
+.btnExcluir {
+  color: #ce2711;
+}
+
+ion-button.btnExcluir::part(native):hover {
+  color: #ce2711;
+}
+
+.btnAdicionarCard {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #3da5d9;
+    border: 0.5px solid #00296b;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+  }
+
+  ion-button.btnAdicionarCard::part(native) {
+    background-color: #3da5d9;
+    border: 0.5px solid #00296b;
+    color: white;
+    border-radius: 20px;
+    box-shadow: none;
+}
+
+.btnRemoverCard {
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 20%;
+  }
+
+  ion-button.btnRemoverCard::part(native) {
+    background-color: white;
+    border: 0.5px solid #ce2711;
+    color: black;
+    border-radius: 20px;
+    box-shadow: none;
+}
+
+  ion-button.btnRemoverCard::part(native):hover {
+    color: #ce2711;
+}
+
+

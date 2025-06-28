@@ -1,10 +1,7 @@
-// Arquivo: src/pages/senha/confirmar/Confirmar.tsx
-
 import React, { useState } from 'react';
 import { IonPage, IonContent, IonRow, IonCol, IonIcon, IonInput, IonButton, IonToast, IonLoading } from '@ionic/react';
 import { mail, returnDownBack } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
-// IMPORTANTE: O caminho para seu arquivo de API deve estar correto.
 import  {requestPasswordReset}  from '../../../lib/endpoints'; 
 import './css/geral.css';
 import './css/ui.css';
@@ -13,7 +10,6 @@ import './css/layouts.css';
 const Confirmar: React.FC = () => {
   const history = useHistory();
 
-  // --- LÓGICA DE ESTADO E SUBMISSÃO ---
   const [email, setEmail] = useState<string>('');
   const [showLoading, setShowLoading] = useState(false);
   const [toast, setToast] = useState<{ show: boolean, message: string, color: string }>({ show: false, message: '', color: '' });
@@ -26,19 +22,17 @@ const Confirmar: React.FC = () => {
       const response = await requestPasswordReset(email);
       setShowLoading(false);
       setToast({ show: true, message: response.message || 'Link enviado com sucesso!', color: 'success' });
-      setEmail(''); // Limpa o campo após o envio
+      setEmail(''); 
     } catch (error: any) {
       setShowLoading(false);
       const errorMessage = error.message || 'Não foi possível enviar o link. Tente novamente.';
       setToast({ show: true, message: errorMessage, color: 'danger' });
     }
   };
-  // --- FIM DA LÓGICA ---
 
   return (
     <IonPage className="paginaSenha">
       <IonContent className="pagS">
-        {/* --- COMPONENTES DE FEEDBACK --- */}
         <IonLoading isOpen={showLoading} message={'Enviando...'} />
         <IonToast
           isOpen={toast.show}
@@ -47,7 +41,6 @@ const Confirmar: React.FC = () => {
           duration={3000}
           onDidDismiss={() => setToast({ show: false, message: '', color: '' })}
         />
-        {/* --- FIM DOS COMPONENTES DE FEEDBACK --- */}
 
         <IonRow className="contVoltar" onClick={() => history.push('/logincadastro/logincadastro')}>
           <IonIcon icon={returnDownBack} className="email"/>

@@ -84,98 +84,102 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
   };
 
   return (
-    <IonModal isOpen={isOpen} onDidDismiss={onClose}>
-      <div style={{ padding: 20 }}>
-        <h2>Avaliar atividade: {atividade.titulo}</h2>
+    <IonRow className="centro">
+      <IonModal isOpen={isOpen} onDidDismiss={onClose} id="modalAvaliar">
+        <div style={{ padding: 20 }}>
+          <h2>Avaliar atividade: {atividade.titulo}</h2>
 
-        {podeAvaliarNivel && (
-          <IonRow style={{ justifyContent: 'center', gap: '30px', marginTop: 20, flexWrap: 'wrap' }}>
-            {niveis.map(({ desc, emoji, cor }) => (
-              <div
-                key={desc}
-                onClick={() => setNivel(desc)}
-                style={{
-                  backgroundColor: cor,
-                  borderRadius: '50%',
-                  width: '60px',
-                  height: '60px',
-                  fontSize: '28px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  transform: nivel === desc ? 'scale(1.1)' : 'scale(1)',
-                  boxShadow: nivel === desc ? '0 0 0 3px #333' : 'none',
-                  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-                }}
-                title={desc}
-              >
-                {emoji}
-              </div>
-            ))}
-          </IonRow>
-        )}
-
-        {podeAvaliarLista && (
-          <>
-            <IonLabel>Número de exercícios</IonLabel>
-            <IonInput
-              type="number"
-              value={exercicios ?? ''}
-              onIonChange={e => setExercicios(Number(e.detail.value))}
-              min={0}
-            />
-            <IonLabel>Número de acertos</IonLabel>
-            <IonInput
-              type="number"
-              value={acertos ?? ''}
-              onIonChange={e => setAcertos(Number(e.detail.value))}
-              min={0}
-              max={exercicios ?? undefined}
-            />
-          </>
-        )}
-
-        {podeAvaliarProva && (
-          <>
-            <IonLabel>Nota obtida</IonLabel>
-            <IonInput
-              type="number"
-              value={nota ?? ''}
-              onIonChange={e => setNota(Number(e.detail.value))}
-              min={0}
-            />
-            <IonLabel>Valor total</IonLabel>
-            <IonInput
-              type="number"
-              value={valor ?? ''}
-              onIonChange={e => setValor(Number(e.detail.value))}
-              min={0}
-            />
-            <IonLabel>Nível</IonLabel>
-            <IonSelect
-              value={nivel ?? ''}
-              placeholder="Selecione um nível"
-              onIonChange={e => setNivel(e.detail.value)}
-            >
+          {podeAvaliarNivel && (
+            <IonRow style={{ justifyContent: 'center', gap: '30px', marginTop: 20, flexWrap: 'wrap' }}>
               {niveis.map(({ desc, emoji, cor }) => (
-                <IonSelectOption key={desc} value={desc}>
-                  <span style={{ color: cor, marginRight: 8 }}>{emoji}</span> {desc}
-                </IonSelectOption>
+                <div
+                  key={desc}
+                  onClick={() => setNivel(desc)}
+                  style={{
+                    backgroundColor: cor,
+                    borderRadius: '50%',
+                    width: '60px',
+                    height: '60px',
+                    fontSize: '28px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transform: nivel === desc ? 'scale(1.1)' : 'scale(1)',
+                    boxShadow: nivel === desc ? '0 0 0 3px #333' : 'none',
+                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                  }}
+                  title={desc}
+                >
+                  {emoji}
+                </div>
               ))}
-            </IonSelect>
-          </>
-        )}
+            </IonRow>
+          )}
 
-        <IonButton expand="block" onClick={handleSalvar} style={{ marginTop: 20 }}>
-          Salvar avaliação
-        </IonButton>
+          {podeAvaliarLista && (
+            <>
+              <IonLabel>Número de exercícios</IonLabel>
+              <IonInput
+                type="number"
+                value={exercicios ?? ''}
+                onIonChange={e => setExercicios(Number(e.detail.value))}
+                min={0}
+              />
+              <IonLabel>Número de acertos</IonLabel>
+              <IonInput
+                type="number"
+                value={acertos ?? ''}
+                onIonChange={e => setAcertos(Number(e.detail.value))}
+                min={0}
+                max={exercicios ?? undefined}
+              />
+            </>
+          )}
 
-        <IonButton expand="block" color="medium" onClick={onClose} style={{ marginTop: 10 }}>
-          Cancelar
-        </IonButton>
-      </div>
-    </IonModal>
+          {podeAvaliarProva && (
+            <>
+              <IonLabel>Nota obtida</IonLabel>
+              <IonInput
+                type="number"
+                value={nota ?? ''}
+                onIonChange={e => setNota(Number(e.detail.value))}
+                min={0}
+              />
+              <IonLabel>Valor total</IonLabel>
+              <IonInput
+                type="number"
+                value={valor ?? ''}
+                onIonChange={e => setValor(Number(e.detail.value))}
+                min={0}
+              />
+              <IonLabel>Nível</IonLabel>
+              <IonSelect
+                value={nivel ?? ''}
+                placeholder="Selecione um nível"
+                onIonChange={e => setNivel(e.detail.value)}
+              >
+                {niveis.map(({ desc, emoji, cor }) => (
+                  <IonSelectOption key={desc} value={desc}>
+                    <span style={{ color: cor, marginRight: 8 }}>{emoji}</span> {desc}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+            </>
+          )}
+
+          <IonRow className="rowAvaliarAtiv">
+            <IonButton expand="block" onClick={handleSalvar} className="btnAvaliarAtiv btnSalvarAvaliacao">
+              Salvar avaliação
+            </IonButton>
+
+            <IonButton expand="block" color="medium" onClick={onClose} className="btnAvaliarAtiv btnCancelarAvaliacao" >
+              Cancelar
+            </IonButton>
+          </IonRow>
+        </div>
+      </IonModal>
+    </IonRow>
   );
 };
 

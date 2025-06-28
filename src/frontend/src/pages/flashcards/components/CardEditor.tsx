@@ -121,16 +121,16 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel }) => {
       </div>
 
       <IonRow className="action-row">
-        <IonButton color="medium" fill="outline" onClick={onCancel} className="action-button">
+        <IonButton color="medium" fill="outline" onClick={onCancel} className="action-button btnCancelarCard">
           Cancelar
         </IonButton>
-        <IonButton color="primary" onClick={() => {
+        <IonButton onClick={() => {
           onSave(
             [{ tipo: 'texto', valor: textoFrente }, ...imagensFrente],
             [{ tipo: 'texto', valor: textoVerso }, ...imagensVerso]
           );
-        }} disabled={!podeSalvar} className="action-button">
-          Salvar Card
+        }} disabled={!podeSalvar} className="action-button btnSalvarCard">
+          Salvar card
         </IonButton>
       </IonRow>
     </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IonPage, IonContent, IonRow, IonCol, IonIcon, IonButton } from '@ionic/react';
-import { documentText, imageOutline, documentAttach, arrowBack } from 'ionicons/icons';
+import { documentText, imageOutline, documentAttach, returnDownBack } from 'ionicons/icons';
 import { useHistory, useParams } from 'react-router-dom';
 import Header from '../../../components/Header';
 import API from '../../../lib/api';
@@ -30,7 +30,6 @@ const Atividade: React.FC = () => {
       const data = await api.get(`atividades/${id}`);
       console.log('Atividade recebida:', data);
 
-      // Garante que conteudo seja array
       const conteudoCorrigido = Array.isArray(data.conteudo) 
         ? data.conteudo 
         : data.conteudo 
@@ -62,14 +61,10 @@ const Atividade: React.FC = () => {
     <IonPage className="pagina">
       <Header />
       <IonContent className="body">
-        <IonButton 
-          fill="clear" 
-          onClick={() => history.goBack()} 
-          className="btn-voltar"
-        >
-          <IonIcon icon={arrowBack} slot="start" />
-          Voltar
-        </IonButton>
+        <IonRow className="contVoltar"  onClick={() => history.goBack()}>
+          <IonIcon icon={returnDownBack} className="voltarAtividades"/>
+          <p className="txtVoltarAtividades">Voltar para home</p>
+        </IonRow>
 
         {loading ? (
           <div className="loader-container">

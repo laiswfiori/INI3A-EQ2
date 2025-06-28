@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonIcon, IonButton, IonGrid, IonRow, IonCol, IonLabel,
   IonPopover, IonModal, IonSelect, IonSelectOption, IonTextarea, useIonToast } from '@ionic/react';
 import Header from '../../../components/Header';
-import { alertCircle, school, close, layers, time, library, arrowForward, card, barChart } from 'ionicons/icons'; 
+import { alertCircle, school, close, layers, time, library, arrowForward, card, barChart, trash, pencil, flash } from 'ionicons/icons'; 
 import './css/geralTelaInicial.css';
 import './css/uiTelaInicial.css';
 import './css/layoutsTelaInicial.css';
@@ -325,7 +325,6 @@ const abrirModalEditarFlashcard = (id: number) => {
       <Header />
       <IonContent>
         <IonGrid id="bodyTelaInicialFlashcards">
-          {/* Seção de Revisão (mantida igual) */}
           <IonRow id="revisao">
             <IonCol id="dCapelo">
               <IonIcon icon={school} id="iconeCapelo" />
@@ -548,12 +547,14 @@ const abrirModalEditarFlashcard = (id: number) => {
                                           {flashcard.cards?.length || 0} {flashcard.cards?.length === 1 ? 'card' : 'cards'}
                                         </p>
                                       </IonCol>
-                                      <IonCol size="4" className="botoes-flashcard">
-                                        <IonButton size="small" color="primary" onClick={() => history.push(`/flashcards/estudar/flashcard/${flashcard.id}`)}>
+                                      <IonCol className="botoes-flashcard">
+                                        <IonButton onClick={() => history.push(`/flashcards/estudar/flashcard/${flashcard.id}`)} className="btnFlash btnEstudar">
+                                          <IonIcon icon={flash} className="iconesOpFlash btnEstudar"/>
                                           Estudar
                                         </IonButton>
 
-                                        <IonButton size="small" color="medium" onClick={() => abrirModalEditarFlashcard(flashcard.id)}>
+                                        <IonButton onClick={() => abrirModalEditarFlashcard(flashcard.id)} className="btnFlash btnEditar">
+                                          <IonIcon icon={pencil} className="iconesOpFlash btnEditar"/>
                                           Editar
                                         </IonButton>
                                         {/*{showModal && flashcardIdParaEditar !== null && (
@@ -566,8 +567,9 @@ const abrirModalEditarFlashcard = (id: number) => {
                                           />                Mudar dps
                                         )}*/}
 
-                                        <IonButton size="small" color="danger" onClick={() => deletarFlashcard(flashcard.id)}>
-                                          Deletar
+                                        <IonButton onClick={() => deletarFlashcard(flashcard.id)} className="btnFlash btnExcluir">
+                                          <IonIcon icon={trash} className="iconesOpFlash btnExcluir"/>
+                                          Excluir
                                         </IonButton>
                                       </IonCol>
                                     </IonRow>
@@ -591,122 +593,148 @@ const abrirModalEditarFlashcard = (id: number) => {
           </IonRow>
         </IonGrid>
 
-        {/* Modal para criar novo flashcard */}
-        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalFlashcards">
+       <IonModal
+          isOpen={showModal}
+          onDidDismiss={() => {
+            setShowModal(false);
+            setFlashcardIdParaEditar(null);
+            setShowCardEditor(false);
+          }}
+          className="modalFlashcards"
+        >
           <div className="modalConteudo scroll-modal">
             <IonRow className="contFecharModal">
-              <IonIcon icon={close} className="iconeFecharM" onClick={() => setShowModal(false)} />
-            </IonRow>
-            <IonRow className="centroModal">
-              <h2 className="label">Crie um novo flashcard!</h2>
-            </IonRow>
-            
-            <IonSelect
-              value={topicoSelecionadoParaNovoFlashcard}
-              placeholder="Escolha o tópico"
-              onIonChange={(e) => setTopicoSelecionadoParaNovoFlashcard(e.detail.value)}
-              className="input iFlashcard"
-            >
-              {topicos
-                .filter(t => t.materia_id === modalMateriaSelecionada?.id)
-                .map(topico => (
-                  <IonSelectOption key={topico.id} value={topico.id}>
-                    {topico.titulo}
-                  </IonSelectOption>
-                ))}
-            </IonSelect>
-
-            <IonTextarea
-              labelPlacement="stacked"
-              placeholder="Digite o título do flashcard"
-              value={novoFlashcardTitulo}
-              onIonInput={(e) => setNovoFlashcardTitulo(e.detail.value!)}
-              className="input"
-            />
-
-            <IonRow className="centroModal">
-              <h3>Adicionar cards</h3>
+              <IonIcon
+                icon={close}
+                className="iconeFecharM"
+                onClick={() => {
+                  setShowModal(false);
+                  setFlashcardIdParaEditar(null);
+                  setShowCardEditor(false);
+                }}
+              />
             </IonRow>
 
-            <IonButton expand="block" onClick={adicionarCardComEditor} className="btnAdicionarCard">
-              Adicionar Card com Editor Avançado
-            </IonButton>
+            {!showCardEditor && (
+              <>
+                <IonRow className="centroModal">
+                  <h2 className="label">
+                    {flashcardIdParaEditar ? 'Editar flashcard' : 'Criar novo flashcard'}
+                  </h2>
+                </IonRow>
 
-            {/* Lista de cards adicionados */}
-            {cardsTemp.length > 0 && (
-              <div className="listaCardsPreview">
-                <h4>Cards adicionados:</h4>
-                {cardsTemp.map((card, index) => (
-                  <div key={index} className="cardPreviewItem">
-                    <div className="cardPreviewContent">
-                      <h5>Card {index + 1}</h5>
-                      <div className="cardPreviewSides">
-                        <div>
-                          <strong>Frente:</strong>
-                          {card.conteudo_frente.map((item, i) => (
-                            <div key={i}>
-                              {item.tipo === 'texto' && <p>{item.valor}</p>}
-                              {item.tipo === 'imagem' && <img src={item.valor} alt="frente" style={{ maxWidth: '100px' }} />}
-                              {item.tipo === 'arquivo' && <p>Arquivo: {item.nome}</p>}
+                <IonSelect
+                  value={topicoSelecionadoParaNovoFlashcard}
+                  placeholder="Escolha o tópico"
+                  onIonChange={(e) => setTopicoSelecionadoParaNovoFlashcard(e.detail.value)}
+                  className="input iFlashcard"
+                >
+                  {topicos
+                    .filter(t => t.materia_id === modalMateriaSelecionada?.id)
+                    .map(topico => (
+                      <IonSelectOption key={topico.id} value={topico.id}>
+                        {topico.titulo}
+                      </IonSelectOption>
+                    ))}
+                </IonSelect>
+
+                <IonTextarea
+                  labelPlacement="stacked"
+                  placeholder="Digite o título do flashcard"
+                  value={novoFlashcardTitulo}
+                  onIonInput={(e) => setNovoFlashcardTitulo(e.detail.value!)}
+                  className="input"
+                />
+
+                <IonRow className="centroModal">
+                  <h3>{flashcardIdParaEditar ? 'Editar cards' : 'Adicionar cards'}</h3>
+                </IonRow>
+
+                <IonButton
+                  expand="block"
+                  onClick={() => setShowCardEditor(true)}
+                  className="btnAdicionarCard"
+                >
+                  {flashcardIdParaEditar ? 'Editar conteúdo do card' : 'Adicionar conteúdo do card'}
+                </IonButton>
+
+                {cardsTemp.length > 0 && (
+                  <div className="listaCardsPreview">
+                    <h4>{flashcardIdParaEditar ? 'Cards existentes:' : 'Cards adicionados:'}</h4>
+                    {cardsTemp.map((card, index) => (
+                      <div key={index} className="cardPreviewItem">
+                        <div className="cardPreviewContent">
+                          <IonRow className="rowRC">
+                            <h5>Card {index + 1}</h5>
+                            <IonButton
+                              onClick={() => removerCardTemp(index)}
+                              className="btnRemoverCard"
+                            >
+                              Remover
+                            </IonButton>
+                          </IonRow>
+                          <div className="cardPreviewSides">
+                            <div>
+                              <strong>Frente:</strong>
+                              {card.conteudo_frente.map((item, i) => (
+                                <div key={i}>
+                                  {item.tipo === 'texto' && <p>{item.valor}</p>}
+                                  {item.tipo === 'imagem' && <img src={item.valor} alt="frente" />}
+                                  {item.tipo === 'arquivo' && <p>Arquivo: {item.nome}</p>}
+                                </div>
+                              ))}
                             </div>
-                          ))}
-                        </div>
-                        <div>
-                          <strong>Verso:</strong>
-                          {card.conteudo_verso.map((item, i) => (
-                            <div key={i}>
-                              {item.tipo === 'texto' && <p>{item.valor}</p>}
-                              {item.tipo === 'imagem' && <img src={item.valor} alt="verso" style={{ maxWidth: '100px' }} />}
-                              {item.tipo === 'arquivo' && <p>Arquivo: {item.nome}</p>}
+                            <div>
+                              <strong>Verso:</strong>
+                              {card.conteudo_verso.map((item, i) => (
+                                <div key={i}>
+                                  {item.tipo === 'texto' && <p>{item.valor}</p>}
+                                  {item.tipo === 'imagem' && <img src={item.valor} alt="verso"  />}
+                                  {item.tipo === 'arquivo' && <p>Arquivo: {item.nome}</p>}
+                                </div>
+                              ))}
                             </div>
-                          ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <IonButton 
-                      size="small" 
-                      color="danger" 
-                      onClick={() => removerCardTemp(index)}
-                      className="btnRemoverCard"
-                    >
-                      Remover
-                    </IonButton>
+                    ))}
                   </div>
-                ))}
-              </div>
+                )}
+
+                <IonButton
+                  expand="block"
+                  className="btnSalvar bntSFlashcard"
+                  onClick={handleSalvarFlashcard}
+                  disabled={cardsTemp.length === 0}
+                >
+                  {flashcardIdParaEditar ? 'Salvar Alterações' : 'Salvar Flashcard'}
+                </IonButton>
+              </>
             )}
 
-            <IonButton 
-              expand="block" 
-              className="btnSalvar bntSFlashcard" 
-              onClick={handleSalvarFlashcard}
-              disabled={cardsTemp.length === 0}
-            >
-              Salvar Flashcard
-            </IonButton>
-          </div>
-        </IonModal>
+            {showCardEditor && (
+              <>
+                <IonRow className="centroModal">
+                  <h3 className="modal-title">Editor de Card</h3>
+                  <IonButton
+                    onClick={() => setShowCardEditor(false)}
+                    color="medium"
+                    fill="clear"
+                  >
+                    Fechar Editor
+                  </IonButton>
+                </IonRow>
 
-        {/* Modal para o CardEditor */}
-        <IonModal 
-          isOpen={showCardEditor} 
-          onDidDismiss={() => setShowCardEditor(false)}
-          className="card-editor-modal"
-        >
-          <div className="modal-header">
-            <h3 className="modal-title">Editor de Card</h3>
-            <button className="close-button" onClick={() => setShowCardEditor(false)}>
-              <IonIcon icon={close} />
-            </button>
+                <CardEditor
+                  onSave={(frente, verso) => {
+                    setCardsTemp([...cardsTemp, { conteudo_frente: frente, conteudo_verso: verso }]);
+                    setShowCardEditor(false);
+                  }}
+                  onCancel={() => setShowCardEditor(false)}
+                />
+              </>
+            )}
           </div>
-
-          <CardEditor
-            onSave={(frente, verso) => {
-              setCardsTemp([...cardsTemp, { conteudo_frente: frente, conteudo_verso: verso }]);
-              setShowCardEditor(false);
-            }}
-            onCancel={() => setShowCardEditor(false)}
-          />
         </IonModal>
       </IonContent>
     </IonPage>

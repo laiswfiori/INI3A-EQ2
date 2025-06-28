@@ -42,3 +42,74 @@
 .btn-voltar {
   margin: 10px;
 }
+
+#modalAvaliar::part(content) {
+  border-radius: 20px;
+}
+
+.contVoltar {
+    width: 100% !important;
+    display: flex;
+    padding-left: 2%;
+    margin-top: 2%;
+    align-items: center;
+    cursor: pointer;
+}
+
+.voltarAtividades, .txtVoltarAtividades {
+  color: black;
+}
+
+.txtVoltarAtividades {
+  padding: 0;
+  margin: 0;
+}
+
+.rowAvaliarAtiv {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10%;
+}
+
+.btnAvaliarAtiv {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 45%;
+  }
+
+  ion-button.btnSalvarAvaliacao::part(native) {
+    background-color: #3da5d9;
+    border: 0.5px solid #00296b;
+    color: white;
+    border-radius: 20px;
+    box-shadow: none;
+}
+
+  ion-button.btnSalvarAvaliacao::part(native):hover {
+    background-color: #00296b;
+}
+
+
+  ion-button.btnCancelarAvaliacao::part(native) {
+    background-color: #fec601;
+    border: 0.5px solid #ea7317;
+    color: black !important;
+    border-radius: 20px;
+    box-shadow: none;
+}
+
+  ion-button.btnCancelarAvaliacao::part(native):hover {
+    background-color: #ea7317;
+}
+
+@media (max-width: 768px) {
+    #modalAvaliar {
+      margin: 5%;
+    }
+}

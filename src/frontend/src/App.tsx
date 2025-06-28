@@ -78,15 +78,10 @@ const App: React.FC = () => (
         <Route path="/flashcards/flashcards" component={Flashcards} exact />
         <Route path="/flashcards/telainicialflashcards" component={TelaInicialFlashcards} exact />
         <Route path="/flashcards/relatorio" component={Relatorio} exact />
-        
-        {/* --- ROTAS DE SENHA --- */}
         <Route path="/senha/confirmar" component={Confirmar} exact />
         <Route path="/senha/concluir" component={Concluir} exact />
         <Route path="/senha/alterar" component={Alterar} exact />
-        {/* --- ROTA ADICIONADA --- */}
-        <Route path="/redefinir-senha" component={Redefinir} exact />
-
-        {/* --- ROTAS COM PARÂMETROS --- */}
+        <Route path="/senha/redefinir" component={Redefinir} exact />
         <Route path="/materias/:id" component={Topicos} exact />
         <Route path="/topicos/:id" component={Atividades} exact />
         <Route path="/atividades/:id" component={Atividade} exact />
