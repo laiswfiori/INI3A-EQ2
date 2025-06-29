@@ -13,9 +13,7 @@ use Illuminate\Support\Str;
 
 class PasswordResetController extends Controller
 {
-    /**
-     * Cria e envia o link de redefinição de senha para o e-mail do usuário.
-     */
+
     public function requestReset(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -41,9 +39,7 @@ class PasswordResetController extends Controller
         return response()->json(['message' => 'Um link de redefinição foi enviado para o seu e-mail.'], 200);
     }
 
-    /**
-     * Valida o token e redefine a senha do usuário.
-     */
+
     public function resetPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -80,25 +76,22 @@ class PasswordResetController extends Controller
         return response()->json(['message' => 'Sua senha foi redefinida com sucesso.']);
     }
 
-    /**
-     * Função auxiliar para enviar o e-mail de redefinição de senha.
-     */
+
     private function sendResetEmail($email, $token)
     {
         $frontendUrl = env('FRONTEND_URL', 'http://localhost:8100');
-        $resetUrl = "{$frontendUrl}/redefinir-senha?token={$token}&email=" . urlencode($email);
+        $resetUrl = "{$frontendUrl}/senha/alterar?token={$token}&email=" . urlencode($email);
 
-        $subject = 'Seu Link para Redefinição de Senha';
+        $subject = 'Seu Link para alteração de Senha';
         $body = "Olá,\n\n" .
-                "Você está recebendo este e-mail porque recebemos um pedido de redefinição de senha para sua conta.\n" .
-                "Clique no link abaixo para redefinir sua senha:\n" .
+                "Você está recebendo este e-mail porque recebemos um pedido de alteração de senha para sua conta.\n" .
+                "Clique no link abaixo para alterar sua senha:\n" .
                 $resetUrl . "\n\n" .
-                "Este link de redefinição de senha irá expirar em 60 minutos.\n" .
-                "Se você não solicitou uma redefinição de senha, nenhuma ação é necessária.\n\n" .
+                "Este link de alteração de senha irá expirar em 60 minutos.\n" .
+                "Se você não solicitou uma alteração de senha, nenhuma ação é necessária.\n\n" .
                 "Atenciosamente,\n" .
                 env('APP_NAME');
 
-        // Pede o 'mailer' diretamente ao app para contornar erros de injeção de dependência.
         app('mailer')->raw($body, function ($message) use ($email, $subject) {
             $message->to($email)
                     ->subject($subject);

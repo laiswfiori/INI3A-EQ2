@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonIcon, IonButton, IonGrid, IonRow, IonCol, IonLabel,
   IonPopover, IonModal, IonSelect, IonSelectOption, IonTextarea, useIonToast } from '@ionic/react';
 import Header from '../../../components/Header';
-import { alertCircle, school, close, layers, time, library, arrowForward, card, barChart, trash, pencil, flash } from 'ionicons/icons'; 
+import { alertCircle, school, close, layers, time, library, arrowForward, card, barChart, trash, pencil, flash, chevronDown } from 'ionicons/icons'; 
 import './css/geralTelaInicial.css';
 import './css/uiTelaInicial.css';
 import './css/layoutsTelaInicial.css';
@@ -67,6 +67,8 @@ const TelaInicialFlashcards: React.FC = () => {
   const [showCardEditor, setShowCardEditor] = useState(false);
   const [cardsTemp, setCardsTemp] = useState<Card[]>([]);
   const [flashcardIdParaEditar, setFlashcardIdParaEditar] = useState<number | null>(null);
+  const [flashcardsComOpcoesAbertas, setFlashcardsComOpcoesAbertas] = useState<number[]>([]);
+
 
   const history = useHistory();
   const [presentToast] = useIonToast();
@@ -320,6 +322,15 @@ const abrirModalEditarFlashcard = (id: number) => {
     setCardsTemp(prev => prev.filter((_, i) => i !== index));
   };
 
+  const toggleOpcoesFlashcard = (flashcardId: number) => {
+    setFlashcardsComOpcoesAbertas((prev) =>
+      prev.includes(flashcardId)
+        ? prev.filter(id => id !== flashcardId)
+        : [...prev, flashcardId]
+    );
+  };
+
+
   return (
     <IonPage className="pagina">
       <Header />
@@ -548,29 +559,47 @@ const abrirModalEditarFlashcard = (id: number) => {
                                         </p>
                                       </IonCol>
                                       <IonCol className="botoes-flashcard">
-                                        <IonButton onClick={() => history.push(`/flashcards/estudar/flashcard/${flashcard.id}`)} className="btnFlash btnEstudar">
-                                          <IonIcon icon={flash} className="iconesOpFlash btnEstudar"/>
-                                          Estudar
+                                        <IonButton
+                                          className={`btnFlash btnMostrar ${
+                                            flashcardsComOpcoesAbertas.includes(flashcard.id) ? 'btnFecharOpcoes' : ''
+                                          }`}
+                                          onClick={() => toggleOpcoesFlashcard(flashcard.id)}
+                                        >
+                                          <IonIcon
+                                            icon={flashcardsComOpcoesAbertas.includes(flashcard.id) ? close : chevronDown}
+                                            className="bntAbrirOp"
+                                          />
+                                          {flashcardsComOpcoesAbertas.includes(flashcard.id) ? 'Fechar opções' : 'Mostrar opções'}
                                         </IonButton>
 
-                                        <IonButton onClick={() => abrirModalEditarFlashcard(flashcard.id)} className="btnFlash btnEditar">
-                                          <IonIcon icon={pencil} className="iconesOpFlash btnEditar"/>
-                                          Editar
-                                        </IonButton>
-                                        {/*{showModal && flashcardIdParaEditar !== null && (
-                                          <EditarFlashcard
-                                            id={flashcardIdParaEditar}
-                                            onClose={() => {
-                                              setShowModal(false);
-                                              setFlashcardIdParaEditar(null);
-                                            }}
-                                          />                Mudar dps
-                                        )}*/}
+                                        {flashcardsComOpcoesAbertas.includes(flashcard.id) && (
+                                          <div className="grupoBotoesFlashcard">
+                                            <IonButton onClick={() => history.push(`/flashcards/estudar/flashcard/${flashcard.id}`)} className="btnFlash btnEstudar">
+                                              <IonIcon icon={flash} className="iconesOpFlash btnEstudar" />
+                                              Estudar
+                                            </IonButton>
 
-                                        <IonButton onClick={() => deletarFlashcard(flashcard.id)} className="btnFlash btnExcluir">
-                                          <IonIcon icon={trash} className="iconesOpFlash btnExcluir"/>
-                                          Excluir
-                                        </IonButton>
+                                            <IonButton onClick={() => abrirModalEditarFlashcard(flashcard.id)} className="btnFlash btnEditar">
+                                              <IonIcon icon={pencil} className="iconesOpFlash btnEditar" />
+                                              Editar
+                                            </IonButton>
+
+                                            {/* {showModal && flashcardIdParaEditar !== null && (
+                                              <EditarFlashcard
+                                                id={flashcardIdParaEditar}
+                                                onClose={() => {
+                                                  setShowModal(false);
+                                                  setFlashcardIdParaEditar(null);
+                                                }}
+                                              />
+                                            )} */} {/* Mudar dps */}
+
+                                            <IonButton onClick={() => deletarFlashcard(flashcard.id)} className="btnFlash btnExcluir">
+                                              <IonIcon icon={trash} className="iconesOpFlash btnExcluir" />
+                                              Excluir
+                                            </IonButton>
+                                          </div>
+                                        )}
                                       </IonCol>
                                     </IonRow>
                                   ))}

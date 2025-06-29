@@ -9,6 +9,7 @@ import './css/layout.css';
 import Header from '../../../components/Header';
 import API from '../../../lib/api';
 import AvaliarModal from './AvaliarModal'; 
+import { validarCamposAtividade } from '../../../utils/erros';
 
 
 interface Atividade {
@@ -155,8 +156,9 @@ const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
   };
 
 const handleSalvar = async () => {
-  if (!novaAtividade.titulo.trim()) {
-    alert('O título da atividade é obrigatório');
+  const erro = validarCamposAtividade(novaAtividade);
+  if (erro) {
+    alert(erro);
     return;
   }
 
@@ -463,8 +465,6 @@ const handleSalvar = async () => {
                 ref={inputArquivoRef}
                 style={{ display: 'none' }}
               />
-
-              {/* Visualização do conteúdo */}
               <div className="conteudo-preview" style={{ marginTop: '10px' }}>
                   {novaAtividade.conteudo.map((item, idx) => (
                     <div key={idx} className="preview-item">

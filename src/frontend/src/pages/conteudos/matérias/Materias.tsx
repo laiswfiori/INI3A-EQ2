@@ -7,6 +7,7 @@ import './css/ui.css';
 import './css/layout.css';
 import Header from '../../../components/Header';
 import API from '../../../lib/api';
+import { validarCamposMateria } from '../../../utils/erros';
 
 interface Atividade {
   id: number;
@@ -100,6 +101,12 @@ const Materias: React.FC = () => {
   };
 
   const handleSalvar = async () => {
+    const erro = validarCamposMateria(novaMateria);
+      if (erro) {
+        alert(erro);
+        return;
+      }
+
     const api = new API();
     const endpoint = modoModal === 'editar'
       ? `materias/${materiaSelecionada?.id}`

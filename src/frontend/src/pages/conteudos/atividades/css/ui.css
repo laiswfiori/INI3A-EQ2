@@ -50,7 +50,7 @@ ion-button.config::part(native):hover {
 }
 
 ion-modal.modalAddAtividade {
-    --max-height: 30%;
+    --max-height: 100%;
     height: auto;
 }
 

@@ -18,7 +18,7 @@ import Relatorio from './pages/flashcards/relatorio/Relatorio';
 import Confirmar from './pages/senha/confirmar/Confirmar';
 import Concluir from './pages/senha/concluir/Concluir';
 import Alterar from './pages/senha/alterar/Alterar';
-import Redefinir from './pages/senha/redefinir/Redefinir';
+//import Redefinir from './pages/senha/redefinir/Redefinir';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -81,7 +81,7 @@ const App: React.FC = () => (
         <Route path="/senha/confirmar" component={Confirmar} exact />
         <Route path="/senha/concluir" component={Concluir} exact />
         <Route path="/senha/alterar" component={Alterar} exact />
-        <Route path="/senha/redefinir" component={Redefinir} exact />
+       {/* <Route path="/senha/redefinir" component={Redefinir} exact /> */ }
         <Route path="/materias/:id" component={Topicos} exact />
         <Route path="/topicos/:id" component={Atividades} exact />
         <Route path="/atividades/:id" component={Atividade} exact />

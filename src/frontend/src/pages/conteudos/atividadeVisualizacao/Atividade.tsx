@@ -5,7 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import Header from '../../../components/Header';
 import API from '../../../lib/api';
 import './css/ui.css';
-
+import './css/layouts.css';
 
 interface Atividade {
   id: number;
@@ -24,46 +24,84 @@ const Atividade: React.FC = () => {
   const [erro, setErro] = useState('');
 
   useEffect(() => {
-  const fetchAtividade = async () => {
-    const api = new API();
-    try {
-      const data = await api.get(`atividades/${id}`);
-      console.log('Atividade recebida:', data);
+    const fetchAtividade = async () => {
+      const api = new API();
+      try {
+        const data = await api.get(`atividades/${id}`);
+        console.log('Atividade recebida:', data);
 
-      const conteudoCorrigido = Array.isArray(data.conteudo) 
-        ? data.conteudo 
-        : data.conteudo 
-          ? [data.conteudo] 
-          : [];
+        const conteudoCorrigido = Array.isArray(data.conteudo)
+          ? data.conteudo
+          : data.conteudo
+            ? [data.conteudo]
+            : [];
 
-      setAtividade({
-        ...data,
-        conteudo: conteudoCorrigido
-      });
-    } catch (error) {
-      console.error('Erro ao buscar atividade:', error);
-      setErro('Erro ao carregar atividade');
-    } finally {
+        setAtividade({
+          ...data,
+          conteudo: conteudoCorrigido
+        });
+      } catch (error) {
+        console.error('Erro ao buscar atividade:', error);
+        setErro('Erro ao carregar atividade');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchAtividade();
+    } else {
+      setErro('ID da atividade não encontrado na URL');
       setLoading(false);
     }
-  };
+  }, [id]);
 
-  if (id) {
-    fetchAtividade();
-  } else {
-    setErro('ID da atividade não encontrado na URL');
-    setLoading(false);
-  }
-}, [id]);
+  const renderTexto = () => (
+    <div className="metadeColuna">
+      <div className="tituloSecao">Texto</div>
+      {atividade!.conteudo
+        .filter(item => item.tipo === 'texto')
+        .map((item, i) => <p key={i}>{item.valor}</p>)}
+    </div>
+  );
 
+
+  const renderImagem = () => (
+    <div>
+      <div className="tituloSecao">Imagens</div>
+      <div className="flexDocumentosImgs flexImgsWide">
+        {atividade!.conteudo
+          .filter(item => item.tipo === 'imagem')
+          .map((item, i) => (
+            <img key={i} src={item.valor} alt="Imagem da atividade" className="imagemConteudo" />
+          ))}
+      </div>
+    </div>
+  );
+
+
+  const renderPdf = () => (
+    <div>
+      <div className="tituloSecao">Documentos</div>
+      <div className="flexDocumentosImgs">
+        {atividade!.conteudo
+          .filter(item => item.tipo === 'arquivo')
+          .map((item, i) => (
+            <a key={i} href={item.valor} download={item.nome} target="_blank" rel="noopener noreferrer">
+              {item.nome}
+            </a>
+          ))}
+      </div>
+    </div>
+  );
 
   return (
     <IonPage className="pagina">
       <Header />
       <IonContent className="body">
-        <IonRow className="contVoltar"  onClick={() => history.goBack()}>
-          <IonIcon icon={returnDownBack} className="voltarAtividades"/>
-          <p className="txtVoltarAtividades">Voltar para home</p>
+        <IonRow className="contVoltar" onClick={() => history.goBack()}>
+          <IonIcon icon={returnDownBack} className="voltarAtividades" />
+          <p className="txtVoltarAtividades">Voltar para atividades</p>
         </IonRow>
 
         {loading ? (
@@ -80,51 +118,48 @@ const Atividade: React.FC = () => {
 
             <div className="linhaHorizontal"></div>
 
-            <h2>Conteúdo</h2>
+            <h2 className="txtCentro">Atividade</h2>
 
             {atividade.conteudo.length === 0 && (
               <p>Não há conteúdo adicionado.</p>
             )}
 
-            {atividade.conteudo.map((item, idx) => (
-              <div key={idx} className="conteudo-item">
-                {item.tipo === 'texto' && (
-                  <IonRow>
-                    <IonCol>
-                      <IonIcon icon={documentText} className="iconeConteudo"/>
-                      <p>{item.valor}</p>
+            {(() => {
+              const temTexto = atividade.conteudo.some(item => item.tipo === 'texto');
+              const temImagem = atividade.conteudo.some(item => item.tipo === 'imagem');
+              const temPdf = atividade.conteudo.some(item => item.tipo === 'arquivo');
+
+              return (
+                <IonRow className="gridAtividade">
+                  {temTexto && (
+                    <IonCol
+                      size={temImagem && temPdf ? '7' : '8'}
+                      className="colPrincipal"
+                    >
+                      {renderTexto()}
                     </IonCol>
-                  </IonRow>
-                )}
-                {item.tipo === 'imagem' && (
-                  <IonRow>
-                    <IonCol>
-                      <IonIcon icon={imageOutline} className="iconeConteudo"/>
-                      <img 
-                        src={item.valor} 
-                        alt="Imagem da atividade" 
-                        className="imagemConteudo"
-                      />
+                  )}
+
+                  {(temImagem || temPdf) && (
+                    <IonCol
+                      size={temTexto ? (temImagem && temPdf ? '5' : '4') : '6'}
+                      className="colSecundaria"
+                    >
+                      {temImagem && (
+                        <div className="metadeColuna bordaInferior">
+                          {renderImagem()}
+                        </div>
+                      )}
+                      {temPdf && (
+                        <div className="metadeColuna">
+                          {renderPdf()}
+                        </div>
+                      )}
                     </IonCol>
-                  </IonRow>
-                )}
-                {item.tipo === 'arquivo' && (
-                  <IonRow>
-                    <IonCol>
-                      <IonIcon icon={documentAttach} className="iconeConteudo"/>
-                      <a 
-                        href={item.valor} 
-                        download={item.nome} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                      >
-                        {item.nome}
-                      </a>
-                    </IonCol>
-                  </IonRow>
-                )}
-              </div>
-            ))}
+                  )}
+                </IonRow>
+              );
+            })()}
           </div>
         ) : (
           <p>Atividade não encontrada.</p>

@@ -46,7 +46,7 @@
   }
 
 .svgIniciar {
-    width: 1.5rem !important;
+    width: 2rem !important;
     height: auto !important;
   }
 
@@ -375,5 +375,14 @@ ion-button.btnExcluir::part(native):hover {
   ion-button.btnRemoverCard::part(native):hover {
     color: #ce2711;
 }
+
+.btnFecharOpcoes {
+  border: 0.5px solid #ce2711 !important;
+}
+
+.btnFecharOpcoes::part(native) {
+  border: 0.5px solid #ce2711 !important;
+}
+
 
 

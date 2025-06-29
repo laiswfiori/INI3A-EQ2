@@ -10,6 +10,10 @@
         width: 45%;
         max-width: 45%;
     }
+    .circular-progress {
+        --size: 80% !important;
+        --stroke-width: 30px !important;
+    }
 }
 
 @media (min-width: 768px) {

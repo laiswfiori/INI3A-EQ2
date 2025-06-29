@@ -108,8 +108,37 @@
     background-color: #ea7317;
 }
 
-@media (max-width: 768px) {
-    #modalAvaliar {
-      margin: 5%;
-    }
+.descricao, .tipo {
+  text-align: center;
 }
+
+.colSecundaria {
+  border-left: 2px solid #ccc;
+  padding-left: 1rem;
+}
+
+.bordaInferior {
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.metadeColuna {
+  padding: 0.5rem 0;
+}
+
+.tituloSecao {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.flexDocumentosImgs {
+  display: flex;
+  flex-direction: column;
+}
+
+.imagemConteudo {
+  margin-bottom: 2%;
+}
+

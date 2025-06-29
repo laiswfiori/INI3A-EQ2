@@ -8,6 +8,7 @@ import './css/ui.css';
 import './css/layout.css';
 import Header from '../../../components/Header';
 import API from '../../../lib/api';
+import { validarCamposTopico } from '../../../utils/erros';
 
 interface Atividade {
   id: number;
@@ -103,11 +104,12 @@ const Topicos: React.FC = () => {
   };
 
   const handleSalvar = async () => {
-
-    if (!novoTopico.titulo.trim()) {
-      alert('O título do tópico é obrigatório.');
+    const erro = validarCamposTopico(novoTopico);
+    if (erro) {
+      alert(erro);
       return;
     }
+
     if (!novoTopico.materia_id || novoTopico.materia_id <= 0) {
       alert('Erro: ID da matéria inválido.');
       return;

@@ -42,7 +42,7 @@ const Confirmar: React.FC = () => {
           onDidDismiss={() => setToast({ show: false, message: '', color: '' })}
         />
 
-        <IonRow className="contVoltar" onClick={() => history.push('/logincadastro/logincadastro')}>
+        <IonRow className="contVoltar" onClick={() => history.goBack()}>
           <IonIcon icon={returnDownBack} className="email"/>
           <p>Voltar para login</p>
         </IonRow>
