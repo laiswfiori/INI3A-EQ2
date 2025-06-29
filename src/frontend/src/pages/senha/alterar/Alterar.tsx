@@ -55,7 +55,7 @@ const Alterar: React.FC = () => {
       setShowLoading(false);
       setToast({ show: true, message: response.message || 'Senha redefinida com sucesso!', color: 'success' });
 
-      setTimeout(() => ionRouter.push('/logincadastro/logincadastro', 'root', 'replace'), 3000);
+      setTimeout(() => ionRouter.push('/senha/concluir', 'root', 'replace'), 3000);
 
     } catch (error: any) {
       setShowLoading(false);

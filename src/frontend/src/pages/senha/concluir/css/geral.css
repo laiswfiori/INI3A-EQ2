@@ -36,3 +36,21 @@
     width: 100%;
     height: 100%;
 }
+
+#txtS {
+  cursor: pointer;
+  user-select: none;
+  text-decoration: underline;
+}
+
+.contLogin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2% !important;
+    width: 60%;
+    padding: 1%;
+    gap: 1rem;
+    border-radius: 20px;
+    border: 1px solid #00296b;
+}
