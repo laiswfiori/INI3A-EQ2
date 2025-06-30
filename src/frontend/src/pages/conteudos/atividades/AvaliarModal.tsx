@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { IonModal, IonButton, IonRow, IonInput, IonLabel, IonSelect, IonSelectOption } from '@ionic/react';
+import { validarCamposAtividadeAvaliacao } from '../../../utils/erros';
 
 interface Atividade {
   id: number;
@@ -56,30 +57,28 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
   ];
 
   const handleSalvar = () => {
+    const erro = validarCamposAtividadeAvaliacao({
+      podeAvaliarNivel,
+      podeAvaliarLista,
+      podeAvaliarProva,
+      nivel,
+      exercicios,
+      acertos,
+      nota,
+      valor,
+    });
+
+    if (erro) {
+      alert(erro);
+      return;
+    }
+
     if (podeAvaliarNivel) {
-      if (!nivel) {
-        alert('Selecione um nível');
-        return;
-      }
       onSalvar({ nivel });
     } else if (podeAvaliarLista) {
-      if (exercicios === null || acertos === null) {
-        alert('Preencha número de exercícios e acertos');
-        return;
-      }
       onSalvar({ exercicios, acertos });
     } else if (podeAvaliarProva) {
-      if (nota === null || valor === null) {
-        alert('Preencha nota e valor total');
-        return;
-      }
-      if (!nivel) {
-        alert('Selecione um nível');
-        return;
-      }
       onSalvar({ nota, valor, nivel });
-    } else {
-      alert('Tipo de atividade não suportado para avaliação');
     }
   };
 
