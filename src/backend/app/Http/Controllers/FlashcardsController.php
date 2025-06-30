@@ -6,6 +6,7 @@ use App\Models\Flashcard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Card; //Bia
 
 class FlashcardsController extends Controller
 {
@@ -79,5 +80,18 @@ class FlashcardsController extends Controller
         $flashcard->delete();
 
         return response()->json(['message' => 'Flashcard deletado com sucesso.'], 200);
+    }
+
+    public function cards($id) //Bia
+    {
+        $flashcard = Flashcard::find($id);
+
+        if (!$flashcard) {
+            return response()->json(['message' => 'Flashcard não encontrado.'], 404);
+        }
+
+        $cards = Card::where('flashcard_id', $id)->get();
+
+        return response()->json($cards);
     }
 }

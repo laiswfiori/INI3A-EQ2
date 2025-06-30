@@ -81,10 +81,11 @@ const App: React.FC = () => (
         <Route path="/senha/confirmar" component={Confirmar} exact />
         <Route path="/senha/concluir" component={Concluir} exact />
         <Route path="/senha/alterar" component={Alterar} exact />
-       {/* <Route path="/senha/redefinir" component={Redefinir} exact /> */ }
+        
         <Route path="/materias/:id" component={Topicos} exact />
         <Route path="/topicos/:id" component={Atividades} exact />
         <Route path="/atividades/:id" component={Atividade} exact />
+        <Route path="/flashcard/:id" component={Flashcards} />
 
         {}
         <Route exact path="/">

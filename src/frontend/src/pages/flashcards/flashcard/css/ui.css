@@ -1,0 +1,58 @@
+.emoji-botoes {
+  margin-top: 5%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.emoji-botao {
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.emoji-botao::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+}
+
+.emoji-botao {
+  background-color: var(--cor-emoji);
+}
+
+.emoji-botao:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btnVerso {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 20%;
+    margin-top: 5%;
+}
+
+ion-button.btnVerso::part(native) {
+    background-color: #3da5d9;
+    border: 2px solid #00296b;
+    color: white;
+    border-radius: 20px;
+    box-shadow: none;
+}
+
+ion-button.btnVerso::part(native):hover {
+    background-color: #00296b;
+}

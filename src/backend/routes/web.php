@@ -77,6 +77,7 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->get('/{id}', 'FlashcardsController@show');
         $router->put('/{id}', 'FlashcardsController@update');
         $router->delete('/{id}', 'FlashcardsController@destroy');
+        $router->get('/{id}/cards', 'FlashcardsController@cards'); //Bia
     });
 
     // --- Rotas de Cards ---

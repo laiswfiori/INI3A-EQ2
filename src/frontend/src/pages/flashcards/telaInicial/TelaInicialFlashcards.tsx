@@ -4,9 +4,9 @@ import { IonPage, IonContent, IonIcon, IonButton, IonGrid, IonRow, IonCol, IonLa
   IonPopover, IonModal, IonSelect, IonSelectOption, IonTextarea, useIonToast } from '@ionic/react';
 import Header from '../../../components/Header';
 import { alertCircle, school, close, layers, time, library, arrowForward, card, barChart, trash, pencil, flash, chevronDown } from 'ionicons/icons'; 
-import './css/geralTelaInicial.css';
-import './css/uiTelaInicial.css';
-import './css/layoutsTelaInicial.css';
+import './css/geral.css';
+import './css/ui.css';
+import './css/layouts.css';
 import './css/pie.css';
 import API from '../../../lib/api';
 import CardEditor from '../components/CardEditor';
@@ -574,7 +574,7 @@ const abrirModalEditarFlashcard = (id: number) => {
 
                                         {flashcardsComOpcoesAbertas.includes(flashcard.id) && (
                                           <div className="grupoBotoesFlashcard">
-                                            <IonButton onClick={() => history.push(`/flashcards/estudar/flashcard/${flashcard.id}`)} className="btnFlash btnEstudar">
+                                            <IonButton onClick={() => history.push(`/flashcard/${flashcard.id}`)} className="btnFlash btnEstudar">
                                               <IonIcon icon={flash} className="iconesOpFlash btnEstudar" />
                                               Estudar
                                             </IonButton>
