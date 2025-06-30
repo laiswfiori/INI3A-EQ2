@@ -2,6 +2,10 @@
     .revisaoGeral {
         height: 25% !important;
     }
+    .ion-delegate-host {
+        display: flex !important;
+        justify-content: center !important;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 1023px){
@@ -13,6 +17,10 @@
     .circular-progress {
         --size: 80% !important;
         --stroke-width: 30px !important;
+    }
+    .ion-delegate-host {
+        display: flex !important;
+        justify-content: flex-end !important;
     }
 }
 
@@ -53,6 +61,13 @@
     }
     ion-modal.modalFlashcards::part(content) {
         width: 90%;
+    }
+    .ion-delegate-host {
+        display: flex !important;
+        justify-content: flex-end !important;
+    }
+    #branco {
+        width: 25% !important;
     }
 }
 

@@ -148,8 +148,9 @@ const filtrarFlashcardsDoUsuario = (
     setMateriaExpandidaId(materiaExpandidaId === materiaId ? null : materiaId);
   };
 
-  const handlePopoverClick = (event: React.MouseEvent) => {
-    setPopoverEvent(event.nativeEvent);
+  const handlePopoverClick = (e: React.MouseEvent) => {
+    console.log('nativeEvent', e.nativeEvent);
+    setPopoverEvent(e.nativeEvent);
     setPopoverVisible(true);
   };
 
@@ -351,13 +352,15 @@ const abrirModalEditarFlashcard = (id: number) => {
               </IonButton>
             </IonCol>
             <IonCol id="d2">
-              <IonButton id="btnAlerta" onClick={handlePopoverClick}>
+              <IonButton id="btnAlerta" onClick={(e) => {
+                setPopoverEvent(e.nativeEvent);
+                setPopoverVisible(true);
+              }}>
                 <IonIcon icon={alertCircle} id="iconeAlerta" />
               </IonButton>
               <IonPopover
                 isOpen={popoverVisible}
                 event={popoverEvent}
-                trigger="btnAlerta"
                 onDidDismiss={closePopover}
                 className="popoverGeral"
               >

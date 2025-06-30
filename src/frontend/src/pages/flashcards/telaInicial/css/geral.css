@@ -80,22 +80,23 @@
     justify-content: flex-end;
   }
 
-.popoverGeral {
-    width: 40%;
-    background-color: transparent;
-}
-
 #branco {
     padding-left: 1%;
     width: 40%;
     background-color: white;
+    border: 2px solid #3da5d9;
 }
 
 ion-popover.popoverGeral::part(content) {
     background-color: transparent;
     width: 40%;
-    min-width: unset !important;
-    max-width: unset !important;
+    max-width: unset;
+    min-width: unset;
+}
+
+.popoverGeral {
+    width: 40%;
+    background-color: transparent;
 }
 
 #estatisticas {
