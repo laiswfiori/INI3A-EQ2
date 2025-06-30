@@ -364,7 +364,7 @@ const handleSalvar = async () => {
                           expand="block"
                           className="btnIC"
                           id="btnVer"
-                          onClick={() => history.push(`/atividadesVisualizacao/${atividade.id}`)}
+                          onClick={() => history.push(`/atividades/${atividade.id}`)}
                         >
                           <IonIcon icon={arrowForward} className="iconesPopover" />
                           Ver

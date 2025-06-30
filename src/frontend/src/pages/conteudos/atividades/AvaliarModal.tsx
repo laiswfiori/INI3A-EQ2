@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IonModal, IonButton, IonRow, IonInput, IonLabel, IonSelect, IonSelectOption } from '@ionic/react';
-import { validarCamposAtividadeAvaliacao } from '../../../utils/erros';
+import { IonModal, IonButton, IonRow, IonInput, IonLabel } from '@ionic/react';
 
 interface Atividade {
   id: number;
@@ -50,35 +49,49 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
 
   const niveis = [
     { desc: 'muito fácil', emoji: '😄', cor: '#1e7e34' },
-    { desc: 'fácil',       emoji: '😊', cor: '#28a745' },
-    { desc: 'médio',       emoji: '😐', cor: '#ffc107' },
-    { desc: 'difícil',     emoji: '😟', cor: '#fd7e14' },
+    { desc: 'fácil', emoji: '😊', cor: '#28a745' },
+    { desc: 'médio', emoji: '😐', cor: '#ffc107' },
+    { desc: 'difícil', emoji: '😟', cor: '#fd7e14' },
     { desc: 'muito difícil', emoji: '😣', cor: '#dc3545' }
   ];
 
   const handleSalvar = () => {
-    const erro = validarCamposAtividadeAvaliacao({
-      podeAvaliarNivel,
-      podeAvaliarLista,
-      podeAvaliarProva,
-      nivel,
-      exercicios,
-      acertos,
-      nota,
-      valor,
-    });
-
-    if (erro) {
-      alert(erro);
-      return;
-    }
-
     if (podeAvaliarNivel) {
+      if (!nivel) {
+        alert('Selecione um nível');
+        return;
+      }
       onSalvar({ nivel });
     } else if (podeAvaliarLista) {
-      onSalvar({ exercicios, acertos });
+      if (exercicios === null || acertos === null || exercicios === 0) {
+        alert('Preencha número de exercícios e acertos (mínimo 1 exercício)');
+        return;
+      }
+      const percentual = (acertos / exercicios) * 100;
+      let nivelCalculado: string;
+      if (percentual >= 90) nivelCalculado = 'muito fácil';
+      else if (percentual >= 75) nivelCalculado = 'fácil';
+      else if (percentual >= 50) nivelCalculado = 'médio';
+      else if (percentual >= 30) nivelCalculado = 'difícil';
+      else nivelCalculado = 'muito difícil';
+      setNivel(nivelCalculado);
+      onSalvar({ exercicios, acertos, nivel: nivelCalculado });
     } else if (podeAvaliarProva) {
-      onSalvar({ nota, valor, nivel });
+      if (nota === null || valor === null || valor === 0) {
+        alert('Preencha nota e valor total (valor não pode ser zero)');
+        return;
+      }
+      const percentual = (nota / valor) * 100;
+      let nivelCalculado: string;
+      if (percentual >= 90) nivelCalculado = 'muito fácil';
+      else if (percentual >= 75) nivelCalculado = 'fácil';
+      else if (percentual >= 50) nivelCalculado = 'médio';
+      else if (percentual >= 30) nivelCalculado = 'difícil';
+      else nivelCalculado = 'muito difícil';
+      setNivel(nivelCalculado);
+      onSalvar({ nota, valor, nivel: nivelCalculado });
+    } else {
+      alert('Tipo de atividade não suportado para avaliação');
     }
   };
 
@@ -152,18 +165,6 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
                 onIonChange={e => setValor(Number(e.detail.value))}
                 min={0}
               />
-              <IonLabel>Nível</IonLabel>
-              <IonSelect
-                value={nivel ?? ''}
-                placeholder="Selecione um nível"
-                onIonChange={e => setNivel(e.detail.value)}
-              >
-                {niveis.map(({ desc, emoji, cor }) => (
-                  <IonSelectOption key={desc} value={desc}>
-                    <span style={{ color: cor, marginRight: 8 }}>{emoji}</span> {desc}
-                  </IonSelectOption>
-                ))}
-              </IonSelect>
             </>
           )}
 
@@ -171,8 +172,7 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
             <IonButton expand="block" onClick={handleSalvar} className="btnAvaliarAtiv btnSalvarAvaliacao">
               Salvar avaliação
             </IonButton>
-
-            <IonButton expand="block" color="medium" onClick={onClose} className="btnAvaliarAtiv btnCancelarAvaliacao" >
+            <IonButton expand="block" color="medium" onClick={onClose} className="btnAvaliarAtiv btnCancelarAvaliacao">
               Cancelar
             </IonButton>
           </IonRow>

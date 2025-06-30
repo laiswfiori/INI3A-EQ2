@@ -1,12 +1,10 @@
-// Arquivo: src/lib/api.ts
-
 const prod = false;
 
 export default class API {
   apiUrl: string = "";
 
   constructor() {
-    this.apiUrl = prod ? 'API_DE_PRODUCAO_AQUI' : 'http://localhost:8000';
+    this.apiUrl = prod ? 'API_PROD' : 'http://localhost:8000';
   }
 
   private getToken(token?: string | null): string | null {
@@ -15,12 +13,9 @@ export default class API {
 
   async makeRequest(method: string, endpoint: string, data: any = null, token: string | null = null) {
     const authToken = this.getToken(token);
-    const cleanedEndpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
-    const url = `${this.apiUrl}/${cleanedEndpoint}`;
-
+    const url = `${this.apiUrl}/${endpoint}`;
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
     };
 
     if (authToken) {
@@ -33,24 +28,13 @@ export default class API {
       body: data ? JSON.stringify(data) : null,
     };
     
+
     try {
       const response = await fetch(url, options);
-
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        throw { 
-          status: response.status, 
-          message: errorData?.message || response.statusText,
-          errors: errorData?.errors || null
-        };
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-      if (response.status === 204) {
-        return { success: true };
-      }
-      
       return await response.json();
-
     } catch (error) {
       console.error('Erro ao fazer requisição:', error);
       throw error;
@@ -70,6 +54,6 @@ export default class API {
   }
 
   async delete(endpoint: string, token: string | null = null) {
-    return this.makeRequest('DELETE',endpoint, null, token);
+    return this.makeRequest('DELETE', endpoint, null, token);
   }
 }

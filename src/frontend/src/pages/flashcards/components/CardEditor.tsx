@@ -1,7 +1,8 @@
-import React, { useRef } from 'react';
+// CardEditor.tsx
+import React, { useEffect, useRef, useState } from 'react';
 import { IonButton, IonIcon, IonRow, IonTextarea, IonLabel } from '@ionic/react';
 import { image, close } from 'ionicons/icons';
-import './css/ui.css';
+import './css/ui.css'; // Certifique-se de que seu CSS está correto
 
 interface ConteudoItem {
   tipo: 'texto' | 'imagem' | 'arquivo';
@@ -12,16 +13,31 @@ interface ConteudoItem {
 interface CardEditorProps {
   onSave: (frente: ConteudoItem[], verso: ConteudoItem[]) => void;
   onCancel: () => void;
+  conteudoFrenteInicial?: ConteudoItem[];
+  conteudoVersoInicial?: ConteudoItem[];
 }
 
-const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel }) => {
-  const [textoFrente, setTextoFrente] = React.useState('');
-  const [textoVerso, setTextoVerso] = React.useState('');
-  const [imagensFrente, setImagensFrente] = React.useState<ConteudoItem[]>([]);
-  const [imagensVerso, setImagensVerso] = React.useState<ConteudoItem[]>([]);
+const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel, conteudoFrenteInicial = [], conteudoVersoInicial = [] }) => {
+  const [textoFrente, setTextoFrente] = useState('');
+  const [textoVerso, setTextoVerso] = useState('');
+  const [imagensFrente, setImagensFrente] = useState<ConteudoItem[]>([]);
+  const [imagensVerso, setImagensVerso] = useState<ConteudoItem[]>([]);
 
   const inputImagemFrenteRef = useRef<HTMLInputElement>(null);
   const inputImagemVersoRef = useRef<HTMLInputElement>(null);
+
+  // UseEffect para inicializar os estados com os valores iniciais (para edição)
+  useEffect(() => {
+    const textoFrenteItem = conteudoFrenteInicial.find(c => c.tipo === 'texto');
+    const imagensFrenteItens = conteudoFrenteInicial.filter(c => c.tipo === 'imagem');
+    setTextoFrente(textoFrenteItem?.valor || '');
+    setImagensFrente(imagensFrenteItens);
+
+    const textoVersoItem = conteudoVersoInicial.find(c => c.tipo === 'texto');
+    const imagensVersoItens = conteudoVersoInicial.filter(c => c.tipo === 'imagem');
+    setTextoVerso(textoVersoItem?.valor || '');
+    setImagensVerso(imagensVersoItens);
+  }, [conteudoFrenteInicial, conteudoVersoInicial]); // Dependências garantem que ele re-renderize quando os dados iniciais mudam
 
   const handleAddImagem = (e: React.ChangeEvent<HTMLInputElement>, lado: 'frente' | 'verso') => {
     const file = e.target.files?.[0];
@@ -37,7 +53,7 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel }) => {
         else setImagensVerso(prev => [...prev, novoItem]);
       };
       reader.readAsDataURL(file);
-      e.target.value = '';
+      e.target.value = ''; // Limpa o input file para permitir adicionar a mesma imagem novamente
     }
   };
 
@@ -46,12 +62,15 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel }) => {
     else setImagensVerso(prev => prev.filter((_, i) => i !== index));
   };
 
-  const podeSalvar = textoFrente.trim() !== '' && textoVerso.trim() !== '';
+  // Condição para habilitar o botão "Salvar Card"
+  // Habilita se houver texto OU imagem em AMBOS os lados (frente e verso)
+  const podeSalvar =
+    (textoFrente.trim() !== '' || imagensFrente.length > 0) &&
+    (textoVerso.trim() !== '' || imagensVerso.length > 0);
 
   return (
     <div className="card-editor-container">
       <div className="card-sides-container">
-
         <div className="card-side">
           <IonLabel className="side-label">Frente (Pergunta)</IonLabel>
 
@@ -117,19 +136,22 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel }) => {
             <IonIcon icon={image} slot="icon-only" />
           </IonButton>
         </div>
-
       </div>
 
       <IonRow className="action-row">
         <IonButton color="medium" fill="outline" onClick={onCancel} className="action-button btnCancelarCard">
           Cancelar
         </IonButton>
-        <IonButton onClick={() => {
-          onSave(
-            [{ tipo: 'texto', valor: textoFrente }, ...imagensFrente],
-            [{ tipo: 'texto', valor: textoVerso }, ...imagensVerso]
-          );
-        }} disabled={!podeSalvar} className="action-button btnSalvarCard">
+        <IonButton
+          onClick={() => {
+            onSave(
+              [{ tipo: 'texto', valor: textoFrente }, ...imagensFrente],
+              [{ tipo: 'texto', valor: textoVerso }, ...imagensVerso]
+            );
+          }}
+          disabled={!podeSalvar}
+          className="action-button btnSalvarCard"
+        >
           Salvar card
         </IonButton>
       </IonRow>

@@ -68,7 +68,9 @@ const TelaInicialFlashcards: React.FC = () => {
   const [cardsTemp, setCardsTemp] = useState<Card[]>([]);
   const [flashcardIdParaEditar, setFlashcardIdParaEditar] = useState<number | null>(null);
   const [flashcardsComOpcoesAbertas, setFlashcardsComOpcoesAbertas] = useState<number[]>([]);
-
+  const [editingCardIndex, setEditingCardIndex] = useState<number | null>(null);
+  const [cardEditorInitialFrente, setCardEditorInitialFrente] = useState<ConteudoItem[]>([]);
+  const [cardEditorInitialVerso, setCardEditorInitialVerso] = useState<ConteudoItem[]>([]);
 
   const history = useHistory();
   const [presentToast] = useIonToast();
@@ -144,12 +146,47 @@ const filtrarFlashcardsDoUsuario = (
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    const carregarDadosParaEdicao = async () => {
+      if (flashcardIdParaEditar !== null) {
+        try {
+          const flashcard = flashcards.find(f => f.id === flashcardIdParaEditar);
+          if (flashcard) {
+            setNovoFlashcardTitulo(flashcard.titulo);
+            setTopicoSelecionadoParaNovoFlashcard(flashcard.topico_id);
+            const cardsDoFlashcard = cards.filter(c => c.flashcard_id === flashcard.id);
+            setCardsTemp(cardsDoFlashcard);
+            const topicoDoFlashcard = topicos.find(t => t.id === flashcard.topico_id);
+            if (topicoDoFlashcard) {
+              const materiaDoTopico = materias.find(m => m.id === topicoDoFlashcard.materia_id);
+              setModalMateriaSelecionada(materiaDoTopico || null);
+            }
+          }
+        } catch (error) {
+          console.error('Erro ao carregar dados do flashcard para edição:', error);
+          presentToast({
+            message: 'Erro ao carregar flashcard para edição.',
+            duration: 3000,
+            color: 'danger',
+          });
+          setFlashcardIdParaEditar(null);
+        }
+      } else {
+        setNovoFlashcardTitulo('');
+        setTopicoSelecionadoParaNovoFlashcard(null);
+        setCardsTemp([]);
+        setModalMateriaSelecionada(null);
+      }
+    };
+
+    carregarDadosParaEdicao();
+  }, [flashcardIdParaEditar, flashcards, cards, topicos, materias]);
+
   const toggleExpandirMateria = (materiaId: number) => {
     setMateriaExpandidaId(materiaExpandidaId === materiaId ? null : materiaId);
   };
 
   const handlePopoverClick = (e: React.MouseEvent) => {
-    console.log('nativeEvent', e.nativeEvent);
     setPopoverEvent(e.nativeEvent);
     setPopoverVisible(true);
   };
@@ -159,6 +196,7 @@ const filtrarFlashcardsDoUsuario = (
   };
 
   const abrirModalCriarFlashcard = (materia: Materia) => {
+    setFlashcardIdParaEditar(null);
     setNovoFlashcardTitulo('');
     setCardsTemp([]);
     setTopicoSelecionadoParaNovoFlashcard(null); 
@@ -170,8 +208,7 @@ const filtrarFlashcardsDoUsuario = (
     history.push(`/flashcards/estudar/${topicoId}`);
   };
 
-
-const handleSalvarFlashcard = async (): Promise<void> => {
+const handleSalvarOuAtualizarFlashcard = async (): Promise<void> => {
   if (!topicoSelecionadoParaNovoFlashcard || novoFlashcardTitulo.trim() === '') {
     presentToast({
       message: 'Preencha o título e selecione um tópico para o flashcard.',
@@ -181,9 +218,16 @@ const handleSalvarFlashcard = async (): Promise<void> => {
     return;
   }
 
-  if (cardsTemp.length === 0) {
+  const hasValidContent = cardsTemp.some(card => 
+    (card.conteudo_frente.some(item => item.tipo === 'texto' && item.valor.trim() !== '') || 
+     card.conteudo_frente.some(item => item.tipo === 'imagem' && item.valor.trim() !== '')) &&
+    (card.conteudo_verso.some(item => item.tipo === 'texto' && item.valor.trim() !== '') || 
+     card.conteudo_verso.some(item => item.tipo === 'imagem' && item.valor.trim() !== ''))
+  );
+
+  if (!hasValidContent) {
     presentToast({
-      message: 'Adicione pelo menos um card ao flashcard.',
+      message: 'Adicione pelo menos um card com conteúdo válido na frente e no verso (texto ou imagem).',
       duration: 3000,
       color: 'warning',
     });
@@ -191,56 +235,86 @@ const handleSalvarFlashcard = async (): Promise<void> => {
   }
 
   try {
-    const novoFlashcard = {
-      topico_id: topicoSelecionadoParaNovoFlashcard,
-      titulo: novoFlashcardTitulo,
-    };
+    if (flashcardIdParaEditar) {
+      await api.put(`flashcards/${flashcardIdParaEditar}`, {
+        titulo: novoFlashcardTitulo,
+        topico_id: topicoSelecionadoParaNovoFlashcard,
+      });
 
-    const flashcardCriado: Flashcard = await api.post('flashcards', novoFlashcard);
+      const cardsExistentesDoFlashcard = cards.filter(c => c.flashcard_id === flashcardIdParaEditar);
 
-    if (!flashcardCriado || !flashcardCriado.id) {
-      throw new Error('ID do flashcard não retornado');
-    }
+      const cardsParaDeletar = cardsExistentesDoFlashcard.filter(
+        existingCard => !cardsTemp.some(tempCard => tempCard.id === existingCard.id)
+      );
+      for (const card of cardsParaDeletar) {
+        if (card.id) await api.delete(`cards/${card.id}`);
+      }
 
-    for (const card of cardsTemp) {
-      await api.post('cards', {
-        flashcard_id: flashcardCriado.id,
-        conteudo_frente: card.conteudo_frente,
-        conteudo_verso: card.conteudo_verso,
+      for (const card of cardsTemp) {
+        const filteredFrente = card.conteudo_frente.filter(item => !(item.tipo === 'texto' && item.valor.trim() === ''));
+        const filteredVerso = card.conteudo_verso.filter(item => !(item.tipo === 'texto' && item.valor.trim() === ''));
+
+        const cardData = {
+          flashcard_id: flashcardIdParaEditar,
+          conteudo_frente: filteredFrente,
+          conteudo_verso: filteredVerso,
+        };
+
+        if (card.id) {
+          await api.put(`cards/${card.id}`, cardData);
+        } else {
+          await api.post('cards', cardData);
+        }
+      }
+
+      presentToast({
+        message: 'Flashcard atualizado com sucesso!',
+        duration: 2000,
+        color: 'success',
+      });
+    } else {
+      const novoFlashcard = {
+        topico_id: topicoSelecionadoParaNovoFlashcard,
+        titulo: novoFlashcardTitulo,
+      };
+
+      const flashcardCriado: Flashcard = await api.post('flashcards', novoFlashcard);
+
+      if (!flashcardCriado || !flashcardCriado.id) {
+        throw new Error('ID do flashcard não retornado');
+      }
+
+      for (const card of cardsTemp) {
+        const filteredFrente = card.conteudo_frente.filter(item => !(item.tipo === 'texto' && item.valor.trim() === ''));
+        const filteredVerso = card.conteudo_verso.filter(item => !(item.tipo === 'texto' && item.valor.trim() === ''));
+
+        await api.post('cards', {
+          flashcard_id: flashcardCriado.id,
+          conteudo_frente: filteredFrente,
+          conteudo_verso: filteredVerso,
+        });
+      }
+
+      presentToast({
+        message: 'Flashcard criado com sucesso!',
+        duration: 2000,
+        color: 'success',
       });
     }
 
-    presentToast({
-      message: 'Flashcard criado com sucesso!',
-      duration: 2000,
-      color: 'success',
-    });
-
-    const [materiasData, topicosData, flashcardsData, cardsData] = await Promise.all([
-      api.get('materias'),
-      api.get('topicos'),
-      api.get('flashcards'),
-      api.get('cards'),
-    ]);
-
-    const flashcardsAtualizados = filtrarFlashcardsDoUsuario(
-      materiasData,
-      topicosData,
-      flashcardsData,
-      cardsData
-    );
-
-    setMaterias(materiasData);
-    setTopicos(topicosData);
-    setFlashcards(flashcardsAtualizados);
-    setCards(cardsData);
+    await fetchData();
     setShowModal(false);
     setCardsTemp([]);
     setNovoFlashcardTitulo('');
+    setTopicoSelecionadoParaNovoFlashcard(null);
+    setFlashcardIdParaEditar(null);
+    setEditingCardIndex(null);
+    setCardEditorInitialFrente([]);
+    setCardEditorInitialVerso([]);
   } catch (error) {
-    console.error('Erro ao salvar flashcard com cards:', error);
+    console.error('Erro ao salvar/atualizar flashcard com cards:', error);
     presentToast({
-      message: 'Erro ao salvar flashcard.',
+      message: 'Erro ao salvar/atualizar flashcard.',
       duration: 3000,
       color: 'danger',
     });
@@ -258,24 +332,7 @@ const deletarFlashcard = async (id: number): Promise<void> => {
       color: 'success',
     });
 
-    const [materiasData, topicosData, flashcardsData, cardsData] = await Promise.all([
-      api.get('materias'),
-      api.get('topicos'),
-      api.get('flashcards'),
-      api.get('cards'),
-    ]);
-
-    const flashcardsAtualizados = filtrarFlashcardsDoUsuario(
-      materiasData,
-      topicosData,
-      flashcardsData,
-      cardsData
-    );
-
-    setMaterias(materiasData);
-    setTopicos(topicosData);
-    setFlashcards(flashcardsAtualizados);
-    setCards(cardsData);
+    await fetchData();
   } catch (error) {
     console.error('Erro ao deletar flashcard:', error);
     presentToast({
@@ -291,33 +348,37 @@ const abrirModalEditarFlashcard = (id: number) => {
   setShowModal(true);
 };
 
-  const adicionarCardComEditor = () => {
-    setShowCardEditor(true);
+const handleAddOrUpdateCardTemp = (conteudoFrente: ConteudoItem[], conteudoVerso: ConteudoItem[]) => {
+  const newCard: Card = {
+    conteudo_frente: conteudoFrente,
+    conteudo_verso: conteudoVerso,
   };
 
-  const salvarCardDoEditor = (frente: ConteudoItem[], verso: ConteudoItem[]) => {
-  const frentePreenchido = frente.some(item => item.valor.trim() !== '');
-  const versoPreenchido = verso.some(item => item.valor.trim() !== '');
-
-  if (!frentePreenchido || !versoPreenchido) {
-    presentToast({
-      message: 'Preencha tanto a frente quanto o verso do card.',
-      duration: 3000,
-      color: 'warning',
-    });
-    return;
+  if (editingCardIndex !== null) {
+    const updatedCards = [...cardsTemp];
+    updatedCards[editingCardIndex] = { ...updatedCards[editingCardIndex], ...newCard };
+    setCardsTemp(updatedCards);
+  } else {
+    setCardsTemp(prev => [...prev, newCard]);
   }
-
-  setCardsTemp(prev => [
-    ...prev,
-    {
-      conteudo_frente: frente,
-      conteudo_verso: verso,
-    }
-  ]);
   setShowCardEditor(false);
+  setEditingCardIndex(null);
+  setCardEditorInitialFrente([]);
+  setCardEditorInitialVerso([]);
 };
 
+
+const setShowCardEditorAndInitialData = (
+  show: boolean,
+  frente: ConteudoItem[] = [],
+  verso: ConteudoItem[] = [],
+  index: number | null = null
+) => {
+  setShowCardEditor(show);
+  setCardEditorInitialFrente(frente);
+  setCardEditorInitialVerso(verso);
+  setEditingCardIndex(index);
+};
 
   const removerCardTemp = (index: number) => {
     setCardsTemp(prev => prev.filter((_, i) => i !== index));
@@ -587,16 +648,6 @@ const abrirModalEditarFlashcard = (id: number) => {
                                               Editar
                                             </IonButton>
 
-                                            {/* {showModal && flashcardIdParaEditar !== null && (
-                                              <EditarFlashcard
-                                                id={flashcardIdParaEditar}
-                                                onClose={() => {
-                                                  setShowModal(false);
-                                                  setFlashcardIdParaEditar(null);
-                                                }}
-                                              />
-                                            )} */} {/* Mudar dps */}
-
                                             <IonButton onClick={() => deletarFlashcard(flashcard.id)} className="btnFlash btnExcluir">
                                               <IonIcon icon={trash} className="iconesOpFlash btnExcluir" />
                                               Excluir
@@ -631,6 +682,9 @@ const abrirModalEditarFlashcard = (id: number) => {
             setShowModal(false);
             setFlashcardIdParaEditar(null);
             setShowCardEditor(false);
+            setCardsTemp([]);
+            setNovoFlashcardTitulo('');
+            setTopicoSelecionadoParaNovoFlashcard(null);
           }}
           className="modalFlashcards"
         >
@@ -643,6 +697,9 @@ const abrirModalEditarFlashcard = (id: number) => {
                   setShowModal(false);
                   setFlashcardIdParaEditar(null);
                   setShowCardEditor(false);
+                  setCardsTemp([]);
+                  setNovoFlashcardTitulo('');
+                  setTopicoSelecionadoParaNovoFlashcard(null);
                 }}
               />
             </IonRow>
@@ -684,10 +741,10 @@ const abrirModalEditarFlashcard = (id: number) => {
 
                 <IonButton
                   expand="block"
-                  onClick={() => setShowCardEditor(true)}
+                  onClick={() => setShowCardEditorAndInitialData(true)}
                   className="btnAdicionarCard"
                 >
-                  {flashcardIdParaEditar ? 'Editar conteúdo do card' : 'Adicionar conteúdo do card'}
+                  {flashcardIdParaEditar ? 'Adicionar/Editar conteúdo do card' : 'Adicionar conteúdo do card'}
                 </IonButton>
 
                 {cardsTemp.length > 0 && (
@@ -698,6 +755,12 @@ const abrirModalEditarFlashcard = (id: number) => {
                         <div className="cardPreviewContent">
                           <IonRow className="rowRC">
                             <h5>Card {index + 1}</h5>
+                            <IonButton
+                              onClick={() => setShowCardEditorAndInitialData(true, card.conteudo_frente, card.conteudo_verso, index)}
+                              className="btnEditarCard"
+                            >
+                              Editar
+                            </IonButton>
                             <IonButton
                               onClick={() => removerCardTemp(index)}
                               className="btnRemoverCard"
@@ -711,7 +774,7 @@ const abrirModalEditarFlashcard = (id: number) => {
                               {card.conteudo_frente.map((item, i) => (
                                 <div key={i}>
                                   {item.tipo === 'texto' && <p>{item.valor}</p>}
-                                  {item.tipo === 'imagem' && <img src={item.valor} alt="frente" />}
+                                  {item.tipo === 'imagem' && item.valor && <img src={item.valor} alt="frente" className="image-preview-thumbnail" />}
                                   {item.tipo === 'arquivo' && <p>Arquivo: {item.nome}</p>}
                                 </div>
                               ))}
@@ -721,7 +784,7 @@ const abrirModalEditarFlashcard = (id: number) => {
                               {card.conteudo_verso.map((item, i) => (
                                 <div key={i}>
                                   {item.tipo === 'texto' && <p>{item.valor}</p>}
-                                  {item.tipo === 'imagem' && <img src={item.valor} alt="verso"  />}
+                                  {item.tipo === 'imagem' && item.valor && <img src={item.valor} alt="verso" className="image-preview-thumbnail" />}
                                   {item.tipo === 'arquivo' && <p>Arquivo: {item.nome}</p>}
                                 </div>
                               ))}
@@ -736,8 +799,18 @@ const abrirModalEditarFlashcard = (id: number) => {
                 <IonButton
                   expand="block"
                   className="btnSalvar bntSFlashcard"
-                  onClick={handleSalvarFlashcard}
-                  disabled={cardsTemp.length === 0}
+                  onClick={handleSalvarOuAtualizarFlashcard}
+                  disabled={
+                    novoFlashcardTitulo.trim() === '' ||
+                    topicoSelecionadoParaNovoFlashcard === null ||
+                    cardsTemp.length === 0 ||
+                    !cardsTemp.every(card => 
+                      (card.conteudo_frente.some(item => item.tipo === 'texto' && item.valor.trim() !== '') || 
+                       card.conteudo_frente.some(item => item.tipo === 'imagem' && item.valor.trim() !== '')) &&
+                      (card.conteudo_verso.some(item => item.tipo === 'texto' && item.valor.trim() !== '') || 
+                       card.conteudo_verso.some(item => item.tipo === 'imagem' && item.valor.trim() !== ''))
+                    )
+                  }
                 >
                   {flashcardIdParaEditar ? 'Salvar Alterações' : 'Salvar Flashcard'}
                 </IonButton>
@@ -747,9 +820,9 @@ const abrirModalEditarFlashcard = (id: number) => {
             {showCardEditor && (
               <>
                 <IonRow className="centroModal">
-                  <h3 className="modal-title">Editor de Card</h3>
+                  <h3 className="modal-title">{editingCardIndex !== null ? 'Editar Card' : 'Adicionar Card'}</h3>
                   <IonButton
-                    onClick={() => setShowCardEditor(false)}
+                    onClick={() => setShowCardEditorAndInitialData(false)}
                     color="medium"
                     fill="clear"
                   >
@@ -758,11 +831,10 @@ const abrirModalEditarFlashcard = (id: number) => {
                 </IonRow>
 
                 <CardEditor
-                  onSave={(frente, verso) => {
-                    setCardsTemp([...cardsTemp, { conteudo_frente: frente, conteudo_verso: verso }]);
-                    setShowCardEditor(false);
-                  }}
-                  onCancel={() => setShowCardEditor(false)}
+                  onSave={handleAddOrUpdateCardTemp}
+                  onCancel={() => setShowCardEditorAndInitialData(false)}
+                  conteudoFrenteInicial={cardEditorInitialFrente}
+                  conteudoVersoInicial={cardEditorInitialVerso}
                 />
               </>
             )}

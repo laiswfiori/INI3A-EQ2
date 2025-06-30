@@ -24,11 +24,6 @@ $router->group(['prefix' => 'password'], function () use ($router) {
     $router->post('reset', 'PasswordResetController@resetPassword');
 });
 
-
-//==========================================================================
-// ROTAS PROTEGIDAS (PRECISAM DE AUTENTICAÇÃO VIA MIDDLEWARE 'auth')
-//==========================================================================
-
 $router->group(['middleware' => 'auth'], function () use ($router) {
 
     // --- Rotas de Gerenciamento de Usuário e Perfil (prefixo 'api') ---

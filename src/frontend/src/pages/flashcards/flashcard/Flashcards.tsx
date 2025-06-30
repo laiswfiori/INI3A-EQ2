@@ -12,23 +12,25 @@ interface Card {
   id?: number;
   conteudo_frente: { tipo: string; valor: string; nome?: string }[];
   conteudo_verso: { tipo: string; valor: string; nome?: string }[];
+  nivelResposta?: string; 
 }
 
 const api = new API();
 
 const Flashcard: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>(); 
   const history = useHistory();
   const [cards, setCards] = useState<Card[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mostrarVerso, setMostrarVerso] = useState(false);
-  const [respostas, setRespostas] = useState<string[]>([]);
+  const [respostas, setRespostas] = useState<string[]>([]); 
 
   useEffect(() => {
     const fetchCards = async () => {
       try {
         const cardsData: Card[] = await api.get(`flashcards/${id}/cards`);
-        setCards(cardsData);
+        const initialCards = cardsData.map(card => ({ ...card, nivelResposta: card.nivelResposta || undefined }));
+        setCards(initialCards);
         setMostrarVerso(false);  
         setCurrentIndex(0);    
       } catch (error) {
@@ -43,22 +45,66 @@ const Flashcard: React.FC = () => {
     setMostrarVerso(false);
   }, [currentIndex]);
 
-  const handleEmojiClick = (nivel: string) => {
+  const handleEmojiClick = async (nivel: string) => {
     if (!mostrarVerso) return;
+
+    const currentCard = cards[currentIndex];
+    
+    if (currentCard && typeof currentCard.id === 'number') {
+      try {
+        await api.put(`cards/${currentCard.id}`, { nivel: nivel }); 
+      } catch (error) {
+        console.error(`Erro ao salvar nível do card ${currentCard.id} no BD:`, error);
+      }
+    }
 
     const novasRespostas = [...respostas, nivel];
     setRespostas(novasRespostas);
 
-    if (currentIndex + 1 < cards.length) {
+    const cardsAtualizadosComNivel = cards.map((card, idx) =>
+      idx === currentIndex ? { ...card, nivelResposta: nivel } : card
+    );
+    setCards(cardsAtualizadosComNivel);
+
+    if (currentIndex + 1 < cardsAtualizadosComNivel.length) {
       setCurrentIndex(currentIndex + 1);
       setMostrarVerso(false);
     } else {
-      history.push('/flashcards/relatorio', { respostas: novasRespostas });
+      const pontuacaoTotalFlashcard = cardsAtualizadosComNivel.reduce((acc, card) => {
+        switch (card.nivelResposta) {
+          case 'muito fácil': return acc + 1;
+          case 'fácil': return acc + 2;
+          case 'médio': return acc + 3;
+          case 'difícil': return acc + 4;
+          case 'muito difícil': return acc + 5;
+          default: return acc;
+        }
+      }, 0);
+      const mediaFlashcard = cardsAtualizadosComNivel.length ? pontuacaoTotalFlashcard / cardsAtualizadosComNivel.length : 0;
+
+      const nivelFlashcardString =
+        mediaFlashcard <= 1.5 ? 'muito fácil' : 
+        mediaFlashcard <= 2.5 ? 'fácil' : 
+        mediaFlashcard <= 3.5 ? 'médio' : 
+        mediaFlashcard <= 4.5 ? 'difícil' : 
+        'muito difícil'; 
+
+      try {
+        await api.put(`flashcards/${id}`, { nivel: nivelFlashcardString });
+      } catch (error) {
+        console.error(`Erro ao salvar nível do flashcard ${id} no BD:`, error);
+      }
+
+      history.push('/flashcards/relatorio', { respostas: novasRespostas, cardsComRespostas: cardsAtualizadosComNivel });
     }
   };
 
   const handleRevelarResposta = () => {
     setMostrarVerso(true);  
+  };
+
+  const handleVoltarFrente = () => {
+    setMostrarVerso(false);
   };
 
   if (cards.length === 0) {
@@ -86,6 +132,14 @@ const Flashcard: React.FC = () => {
     <IonPage>
       <Header />
       <IonContent className="pagFlashcards">
+        {mostrarVerso && (
+          <IonRow className="flexF" style={{ marginBottom: '10px' }}>
+            <IonButton expand="block" onClick={handleVoltarFrente} className="btnVerso">
+              Voltar para a Frente
+            </IonButton>
+          </IonRow>
+        )}
+
         <IonRow className="contF">
           <CardFlip
             frente={
