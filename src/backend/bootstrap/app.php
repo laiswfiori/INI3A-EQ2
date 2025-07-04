@@ -87,6 +87,7 @@ $app->register(App\Providers\EventServiceProvider::class);
 |--------------------------------------------------------------------------
 */
 
+
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
@@ -94,3 +95,5 @@ $app->router->group([
 });
 
 return $app;
+
+

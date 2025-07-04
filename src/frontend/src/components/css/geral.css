@@ -69,3 +69,147 @@
     margin-top: 2.5%;
     margin-bottom: 2.5%;
 }
+
+
+.popoverPosicao {
+  position: fixed !important;
+  bottom: auto !important;
+  left: auto !important;
+  --width: 400px;
+  --min-height: 80px;
+  width: var(--width) !important;
+  max-width: 90vw !important;
+  z-index: 9999;
+  background: rgb(214, 221, 228) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden !important;
+  padding: 0.5rem;
+  border-radius: 8px;
+  --height: 150px !important;
+  height: 150px !important;
+}
+
+.ion-delegate-host {
+    height: 150px !important;
+  }
+
+    .popoverPosicao ion-content::part(scroll) {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 150px !important;
+  }
+
+.popoverPosicao .popover-content {
+  max-height: none !important;
+  height: auto !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding-right: 0 !important;
+}
+
+.popoverPosicao {
+  --background: rgb(214, 221, 228) !important;
+  --ion-background-color: rgb(214, 221, 228) !important;
+}
+
+.popoverPosicao .popover-content {
+  background: rgb(214, 221, 228) !important;
+}
+
+.popoverPosicao #background-content {
+  background: rgb(214, 221, 228) !important;
+}
+
+.grid-popover-container {
+  width: 100%;
+  height: 100% !important;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: rgb(214, 221, 228);
+}
+
+.popover-col1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  min-height: 0;
+}
+
+.popover-col2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 60%;
+  height: auto !important;
+}
+
+.contIP {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#contIP {
+  width: 50%;
+  height: 50%;
+  background-color: rgb(235, 245, 255);
+  border-radius: 10px;
+}
+
+.popoverPosicao ion-content {
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+}
+
+.popoverPosicao {
+  min-height: unset !important;
+}
+
+.popoverPosicao ion-content {
+  display: block !important;
+  height: auto !important;
+  min-height: 80px !important;
+  max-height: none !important;
+}
+
+.popoverPosicao #header {
+  height: 150px !important;
+  min-height: 150px !important;
+  max-height: 150px !important;
+}
+
+.popoverPosicao .popover-content {
+  display: block !important;
+  height: auto !important;
+  min-height: 80px !important;
+  max-height: none !important;
+}
+
+.grid-popover-container {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: auto !important;
+  min-height: 80px !important;
+  height: 150px !important;
+}
+
+.popoverPosicao::part(content),
+.popoverPosicao::part(container),
+.popoverPosicao::part(background),
+.popoverPosicao::part(delegate-host) {
+  display: block !important;
+  height: auto !important;
+  min-height: 80px !important;
+  max-height: none !important;
+  overflow: visible !important;
+}

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonHeader, IonToolbar, IonImg, IonTabButton, IonIcon, IonLabel } from '@ionic/react';
-import { home, calendar, star, documentText, personCircle } from 'ionicons/icons';
+import { IonHeader, IonToolbar, IonImg, IonTabButton, IonIcon, IonLabel, IonPopover, IonContent, IonButton, IonCol, IonRow } from '@ionic/react';
+import { home, calendar, star, documentText, personCircle, notifications, close} from 'ionicons/icons';
 import './css/ui.css';
 import './css/geral.css';
 import './css/layouts.css';
@@ -9,6 +9,8 @@ import './css/layouts.css';
 const Header: React.FC = () => {
   const history = useHistory();
   const [menuAberto, setMenuAberto] = useState(false);
+  const navRef = useRef<HTMLDivElement | null>(null);
+  const [mostrarPopover, setMostrarPopover] = useState(false);
 
   const isAuthenticated = () => {
     const token = localStorage.getItem('token');
@@ -56,6 +58,28 @@ const Header: React.FC = () => {
     setMenuAberto(!menuAberto);
   };
 
+  useEffect(() => {
+    const ultimo = localStorage.getItem('ultimaExibicaoPopover');
+    const agora = Date.now();
+
+    if (!ultimo || agora - parseInt(ultimo) > 3 * 60 * 60 * 1000) {
+      setMostrarPopover(true);
+      localStorage.setItem('ultimaExibicaoPopover', agora.toString());
+    }
+
+    const intervalo = setInterval(() => {
+      const ultimoSalvo = localStorage.getItem('ultimaExibicaoPopover');
+      const agoraAtual = Date.now();
+
+      if (!ultimoSalvo || agoraAtual - parseInt(ultimoSalvo) > 3 * 60 * 60 * 1000) {
+        setMostrarPopover(true);
+        localStorage.setItem('ultimaExibicaoPopover', agoraAtual.toString());
+      }
+    }, 1 * 1000); 
+
+    return () => clearInterval(intervalo);
+  }, []);
+
   return (
     <IonHeader>
       <IonToolbar>
@@ -64,7 +88,7 @@ const Header: React.FC = () => {
             <IonImg src="/imgs/logoInicio.png" alt="Logo FSMR" id="logo" onClick={navHome}/>
           </div>
 
-          <div id="nav" className="azul">
+          <div id="nav" className="azul" ref={navRef}>
               <div>
                 <IonTabButton className="azul" tab="agenda" onClick={navAgenda}>
                   <IonIcon icon={calendar} className="icones"/>
@@ -92,6 +116,52 @@ const Header: React.FC = () => {
             </IonTabButton>
           </div>     
         </div>
+       <IonButton
+          id="popover-trigger"
+          ref={(el) => {
+            if (el && navRef.current) {
+              const navRect = navRef.current.getBoundingClientRect();
+              el.style.position = 'fixed'; 
+              el.style.top = `${navRect.bottom + 5}px`;
+              el.style.right = '20px';
+              el.style.display = 'none'; 
+            }
+          }}
+        ></IonButton>
+
+        <IonPopover
+          isOpen={mostrarPopover}
+          onDidDismiss={() => setMostrarPopover(false)}
+          trigger="popover-trigger"
+          side="bottom"
+          alignment="end"
+          className="popoverPosicao"
+        >
+          <IonContent className="ion-padding" >
+            <div className="grid-popover-container">
+              <div className="popover-col1">
+                <div className="contIP" id="contIP">
+                  <IonIcon icon={notifications} className="iconesPopover"/>
+                </div>
+              </div>
+              <div className="popover-col2">
+                <IonRow>
+                  <p>Hora de revisar!</p>
+                </IonRow>
+                <IonRow>
+                  <p>Lembre-se de sempre revisar seus flashcards.</p>
+                </IonRow>
+              </div>
+              <div className="popover-col1">
+                <div className="contIP">
+                  <IonIcon icon={close} className="iconesPopover" onClick={() => setMostrarPopover(false)}
+  style={{ cursor: 'pointer' }}/>
+                </div>
+              </div>
+            </div>
+          </IonContent>
+        </IonPopover>
+
         <div id="headerMobile" className="azul">
           <IonImg src="/imgs/logo1.png" alt="Logo FSMR" id="logoMobile"/>
 
@@ -111,7 +181,7 @@ const Header: React.FC = () => {
           
         </div>
         {menuAberto && (
-          <div id="mobileMenu" className="azul">
+          <div id="mobileMenu" className="azul" ref={navRef}>
             <div id="linksMenu">
                 <div className="menu2" onClick={navAgenda}>
                   <IonIcon icon={calendar} className="iconesMobile" />

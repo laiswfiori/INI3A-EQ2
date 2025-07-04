@@ -61,3 +61,52 @@
     font-size: 1.1rem !important;
   }
 }
+
+@media (max-width: 767px) {
+  .popoverPosicao {
+    --width: 100% !important;
+    width: 100% !important;
+    --height: 120px !important;
+    height: 120px !important;
+    left: 0 !important;
+    right: auto !important;
+    border-radius: 0 !important;
+    transform: none !important;
+  }
+
+  .popoverPosicao #header {
+    height: 120px !important;
+    min-height: 120px !important;
+    max-height: 120px !important;
+  }
+
+  .grid-popover-container {
+    flex-direction: row !important; 
+    height: 100% !important;
+  }
+
+  .popoverPosicao ion-content::part(scroll) {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 120px !important;
+  }
+
+  .ion-delegate-host {
+    height: 120px !important;
+  }
+
+  .popover-col2 {
+    width: 80% !important;
+    height: 100% !important;
+  }
+  .popoverPosicao::part(content),
+.popoverPosicao::part(container),
+.popoverPosicao::part(background),
+.popoverPosicao::part(delegate-host) {
+  width: 100% !important;
+  left: 0 !important;
+  right: auto !important;
+  transform: none !important;
+  border-radius: 0 !important;
+}
+}
