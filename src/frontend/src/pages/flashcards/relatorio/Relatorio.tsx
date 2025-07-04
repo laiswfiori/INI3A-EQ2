@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonPage, IonContent, IonRow, IonCol, IonButton, IonGrid, IonIcon } from '@ionic/react';
-import { cellular, layers, print } from 'ionicons/icons'; 
+import { cellular, layers, print, checkmarkDone } from 'ionicons/icons'; 
 import { useLocation } from 'react-router-dom';
 import Header from '../../../components/Header';
 import './css/geral.css';
@@ -20,6 +20,7 @@ const Relatorio: React.FC = () => {
   const cardsComRespostas = location.state?.cardsComRespostas || [];
 
   const totalCardsFeitos = respostas.length;
+  const totalAcertos = respostas.filter(r => r === 'muito fácil' || r === 'fácil').length;
 
   const pontuacao = respostas.reduce((acc, val) => {
     switch (val) {
@@ -72,6 +73,20 @@ const Relatorio: React.FC = () => {
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
+                  <p className="txtGrande">{totalAcertos}</p>
+                </IonCol>
+                <IonCol className="altD iconFim">
+                  <IonIcon icon={checkmarkDone} className="iconesTF" />
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <p className="txtTF">Total de cards fáceis ou muito fáceis</p>
+              </IonRow>
+            </IonRow>
+
+            <IonRow className="estDivs">
+              <IonRow className="espDiv">
+                <IonCol className="altD">
                   <p className="txtGrande">{nivelFlashcard}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
@@ -85,9 +100,16 @@ const Relatorio: React.FC = () => {
             </IonRow>
           </IonRow>
 
-          <IonRow className="rowsRelatorio" style={{ marginTop: '30px', borderTop: '1px solid #eee', paddingTop: '20px' }}>
+          <IonRow className="rowsRelatorio centroRelatorio">
+            <IonButton onClick={gerarRelatorio} className="btnRelatorio">
+              <IonIcon icon={print} className="iconeImpressora" />
+              Gerar Relatório
+            </IonButton>
+          </IonRow>
+
+          <IonRow className="rowsRelatorio centroCards">
             <IonCol size="12">
-              <h2 className="preto" style={{ marginBottom: '20px' }}>Detalhes por Card:</h2>
+              <h2 className="preto" id="txtDetalhes">Detalhes por card:</h2>
             </IonCol>
             {cardsComRespostas.map((card, index) => (
               <IonCol size="12" sizeSm="6" sizeMd="4" sizeLg="3" key={index} style={{ marginBottom: '15px' }}>
@@ -122,13 +144,6 @@ const Relatorio: React.FC = () => {
                 </div>
               </IonCol>
             ))}
-          </IonRow>
-
-          <IonRow className="rowsRelatorio centroRelatorio">
-            <IonButton onClick={gerarRelatorio} className="btnRelatorio">
-              <IonIcon icon={print} className="iconeImpressora" />
-              Gerar Relatório
-            </IonButton>
           </IonRow>
         </IonGrid>
       </IonContent>

@@ -32,3 +32,16 @@ p {
     padding: 0;
     margin: 1%;;
 }
+
+.centroCards {
+    margin-top: 2%;
+    border-top: 2px solid #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#txtDetalhes {
+    text-align: center;
+}
