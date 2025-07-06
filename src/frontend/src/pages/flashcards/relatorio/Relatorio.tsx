@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { IonPage, IonContent, IonRow, IonCol, IonButton, IonGrid, IonIcon } from '@ionic/react';
-import { cellular, layers, print, checkmarkDone } from 'ionicons/icons'; 
+import { cellular, layers, print, checkmarkDone, download } from 'ionicons/icons';
 import { useLocation } from 'react-router-dom';
+import { getUserProfile } from '../../../lib/endpoints';
+import { useReactToPrint } from 'react-to-print';
 import Header from '../../../components/Header';
+import RelatorioPDF from './RelatorioPDF';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layouts.css';
@@ -15,12 +18,31 @@ interface Card {
 }
 
 const Relatorio: React.FC = () => {
-  const location = useLocation<{ respostas: string[]; cardsComRespostas: Card[] }>();
+  const location = useLocation<{ nomeDeck: string; respostas: string[]; cardsComRespostas: Card[] }>();
   const respostas = location.state?.respostas || [];
   const cardsComRespostas = location.state?.cardsComRespostas || [];
+  const nomeDeck = location.state?.nomeDeck || 'Deck';
+
+  const [nomeUsuario, setNomeUsuario] = useState<string>('Usuário');
+  const pdfRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchNome = async () => {
+      try {
+        const user = await getUserProfile();
+        const nomeCompleto = `${user.name} ${user.surname}`;
+        setNomeUsuario(nomeCompleto);
+      } catch (error) {
+        console.error("Erro ao buscar nome do usuário:", error);
+        setNomeUsuario('Usuário');
+      }
+    };
+    fetchNome();
+  }, []);
 
   const totalCardsFeitos = respostas.length;
   const totalAcertos = respostas.filter(r => r === 'muito fácil' || r === 'fácil').length;
+  const totalNaoFaceis = respostas.filter(r => r === 'médio' || r === 'difícil' || r === 'muito difícil').length;
 
   const pontuacao = respostas.reduce((acc, val) => {
     switch (val) {
@@ -41,15 +63,24 @@ const Relatorio: React.FC = () => {
     media <= 3.5 ? 'médio' :
     media <= 4.5 ? 'difícil' : 'muito difícil';
 
-  const gerarRelatorio = () => {
-    window.print();
-  };
+  const handlePrint = useReactToPrint({
+    content: () => pdfRef.current,
+    pageStyle: `
+      @page { size: auto; margin: 10mm; }
+      @media print {
+        body { -webkit-print-color-adjust: exact; }
+        .no-print { display: none !important; }
+      }
+    `,
+    documentTitle: `Relatório_${nomeDeck}_${new Date().toLocaleDateString()}`,
+    removeAfterPrint: false
+  });
 
   return (
     <IonPage className="pagina">
       <Header />
       <IonContent>
-        <IonGrid id="bodyRelatorio">
+        <IonGrid id="bodyRelatorio" className="no-print">
           <IonRow className="rowsRelatorio centroRelatorio">
             <h1 className="preto">Parabéns, você concluiu esse deck!</h1>
             <p id="pCentro">Você finalizou todos os flashcards desta etapa com sucesso.</p>
@@ -100,10 +131,14 @@ const Relatorio: React.FC = () => {
             </IonRow>
           </IonRow>
 
-          <IonRow className="rowsRelatorio centroRelatorio">
-            <IonButton onClick={gerarRelatorio} className="btnRelatorio">
+          <IonRow className="rowsRelatorio centrobtns">
+            <IonButton onClick={handlePrint} className="btnRelatorio">
               <IonIcon icon={print} className="iconeImpressora" />
-              Gerar Relatório
+              Gerar relatório
+            </IonButton>
+            <IonButton onClick={() => window.print()} className="btnRelatorio">
+              <IonIcon icon={download} className="iconeImpressora" />
+              Salvar estatísticas
             </IonButton>
           </IonRow>
 
@@ -124,28 +159,49 @@ const Relatorio: React.FC = () => {
                       }
                       if (primeiroTexto) {
                         const displayContent = primeiroTexto.valor.length > 50 ? primeiroTexto.valor.substring(0, 47) + '...' : primeiroTexto.valor;
-                        return <p style={{ fontSize: '0.8em', margin: 0, padding: 0 }}>{displayContent}</p>;
+                        return <p style={{ fontSize: '0.8em', margin: 0 }}>{displayContent}</p>;
                       }
-                      return <p style={{ fontSize: '0.8em', margin: 0, padding: 0 }}>[Sem Conteúdo]</p>;
+                      return <p style={{ fontSize: '0.8em', margin: 0 }}>[Sem Conteúdo]</p>;
                     })()}
                   </div>
-                  <p style={{ fontSize: '0.9em', margin: '0', color: '#666' }}>
-                    <strong>Resposta:</strong> <span style={{ color: (() => {
-                      switch (card.nivelResposta) {
-                        case 'muito fácil': return '#1e7e34';
-                        case 'fácil': return '#28a745';
-                        case 'médio': return '#ffc107';
-                        case 'difícil': return '#fd7e14';
-                        case 'muito difícil': return '#dc3545';
-                        default: return '#000';
-                      }
-                    })(), fontWeight: 'bold' }}>{card.nivelResposta || 'Não Avaliado'}</span>
+                  <p style={{ fontSize: '0.9em', margin: 0, color: '#666' }}>
+                    <strong>Resposta:</strong>{' '}
+                    <span style={{
+                      color: (() => {
+                        switch (card.nivelResposta) {
+                          case 'muito fácil': return '#1e7e34';
+                          case 'fácil': return '#28a745';
+                          case 'médio': return '#ffc107';
+                          case 'difícil': return '#fd7e14';
+                          case 'muito difícil': return '#dc3545';
+                          default: return '#000';
+                        }
+                      })(),
+                      fontWeight: 'bold'
+                    }}>
+                      {card.nivelResposta || 'Não Avaliado'}
+                    </span>
                   </p>
                 </div>
               </IonCol>
             ))}
           </IonRow>
         </IonGrid>
+
+        <div style={{ position: 'fixed', left: '-10000px', top: 'auto' }}>
+          <div ref={pdfRef}>
+            <RelatorioPDF
+              nome={nomeUsuario}
+              deck={nomeDeck}
+              total={totalCardsFeitos}
+              tempoTotal="10min"
+              tempoPorCard="1min"
+              revisar={totalNaoFaceis}
+              faceis={totalAcertos}
+              naoFaceis={totalNaoFaceis}
+            />
+          </div>
+        </div>
       </IonContent>
     </IonPage>
   );

@@ -224,26 +224,59 @@
     background-color: #ea7317;
 }
 
-
 @media (max-width: 768px) {
-  .card-editor-modal {
-    --width: 80% !important;
-    --height: 90%;
-  }
-  
-  .card-sides-container {
-    flex-direction: column;
-    gap: 12px;
-  }
-  
   .card-side {
-    min-height: 200px;
+    position: relative !important;
+    overflow: visible !important;
+    padding-right: 48px !important;
   }
-  
+
+  .image-button {
+    position: absolute !important;
+    top: 120px !important;
+    left: 16px !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    font-size: 22px !important;
+    z-index: 20 !important;
+  }
+
   .content-preview {
-    max-height: 150px;
+    margin-bottom: 16px !important;
+    min-height: 200px !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+  }
+
+  .card-side {
+    min-height: 400px !important;
+    max-height: none !important;
+  }
+
+  .card-sides-container {
+    flex-direction: column !important;
+    gap: 16px !important;
+    max-height: 75vh !important;
+    overflow-y: auto !important;
+  }
+
+  .card-editor-container {
+    overflow-y: auto !important;
+    height: 100% !important;
+  }
+
+  .action-row {
+    position: sticky !important;
+    background: white !important;
+    padding: 12px 0 !important;
+    border-top: 1px solid #eee !important;
+    z-index: 10 !important;
   }
 }
+
+
 
 ion-modal {
   --max-height: 90vh;

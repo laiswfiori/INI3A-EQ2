@@ -11,7 +11,6 @@ import API from '../../../lib/api';
 import AvaliarModal from './AvaliarModal'; 
 import { validarCamposAtividade } from '../../../utils/erros';
 
-
 interface Atividade {
   id: number;
   topico_id: number;
@@ -44,51 +43,50 @@ const Atividades: React.FC = () => {
 
   
   const adicionarTextoAoConteudo = (texto: string) => {
-  setNovaAtividade(prev => ({
-    ...prev,
-    conteudo: [...prev.conteudo, { tipo: 'texto', valor: texto }]
-  }));
-};
+    setNovaAtividade(prev => ({
+      ...prev,
+      conteudo: [...prev.conteudo, { tipo: 'texto', valor: texto }]
+    }));
+  };
 
-const adicionarImagemAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setNovaAtividade(prev => ({
-        ...prev,
-        conteudo: [...prev.conteudo, { tipo: 'imagem', valor: reader.result as string }]
-      }));
-    };
-    reader.readAsDataURL(file);
-  }
-};
+  const adicionarImagemAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNovaAtividade(prev => ({
+          ...prev,
+          conteudo: [...prev.conteudo, { tipo: 'imagem', valor: reader.result as string }]
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setNovaAtividade(prev => ({
-        ...prev,
-        conteudo: [...prev.conteudo, {
-          tipo: 'arquivo',
-          valor: reader.result as string,
-          nome: file.name
-        }]
-      }));
-    };
-    reader.readAsDataURL(file);
-  }
-};
-    const removerItemConteudo = (index: number) => {
-      setNovaAtividade(prev => ({
-        ...prev,
-        conteudo: prev.conteudo.filter((_, idx) => idx !== index)
-      }));
-    };
+  const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNovaAtividade(prev => ({
+          ...prev,
+          conteudo: [...prev.conteudo, {
+            tipo: 'arquivo',
+            valor: reader.result as string,
+            nome: file.name
+          }]
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-
+  const removerItemConteudo = (index: number) => {
+    setNovaAtividade(prev => ({
+      ...prev,
+      conteudo: prev.conteudo.filter((_, idx) => idx !== index)
+    }));
+  };
 
   const alterarStatus = async (atividade: Atividade, novoStatus: string) => {
     const api = new API();
@@ -105,7 +103,6 @@ const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
       alert('Erro ao atualizar o status da atividade.');
     }
   };
-  
 
   const [novaAtividade, setNovaAtividade] = useState({
     titulo: '',
@@ -155,55 +152,55 @@ const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNovaAtividade({ ...novaAtividade, [field]: value });
   };
 
-const handleSalvar = async () => {
-  const erro = validarCamposAtividade(novaAtividade);
-  if (erro) {
-    alert(erro);
-    return;
-  }
-
-  const conteudoFinal = textoTemp.trim()
-    ? [...novaAtividade.conteudo, { tipo: 'texto', valor: textoTemp.trim() }]
-    : novaAtividade.conteudo;
-
-  try {
-    const api = new API();
-    const endpoint = modoModal === 'editar'
-      ? `atividades/${atividadeSelecionada?.id}`
-      : `atividades`;
-
-    const method = modoModal === 'editar' ? api.put : api.post;
-
-    const data = await method.call(api, endpoint, {
-      ...novaAtividade,
-      conteudo: conteudoFinal,
-    });
-
-    if (modoModal === 'editar') {
-      setAtividades(prev =>
-        prev.map(a => a.id === atividadeSelecionada?.id ? data : a)
-      );
-    } else {
-      setAtividades(prev => [...prev, data]);
+  const handleSalvar = async () => {
+    const erro = validarCamposAtividade(novaAtividade);
+    if (erro) {
+      alert(erro);
+      return;
     }
 
-    setTextoTemp('');
-    setNovaAtividade({
-      titulo: '',
-      descricao: '',
-      topico_id: novaAtividade.topico_id,
-      status: 'não iniciado',
-      tipo: '',
-      conteudo: [],
-    });
+    const conteudoFinal = textoTemp.trim()
+      ? [...novaAtividade.conteudo, { tipo: 'texto', valor: textoTemp.trim() }]
+      : novaAtividade.conteudo;
 
-    setShowModal(false);
-    setShowPopover(false);
-  } catch (error: any) {
-    console.error(`Erro ao ${modoModal === 'editar' ? 'editar' : 'adicionar'} atividade:`, error);
-    alert(error?.response?.data?.message || 'Erro ao salvar atividade');
-  }
-};
+    try {
+      const api = new API();
+      const endpoint = modoModal === 'editar'
+        ? `atividades/${atividadeSelecionada?.id}`
+        : `atividades`;
+
+      const method = modoModal === 'editar' ? api.put : api.post;
+
+      const data = await method.call(api, endpoint, {
+        ...novaAtividade,
+        conteudo: conteudoFinal,
+      });
+
+      if (modoModal === 'editar') {
+        setAtividades(prev =>
+          prev.map(a => a.id === atividadeSelecionada?.id ? data : a)
+        );
+      } else {
+        setAtividades(prev => [...prev, data]);
+      }
+
+      setTextoTemp('');
+      setNovaAtividade({
+        titulo: '',
+        descricao: '',
+        topico_id: novaAtividade.topico_id,
+        status: 'não iniciado',
+        tipo: '',
+        conteudo: [],
+      });
+
+      setShowModal(false);
+      setShowPopover(false);
+    } catch (error: any) {
+      console.error(`Erro ao ${modoModal === 'editar' ? 'editar' : 'adicionar'} atividade:`, error);
+      alert(error?.response?.data?.message || 'Erro ao salvar atividade');
+    }
+  };
 
   const handleEditar = () => {
     if (atividadeSelecionada) {
@@ -278,7 +275,6 @@ const handleSalvar = async () => {
     }
   };
 
-
   return (
     <IonPage className={`pagina ${showModal ? 'desfocado' : ''}`}>
       <Header />
@@ -294,50 +290,57 @@ const handleSalvar = async () => {
           <p className="error-message">{error}</p>
         ) : (
           <IonList className="atividades-list">
-            {atividades.map((atividade) => (
-              <IonItem key={atividade.id} className={`atividade-item ${atividade.status === 'concluído' ? 'concluida' : ''}`}>
-                  <IonRow className="containerAtividade">
-                    <IonIcon icon={documentText} className="livro" />
-                    <IonCol className="td">
-                      <h2 className="txtTitMat">
-                        {atividade.titulo}
-                      </h2>
-                      <p className="sRisco">{atividade.descricao}</p>
+            {atividades
+              .slice()
+              .sort((a, b) => {
+                if (a.status === 'concluído' && b.status !== 'concluído') return 1;
+                if (a.status !== 'concluído' && b.status === 'concluído') return -1;
+                return 0;
+              })
+              .map((atividade) => (
+                <IonItem key={atividade.id} className={`atividade-item ${atividade.status === 'concluído' ? 'concluida' : ''}`}>
+                    <IonRow className="containerAtividade">
+                      <IonIcon icon={documentText} className="livro" />
+                      <IonCol className="td">
+                        <h2 className="txtTitMat">
+                          {atividade.titulo}
+                        </h2>
+                        <p className="sRisco">{atividade.descricao}</p>
                         <p className="sRisco">Tipo: {atividade.tipo}</p>
-                    </IonCol>
-                    <IonCol id="containerConfig">
-                      <IonButton
-                        id={`config-btn-${atividade.id}`}
-                        className="config"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setAtividadeSelecionada(atividade);
-                          setPopoverEvent(e.nativeEvent);
-                          setShowPopover(true);
-                        }}
-                      >
-                        ...
-                      </IonButton>
-                    </IonCol>
-                    <IonRow className="contIrTopicos">
-                      {atividade.status === 'não iniciado' && (
+                      </IonCol>
+                      <IonCol id="containerConfig">
                         <IonButton
-                          expand="block"
-                          className="btnIC"
-                          id="btnRaio"
-                          onClick={async () => {
-                            await alterarStatus(atividade, 'em andamento');
-                            history.push(`/atividades/${atividade.id}`);
+                          id={`config-btn-${atividade.id}`}
+                          className="config"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setAtividadeSelecionada(atividade);
+                            setPopoverEvent(e.nativeEvent);
+                            setShowPopover(true);
                           }}
                         >
-                          <IonIcon icon={flash} className="iconesPopover" id="raio"/>
-                          Iniciar
+                          ...
                         </IonButton>
-                      )}
+                      </IonCol>
+                      <IonRow className="contIrTopicos">
+                        {atividade.status === 'não iniciado' && (
+                          <IonButton
+                            expand="block"
+                            className="btnIC"
+                            id="btnRaio"
+                            onClick={async () => {
+                              await alterarStatus(atividade, 'em andamento');
+                              history.push(`/atividades/${atividade.id}`);
+                            }}
+                          >
+                            <IonIcon icon={flash} className="iconesPopover" id="raio"/>
+                            Iniciar
+                          </IonButton>
+                        )}
 
-                      {atividade.status === 'em andamento' && (
-                        <>
-                           <IonButton
+                        {atividade.status === 'em andamento' && (
+                          <>
+                            <IonButton
                               expand="block"
                               className="btnIC"
                               id="btnCheck"
@@ -347,6 +350,19 @@ const handleSalvar = async () => {
                               Concluir
                             </IonButton>
 
+                            <IonButton
+                              expand="block"
+                              className="btnIC"
+                              id="btnVer"
+                              onClick={() => history.push(`/atividades/${atividade.id}`)}
+                            >
+                              <IonIcon icon={arrowForward} className="iconesPopover" />
+                              Ver
+                            </IonButton>
+                          </>
+                        )}
+
+                        {atividade.status === 'concluído' && (
                           <IonButton
                             expand="block"
                             className="btnIC"
@@ -356,24 +372,11 @@ const handleSalvar = async () => {
                             <IonIcon icon={arrowForward} className="iconesPopover" />
                             Ver
                           </IonButton>
-                        </>
-                      )}
-
-                      {atividade.status === 'concluído' && (
-                        <IonButton
-                          expand="block"
-                          className="btnIC"
-                          id="btnVer"
-                          onClick={() => history.push(`/atividades/${atividade.id}`)}
-                        >
-                          <IonIcon icon={arrowForward} className="iconesPopover" />
-                          Ver
-                        </IonButton>
-                      )}
+                        )}
+                      </IonRow>
                     </IonRow>
-                  </IonRow>
-              </IonItem>
-            ))}
+                </IonItem>
+              ))}
           </IonList>
         )}
 
@@ -466,36 +469,34 @@ const handleSalvar = async () => {
                 style={{ display: 'none' }}
               />
               <div className="conteudo-preview" style={{ marginTop: '10px' }}>
-                  {novaAtividade.conteudo.map((item, idx) => (
-                    <div key={idx} className="preview-item">
-                      {item.tipo === 'texto' && (
-                        <p>{item.valor}</p>
-                      )}
-                      {item.tipo === 'imagem' && (
-                        <div className="preview-img-container">
-                          <img src={item.valor} alt="imagem" className="preview-img"/>
-                          <IonIcon 
-                            icon={close} 
-                            className="icone-remover" 
-                            onClick={() => removerItemConteudo(idx)} 
-                          />
-                        </div>
-                      )}
-                      {item.tipo === 'arquivo' && (
-                        <div className="preview-arquivo">
-                          <a href={item.valor} download={item.nome}>{item.nome}</a>
-                          <IonIcon 
-                            icon={close} 
-                            className="icone-remover" 
-                            onClick={() => removerItemConteudo(idx)} 
-                          />
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-
+                {novaAtividade.conteudo.map((item, idx) => (
+                  <div key={idx} className="preview-item">
+                    {item.tipo === 'texto' && (
+                      <p>{item.valor}</p>
+                    )}
+                    {item.tipo === 'imagem' && (
+                      <div className="preview-img-container">
+                        <img src={item.valor} alt="imagem" className="preview-img"/>
+                        <IonIcon 
+                          icon={close} 
+                          className="icone-remover" 
+                          onClick={() => removerItemConteudo(idx)} 
+                        />
+                      </div>
+                    )}
+                    {item.tipo === 'arquivo' && (
+                      <div className="preview-arquivo">
+                        <a href={item.valor} download={item.nome}>{item.nome}</a>
+                        <IonIcon 
+                          icon={close} 
+                          className="icone-remover" 
+                          onClick={() => removerItemConteudo(idx)} 
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
 
               <IonRow className="flexInicio">
                 <IonIcon 

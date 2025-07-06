@@ -13,7 +13,7 @@ export default class API {
 
   async makeRequest(method: string, endpoint: string, data: any = null, token: string | null = null) {
     const authToken = this.getToken(token);
-    const url = `${this.apiUrl}/${endpoint}`;
+    const url = `${this.apiUrl.replace(/\/$/, '')}/${endpoint.replace(/^\//, '')}`;
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };

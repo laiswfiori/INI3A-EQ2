@@ -1,8 +1,7 @@
-// CardEditor.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import { IonButton, IonIcon, IonRow, IonTextarea, IonLabel } from '@ionic/react';
 import { image, close } from 'ionicons/icons';
-import './css/ui.css'; // Certifique-se de que seu CSS está correto
+import './css/ui.css'; 
 
 interface ConteudoItem {
   tipo: 'texto' | 'imagem' | 'arquivo';
@@ -26,7 +25,6 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel, conteudoFrent
   const inputImagemFrenteRef = useRef<HTMLInputElement>(null);
   const inputImagemVersoRef = useRef<HTMLInputElement>(null);
 
-  // UseEffect para inicializar os estados com os valores iniciais (para edição)
   useEffect(() => {
     const textoFrenteItem = conteudoFrenteInicial.find(c => c.tipo === 'texto');
     const imagensFrenteItens = conteudoFrenteInicial.filter(c => c.tipo === 'imagem');
@@ -37,7 +35,7 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel, conteudoFrent
     const imagensVersoItens = conteudoVersoInicial.filter(c => c.tipo === 'imagem');
     setTextoVerso(textoVersoItem?.valor || '');
     setImagensVerso(imagensVersoItens);
-  }, [conteudoFrenteInicial, conteudoVersoInicial]); // Dependências garantem que ele re-renderize quando os dados iniciais mudam
+  }, [conteudoFrenteInicial, conteudoVersoInicial]);
 
   const handleAddImagem = (e: React.ChangeEvent<HTMLInputElement>, lado: 'frente' | 'verso') => {
     const file = e.target.files?.[0];
@@ -53,7 +51,7 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel, conteudoFrent
         else setImagensVerso(prev => [...prev, novoItem]);
       };
       reader.readAsDataURL(file);
-      e.target.value = ''; // Limpa o input file para permitir adicionar a mesma imagem novamente
+      e.target.value = ''; 
     }
   };
 
@@ -62,8 +60,7 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel, conteudoFrent
     else setImagensVerso(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Condição para habilitar o botão "Salvar Card"
-  // Habilita se houver texto OU imagem em AMBOS os lados (frente e verso)
+
   const podeSalvar =
     (textoFrente.trim() !== '' || imagensFrente.length > 0) &&
     (textoVerso.trim() !== '' || imagensVerso.length > 0);
@@ -130,6 +127,7 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel, conteudoFrent
             accept="image/*"
             ref={inputImagemVersoRef}
             onChange={e => handleAddImagem(e, 'verso')}
+            className="inputImg"
             style={{ display: 'none' }}
           />
           <IonButton fill="clear" onClick={() => inputImagemVersoRef.current?.click()} className="image-button">

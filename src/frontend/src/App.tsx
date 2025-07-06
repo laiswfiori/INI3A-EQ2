@@ -13,6 +13,8 @@ import Perfil from './pages/perfil/Perfil';
 import Configuracoes from './pages/configuracoes/Configuracoes';
 import Agenda from './pages/agenda/Agenda';
 import Flashcards from './pages/flashcards/flashcard/Flashcards';
+import CardsMateria from './pages/flashcards/flashcard/CardsMateria';
+import RevisaoGeral from './pages/flashcards/flashcard/RevisaoGeral';
 import TelaInicialFlashcards from './pages/flashcards/telaInicial/TelaInicialFlashcards';
 import Relatorio from './pages/flashcards/relatorio/Relatorio';
 import Confirmar from './pages/senha/confirmar/Confirmar';
@@ -85,7 +87,10 @@ const App: React.FC = () => (
         <Route path="/materias/:id" component={Topicos} exact />
         <Route path="/topicos/:id" component={Atividades} exact />
         <Route path="/atividades/:id" component={Atividade} exact />
-        <Route path="/flashcard/:id" component={Flashcards} />
+
+        <Route path="/flashcard/revisaoGeral" component={RevisaoGeral} exact />
+        <Route path="/flashcard/materia/:id" component={CardsMateria} exact />
+        <Route path="/flashcard/:id(\d+)" component={Flashcards} exact />
 
         {}
         <Route exact path="/">

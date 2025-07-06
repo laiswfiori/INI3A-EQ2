@@ -274,3 +274,7 @@ ion-popover::part(backdrop) {
   transform: scale(0.9);
   opacity: 0.5;
 }
+
+.ion-delegate-host {
+  height: 100% !important;
+}

@@ -67,12 +67,14 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
 
     // --- Rotas de Flashcards ---
     $router->group(['prefix' => 'flashcards'], function () use ($router) {
+        $router->get('/todos', 'FlashcardsController@revisaoGeral');
+        $router->get('/materia/{id}', 'FlashcardsController@porMateria');
+        $router->get('/{id}/cards', 'FlashcardsController@cards');
         $router->get('/', 'FlashcardsController@index');
         $router->post('/', 'FlashcardsController@store');
         $router->get('/{id}', 'FlashcardsController@show');
         $router->put('/{id}', 'FlashcardsController@update');
         $router->delete('/{id}', 'FlashcardsController@destroy');
-        $router->get('/{id}/cards', 'FlashcardsController@cards'); //Bia
     });
 
     // --- Rotas de Cards ---

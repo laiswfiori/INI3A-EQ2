@@ -332,3 +332,14 @@ ion-modal.modalFlashcards::part(content) {
     display: flex;
     justify-content: space-between;
 }
+
+.colRC {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.scroll-modal {
+    max-height: 100% !important;
+    min-height: 100% !important;
+    height: 100% !important;
+}

@@ -21,6 +21,14 @@
     justify-content: space-around;
 }
 
+.centrobtns {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5%;
+}
+
 .colDesempenho {
     display: flex;
     flex-direction: column;

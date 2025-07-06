@@ -13,16 +13,16 @@ class CardsController extends Controller
     {
         $this->middleware('auth');
     }
-    public function index()
+    public function index(Request $request)
     {
-        // Retorna todas as atividades cujos tópicos pertencem ao usuário autenticado
-        //$usuarioId = Auth::id();]
-        
-        $cards = Card::all();
+        $query = Card::query();
 
-        /* $atividades = Atividade::whereHas('topico', function ($query) use ($usuarioId) {
-            $query->where('usuario_id', $usuarioId);
-        })->get(); */
+        // Se passou flashcard_id na query, filtra
+        if ($request->has('flashcard_id')) {
+            $query->where('flashcard_id', $request->input('flashcard_id'));
+        }
+
+        $cards = $query->get();
 
         return response()->json($cards);
     }
