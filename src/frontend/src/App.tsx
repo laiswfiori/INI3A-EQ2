@@ -1,14 +1,15 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
+import { SoundProvider } from './utils/Som';
 import Home from './pages/pagInicial/Home';
+import Login from './pages/login/Login';
+import Registro from './pages/registro/Registro';
+import LoginCadastro from './pages/loginCadastro/loginCadastro';
 import Matérias from './pages/conteudos/matérias/Materias';
 import Topicos from './pages/conteudos/topicos/Topicos';
 import Atividades from './pages/conteudos/atividades/Atividades';
 import Atividade from './pages/conteudos/atividadeVisualizacao/Atividade';
-import Login from './pages/login/Login';
-import Registro from './pages/registro/Registro';
-import LoginCadastro from './pages/loginCadastro/loginCadastro';
 import Perfil from './pages/perfil/Perfil';
 import Configuracoes from './pages/configuracoes/Configuracoes';
 import Agenda from './pages/agenda/Agenda';
@@ -20,7 +21,6 @@ import Relatorio from './pages/flashcards/relatorio/Relatorio';
 import Confirmar from './pages/senha/confirmar/Confirmar';
 import Concluir from './pages/senha/concluir/Concluir';
 import Alterar from './pages/senha/alterar/Alterar';
-//import Redefinir from './pages/senha/redefinir/Redefinir';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -64,40 +64,42 @@ setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route path="/pagInicial/home" component={Home} exact />
-        <Route path="/conteudos/materias" component={Matérias} exact />
-        <Route path="/conteudos/topicos" component={Topicos} exact />
-        <Route path="/conteudos/atividades" component={Atividades} exact />
-        <Route path="/conteudos/atividade" component={Atividade} exact />
-        <Route path="/login/login" component={Login} exact />
-        <Route path="/registro/registro" component={Registro} exact />
-        <Route path="/logincadastro/logincadastro" component={LoginCadastro} exact />
-        <Route path="/perfil/perfil" component={Perfil} exact />
-        <Route path="/configuracoes/configuracoes" component={Configuracoes} exact />
-        <Route path="/agenda/agenda" component={Agenda} exact />
-        <Route path="/flashcards/flashcards" component={Flashcards} exact />
-        <Route path="/flashcards/telainicialflashcards" component={TelaInicialFlashcards} exact />
-        <Route path="/flashcards/relatorio" component={Relatorio} exact />
-        <Route path="/senha/confirmar" component={Confirmar} exact />
-        <Route path="/senha/concluir" component={Concluir} exact />
-        <Route path="/senha/alterar" component={Alterar} exact />
-        
-        <Route path="/materias/:id" component={Topicos} exact />
-        <Route path="/topicos/:id" component={Atividades} exact />
-        <Route path="/atividades/:id" component={Atividade} exact />
+    <SoundProvider>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route path="/pagInicial/home" component={Home} exact />
+          <Route path="/login/login" component={Login} exact />
+          <Route path="/registro/registro" component={Registro} exact />
+          <Route path="/logincadastro/logincadastro" component={LoginCadastro} exact />
+          <Route path="/conteudos/materias" component={Matérias} exact />
+          <Route path="/conteudos/topicos" component={Topicos} exact />
+          <Route path="/conteudos/atividades" component={Atividades} exact />
+          <Route path="/conteudos/atividade" component={Atividade} exact />
+          <Route path="/perfil/perfil" component={Perfil} exact />
+          <Route path="/configuracoes/configuracoes" component={Configuracoes} exact />
+          <Route path="/agenda/agenda" component={Agenda} exact />
+          <Route path="/flashcards/flashcards" component={Flashcards} exact />
+          <Route path="/flashcards/telainicialflashcards" component={TelaInicialFlashcards} exact />
+          <Route path="/flashcards/relatorio" component={Relatorio} exact />
+          <Route path="/senha/confirmar" component={Confirmar} exact />
+          <Route path="/senha/concluir" component={Concluir} exact />
+          <Route path="/senha/alterar" component={Alterar} exact />
+          
+          <Route path="/materias/:id" component={Topicos} exact />
+          <Route path="/topicos/:id" component={Atividades} exact />
+          <Route path="/atividades/:id" component={Atividade} exact />
 
-        <Route path="/flashcard/revisaoGeral" component={RevisaoGeral} exact />
-        <Route path="/flashcard/materia/:id" component={CardsMateria} exact />
-        <Route path="/flashcard/:id(\d+)" component={Flashcards} exact />
+          <Route path="/flashcard/revisaoGeral" component={RevisaoGeral} exact />
+          <Route path="/flashcard/materia/:id" component={CardsMateria} exact />
+          <Route path="/flashcard/:id(\d+)" component={Flashcards} exact />
 
-        {}
-        <Route exact path="/">
-          <Redirect to="/pagInicial/home" />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
+          {}
+          <Route exact path="/">
+            <Redirect to="/pagInicial/home" />
+          </Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </SoundProvider>
   </IonApp>
 );
 

@@ -10,6 +10,7 @@ import Header from '../../../components/Header';
 import API from '../../../lib/api';
 import AvaliarModal from './AvaliarModal'; 
 import { validarCamposAtividade } from '../../../utils/erros';
+import { useSoundPlayer } from '../../../utils/Som';
 
 interface Atividade {
   id: number;
@@ -40,6 +41,8 @@ const Atividades: React.FC = () => {
 
   const [showModalAvaliar, setShowModalAvaliar] = useState(false);
   const [atividadeAvaliar, setAtividadeAvaliar] = useState<Atividade | null>(null);
+
+  const { playSomIniciar, playSomConcluir } = useSoundPlayer();
 
   
   const adicionarTextoAoConteudo = (texto: string) => {
@@ -329,6 +332,7 @@ const Atividades: React.FC = () => {
                             className="btnIC"
                             id="btnRaio"
                             onClick={async () => {
+                              playSomIniciar(); 
                               await alterarStatus(atividade, 'em andamento');
                               history.push(`/atividades/${atividade.id}`);
                             }}
@@ -344,7 +348,10 @@ const Atividades: React.FC = () => {
                               expand="block"
                               className="btnIC"
                               id="btnCheck"
-                              onClick={() => abrirModalAvaliar(atividade)}
+                              onClick={() => {
+                                playSomConcluir(); 
+                                abrirModalAvaliar(atividade);  
+                              }}
                             >
                               <IonIcon icon={checkmarkDone} className="iconesPopover" id="check" />
                               Concluir

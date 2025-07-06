@@ -7,6 +7,7 @@ import './css/layouts.css';
 import API from '../../../lib/api';
 import CardFlip from '../components/CardFlip';
 import Header from '../../../components/Header';
+import { useSoundPlayer } from '../../../utils/Som';
 
 interface Card {
   id?: number;
@@ -15,66 +16,50 @@ interface Card {
   nivelResposta?: string;
 }
 
-interface FlashcardData {
+interface Flashcard {
   id: number;
   titulo: string;
   materias?: string[];
 }
 
-interface Topico {
-  id: number;
-  materia_id: number;
-}
-
 const api = new API();
 
-const CardsMateria: React.FC = () => {
+const Flashcards: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
   const history = useHistory();
-  const materiaId = id ? Number(id) : NaN;
-  const isIdValido = !isNaN(materiaId);
+  const flashcardId = id ? Number(id) : NaN;
+  const isIdValido = !isNaN(flashcardId);
 
   const [cards, setCards] = useState<Card[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [mostrarVerso, setMostrarVerso] = useState(false);
   const [respostas, setRespostas] = useState<string[]>([]);
+  const [tituloDeck, setTituloDeck] = useState('Estudo');
   const [materias, setMaterias] = useState<string[]>([]);
-  const [tituloDeck, setTituloDeck] = useState('Estudo por Matéria');
+
+  const { playSomRespCerta, playSomRespErrada } = useSoundPlayer();
 
   useEffect(() => {
-    const fetchCardsMateria = async () => {
+    const fetchCards = async () => {
+      if (!isIdValido) return;
+
       try {
-        if (!isIdValido) return;
+        const flashcard: Flashcard = await api.get(`flashcards/${flashcardId}`);
+        const cardsDoFlash: Card[] = await api.get(`flashcards/${flashcardId}/cards`);
 
-        // Busca os tópicos dessa matéria
-        const topicos: Topico[] = await api.get(`topicos?materia_id=${materiaId}`);
-        const topicoIds = topicos.map(t => t.id);
-
-        // Busca todos os flashcards
-        const flashcards: FlashcardData[] = await api.get('flashcards');
-        const flashcardsDaMateria = flashcards.filter(f => topicoIds.includes((f as any).topico_id));
-        const flashcardIds = flashcardsDaMateria.map(f => f.id);
-
-        // Busca e junta todos os cards desses flashcards
-        const cardsTotais: Card[] = [];
-
-        for (const id of flashcardIds) {
-          const cardsDoFlash = await api.get(`flashcards/${id}/cards`);
-          cardsTotais.push(...cardsDoFlash);
-        }
-
-        setCards(cardsTotais);
+        setTituloDeck(flashcard.titulo || 'Estudo');
+        setMaterias(flashcard.materias || []);
+        setCards(cardsDoFlash);
         setCurrentCardIndex(0);
         setMostrarVerso(false);
         setRespostas([]);
-        setMaterias([String(materiaId)]);
       } catch (err) {
-        console.error('Erro ao carregar cards da matéria:', err);
+        console.error('Erro ao carregar flashcard ou cards:', err);
       }
     };
 
-    fetchCardsMateria();
-  }, [id]);
+    fetchCards();
+  }, [flashcardId]);
 
   useEffect(() => {
     setMostrarVerso(false);
@@ -85,7 +70,7 @@ const CardsMateria: React.FC = () => {
       <IonPage>
         <Header />
         <IonContent className="pagFlashcards">
-          <p>ID da matéria inválido.</p>
+          <p>ID do flashcard inválido.</p>
         </IonContent>
       </IonPage>
     );
@@ -96,7 +81,7 @@ const CardsMateria: React.FC = () => {
       <IonPage>
         <Header />
         <IonContent className="pagFlashcards">
-          <p>Carregando cards da matéria...</p>
+          <div className="loader-container"><div className="loader"></div></div>
         </IonContent>
       </IonPage>
     );
@@ -113,8 +98,13 @@ const CardsMateria: React.FC = () => {
   ];
 
   const handleResponder = async (nivel: string) => {
-    if (!mostrarVerso) return;
-    if (!cardAtual?.id) return;
+    if (!mostrarVerso || !cardAtual?.id) return;
+
+    if (nivel === 'muito fácil' || nivel === 'fácil') {
+      playSomRespCerta();
+    } else {
+      playSomRespErrada();
+    }
 
     try {
       await api.put(`cards/${cardAtual.id}`, { nivel });
@@ -123,12 +113,12 @@ const CardsMateria: React.FC = () => {
     }
 
     const novasRespostas = [...respostas, nivel];
-    setRespostas(novasRespostas);
-    setCards(prev =>
-      prev.map((card, idx) =>
-        idx === currentCardIndex ? { ...card, nivelResposta: nivel } : card
-      )
+    const cardsAtualizados = cards.map((c, i) =>
+      i === currentCardIndex ? { ...c, nivelResposta: nivel } : c
     );
+
+    setRespostas(novasRespostas);
+    setCards(cardsAtualizados);
 
     if (currentCardIndex + 1 < cards.length) {
       setCurrentCardIndex(currentCardIndex + 1);
@@ -136,9 +126,8 @@ const CardsMateria: React.FC = () => {
       return;
     }
 
-    // fim da revisão — calcula nível médio
-    const total = cards.reduce((acc, card) => {
-      switch (card.nivelResposta) {
+    const total = cardsAtualizados.reduce((acc, c) => {
+      switch (c.nivelResposta) {
         case 'muito fácil': return acc + 1;
         case 'fácil': return acc + 2;
         case 'médio': return acc + 3;
@@ -148,21 +137,22 @@ const CardsMateria: React.FC = () => {
       }
     }, 0);
 
-    const media = cards.length ? total / cards.length : 0;
+    const media = cardsAtualizados.length ? total / cardsAtualizados.length : 0;
     const nivelFinal =
       media <= 1.5 ? 'muito fácil' :
       media <= 2.5 ? 'fácil' :
       media <= 3.5 ? 'médio' :
-      media <= 4.5 ? 'difícil' :
-      'muito difícil';
+      media <= 4.5 ? 'difícil' : 'muito difícil';
 
-    // sem PUT em flashcards, pois estamos lidando com múltiplos
+    try {
+      await api.put(`flashcards/${flashcardId}`, { nivel: nivelFinal });
+    } catch (err) {
+      console.error('Erro ao salvar nível geral do flashcard:', err);
+    }
 
     history.push('/flashcards/relatorio', {
       respostas: novasRespostas,
-      cardsComRespostas: cards.map((c, idx) =>
-        idx === currentCardIndex ? { ...c, nivelResposta: nivel } : c
-      ),
+      cardsComRespostas: cardsAtualizados,
       nomeDeck: tituloDeck,
       revisaoGeral: false,
       materias,
@@ -241,4 +231,4 @@ const CardsMateria: React.FC = () => {
   );
 };
 
-export default CardsMateria;
+export default Flashcards;

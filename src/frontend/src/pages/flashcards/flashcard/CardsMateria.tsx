@@ -7,6 +7,7 @@ import './css/layouts.css';
 import API from '../../../lib/api';
 import CardFlip from '../components/CardFlip';
 import Header from '../../../components/Header';
+import { useSoundPlayer } from '../../../utils/Som';
 
 interface Card {
   id?: number;
@@ -42,10 +43,12 @@ const CardsMateria: React.FC = () => {
   const [titulo, setTitulo] = useState('');
   const [materias, setMaterias] = useState<string[]>([]);
 
+  const { playSomRespCerta, playSomRespErrada} = useSoundPlayer();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('🔍 Iniciando busca para matéria ID:', materiaId);
+        console.log('Iniciando busca para matéria ID:', materiaId);
 
         const topicosTodos: Topico[] = await api.get('topicos');
         const topicos = topicosTodos.filter(t => t.materia_id === materiaId);
@@ -53,7 +56,7 @@ const CardsMateria: React.FC = () => {
 
 
         if (topicoIds.length === 0) {
-          console.warn('⚠️ Nenhum tópico encontrado para a matéria');
+          console.warn('Nenhum tópico encontrado para a matéria');
           setCards([]);
           return;
         }
@@ -80,7 +83,7 @@ const CardsMateria: React.FC = () => {
           flashcardIds.map(fid => api.get(`cards?flashcard_id=${fid}`))
         );
         const todosCards = cardLists.flat();
-        console.log('🧠 Cards filtrados da matéria:', todosCards.map(c => c.id));
+        console.log('Cards filtrados da matéria:', todosCards.map(c => c.id));
 
         setCards(todosCards);
         setCurrentCardIndex(0);
@@ -103,7 +106,7 @@ const CardsMateria: React.FC = () => {
       <IonPage>
         <Header />
         <IonContent className="pagFlashcards">
-          <p>⏳ Carregando cards da matéria...</p>
+          <div className="loader-container"><div className="loader"></div></div>
         </IonContent>
       </IonPage>
     );
@@ -121,6 +124,12 @@ const CardsMateria: React.FC = () => {
 
   const handleNextCard = async (nivel: string) => {
     if (!mostrarVerso) return;
+
+    if (nivel === 'muito fácil' || nivel === 'fácil') {
+      playSomRespCerta();
+    } else {
+      playSomRespErrada();
+    }
 
     try {
       if (cardAtual.id) {

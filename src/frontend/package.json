@@ -32,7 +32,8 @@
     "react-select": "^5.10.1",
     "react-to-pdf": "^2.0.1",
     "react-to-print": "^3.1.1",
-    "swiper": "^9.4.1"
+    "swiper": "^9.4.1",
+    "use-sound": "^5.0.0"
   },
   "devDependencies": {
     "@capacitor/cli": "7.2.0",

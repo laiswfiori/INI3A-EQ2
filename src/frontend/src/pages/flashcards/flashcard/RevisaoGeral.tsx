@@ -7,6 +7,7 @@ import './css/layouts.css';
 import API from '../../../lib/api';
 import CardFlip from '../components/CardFlip';
 import Header from '../../../components/Header';
+import { useSoundPlayer } from '../../../utils/Som';
 
 interface Card {
   id?: number;
@@ -38,6 +39,8 @@ const RevisaoGeral: React.FC = () => {
 
   const [flashcardTitulo, setFlashcardTitulo] = useState('');
   const [materias, setMaterias] = useState<string[]>([]);
+
+  const { playSomRespCerta, playSomRespErrada} = useSoundPlayer();
 
   const didFetch = useRef(false);
 
@@ -91,7 +94,7 @@ const RevisaoGeral: React.FC = () => {
       <IonPage>
         <Header />
         <IonContent className="pagFlashcards">
-          <p>Carregando flashcards para revisão geral...</p>
+          <div className="loader-container"><div className="loader"></div></div>
         </IonContent>
       </IonPage>
     );
@@ -105,7 +108,7 @@ const RevisaoGeral: React.FC = () => {
       <IonPage>
         <Header />
         <IonContent className="pagFlashcards">
-          <p>Carregando cards do flashcard...</p>
+          <div className="loader-container"><div className="loader"></div></div>
         </IonContent>
       </IonPage>
     );
@@ -191,6 +194,11 @@ const RevisaoGeral: React.FC = () => {
   };
 
   const handleEmojiClick = (nivel: string) => {
+    if (nivel === 'muito fácil' || nivel === 'fácil') {
+      playSomRespCerta();
+    } else {
+      playSomRespErrada();
+    }
     handleNextCardOrFlashcard(nivel);
   };
 

@@ -5,12 +5,15 @@ import { home, calendar, star, documentText, personCircle, notifications, close}
 import './css/ui.css';
 import './css/geral.css';
 import './css/layouts.css';
+import { useSoundPlayer } from './../utils/Som';
 
 const Header: React.FC = () => {
   const history = useHistory();
   const [menuAberto, setMenuAberto] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
   const [mostrarPopover, setMostrarPopover] = useState(false);
+
+  const { playSomNotificacao } = useSoundPlayer();
 
   const isAuthenticated = () => {
     const token = localStorage.getItem('token');
@@ -64,6 +67,7 @@ const Header: React.FC = () => {
 
     if (!ultimo || agora - parseInt(ultimo) > 3 * 60 * 60 * 1000) {
       setMostrarPopover(true);
+      playSomNotificacao();
       localStorage.setItem('ultimaExibicaoPopover', agora.toString());
     }
 
@@ -73,6 +77,7 @@ const Header: React.FC = () => {
 
       if (!ultimoSalvo || agoraAtual - parseInt(ultimoSalvo) > 3 * 60 * 60 * 1000) {
         setMostrarPopover(true);
+        playSomNotificacao();
         localStorage.setItem('ultimaExibicaoPopover', agoraAtual.toString());
       }
     }, 1 * 1000); 
