@@ -83,8 +83,10 @@
   background: rgb(214, 221, 228) !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden !important;
-  padding: 0.5rem;
-  border-radius: 8px;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-top-left-radius: 8px !important;
+  border-bottom-left-radius: 8px !important;
   --height: 150px !important;
   height: 150px !important;
 }

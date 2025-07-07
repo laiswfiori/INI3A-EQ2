@@ -75,6 +75,7 @@ ion-button {
   justify-content: flex-start;
   gap: 5%;
   padding-top: 2%;
+  width: 100%;
 }
 
 .td {
@@ -237,4 +238,8 @@ ion-popover::part(backdrop) {
 
 .setaMat {
   margin-left: 2%;
+}
+
+.rowBarra {
+  width: 100%;
 }

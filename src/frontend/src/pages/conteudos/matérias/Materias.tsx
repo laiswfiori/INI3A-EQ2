@@ -262,72 +262,80 @@ const Materias: React.FC = () => {
                 <IonItem key={materia.id} className="materia-item">
                   <IonLabel>
                     <IonRow className="containerMateria">
-                      <div>
-                        {iconesMaterias[materia.id]?.startsWith('data:image') ? (
-                          <img
-                            src={iconesMaterias[materia.id]}
-                            alt="Ícone personalizado"
-                            className="imgMF imgMobile imgT"
-                          />
-                        ) : (() => {
-                          const key = materia.nome.trim().toUpperCase();
-                          const iconeData = iconePorMateriaNome[key];
-                          return (
-                            <IonIcon
-                              icon={iconeData ? iconeData.icon : library}
-                              className={iconeData ? iconeData.className : 'livro'}
+                      <IonCol className="col1M">
+                        <div>
+                          {iconesMaterias[materia.id]?.startsWith('data:image') ? (
+                            <img
+                              src={iconesMaterias[materia.id]}
+                              alt="Ícone personalizado"
+                              className="imgMF imgMobile imgM"
                             />
-                          );
-                        })()}
-                      </div>
-                      <IonCol className="td">
-                        <h2 className="txtTitMat">{materia.nome}</h2>
+                          ) : (() => {
+                            const key = materia.nome.trim().toUpperCase();
+                            const iconeData = iconePorMateriaNome[key];
+                            return (
+                              <IonIcon
+                                icon={iconeData ? iconeData.icon : library}
+                                className={iconeData ? iconeData.className : 'livro'}
+                              />
+                            );
+                          })()}
+                        </div>
+                        <IonRow>
+                          <IonIcon
+                            icon={image}
+                            className="iconImg"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const input = document.getElementById(`input-icone-${materia.id}`) as HTMLInputElement;
+                              input?.click();
+                            }}
+                          />
+                          <input
+                            id={`input-icone-${materia.id}`}
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={(e) => handleIconeChange(e, materia.id)}
+                          />
+                        </IonRow>
                       </IonCol>
-                      <IonCol id="containerConfig">
-                        <IonButton
-                          id={`config-btn-${materia.id}`}
-                          className="config"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setMateriaSelecionada(materia);
-                            setPopoverEvent(e.nativeEvent);
-                            setShowPopover(true);
-                          }}
-                        >
-                          ...
-                        </IonButton>
+                      <IonCol className="col2M">
+                        <IonRow>
+                          <IonCol className="td tdMat">
+                            <h2 className="txtTMat">{materia.nome}</h2>
+                          </IonCol>
+                          <IonCol id="containerConfig">
+                            <IonButton
+                              id={`config-btn-${materia.id}`}
+                              className="config"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setMateriaSelecionada(materia);
+                                setPopoverEvent(e.nativeEvent);
+                                setShowPopover(true);
+                              }}
+                            >
+                              ...
+                            </IonButton>
+                          </IonCol>
+                        </IonRow>
                       </IonCol>
-                    </IonRow>
-                    <IonRow>
-                      <IonIcon
-                        icon={image}
-                        className="iconImg"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const input = document.getElementById(`input-icone-${materia.id}`) as HTMLInputElement;
-                          input?.click();
-                        }}
-                      />
-                      <input
-                        id={`input-icone-${materia.id}`}
-                        type="file"
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        onChange={(e) => handleIconeChange(e, materia.id)}
-                      />
-                    </IonRow>
-                    <IonRow className="totalAtividades">
-                      <p>{totalTopicos} tópicos</p>
-                      <p id="txtConc">{topicosConcluidos} concluídos</p>
-                    </IonRow>
-                    <IonRow className="barra">
-                      <div className="barraStatus" style={{ width: `${progresso}%` }}></div>
-                    </IonRow>
-                    <IonRow className="contIrTopicos">
-                      <IonButton className="btnIrTopicos" onClick={() => history.push(`/materias/${materia.id}`)}>
-                        Ir para tópicos
-                        <IonIcon icon={arrowForward} className="setaMat" />
-                      </IonButton>
+                      <IonRow className="rowBarra">
+                        <IonRow className="totalAtividades">
+                          <p>{totalTopicos} tópicos</p>
+                          <p id="txtConc">{topicosConcluidos} concluídos</p>
+                        </IonRow>
+                        <IonRow className="barra">
+                          <div className="barraStatus" style={{ width: `${progresso}%` }}></div>
+                        </IonRow>
+                      </IonRow>
+                      <IonRow className="contIrTopicos">
+                          <IonButton className="btnIrTopicos" onClick={() => history.push(`/materias/${materia.id}`)}>
+                            Ir para tópicos
+                            <IonIcon icon={arrowForward} className="setaMat" />
+                          </IonButton>
+                        </IonRow>
                     </IonRow>
                   </IonLabel>
                 </IonItem>

@@ -4,7 +4,7 @@
         margin-top: 5%;
     }
      .btnIrTopicos {
-        width: 60%;
+        width: 60% !important;
       }
 }
 
@@ -64,3 +64,69 @@
         width: 60%;
       }
 }
+
+@media (max-width: 320px) {
+    .col1M {
+        width: 25%;
+        max-width: 25%;
+    }
+    .col2M {
+        width: 75% !important;
+    }
+    .m1, .m2, .m3, .m4, .m5, .m6, .m7, .m8, .m9, .m10, .m11, .livro {
+        font-size: 3.2rem !important;
+    }
+    .imgM {
+        max-width: 3.2rem !important;
+    }
+}
+
+@media (min-width: 321px) and (max-width: 767px) {
+    .col1M {
+        width: 25%;
+        max-width: 25%;
+    }
+    .col2M {
+        width: 75% !important;
+    }
+    .m1, .m2, .m3, .m4, .m5, .m6, .m7, .m8, .m9, .m10, .m11, .livro {
+        font-size: 3.8rem !important;
+    }
+    .imgM {
+        max-width: 4rem !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .col1M {
+        width: 20%;
+        max-width: 20%;
+    }
+    .col2M {
+        width: 80% !important;
+    }
+    .m1, .m2, .m3, .m4, .m5, .m6, .m7, .m8, .m9, .m10, .m11, .livro {
+        font-size: 4rem !important;
+    }
+    .imgM {
+        max-width: 4rem !important;
+    }
+}
+
+@media (min-width: 1025px) {
+    .col1M {
+        width: 25%;
+        max-width: 25%;
+    }
+    .col2M {
+        width: 75% !important;
+    }
+    .m1, .m2, .m3, .m4, .m5, .m6, .m7, .m8, .m9, .m10, .m11, .livro {
+        font-size: 5rem !important;
+    }
+    .imgM {
+        max-width: 6rem;
+    }
+}
+
+    
