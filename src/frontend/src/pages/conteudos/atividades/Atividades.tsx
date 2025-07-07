@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, 
-  IonModal, IonPopover, IonInput, IonTextarea, IonRow, IonCol, IonBadge, IonSelect, IonSelectOption} from '@ionic/react';
-import { pencil, trash, flash, checkmarkDone, close, checkmark, arrowForward, documentText, images, documentAttach  } from 'ionicons/icons';
+import {
+  IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, 
+  IonModal, IonPopover, IonInput, IonTextarea, IonRow, IonCol, IonSelect, IonSelectOption
+} from '@ionic/react';
+import { pencil, trash, flash, checkmarkDone, close, checkmark, arrowForward, documentText, images } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -36,68 +38,58 @@ const Atividades: React.FC = () => {
   const [modoModal, setModoModal] = useState<'adicionar' | 'editar'>('adicionar');
   const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
   const [textoTemp, setTextoTemp] = useState('');
+
+  const [imagensPreview, setImagensPreview] = useState<{ [atividadeId: number]: string }>({});
+
   const inputImagemRef = useRef<HTMLInputElement>(null);
-  const inputArquivoRef = useRef<HTMLInputElement>(null);
 
   const [showModalAvaliar, setShowModalAvaliar] = useState(false);
   const [atividadeAvaliar, setAtividadeAvaliar] = useState<Atividade | null>(null);
 
   const { playSomIniciar, playSomConcluir } = useSoundPlayer();
 
-  
-  const adicionarTextoAoConteudo = (texto: string) => {
-    setNovaAtividade(prev => ({
-      ...prev,
-      conteudo: [...prev.conteudo, { tipo: 'texto', valor: texto }]
-    }));
-  };
-
-  const adicionarImagemAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const adicionarImagemAtividadeSelecionada = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNovaAtividade(prev => ({
-          ...prev,
-          conteudo: [...prev.conteudo, { tipo: 'imagem', valor: reader.result as string }]
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+    if (!file || !atividadeSelecionada) return;
 
-  const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNovaAtividade(prev => ({
-          ...prev,
-          conteudo: [...prev.conteudo, {
-            tipo: 'arquivo',
-            valor: reader.result as string,
-            nome: file.name
-          }]
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const imagemBase64 = reader.result as string;
 
-  const removerItemConteudo = (index: number) => {
-    setNovaAtividade(prev => ({
-      ...prev,
-      conteudo: prev.conteudo.filter((_, idx) => idx !== index)
-    }));
+      try {
+        const api = new API();
+        const conteudoAtualizado = [{ tipo: 'imagem', valor: imagemBase64 }];
+
+        const dataAtualizada = await api.put(`atividades/${atividadeSelecionada.id}`, {
+          ...atividadeSelecionada,
+          conteudo: conteudoAtualizado,
+        });
+        setAtividades(prev =>
+          prev.map(a => (a.id === atividadeSelecionada.id ? dataAtualizada : a))
+        );
+
+        setAtividadeSelecionada(dataAtualizada);
+
+        setImagensPreview(prev => ({
+          ...prev,
+          [atividadeSelecionada.id]: imagemBase64,
+        }));
+      } catch (error) {
+        alert('Erro ao atualizar a imagem da atividade');
+        console.error(error);
+      }
+    };
+
+    reader.readAsDataURL(file);
   };
 
   const alterarStatus = async (atividade: Atividade, novoStatus: string) => {
     const api = new API();
-  
+
     try {
       const atualizada = { ...atividade, status: novoStatus };
       const data = await api.put(`atividades/${atividade.id}`, atualizada);
-  
+
       setAtividades(prev => 
         prev.map(a => a.id === atividade.id ? data : a)
       );
@@ -120,26 +112,43 @@ const Atividades: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
+    localStorage.setItem('imagensPreview', JSON.stringify(imagensPreview));
+  }, [imagensPreview]);
+
+  useEffect(() => {
     if (id) {
       setNovaAtividade(prev => ({ ...prev, topico_id: Number(id) }));
     }
   }, [id]);
 
   useEffect(() => {
+    const imagensSalvas = localStorage.getItem('imagensPreview');
+    let imagens: { [atividadeId: number]: string } = {};
+
+    if (imagensSalvas) {
+      try {
+        imagens = JSON.parse(imagensSalvas);
+      } catch {
+        imagens = {};
+      }
+    }
+
     const fetchAtividades = async () => {
       setLoading(true);
       setError('');
-      
+
       try {
         const api = new API();
         const atividadesResponse = await api.get("atividades");
-        
-        const atividadesFiltradas = id 
+
+        const atividadesFiltradas = id
           ? atividadesResponse.filter((a: Atividade) => a.topico_id === Number(id))
           : atividadesResponse;
-        
+
         setAtividades(atividadesFiltradas);
-        console.log("Atividades carregadas:", atividadesFiltradas);
+
+        setImagensPreview(imagens);
+
       } catch (err: any) {
         setError(err.message || 'Erro ao carregar atividades');
         console.error("Erro ao buscar atividades:", err);
@@ -244,6 +253,12 @@ const Atividades: React.FC = () => {
         await api.delete(`atividades/${atividadeSelecionada.id}`);
         setAtividades(prev => prev.filter(a => a.id !== atividadeSelecionada.id));
         setShowPopover(false);
+
+        setImagensPreview(prev => {
+          const copia = { ...prev };
+          delete copia[atividadeSelecionada.id];
+          return copia;
+        });
       } catch (err: any) {
         console.error('Erro ao excluir atividade:', err);
         alert(err?.response?.data?.message || 'Erro ao excluir atividade');
@@ -302,15 +317,24 @@ const Atividades: React.FC = () => {
               })
               .map((atividade) => (
                 <IonItem key={atividade.id} className={`atividade-item ${atividade.status === 'concluído' ? 'concluida' : ''}`}>
-                    <IonRow className="containerAtividade">
-                      <IonIcon icon={documentText} className="livro" />
+                  <IonRow className="containerAtividade" style={{ position: 'relative' }}>
+                    <IonRow className="largura">
+                      {imagensPreview[atividade.id] ? (
+                        <img
+                          src={imagensPreview[atividade.id]}
+                          alt="Imagem da atividade"
+                          className="imgMF imgMobile"
+                        />
+                      ) : (
+                        <IonIcon icon={documentText} className="livro" />
+                      )}
+
                       <IonCol className="td">
-                        <h2 className="txtTitMat">
-                          {atividade.titulo}
-                        </h2>
+                        <h2 className="txtTitMat">{atividade.titulo}</h2>
                         <p className="sRisco">{atividade.descricao}</p>
                         <p className="sRisco">Tipo: {atividade.tipo}</p>
                       </IonCol>
+
                       <IonCol id="containerConfig">
                         <IonButton
                           id={`config-btn-${atividade.id}`}
@@ -325,63 +349,84 @@ const Atividades: React.FC = () => {
                           ...
                         </IonButton>
                       </IonCol>
-                      <IonRow className="contIrTopicos">
-                        {atividade.status === 'não iniciado' && (
+                    </IonRow>
+
+                    <IonRow>
+                      <IonIcon
+                        icon={images}
+                        className="iconImg"
+                        onClick={() => {
+                          setAtividadeSelecionada(atividade);
+                          inputImagemRef.current?.click();
+                        }}
+                        title="Alterar imagem"
+                      />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={adicionarImagemAtividadeSelecionada}
+                        ref={inputImagemRef}
+                        style={{ display: 'none' }}
+                      />
+                    </IonRow>
+
+                    <IonRow className="contIrTopicos">
+                      {atividade.status === 'não iniciado' && (
+                        <IonButton
+                          expand="block"
+                          className="btnIC"
+                          id="btnRaio"
+                          onClick={async () => {
+                            playSomIniciar(); 
+                            await alterarStatus(atividade, 'em andamento');
+                            history.push(`/atividades/${atividade.id}`);
+                          }}
+                        >
+                          <IonIcon icon={flash} className="iconesPopover" id="raio"/>
+                          Iniciar
+                        </IonButton>
+                      )}
+
+                      {atividade.status === 'em andamento' && (
+                        <>
                           <IonButton
                             expand="block"
                             className="btnIC"
-                            id="btnRaio"
-                            onClick={async () => {
-                              playSomIniciar(); 
-                              await alterarStatus(atividade, 'em andamento');
-                              history.push(`/atividades/${atividade.id}`);
+                            id="btnCheck"
+                            onClick={() => {
+                              playSomConcluir(); 
+                              abrirModalAvaliar(atividade);  
                             }}
                           >
-                            <IonIcon icon={flash} className="iconesPopover" id="raio"/>
-                            Iniciar
+                            <IonIcon icon={checkmarkDone} className="iconesPopover" id="check" />
+                            Concluir
                           </IonButton>
-                        )}
 
-                        {atividade.status === 'em andamento' && (
-                          <>
-                            <IonButton
-                              expand="block"
-                              className="btnIC"
-                              id="btnCheck"
-                              onClick={() => {
-                                playSomConcluir(); 
-                                abrirModalAvaliar(atividade);  
-                              }}
-                            >
-                              <IonIcon icon={checkmarkDone} className="iconesPopover" id="check" />
-                              Concluir
-                            </IonButton>
-
-                            <IonButton
-                              expand="block"
-                              className="btnIC"
-                              id="btnVer"
-                              onClick={() => history.push(`/atividades/${atividade.id}`)}
-                            >
-                              <IonIcon icon={arrowForward} className="iconesPopover" />
-                              Ver
-                            </IonButton>
-                          </>
-                        )}
-
-                        {atividade.status === 'concluído' && (
                           <IonButton
                             expand="block"
                             className="btnIC"
                             id="btnVer"
                             onClick={() => history.push(`/atividades/${atividade.id}`)}
                           >
-                            <IonIcon icon={arrowForward} className="iconesPopover" />
+                            <IonIcon icon={arrowForward} className="iconesPopover" id="ver"/>
                             Ver
                           </IonButton>
-                        )}
-                      </IonRow>
+                        </>
+                      )}
+
+                      {atividade.status === 'concluído' && (
+                        <IonButton
+                          expand="block"
+                          className="btnIC"
+                          id="btnVer"
+                          onClick={() => history.push(`/atividades/${atividade.id}`)}
+                        >
+                          <IonIcon icon={arrowForward} className="iconesPopover" id="ver"/>
+                          Ver
+                        </IonButton>
+                      )}
                     </IonRow>
+                  </IonRow>
                 </IonItem>
               ))}
           </IonList>
@@ -454,69 +499,14 @@ const Atividades: React.FC = () => {
                 onIonBlur={() => {
                   const texto = textoTemp.trim();
                   if (texto) {
-                    adicionarTextoAoConteudo(texto);
+                    setNovaAtividade(prev => ({
+                      ...prev,
+                      conteudo: [...prev.conteudo, { tipo: 'texto', valor: texto }]
+                    }));
                     setTextoTemp('');
                   }
                 }}
               />
-
-              <input
-                type="file"
-                accept="image/*"
-                onChange={adicionarImagemAoConteudo}
-                ref={inputImagemRef}
-                style={{ display: 'none' }}
-              />
-
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx,.ppt,.pptx"
-                onChange={adicionarArquivoAoConteudo}
-                ref={inputArquivoRef}
-                style={{ display: 'none' }}
-              />
-              <div className="conteudo-preview" style={{ marginTop: '10px' }}>
-                {novaAtividade.conteudo.map((item, idx) => (
-                  <div key={idx} className="preview-item">
-                    {item.tipo === 'texto' && (
-                      <p>{item.valor}</p>
-                    )}
-                    {item.tipo === 'imagem' && (
-                      <div className="preview-img-container">
-                        <img src={item.valor} alt="imagem" className="preview-img"/>
-                        <IonIcon 
-                          icon={close} 
-                          className="icone-remover" 
-                          onClick={() => removerItemConteudo(idx)} 
-                        />
-                      </div>
-                    )}
-                    {item.tipo === 'arquivo' && (
-                      <div className="preview-arquivo">
-                        <a href={item.valor} download={item.nome}>{item.nome}</a>
-                        <IonIcon 
-                          icon={close} 
-                          className="icone-remover" 
-                          onClick={() => removerItemConteudo(idx)} 
-                        />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <IonRow className="flexInicio">
-                <IonIcon 
-                  icon={images} 
-                  className="iconesAdd" 
-                  onClick={() => inputImagemRef.current?.click()} 
-                />
-                <IonIcon 
-                  icon={documentAttach} 
-                  className="iconesAdd" 
-                  onClick={() => inputArquivoRef.current?.click()} 
-                />
-              </IonRow>
 
               <IonButton 
                 expand="block" 
@@ -547,9 +537,10 @@ const Atividades: React.FC = () => {
             Excluir
           </IonButton>
         </IonPopover>
+
         <AvaliarModal
           isOpen={showModalAvaliar}
-          onClose={() => setShowModalAvaliar(false)}
+          onDidDismiss={() => setShowModalAvaliar(false)}
           atividade={atividadeAvaliar}
           onSalvar={salvarAvaliacao}
         />

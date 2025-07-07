@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import useSound from 'use-sound';
 
 import somIniciar from '../assets/sounds/iniciar.mp3'; 
@@ -13,16 +13,35 @@ type SoundContextType = {
   playSomRespCerta: () => void;
   playSomRespErrada: () => void;
   playSomNotificacao: () => void;
+  somAtivo: boolean;
+  toggleSom: () => void;
 };
 
 const SoundContext = createContext<SoundContextType | null>(null);
 
 export const SoundProvider = ({ children }: { children: ReactNode }) => {
-  const [playSomIniciar] = useSound(somIniciar);
-  const [playSomConcluir] = useSound(somConcluir);
-  const [playSomRespCerta] = useSound(somRespCerta);
-  const [playSomRespErrada] = useSound(somRespErrada);
-  const [playSomNotificacao] = useSound(somNotificacao);
+  const [somAtivo, setSomAtivo] = useState<boolean>(() => {
+    const salvo = localStorage.getItem('somAtivo');
+    return salvo !== 'false';
+  });
+
+  const [playIniciar] = useSound(somIniciar);
+  const [playConcluir] = useSound(somConcluir);
+  const [playRespCerta] = useSound(somRespCerta);
+  const [playRespErrada] = useSound(somRespErrada);
+  const [playNotificacao] = useSound(somNotificacao);
+
+  useEffect(() => {
+    localStorage.setItem('somAtivo', somAtivo.toString());
+  }, [somAtivo]);
+
+  const playSomIniciar = () => { if (somAtivo) playIniciar(); };
+  const playSomConcluir = () => { if (somAtivo) playConcluir(); };
+  const playSomRespCerta = () => { if (somAtivo) playRespCerta(); };
+  const playSomRespErrada = () => { if (somAtivo) playRespErrada(); };
+  const playSomNotificacao = () => { if (somAtivo) playNotificacao(); };
+
+  const toggleSom = () => setSomAtivo(prev => !prev);
 
   const value = {
     playSomIniciar,
@@ -30,6 +49,8 @@ export const SoundProvider = ({ children }: { children: ReactNode }) => {
     playSomRespCerta,
     playSomRespErrada,
     playSomNotificacao,
+    somAtivo,
+    toggleSom,
   };
 
   return (

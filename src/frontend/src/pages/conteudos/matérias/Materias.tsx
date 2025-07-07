@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal, IonPopover, IonInput, IonRow, IonCol } from '@ionic/react';
-import { library, pencil, trash, close, arrowForward } from 'ionicons/icons';
+import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon,
+  IonButton, IonModal, IonPopover, IonInput, IonRow, IonCol
+} from '@ionic/react';
+import { library, pencil, trash, close, arrowForward, image, globe, brush, book, school, accessibility,
+  earth, leaf, flask, planet, calculator } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -39,6 +42,48 @@ interface Materia {
   topicos: Topico[];
 }
 
+  export const iconePorMateriaNome: { 
+    [nome: string]: { icon: string; className: string } 
+  } = {
+    'PORTUGUÊS': { icon: library, className: 'm1' },
+    'LITERATURA': { icon: library, className: 'm1' },
+    'INGLÊS': { icon: globe, className: 'm2' },
+    'ESPANHOL': { icon: globe, className: 'm2' },
+    'ARTES': { icon: brush, className: 'm3' },
+    'HISTÓRIA': { icon: book, className: 'm4' },
+    'FILOSOFIA': { icon: school, className: 'm5' },
+    'SOCIOLOGIA': { icon: accessibility, className: 'm6' },
+    'GEOGRAFIA': { icon: earth, className: 'm7' },
+    'BIOLOGIA': { icon: leaf, className: 'm8' },
+    'QUÍMICA': { icon: flask, className: 'm9' },
+    'FÍSICA': { icon: planet, className: 'm10' },
+    'MATEMÁTICA': { icon: calculator, className: 'm11' },
+  };
+
+const normalizarNomeMateria = (nome: string) => {
+  const nomeUpper = nome.trim().toUpperCase();
+
+  const mapa = {
+    'PORTUGUÊS': 'm1',
+    'LITERATURA': 'm1',
+    'INGLÊS': 'm2',
+    'ESPANHOL': 'm2',
+    'ARTES': 'm3',
+    'HISTÓRIA': 'm4',
+    'FILOSOFIA': 'm5',
+    'SOCIOLOGIA': 'm6',
+    'GEOGRAFIA': 'm7',
+    'BIOLOGIA': 'm8',
+    'QUÍMICA': 'm9',
+    'FÍSICA': 'm10',
+    'MATEMÁTICA': 'm11'
+  };
+
+  const classe = mapa[nomeUpper] || '';
+  return { nome: nomeUpper, classe };
+};
+
+
 const Materias: React.FC = () => {
   const [materias, setMaterias] = useState<Materia[]>([]);
   const [loading, setLoading] = useState(true);
@@ -49,7 +94,7 @@ const Materias: React.FC = () => {
   const [modoModal, setModoModal] = useState<'adicionar' | 'editar'>('adicionar');
   const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
   const [novaMateria, setNovaMateria] = useState({ nome: '' });
-
+  const [iconesMaterias, setIconesMaterias] = useState<{ [key: number]: string }>({});
   const history = useHistory();
 
   useEffect(() => {
@@ -74,6 +119,12 @@ const Materias: React.FC = () => {
           return { ...materia, topicos };
         });
         setMaterias(materiasComTopicos);
+
+        const iconesSalvos = localStorage.getItem('iconesMaterias');
+        if (iconesSalvos) {
+          setIconesMaterias(JSON.parse(iconesSalvos));
+        }
+
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -86,13 +137,10 @@ const Materias: React.FC = () => {
 
   const calcularProgresso = (topicos: Topico[]) => {
     const totalTopicos = topicos.length;
-
     const topicosConcluidos = topicos.filter(topico =>
       topico.status === 'concluído'
     ).length;
-
     const progresso = totalTopicos > 0 ? (topicosConcluidos / totalTopicos) * 100 : 0;
-
     return { totalTopicos, topicosConcluidos, progresso };
   };
 
@@ -101,22 +149,30 @@ const Materias: React.FC = () => {
   };
 
   const handleSalvar = async () => {
-    const erro = validarCamposMateria(novaMateria);
-      if (erro) {
-        alert(erro);
-        return;
-      }
-
+    const nomeValidado = novaMateria.nome?.trim() || '';
+    const erro = validarCamposMateria({ nome: nomeValidado });
+    if (erro) {
+      alert(erro);
+      return;
+    }
     const api = new API();
     const endpoint = modoModal === 'editar'
       ? `materias/${materiaSelecionada?.id}`
       : `materias`;
-
     const method = modoModal === 'editar' ? api.put : api.post;
-
     try {
-      const data = await method.call(api, endpoint, { nome: novaMateria.nome });
+      const nomeOriginal = novaMateria.nome.trim();
+      const { classe } = normalizarNomeMateria(nomeOriginal);
 
+      const data = await method.call(api, endpoint, { nome: nomeOriginal });
+
+      if (classe) {
+        setIconesMaterias(prev => {
+          const novos = { ...prev, [data.id]: classe };
+          localStorage.setItem('iconesMaterias', JSON.stringify(novos));
+          return novos;
+        });
+      }
       if (modoModal === 'editar') {
         setMaterias(prev =>
           prev.map(m => m.id === materiaSelecionada?.id
@@ -127,7 +183,6 @@ const Materias: React.FC = () => {
       } else {
         setMaterias(prev => [...prev, { ...data, topicos: [] }]);
       }
-
       setShowModal(false);
       setShowPopover(false);
     } catch (error) {
@@ -145,7 +200,7 @@ const Materias: React.FC = () => {
   };
 
   const handleAdicionar = () => {
-    setNovaMateria({ nome: novaMateria.nome });
+    setNovaMateria({ nome: '' });
     setModoModal('adicionar');
     setShowModal(true);
   };
@@ -157,11 +212,36 @@ const Materias: React.FC = () => {
         await api.delete(`materias/${materiaSelecionada.id}`);
         setShowPopover(false);
         setMaterias(prev => prev.filter(m => m.id !== materiaSelecionada.id));
+        setIconesMaterias(prev => {
+          const novos = { ...prev };
+          delete novos[materiaSelecionada.id];
+          localStorage.setItem('iconesMaterias', JSON.stringify(novos));
+          return novos;
+        });
         console.log('Matéria excluída');
       } catch (err) {
         console.error('Erro ao excluir matéria:', err);
       }
     }
+  };
+
+  const salvarIconeMateria = (materiaId: number, dataUrl: string) => {
+    setIconesMaterias(prev => {
+      const novos = { ...prev, [materiaId]: dataUrl };
+      localStorage.setItem('iconesMaterias', JSON.stringify(novos));
+      return novos;
+    });
+  };
+
+  const handleIconeChange = (e: React.ChangeEvent<HTMLInputElement>, materiaId: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      salvarIconeMateria(materiaId, result);
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -170,7 +250,6 @@ const Materias: React.FC = () => {
       <IonContent className="body">
         <h1 className="titulo">Matérias</h1>
         <div className="linhaHorizontal"></div>
-
         {loading ? (
           <div className="loader-container"><div className="loader"></div></div>
         ) : error ? (
@@ -179,15 +258,28 @@ const Materias: React.FC = () => {
           <IonList className="materias-list">
             {materias.map((materia) => {
               const { totalTopicos, topicosConcluidos, progresso } = calcularProgresso(materia.topicos);
-
               return (
-                <IonItem
-                  key={materia.id}
-                  className="materia-item"
-                >
+                <IonItem key={materia.id} className="materia-item">
                   <IonLabel>
                     <IonRow className="containerMateria">
-                      <IonIcon icon={library} className="livro" />
+                      <div>
+                        {iconesMaterias[materia.id]?.startsWith('data:image') ? (
+                          <img
+                            src={iconesMaterias[materia.id]}
+                            alt="Ícone personalizado"
+                            className="imgMF imgMobile imgT"
+                          />
+                        ) : (() => {
+                          const key = materia.nome.trim().toUpperCase();
+                          const iconeData = iconePorMateriaNome[key];
+                          return (
+                            <IonIcon
+                              icon={iconeData ? iconeData.icon : library}
+                              className={iconeData ? iconeData.className : 'livro'}
+                            />
+                          );
+                        })()}
+                      </div>
                       <IonCol className="td">
                         <h2 className="txtTitMat">{materia.nome}</h2>
                       </IonCol>
@@ -205,6 +297,24 @@ const Materias: React.FC = () => {
                           ...
                         </IonButton>
                       </IonCol>
+                    </IonRow>
+                    <IonRow>
+                      <IonIcon
+                        icon={image}
+                        className="iconImg"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const input = document.getElementById(`input-icone-${materia.id}`) as HTMLInputElement;
+                          input?.click();
+                        }}
+                      />
+                      <input
+                        id={`input-icone-${materia.id}`}
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        onChange={(e) => handleIconeChange(e, materia.id)}
+                      />
                     </IonRow>
                     <IonRow className="totalAtividades">
                       <p>{totalTopicos} tópicos</p>
@@ -225,15 +335,13 @@ const Materias: React.FC = () => {
             })}
           </IonList>
         )}
-
         <IonButton className="botao-adicionar" shape="round" color="primary" onClick={handleAdicionar}>
           +
         </IonButton>
-
         <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalAddMateria">
           <IonContent className="ion-padding">
             <IonRow className="contFecharModal">
-              <IonIcon icon={close} className="iconeFecharM" onClick={() => setShowModal(false)}/>
+              <IonIcon icon={close} className="iconeFecharM" onClick={() => setShowModal(false)} />
             </IonRow>
             <IonRow className="centroModal">
               <h2 className="labelT">
@@ -254,7 +362,6 @@ const Materias: React.FC = () => {
             </div>
           </IonContent>
         </IonModal>
-
         <IonPopover
           isOpen={showPopover}
           event={popoverEvent}
@@ -274,4 +381,4 @@ const Materias: React.FC = () => {
   );
 };
 
-export default Materias
+export default Materias;

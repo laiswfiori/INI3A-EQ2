@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { IonPage, IonContent, IonImg, IonIcon, IonLabel, IonButton } from '@ionic/react';
-import { library, brush, book, school, accessibility, earth, leaf, batteryCharging, planet, calculator } from 'ionicons/icons';
+import { library, brush, book, school, accessibility, earth, leaf, flask, planet, calculator } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -18,7 +18,7 @@ const Home: React.FC = () => {
     { id: 'm5', icon: accessibility, label: 'Sociologia' },
     { id: 'm6', icon: earth, label: 'Geografia' },
     { id: 'm7', icon: leaf, label: 'Biologia' },
-    { id: 'm8', icon: batteryCharging, label: 'Química' },
+    { id: 'm8', icon: flask, label: 'Química' },
     { id: 'm9', icon: planet, label: 'Física' },
     { id: 'm10', icon: calculator, label: 'Matemática' },
   ];
@@ -38,7 +38,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
         if (carouselRef.current) {
-            const itemWidth = 170; 
+            const itemWidth = carouselRef.current?.querySelector('.materia')?.clientWidth || 170;
             const maxScrollLeft = carouselRef.current.scrollWidth - carouselRef.current.clientWidth;
             
             if (carouselRef.current.scrollLeft >= maxScrollLeft - 10) {

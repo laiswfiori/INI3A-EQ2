@@ -343,3 +343,9 @@ ion-modal.modalFlashcards::part(content) {
     min-height: 100% !important;
     height: 100% !important;
 }
+
+.rowIN {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}

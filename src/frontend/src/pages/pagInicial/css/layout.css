@@ -127,6 +127,9 @@
     .cardFraquezas {
         width: 70% !important;
     }
+    #logo {
+        width: 60% !important;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {

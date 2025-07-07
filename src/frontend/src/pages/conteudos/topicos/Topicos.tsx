@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal, IonPopover,
-  IonInput, IonTextarea, IonRow, IonCol } from '@ionic/react';
-import { layers, pencil, trash, arrowForward  } from 'ionicons/icons';
+import {
+  IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal, IonPopover,
+  IonInput, IonTextarea, IonRow, IonCol
+} from '@ionic/react';
+import { layers, pencil, trash, arrowForward, image } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -44,7 +46,9 @@ const Topicos: React.FC = () => {
   const [topicoSelecionado, setTopicoSelecionado] = useState<Topico | null>(null);
   const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
   const [modoModal, setModoModal] = useState<'adicionar' | 'editar'>('adicionar');
-  
+
+  // Estado para ícones personalizados dos tópicos (não matérias)
+  const [iconesTopicos, setIconesTopicos] = useState<{ [key: number]: string }>({});
 
   const [novoTopico, setNovoTopico] = useState({
     titulo: '',
@@ -78,10 +82,16 @@ const Topicos: React.FC = () => {
         });
 
         const topicosFiltrados = topicosComAtividades.filter(
-          (topico: { materia_id: number; }) => topico.materia_id === Number(id)
+          (topico: { materia_id: number }) => topico.materia_id === Number(id)
         );
 
         setTopicos(topicosFiltrados);
+
+        // Carrega ícones dos tópicos do localStorage
+        const iconesSalvos = localStorage.getItem('iconesTopicos');
+        if (iconesSalvos) {
+          setIconesTopicos(JSON.parse(iconesSalvos));
+        }
       } catch (err: any) {
         setError(err.message || 'Erro ao carregar tópicos');
       } finally {
@@ -114,74 +124,89 @@ const Topicos: React.FC = () => {
       alert('Erro: ID da matéria inválido.');
       return;
     }
-      const api = new API();
-      const endpoint = modoModal === 'editar'
-        ? `topicos/${topicoSelecionado?.id}`
-        : `topicos`;
-  
-      const method = modoModal === 'editar' ? api.put : api.post;
-  
-      try {
-        console.log('Enntrou no try');
-        console.log('Enpoint: ', endpoint);
-        const data = await method.call(api, endpoint, {
-          titulo: novoTopico.titulo,
-          materia_id: novoTopico.materia_id,
-          descricao: novoTopico.descricao,
-        });
-  
-        if (modoModal === 'editar') {
-                  console.log('Enntrou no if');
+    const api = new API();
+    const endpoint = modoModal === 'editar'
+      ? `topicos/${topicoSelecionado?.id}`
+      : `topicos`;
 
-          setTopicos(prev =>
-            prev.map(t => t.id === topicoSelecionado?.id
-              ? { ...data, atividades: t.atividades || [] }
-              : t
-            )
-          );
-        } else {
-                  console.log('Enntrou no else');
+    const method = modoModal === 'editar' ? api.put : api.post;
 
-          setTopicos(prev => [...prev, { ...data, atividades: [] }]);
-        }
-  
-        setShowModal(false);
-        setShowPopover(false);
-      } catch (error: any) {
-        console.log('Enntrou no catch');
-        console.error('Erro ao salvar tópico:', error);
-        alert(error?.response?.data?.message || 'Erro desconhecido ao salvar tópico');
+    try {
+      const data = await method.call(api, endpoint, {
+        titulo: novoTopico.titulo,
+        materia_id: novoTopico.materia_id,
+        descricao: novoTopico.descricao,
+      });
+
+      if (modoModal === 'editar') {
+        setTopicos(prev =>
+          prev.map(t => t.id === topicoSelecionado?.id
+            ? { ...data, atividades: t.atividades || [] }
+            : t
+          )
+        );
+      } else {
+        setTopicos(prev => [...prev, { ...data, atividades: [] }]);
       }
-    };
-  
-    const handleEditar = () => {
-      if (topicoSelecionado) {
-        setNovoTopico({ titulo: topicoSelecionado.titulo, materia_id: topicoSelecionado.materia_id, descricao: topicoSelecionado.descricao});
-        setModoModal('editar');
-        setShowModal(true);
-        setShowPopover(false);
-      }
-    };
-  
-    const handleAdicionar = () => {
-       setNovoTopico({ titulo: '',  materia_id: novoTopico.materia_id, descricao: '' });
-      setModoModal('adicionar');
+
+      setShowModal(false);
+      setShowPopover(false);
+    } catch (error: any) {
+      console.error('Erro ao salvar tópico:', error);
+      alert(error?.response?.data?.message || 'Erro desconhecido ao salvar tópico');
+    }
+  };
+
+  const handleEditar = () => {
+    if (topicoSelecionado) {
+      setNovoTopico({ titulo: topicoSelecionado.titulo, materia_id: topicoSelecionado.materia_id, descricao: topicoSelecionado.descricao });
+      setModoModal('editar');
       setShowModal(true);
-    };
-  
-    const handleExcluir = async () => {
-      if (topicoSelecionado) {
-        const api = new API();
-        try {
-          await api.delete(`topicos/${topicoSelecionado.id}`);
-          setShowPopover(false);
-          setTopicos(prev => prev.filter(t => t.id !== topicoSelecionado.id));
-          console.log('Tópicos excluído');
-        } catch (err) {
-          console.error('Erro ao excluir tópico:', err);
-        }
+      setShowPopover(false);
+    }
+  };
+
+  const handleAdicionar = () => {
+    setNovoTopico({ titulo: '', materia_id: novoTopico.materia_id, descricao: '' });
+    setModoModal('adicionar');
+    setShowModal(true);
+  };
+
+  const handleExcluir = async () => {
+    if (topicoSelecionado) {
+      const api = new API();
+      try {
+        await api.delete(`topicos/${topicoSelecionado.id}`);
+        setShowPopover(false);
+        setTopicos(prev => prev.filter(t => t.id !== topicoSelecionado.id));
+        console.log('Tópico excluído');
+      } catch (err) {
+        console.error('Erro ao excluir tópico:', err);
       }
+    }
+  };
+
+  // Função para salvar ícone personalizado do tópico no localStorage
+  const salvarIconeTopico = (topicoId: number, dataUrl: string) => {
+    setIconesTopicos(prev => {
+      const novos = { ...prev, [topicoId]: dataUrl };
+      localStorage.setItem('iconesTopicos', JSON.stringify(novos));
+      return novos;
+    });
+  };
+
+  // Handler para upload de imagem do ícone do tópico
+  const handleIconeChange = (e: React.ChangeEvent<HTMLInputElement>, topicoId: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      salvarIconeTopico(topicoId, result);
     };
+    reader.readAsDataURL(file);
+  };
 
   return (
     <IonPage className={`pagina ${showModal ? 'desfocado' : ''}`}>
@@ -208,8 +233,19 @@ const Topicos: React.FC = () => {
                   className="topico-item"
                 >
                   <IonLabel>
-                    <IonRow className="containerTopico">
-                      <IonIcon icon={layers} className="livro" />
+                    <IonRow className="containerTopico" >
+                      <div>
+                        {iconesTopicos[topico.id] ? (
+                          <img
+                            src={iconesTopicos[topico.id]}
+                            alt="Ícone personalizado"
+                            className="imgMF imgMobile imgT"
+                          />
+                        ) : (
+                          <IonIcon icon={layers} className="livro" />
+                        )}
+                      </div>
+
                       <IonCol className="td">
                         <h2 className="txtTitMat">{topico.titulo}</h2>
                         <p>{topico.descricao}</p>
@@ -226,9 +262,28 @@ const Topicos: React.FC = () => {
                           }}
                         >
                           ...
-                      </IonButton>
-                    </IonCol>
+                        </IonButton>
+                      </IonCol>
                     </IonRow>
+                    <IonRow>
+                      <IonIcon
+                        icon={image}
+                        className="iconImg"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const input = document.getElementById(`input-icone-${topico.id}`) as HTMLInputElement;
+                          input?.click();
+                        }}
+                      />
+                      <input
+                        id={`input-icone-${topico.id}`}
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        onChange={(e) => handleIconeChange(e, topico.id)}
+                      />
+                    </IonRow>
+
                     <IonRow className="totalAtividades">
                       <p>{totalAtividades} atividades</p>
                       <p id="txtConc">{atividadesConcluidas} concluídas</p>
@@ -244,7 +299,7 @@ const Topicos: React.FC = () => {
                         Ir para atividades
                         <IonIcon icon={arrowForward} className="setaMat" />
                       </IonButton>
-                    </IonRow>                    
+                    </IonRow>
                   </IonLabel>
                 </IonItem>
               );
@@ -267,7 +322,7 @@ const Topicos: React.FC = () => {
               <h2 className="labelT">
                 {modoModal === 'adicionar' ? 'Adicionar tópico' : 'Editar tópico'}
               </h2>
-            </IonRow>            
+            </IonRow>
             <div id="pagAdicionar">
               <p className="label">Título</p>
               <IonInput

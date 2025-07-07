@@ -62,27 +62,27 @@ const Header: React.FC = () => {
   };
 
   useEffect(() => {
-    const ultimo = localStorage.getItem('ultimaExibicaoPopover');
-    const agora = Date.now();
+    const checkPopover = () => {
+      const notificacoesAtivas = localStorage.getItem('notificacoesAtivas') !== 'false';
+      if (!notificacoesAtivas) {
+        setMostrarPopover(false);
+        return;
+      }
 
-    if (!ultimo || agora - parseInt(ultimo) > 3 * 60 * 60 * 1000) {
-      setMostrarPopover(true);
-      playSomNotificacao();
-      localStorage.setItem('ultimaExibicaoPopover', agora.toString());
-    }
+      const ultimo = localStorage.getItem('ultimaExibicaoPopover');
+      const agora = Date.now();
 
-    const intervalo = setInterval(() => {
-      const ultimoSalvo = localStorage.getItem('ultimaExibicaoPopover');
-      const agoraAtual = Date.now();
-
-      if (!ultimoSalvo || agoraAtual - parseInt(ultimoSalvo) > 3 * 60 * 60 * 1000) {
+      if (!ultimo || (agora - parseInt(ultimo)) > 3 * 60 * 60 * 1000) {
         setMostrarPopover(true);
         playSomNotificacao();
-        localStorage.setItem('ultimaExibicaoPopover', agoraAtual.toString());
+        localStorage.setItem('ultimaExibicaoPopover', agora.toString());
       }
-    }, 1 * 1000); 
+    };
 
-    return () => clearInterval(intervalo);
+    checkPopover();
+    const interval = setInterval(checkPopover, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (

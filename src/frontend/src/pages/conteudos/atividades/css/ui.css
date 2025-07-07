@@ -186,6 +186,17 @@ ion-button#btnCheck::part(native):hover {
   cursor: pointer;
 }
 
+#ver {
+  color: #00296b;
+  z-index: 9999999999;
+}
+
+ion-button#btnVer::part(native):hover {
+  color: #00296b !important;
+  background-color: rgb(231, 224, 224) !important;
+  cursor: pointer;
+}
+
 .atividade-item.concluida {
   background-color: #d4edda !important;
 }

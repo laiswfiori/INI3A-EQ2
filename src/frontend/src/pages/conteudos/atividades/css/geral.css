@@ -92,6 +92,9 @@ ion-button {
 .td {
   display: flex;
   flex-direction: column;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  min-width: 50%;
 }
 
 ion-item.atividade-item ion-label {

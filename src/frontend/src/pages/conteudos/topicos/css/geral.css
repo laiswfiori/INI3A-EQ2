@@ -202,3 +202,7 @@ ion-button.opcoes::part(native) {
 ion-popover::part(backdrop) {
   background: transparent !important;
 }
+
+.imgT {
+  max-width: 5.5rem !important;
+}

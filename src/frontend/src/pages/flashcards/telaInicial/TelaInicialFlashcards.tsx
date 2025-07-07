@@ -12,6 +12,7 @@ import API from '../../../lib/api';
 import CardEditor from '../components/CardEditor';
 import { useIonViewWillEnter } from '@ionic/react';
 import { useSoundPlayer } from '../../../utils/Som';
+import { iconePorMateriaNome } from '../../conteudos/matérias/Materias';
 
 interface Topico {
   id: number;
@@ -72,6 +73,14 @@ const TelaInicialFlashcards: React.FC = () => {
   const [editingCardIndex, setEditingCardIndex] = useState<number | null>(null);
   const [cardEditorInitialFrente, setCardEditorInitialFrente] = useState<ConteudoItem[]>([]);
   const [cardEditorInitialVerso, setCardEditorInitialVerso] = useState<ConteudoItem[]>([]);
+  const [iconesMaterias, setIconesMaterias] = useState<{ [key: number]: string }>({});
+
+  useEffect(() => {
+    const iconesSalvos = localStorage.getItem('iconesMaterias');
+    if (iconesSalvos) {
+      setIconesMaterias(JSON.parse(iconesSalvos));
+    }
+  }, []);
 
   const { playSomIniciar } = useSoundPlayer();
 
@@ -546,19 +555,38 @@ const setShowCardEditorAndInitialData = (
                   <IonCol key={materia.id} className="materia-itemF">
                     <IonLabel>
                       <IonRow className="containerMateria">
-                        <IonIcon icon={library} className="livroF" />
-                        <IonCol className="td centro">
-                          <h2 className="txtTitMat">{materia.nome}</h2>
-                        </IonCol>
-                        <IonCol className="iconFim">
-                          <IonButton
-                            id={`config-btn-${materia.id}`}
-                            className="verTopicos"
-                            onClick={() => toggleExpandirMateria(materia.id)}
-                          >
-                            {estaExpandida ? 'Esconder tópicos' : 'Ver tópicos'}
-                          </IonButton>
-                        </IonCol>
+                        <IonRow className="rowIN">
+                          <div>
+                            {iconesMaterias[materia.id]?.startsWith('data:image') ? (
+                            <img
+                              src={iconesMaterias[materia.id]}
+                              alt="Ícone da matéria"
+                              className="imgMF"
+                            />
+                          ) : (() => {
+                            const key = materia.nome.trim().toUpperCase();
+                            const iconeData = iconePorMateriaNome[key];
+                            return (
+                              <IonIcon
+                                icon={iconeData ? iconeData.icon : library}
+                                className={iconeData ? iconeData.className : 'livroF'}
+                              />
+                            );
+                          })()}
+                          </div>
+                          <IonCol className="td centro">
+                            <h2 className="txtTitMat">{materia.nome}</h2>
+                          </IonCol>
+                          <IonCol className="iconFim">
+                            <IonButton
+                              id={`config-btn-${materia.id}`}
+                              className="verTopicos"
+                              onClick={() => toggleExpandirMateria(materia.id)}
+                            >
+                              {estaExpandida ? 'Esconder tópicos' : 'Ver tópicos'}
+                            </IonButton>
+                          </IonCol>
+                        </IonRow>
                       </IonRow>
                       <IonRow className="espDC">
                         <p className="txtWC">{totalCardsMateria} cards</p>

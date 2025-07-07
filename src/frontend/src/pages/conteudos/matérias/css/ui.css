@@ -184,3 +184,102 @@ ion-button#btnCheck::part(native):hover {
   background-color: rgb(231, 224, 224) !important;
   cursor: pointer;
 }
+
+.imgAdd {
+  max-height: 3.8rem;
+  max-width: 3.8rem;
+}
+
+.iconImg {
+  color: #74767a;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.m1 {
+    font-size: 3.2rem;
+    background-color: rgb(185, 39, 39);
+    color: white;
+    border-radius: 10px;
+    padding: 4%;
+}
+
+.m2 {
+    font-size: 3.2rem;
+    background-color: rgb(88, 47, 7);
+    color: white;
+    border-radius: 10px;
+    padding: 4%;
+}
+
+.m3 {
+    font-size: 3.2rem;
+    background-color: rgb(64, 193, 216);
+    color: white;
+    border-radius: 10px;
+    padding: 4%;
+}
+
+.m4 {
+    font-size: 3.2rem;
+    background-color: rgb(161, 85, 22);
+    color: white;
+    border-radius: 10px;
+    padding: 4%;
+}
+
+.m5 {
+    font-size: 3.2rem;
+    background-color: rgb(206, 81, 139);
+    color: white;
+    border-radius: 10px;
+    padding: 4%;
+}
+
+.m6 {
+    font-size: 3.2rem;
+    background-color: rgb(202, 182, 5);
+    color: white;
+    border-radius: 10px;
+    padding: 4%;
+}
+
+.m7 {
+    font-size: 3.2rem;
+    background-color: rgb(24, 136, 211);
+    color: white;
+    border-radius: 10px;
+    padding: 4%;
+}
+
+.m8 {
+    font-size: 3.2rem;
+    background-color: rgb(58, 128, 18);
+    color: white;
+    border-radius: 10px;
+    padding: 4%;
+}
+
+.m9 {
+    font-size: 3.2rem;
+    background-color: rgb(219, 132, 19);
+    color: white;
+    border-radius: 10px;
+    padding: 4%;
+}
+
+.m10 {
+    font-size: 3.2rem;
+    background-color: rgb(112, 30, 179);
+    color: white;
+    border-radius: 10px;
+    padding: 4%;
+}
+
+.m11 {
+    font-size: 3.2rem;
+    background-color: rgb(196, 28, 6);
+    color: white;
+    border-radius: 10px;
+    padding: 4%;
+}
