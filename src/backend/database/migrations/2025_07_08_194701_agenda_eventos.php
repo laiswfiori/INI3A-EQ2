@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('materias', function (Blueprint $table) { 
+        Schema::create('agenda_eventos', function (Blueprint $table) { 
             $table->increments('id'); 
             $table->unsignedBigInteger('usuario_id');
             $table->string('nome', 255); 

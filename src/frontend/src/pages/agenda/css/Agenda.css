@@ -1,9 +1,4 @@
 /* Estilo geral para a página e conteúdo */
-ion-content {
-  --background: #121212; /* Fundo escuro */
-  --color: #ffffff;
-}
-
 ion-toolbar[color="dark"] {
   --background: #1f1f1f;
   --color: #ffffff;
