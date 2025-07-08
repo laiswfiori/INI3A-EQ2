@@ -67,9 +67,6 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
 
     // --- Rotas de Flashcards ---
     $router->group(['prefix' => 'flashcards'], function () use ($router) {
-        $router->get('/todos', 'FlashcardsController@revisaoGeral');
-        $router->get('/materia/{id}', 'FlashcardsController@porMateria');
-        $router->get('/{id}/cards', 'FlashcardsController@cards');
         $router->get('/', 'FlashcardsController@index');
         $router->post('/', 'FlashcardsController@store');
         $router->get('/{id}', 'FlashcardsController@show');
@@ -86,6 +83,15 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->delete('/{id}', 'CardsController@destroy');
     });
 
+    // --- Rotas de Agenda Eventos ---
+    $router->group(['prefix' => 'agendaEventos'], function () use ($router) {
+        $router->get('/', 'AgendaEventosController@index');
+        $router->post('/', 'AgendaEventosController@store');
+        $router->get('/{id}', 'AgendaEventosController@show');
+        $router->put('/{id}', 'AgendaEventosController@update');
+        $router->delete('/{id}', 'AgendaEventosController@destroy');
+    });
+    
     // --- Rota de Teste de Autenticação ---
     $router->get('/teste-auth', function () {
         return response()->json([
