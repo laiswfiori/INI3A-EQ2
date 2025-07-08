@@ -57,6 +57,7 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import TesteGrafico from './pages/flashcards/relatorio/TesteGrafico';
 
 
 setupIonicReact();
