@@ -107,6 +107,24 @@ const Relatorio: React.FC = () => {
     { name: 'muito difícil', value: respostas.filter(r => r === 'muito difícil').length },
   ];
 
+  const desempenhoFlashcard = (() => {
+    const total = respostas.length;
+
+    const bons = respostas.filter(r => r === 'fácil' || r === 'muito fácil').length;
+    const regulares = respostas.filter(r => r === 'médio').length;
+    const baixos = respostas.filter(r => r === 'difícil' || r === 'muito difícil').length;
+
+    if (total === 0) return 'sem dados';
+
+    const percentualBom = bons / total;
+    const percentualRegular = regulares / total;
+    const percentualBaixo = baixos / total;
+
+    if (percentualBom >= 0.6) return 'bom';
+    if (percentualRegular >= 0.4) return 'regular';
+    return 'baixo';
+  })();
+
   const processarDados = (dados: Array<{name: string, value: number}>) => {
     return dados
       .filter(item => item.value > 0)
@@ -624,8 +642,8 @@ const gerarRelatorio = async () => {
                 </IonCol>
               </IonRow>
               <IonRow className="colDesempenho">
-                <p className="txtTF">Desempenho</p>
-                <p className="txtTF">Nível: <span>{nivelFlashcard}</span></p>
+                <p className="txtTF">Nível</p>
+                <p className="txtTF">Desempenho: <span>{desempenhoFlashcard}</span></p>
               </IonRow>
             </IonRow>
           </IonRow>
