@@ -30,6 +30,14 @@
     color: #3da5d9;
 }
 
+.iconesMobile:hover {
+    color: #3da5d9;
+}
+
+.iconesMobile:hover + .iconesTxt {
+    color: #3da5d9;
+}
+
 .icones.ativo:hover {
     color: #3da5d9;
 }
@@ -38,7 +46,17 @@
     color: #3da5d9;
 }
 
+.iconesMobile.ativo, .iconesTxt.ativo {
+  color: #ffe99d; 
+}
 
+.iconesMobile.ativo:hover {
+    color: #3da5d9;
+}
+
+.iconesMobile.ativo:hover + .iconesTxt.ativo {
+    color: #3da5d9;
+}
 
 #menu {
     padding-right: 3%;

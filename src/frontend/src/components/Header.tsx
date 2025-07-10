@@ -61,6 +61,17 @@ const Header: React.FC = () => {
     setMenuAberto(!menuAberto);
   };
 
+  const rotaMateriasAtiva = 
+  location.pathname.includes('/conteudos') ||
+  location.pathname.startsWith('/materias/') ||
+  location.pathname.startsWith('/topicos/') ||
+  location.pathname.startsWith('/atividades/');
+
+  const rotaFlashcardsAtiva =
+  location.pathname.includes('/flashcards') ||
+  location.pathname.startsWith('/flashcard/');
+
+
   useEffect(() => {
     const checkPopover = () => {
       const notificacoesAtivas = localStorage.getItem('notificacoesAtivas') !== 'false';
@@ -103,15 +114,15 @@ const Header: React.FC = () => {
 
             <div>
               <IonTabButton className="azul" tab="flashcards" onClick={navFlashcards}>
-                <IonIcon icon={star} className={`icones ${location.pathname.startsWith('/flashcards') ? 'ativo' : ''}`} />
-                <IonLabel className={`iconesTxt ${location.pathname.startsWith('/flashcards') ? 'ativo' : ''}`}>Flashcards</IonLabel>
+                <IonIcon icon={star} className={`icones ${rotaFlashcardsAtiva ? 'ativo' : ''}`} />
+                <IonLabel className={`iconesTxt ${rotaFlashcardsAtiva ? 'ativo' : ''}`}>Flashcards</IonLabel>
               </IonTabButton>
             </div>
 
             <div>
               <IonTabButton className="azul" tab="conteudos" onClick={navConteudos}>
-                <IonIcon icon={documentText} className={`icones ${location.pathname.startsWith('/conteudos') ? 'ativo' : ''}`} />
-                <IonLabel className={`iconesTxt ${location.pathname.startsWith('/conteudos') ? 'ativo' : ''}`}>Matérias</IonLabel>
+                <IonIcon icon={documentText} className={`icones ${rotaMateriasAtiva ? 'ativo' : ''}`} />
+                <IonLabel className={`iconesTxt ${rotaMateriasAtiva ? 'ativo' : ''}`}>Matérias</IonLabel>
               </IonTabButton>
             </div>
           </div>
@@ -162,7 +173,7 @@ const Header: React.FC = () => {
               <div className="popover-col1">
                 <div className="contIP">
                   <IonIcon icon={close} className="iconesPopover" onClick={() => setMostrarPopover(false)}
-  style={{ cursor: 'pointer' }}/>
+                  style={{ cursor: 'pointer' }}/>
                 </div>
               </div>
             </div>
@@ -190,22 +201,22 @@ const Header: React.FC = () => {
         {menuAberto && (
           <div id="mobileMenu" className="azul" ref={navRef}>
             <div id="linksMenu">
-                <div className="menu2" onClick={navAgenda}>
-                  <IonIcon icon={calendar} className="iconesMobile" />
-                  <IonLabel className="iconesTxt">Agenda</IonLabel>
-                </div>
-                <div className="menu2" onClick={navFlashcards}>
-                  <IonIcon icon={star} className="iconesMobile" />
-                  <IonLabel className="iconesTxt">Flashcards</IonLabel>
-                </div>
-                <div className="menu2" onClick={navConteudos}>
-                  <IonIcon icon={documentText} className="iconesMobile" />
-                  <IonLabel className="iconesTxt">Conteúdos</IonLabel>
-                </div>
-                <div className="menu2" onClick={navPerfil}>
-                  <IonIcon icon={personCircle} className="iconesMobile" />
-                  <IonLabel className="iconesTxt">Perfil</IonLabel>
-                </div>
+              <div className="menu2" onClick={navAgenda}>
+                <IonIcon icon={calendar} className={`iconesMobile ${location.pathname.startsWith('/agenda') ? 'ativo' : ''}`} />
+                <IonLabel className={`iconesTxt ${location.pathname.startsWith('/agenda') ? 'ativo' : ''}`}>Agenda</IonLabel>
+              </div>
+              <div className="menu2" onClick={navFlashcards}>
+                <IonIcon icon={star} className={`iconesMobile ${rotaFlashcardsAtiva ? 'ativo' : ''}`} />
+                <IonLabel className={`iconesTxt ${rotaFlashcardsAtiva ? 'ativo' : ''}`}>Flashcards</IonLabel>
+              </div>
+              <div className="menu2" onClick={navConteudos}>
+                <IonIcon icon={documentText} className={`iconesMobile ${rotaMateriasAtiva ? 'ativo' : ''}`} />
+                <IonLabel className={`iconesTxt ${rotaMateriasAtiva ? 'ativo' : ''}`}>Conteúdos</IonLabel>
+              </div>
+              <div className="menu2" onClick={navPerfil}>
+                <IonIcon icon={personCircle} className={`iconesMobile ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`} />
+                <IonLabel className={`iconesTxt ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}>Perfil</IonLabel>
+              </div>
             </div>
           </div>
         )}

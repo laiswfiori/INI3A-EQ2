@@ -4,7 +4,7 @@ import {
   IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, 
   IonModal, IonPopover, IonInput, IonTextarea, IonRow, IonCol, IonSelect, IonSelectOption
 } from '@ionic/react';
-import { pencil, trash, flash, checkmarkDone, close, checkmark, arrowForward, documentText, images } from 'ionicons/icons';
+import { pencil, trash, flash, checkmarkDone, close, checkmark, arrowForward, documentText, reader, map, clipboard, newspaper, images } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -293,6 +293,16 @@ const Atividades: React.FC = () => {
     }
   };
 
+  const getIconPorTipo = (tipo: string) => {
+    const tipoLower = tipo.toLowerCase();
+    if (tipoLower.includes('resumo') || tipoLower.includes('anota')) return documentText;
+    if (tipoLower.includes('lista')) return reader;
+    if (tipoLower.includes('mapa')) return map;
+    if (tipoLower.includes('prova') || tipoLower.includes('simulado')) return clipboard;
+    if (tipoLower.includes('tarefa')) return newspaper;
+    return documentText; 
+  };
+
   return (
     <IonPage className={`pagina ${showModal ? 'desfocado' : ''}`}>
       <Header />
@@ -326,7 +336,7 @@ const Atividades: React.FC = () => {
                           className="imgMF imgMobile"
                         />
                       ) : (
-                        <IonIcon icon={documentText} className="livro" />
+                        <IonIcon icon={getIconPorTipo(atividade.tipo)} className="livro" />
                       )}
 
                       <IonCol className="td">

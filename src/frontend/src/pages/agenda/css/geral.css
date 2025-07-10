@@ -97,11 +97,20 @@
   justify-content: space-around;
 }
 
+.col1MA {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .colAtividades {
+  height: 100%;
   width: 60%;
   max-width: 60%;
   border: 1px solid #a0a0a0;
   border-radius: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .flexRA {
@@ -110,13 +119,19 @@
 }
 
 .colGrafico {
+  height: 100%;
   width: 30%;
   max-width: 30%;
   border: 1px solid #a0a0a0;
   border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .flexA {
+  width: 100%;
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid #a0a0a0;
@@ -140,3 +155,55 @@
   margin-top: 1%;
 }
 
+.rowOfensiva {
+  height: 200px;
+  width: 100%;
+  margin: 1%;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch !important;
+}
+
+.colOfensiva1 {
+  width: 30%;
+  max-width: 30%;
+  min-height: 100%;
+  height: 100%;
+  align-self: stretch;
+  display: flex;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.colOfensiva2 {
+  width: 70%;
+  height: 100%;
+}
+
+.divOfensiva {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.diasOfensiva {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.rowScroll {
+  height: 600px;
+  max-height: 600px;
+  margin-bottom: 2%;
+}
+
+.atividades-scroll {
+  flex-grow: 1;        
+  overflow-y: auto;    
+  padding-right: 8px;  
+}

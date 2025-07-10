@@ -1,13 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { IonPage, IonToolbar, IonContent, IonButton, IonButtons, IonIcon, IonSelect, 
   IonSelectOption, IonSegment, IonSegmentButton, IonLabel, IonRow, IonCol, IonItem } from '@ionic/react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { chevronBack, chevronForward, chevronDown, documentText, rocket, school, calendar } from 'ionicons/icons';
+import { chevronBack, chevronForward, chevronDown, documentText, rocket, school, calendar, flame } from 'ionicons/icons';
 import Header from '../../components/Header';
+import API from '../../lib/api';
 import './css/geral.css'; 
 import './css/ui.css'; 
 import './css/layouts.css'; 
+
+interface Atividade {
+  id: number;
+  topico_id: number;
+  materia_id: number;
+  titulo: string;
+  descricao: string;
+  conteudo: string | { tipo: 'texto' | 'imagem' | 'arquivo', valor: string, nome?: string }[];
+  status: string;
+  tipo: string;
+  nivel: string;
+  created_at: string;
+  updated_at: string;
+}
 
 export default function () {
   const location = useLocation();
@@ -64,17 +79,83 @@ export default function () {
   const days = getDaysInMonth(currentDate);
   const currentMonthYear = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
 
-  const data = [
-  { name: 'Feitas', value: 8 },
-  { name: 'Pendentes', value: 4 }
-];
+  const [atividades, setAtividades] = useState<Atividade[]>([]);
 
-  const COLORS = ['#086e10', '#d1250e'];
+    useEffect(() => {
+    const fetchAtividades = async () => {
+      try {
+        const api = new API();
+        const todas = await api.get("atividades");
+        
+        setAtividades(todas);
+      } catch (error) {
+        console.error("Erro ao buscar atividades para a agenda:", error);
+      }
+    };
+
+    fetchAtividades();
+  }, []);
+
+
+  const contagemStatus = {
+    'não iniciado': 0,
+    'em andamento': 0,
+    'concluído': 0,
+  };
+
+  atividades.forEach((a) => {
+    if (contagemStatus.hasOwnProperty(a.status)) {
+      contagemStatus[a.status]++;
+    }
+  });
+
+  const data = [
+    { name: 'Não iniciado', value: contagemStatus['não iniciado'] },
+    { name: 'Em andamento', value: contagemStatus['em andamento'] },
+    { name: 'Concluído', value: contagemStatus['concluído'] },
+  ];
+
+  const COLORS = ['#d1250e', '#a18115', '#086e10'];
+
+  const getStatusClass = (status: string) => {
+    if (status === 'não iniciado') return 'status-vermelho';
+    if (status === 'em andamento') return 'status-amarelo';
+    return '';
+  };
+
+  const semanaAtual = () => {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0); 
+
+    const diaSemana = hoje.getDay();
+    const inicioSemana = new Date(hoje);
+    inicioSemana.setDate(hoje.getDate() - diaSemana); 
+
+    const dias = [];
+
+    for (let i = 0; i < 7; i++) {
+      const dia = new Date(inicioSemana);
+      dia.setDate(inicioSemana.getDate() + i);
+      dia.setHours(0, 0, 0, 0); 
+      dias.push({
+        numero: dia.getDate(),
+        nome: dia.toLocaleDateString('pt-BR', { weekday: 'short' }),
+        isHoje:
+          dia.getTime() === hoje.getTime(),
+        ativo: dia.getTime() <= hoje.getTime(), 
+      });
+    }
+
+    return dias;
+  };
+
+  const diasDaSemana = semanaAtual();
+
 
   return (
     <IonPage>
       <Header />
-      <IonContent>
+      <IonContent className="pagAgenda">
         <IonRow className="rowAgenda">
           <h1 className="txtAgenda preto">Calendário</h1>
         </IonRow>
@@ -187,28 +268,28 @@ export default function () {
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">3</p>
+                  <p className="txtGrande">{atividades.length}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={documentText} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Total de tarefas</p>
+                <p className="txtTF">Total de atividades</p>
               </IonRow>
             </IonRow>
 
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">4</p>
+                  <p className="txtGrande">{atividades.filter(a => a.status === "concluído").length}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={school} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Total de tarefas feitas</p>
+                <p className="txtTF">Total de atividades concluídas</p>
               </IonRow>
             </IonRow>
 
@@ -226,42 +307,58 @@ export default function () {
               </IonRow>
             </IonRow>
           </IonRow>  
-          <IonRow className="rowA rowCentro">
+          <IonRow className="rowA rowCentro rowScroll">
             <IonCol className="colAtividades">
               <IonRow className="flexA">
                 <h2>Próximas atividades</h2>
                 <p className="txtDescricao">Atividades para os próximos 7 dias. Não acumule suas obrigações!</p>
               </IonRow>
+              <div className="atividades-scroll">
               <IonRow className="flexRA">
-                <IonItem className="materia-item ativAgenda">
-                  <IonRow className="containerMateria">
-                    <IonCol className="col1M">
-                      <IonIcon icon={calendar} className="iconesTF" />
-                    </IonCol>
-                    <IonCol className="col2M">
-                      <IonRow>
+                {atividades.map((atividade) => (
+                  <IonItem key={atividade.id} className="materia-item ativAgenda">
+                    <IonRow className="containerMateria">
+                      <IonCol className="col1MA">
+                        <IonIcon icon={calendar} className="iconesTF" />
                         <IonCol className="td tdMat">
-                          <h2 className="txtTMat">Simulado</h2>
-                        </IonCol>
-                        <IonCol id="containerConfig">
-                          <IonButton className="config">...</IonButton>
+                            <h2 className="txtTMat">{atividade.titulo}</h2>
+                            <p className="txtDescricao">{atividade.tipo}</p>
+                          </IonCol>
+                      </IonCol>
+                      <IonCol className="col2M">
+                        <IonRow>
+                          <IonCol id="containerConfig">
+                            <IonButton className="config">...</IonButton>
+                          </IonCol>
+                        </IonRow>
+                      </IonCol>
+
+                      <IonRow className="rowA">
+                        <IonCol>
+                          <p className="txtDescricao">{atividade.descricao}</p>
                         </IonCol>
                       </IonRow>
-                    </IonCol>
-                    <IonRow className="rowA">
-                        <p className="txtDescricao">Descrição top sobre alguma atividade top!</p>
+
+                      <IonRow className="rowDivsA rowA">
+                        <IonCol className={`divAgenda divStatus ${getStatusClass(atividade.status)}`}>
+                          <p>{atividade.status}</p>
+                        </IonCol>
+                        <IonCol className="divAgenda divData">
+                          <p>
+                            {new Date(atividade.created_at).toLocaleString('pt-BR', {
+                              day: '2-digit',
+                              month: 'short',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </p>
+                        </IonCol>
                       </IonRow>
-                    <IonRow className="rowDivsA rowA">
-                      <div className="divAgenda divNivel">
-                        <p>Fácil</p>
-                      </div>
-                      <div className="divAgenda divData">
-                        <p>Para 31 de jul., 18:30</p>
-                      </div>
                     </IonRow>
-                  </IonRow>
-                </IonItem>
+                  </IonItem>
+                ))}
               </IonRow>
+              </div>
             </IonCol>
             <IonCol className="colGrafico">
               <IonRow className="flexA sBorda">
@@ -295,6 +392,46 @@ export default function () {
                   </PieChart>
                 </ResponsiveContainer>
               </div>
+              <IonRow className="rowOfensiva">
+                <IonCol className="colOfensiva1">
+                  <div className="divOfensiva">
+                    <IonIcon icon={flame} className="iconeFogo" />
+                    <h3 className="hOfensiva">116 dias</h3>
+                    <p className="txtDescricao pOfensiva">Sequência de login</p>
+                  </div>
+                </IonCol>
+                <IonCol className="colOfensiva2">
+                  <div className="diasOfensiva">
+                    <h3 className="dias1">5863</h3>
+                    <h4>/8000</h4>
+                  </div>
+                  <IonRow className="barraA">
+                    <div className="barraStatusA" style={{ width: `${50}%` }}></div>
+                  </IonRow>
+                  <div className="date-nav-and-indicators">
+                    <div className="date-nav-container">
+                      {diasDaSemana.map((dia, index) => (
+                        <div
+                          key={index}
+                          className={`day-item ${dia.isHoje ? 'day-active' : ''}`}
+                        >
+                          <div className="day-number">{dia.numero}</div>
+                          <div className="day-name">{dia.nome}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="indicator-container">
+                      <div className="indicator-line" />
+                      {diasDaSemana.map((dia, index) => (
+                        <div
+                          key={index}
+                          className={`indicator-dot ${dia.ativo ? 'indicator-active' : ''}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </IonCol>
+              </IonRow>
             </IonCol>
           </IonRow>  
       </IonContent>
