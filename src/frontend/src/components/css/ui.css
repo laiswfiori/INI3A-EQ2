@@ -17,7 +17,6 @@
     margin-left: 2%;
 }
 
-
 .iconesMobile {
     font-size: 1.5rem; 
     color: white;
@@ -30,6 +29,16 @@
 .icones:hover + .iconesTxt {
     color: #3da5d9;
 }
+
+.icones.ativo:hover {
+    color: #3da5d9;
+}
+
+.icones.ativo:hover + .iconesTxt.ativo {
+    color: #3da5d9;
+}
+
+
 
 #menu {
     padding-right: 3%;

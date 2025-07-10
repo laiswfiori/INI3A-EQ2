@@ -151,26 +151,22 @@ const gerarRelatorio = async () => {
     const margin = 40;
     let yPosition = margin;
 
-    // Definição das cores dos níveis
     const CORES_NIVEIS: Record<string, [number, number, number]> = {
-      'muito fácil': [76, 175, 80],    // #4CAF50
-      'fácil': [139, 195, 74],         // #8BC34A
-      'médio': [255, 193, 7],          // #FFC107
-      'difícil': [255, 152, 0],        // #FF9800
-      'muito difícil': [244, 67, 54]   // #F44336
+      'muito fácil': [76, 175, 80],  
+      'fácil': [139, 195, 74],       
+      'médio': [255, 193, 7],         
+      'difícil': [255, 152, 0],       
+      'muito difícil': [244, 67, 54]  
     };
 
-    // Cores personalizadas
-    const COR_AZUL: [number, number, number] = [0, 41, 107];       // #00296b
-    const COR_LARANJA: [number, number, number] = [234, 115, 23];  // #ea7317
+    const COR_AZUL: [number, number, number] = [0, 41, 107];       
+    const COR_LARANJA: [number, number, number] = [234, 115, 23]; 
     const COR_BRANCA: [number, number, number] = [255, 255, 255];
     const COR_CINZA: [number, number, number] = [240, 240, 240];
 
-    // ============ PRIMEIRA PÁGINA ============
-    // Cabeçalho principal com imagem
-    const logoUrl = '/../../../../imgs/logoCompleta.png'; // Altere para o caminho da sua imagem
+
+    const logoUrl = '/../../../../imgs/logoCompleta.png';
     
-    // Carrega e adiciona a imagem (assíncrono)
     const imgData = await new Promise<string>((resolve) => {
       const img = new Image();
       img.src = logoUrl;
@@ -182,28 +178,24 @@ const gerarRelatorio = async () => {
         ctx?.drawImage(img, 0, 0);
         resolve(canvas.toDataURL('image/png'));
       };
-      img.onerror = () => resolve(''); // Fallback se a imagem não carregar
+      img.onerror = () => resolve(''); 
     });
 
     if (imgData) {
-      // Adiciona a imagem (ajuste o tamanho conforme necessário)
       doc.addImage(imgData, 'PNG', margin, yPosition - 10, 60, 60);
     }
 
-    // Retângulo de fundo para o título
     doc.setFillColor(...COR_BRANCA);
     doc.rect(margin + 70, yPosition - 15, pageWidth - margin - 110, 60, 'F');
     doc.setDrawColor(...COR_BRANCA);
     doc.rect(margin + 70, yPosition - 15, pageWidth - margin - 110, 60);
     
-    // Título
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(24);
     doc.text('RELATÓRIO DE ESTUDO', margin + 80, yPosition + 15);
     
-    yPosition += 70; // Aumenta o espaçamento para acomodar a imagem
+    yPosition += 70;
 
-     // Informações do Aluno
     doc.setFillColor(...COR_LARANJA);
     doc.rect(margin, yPosition, pageWidth - 2 * margin, 80, 'F');
     doc.setDrawColor(...COR_LARANJA);
@@ -221,7 +213,6 @@ const gerarRelatorio = async () => {
       yPosition += 70;
     }
 
-    // Seção de Destaques
     doc.setFillColor(...COR_AZUL);
     doc.rect(margin, yPosition - 10, pageWidth - 2 * margin, 35, 'F');
     doc.setDrawColor(...COR_AZUL);
@@ -231,7 +222,6 @@ const gerarRelatorio = async () => {
     doc.text('DESTAQUES', margin + 15, yPosition + 15);
     yPosition += 35;
 
-    // Cards de destaques
     const highlights = [
       { title: 'TOTAL DE CARDS', value: totalCardsFeitos, color: COR_BRANCA },
       { title: 'CARDS FÁCEIS', value: totalAcertos, color: COR_BRANCA },
@@ -255,7 +245,7 @@ const gerarRelatorio = async () => {
       doc.setFontSize(20);
       doc.setFont('helvetica', 'bold');
       
-      if (index === 2) { // Nível geral
+      if (index === 2) { 
         const nivelCor = CORES_NIVEIS[nivelFlashcard] || COR_AZUL;
         doc.setTextColor(...nivelCor);
       } else {
@@ -266,7 +256,6 @@ const gerarRelatorio = async () => {
     });
     yPosition += 110;
 
-    // Seção Tempo de Estudo
     doc.setFillColor(...COR_AZUL);
     doc.rect(margin, yPosition - 10, pageWidth - 2 * margin, 35, 'F');
     doc.setDrawColor(...COR_AZUL);
@@ -276,7 +265,6 @@ const gerarRelatorio = async () => {
     doc.text('TEMPO DE ESTUDO', margin + 15, yPosition + 15);
     yPosition += 35;
 
-    // Conteúdo do tempo
     doc.setFillColor(...COR_CINZA);
     doc.rect(margin, yPosition, pageWidth - 2 * margin, 80, 'F');
     doc.setDrawColor(200, 200, 200);
@@ -288,7 +276,6 @@ const gerarRelatorio = async () => {
     doc.text(`Médio: ${tempoMedio}`, margin + 200, yPosition + 30);
     yPosition += 100;
 
-    // Seção Tempo por Card
     if (timeStats?.timeRecords && timeStats.timeRecords.length > 0) {
       doc.setFillColor(...COR_AZUL);
       doc.rect(margin, yPosition - 10, pageWidth - 2 * margin, 35, 'F');
@@ -299,14 +286,12 @@ const gerarRelatorio = async () => {
       doc.text('TEMPO POR CARD', margin + 15, yPosition + 15);
       yPosition += 35;
 
-      // Tabela
       const tableWidth = pageWidth - 2 * margin;
       const rowHeight = 22;
       const col1Width = 60;
       const col2Width = 100;
       const col3Width = tableWidth - col1Width - col2Width;
 
-      // Cabeçalho
       doc.setFillColor(...COR_LARANJA);
       doc.rect(margin, yPosition, tableWidth, rowHeight, 'F');
       doc.setFont('helvetica', 'bold');
@@ -316,7 +301,6 @@ const gerarRelatorio = async () => {
       doc.text('Dificuldade', margin + col1Width + col2Width + 10, yPosition + 16);
       yPosition += rowHeight;
 
-      // Linhas
       doc.setFont('helvetica', 'normal');
       timeStats.timeRecords.forEach((record, index) => {
         if (yPosition + rowHeight > doc.internal.pageSize.getHeight() - margin) {
@@ -355,7 +339,6 @@ const gerarRelatorio = async () => {
       yPosition += 20;
     }
 
-    // ============ SEGUNDA PÁGINA ============
     doc.addPage();
     yPosition = margin;
     
@@ -365,42 +348,38 @@ const gerarRelatorio = async () => {
     doc.text('DISTRIBUIÇÃO DAS RESPOSTAS', pageWidth / 2, yPosition, { align: 'center' });
     yPosition += 30;
 
-    // Gráfico com tamanho reduzido (60% do tamanho original)
     const graficoElement = document.querySelector('.recharts-wrapper');
     if (graficoElement) {
       const canvas = await html2canvas(graficoElement as HTMLElement, {
-        scale: 1.5, // Reduz a escala para deixar o gráfico menor
+        scale: 1.5, 
         backgroundColor: '#ffffff',
         logging: true
       });
       
-      // Define o tamanho reduzido (60% da largura da página)
       const imgWidth = (pageWidth - 2 * margin) * 0.6;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       
-      // Centraliza o gráfico na página
       const centerX = (pageWidth - imgWidth) / 2;
       
       doc.addImage(
         canvas, 
         'PNG', 
-        centerX, // Posição X centralizada
+        centerX, 
         yPosition, 
         imgWidth, 
         imgHeight
       );
       
-      yPosition += imgHeight + 40; // Espaço após o gráfico
+      yPosition += imgHeight + 40; 
     }
 
-    // ============ TERCEIRA PÁGINA (CARDS - MANTIDA ORIGINAL) ============
     doc.addPage();
     yPosition = margin;
 
     const dificuldades = [
-      { titulo: 'CARDS FÁCEIS', cor: [34, 139, 34], selector: '.bloco-facil' },       // Verde
-      { titulo: 'CARDS MÉDIOS', cor: [255, 193, 7], selector: '.bloco-medio' },        // Amarelo
-      { titulo: 'CARDS DIFÍCEIS', cor: [220, 53, 69], selector: '.bloco-dificil' }     // Vermelho
+      { titulo: 'CARDS FÁCEIS', cor: [34, 139, 34], selector: '.bloco-facil' },      
+      { titulo: 'CARDS MÉDIOS', cor: [255, 193, 7], selector: '.bloco-medio' },       
+      { titulo: 'CARDS DIFÍCEIS', cor: [220, 53, 69], selector: '.bloco-dificil' }     
     ];
 
     for (const dificuldade of dificuldades) {
@@ -436,7 +415,6 @@ const gerarRelatorio = async () => {
       }
     }
 
-    // Rodapé
     const totalPages = doc.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
       doc.setPage(i);
@@ -451,11 +429,10 @@ const gerarRelatorio = async () => {
     }
     const pdfOutput = doc.output('bloburl');
     
-    // Abre em nova aba sem barras ou controles
+
     const newWindow = window.open(pdfOutput, '_blank');
     
     if (!newWindow) {
-      // Fallback caso popups estejam bloqueados
       const link = document.createElement('a');
       link.href = pdfOutput;
       link.download = `Relatorio_${nomeDeck.replace(/\s+/g, '_')}.pdf`;
@@ -652,60 +629,58 @@ const gerarRelatorio = async () => {
               </IonRow>
             </IonRow>
           </IonRow>
+          <IonRow className="rowsRelatorio ion-justify-content-center">
+            <IonCol size="12" sizeMd="8" sizeLg="6">
+              <div className="tempo-stats-container">
+                <div 
+                  className="tempo-stats-header" 
+                  onClick={() => setShowDetailedTime(!showDetailedTime)}
+                >
+                  <h2 className="tempo-title">
+                    Estatísticas de Tempo
+                    <IonIcon 
+                      icon={showDetailedTime ? chevronUp : chevronDown} 
+                      className="tempo-toggle-icon"
+                    />
+                  </h2>
+                  <div className="tempo-summary">
+                    <div className="tempo-summary-item">
+                      <div className="tempo-icon-container">
+                        <IonIcon icon={timeOutline} className="tempo-icon" />
+                      </div>
+                      <div>
+                        <p className="tempo-label">Tempo Total</p>
+                        <p className="tempo-value">{tempoTotal}</p>
+                      </div>
+                    </div>
+                    <div className="tempo-summary-item">
+                      <div className="tempo-icon-container">
+                        <IonIcon icon={speedometerOutline} className="tempo-icon" />
+                      </div>
+                      <div>
+                        <p className="tempo-label">Tempo Médio</p>
+                        <p className="tempo-value">{tempoMedio}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-          {/* Bloco de Estatísticas de Tempo - Estilo Atualizado */}
-<IonRow className="rowsRelatorio ion-justify-content-center">
-  <IonCol size="12" sizeMd="8" sizeLg="6">
-    <div className="tempo-stats-container">
-      <div 
-        className="tempo-stats-header" 
-        onClick={() => setShowDetailedTime(!showDetailedTime)}
-      >
-        <h2 className="tempo-title">
-          Estatísticas de Tempo
-          <IonIcon 
-            icon={showDetailedTime ? chevronUp : chevronDown} 
-            className="tempo-toggle-icon"
-          />
-        </h2>
-        <div className="tempo-summary">
-          <div className="tempo-summary-item">
-            <div className="tempo-icon-container">
-              <IonIcon icon={timeOutline} className="tempo-icon" />
-            </div>
-            <div>
-              <p className="tempo-label">Tempo Total</p>
-              <p className="tempo-value">{tempoTotal}</p>
-            </div>
-          </div>
-          <div className="tempo-summary-item">
-            <div className="tempo-icon-container">
-              <IonIcon icon={speedometerOutline} className="tempo-icon" />
-            </div>
-            <div>
-              <p className="tempo-label">Tempo Médio</p>
-              <p className="tempo-value">{tempoMedio}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {showDetailedTime && timeStats?.timeRecords && (
-        <div className="tempo-details">
-          <h3 className="tempo-subtitle">Tempo por Card</h3>
-          <div className="tempo-cards-container">
-            {timeStats.timeRecords.map((record, index) => (
-              <div key={index} className="tempo-card-item">
-                <span className="tempo-card-numero">Card {index + 1}</span>
-                <span className="tempo-card-tempo">{formatTime(record.timeSpent)}</span>
+                {showDetailedTime && timeStats?.timeRecords && (
+                  <div className="tempo-details">
+                    <h3 className="tempo-subtitle">Tempo por Card</h3>
+                    <div className="tempo-cards-container">
+                      {timeStats.timeRecords.map((record, index) => (
+                        <div key={index} className="tempo-card-item">
+                          <span className="tempo-card-numero">Card {index + 1}</span>
+                          <span className="tempo-card-tempo">{formatTime(record.timeSpent)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  </IonCol>
-</IonRow>
+            </IonCol>
+          </IonRow>
 
           <IonRow className="rowsRelatorio grafico">
             <IonCol size="12" className="ion-text-center">
@@ -723,7 +698,7 @@ const gerarRelatorio = async () => {
                       innerRadius={60}
                       label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
                       labelLine={false}
-                      isAnimationActive={false} // Desativa animação para o PDF
+                      isAnimationActive={false} 
                     >
                       {dadosOrdenados.map((item) => (
                         <Cell 

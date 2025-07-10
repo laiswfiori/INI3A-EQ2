@@ -95,31 +95,33 @@ const Header: React.FC = () => {
 
           <div id="nav" className="azul" ref={navRef}>
               <div>
-                <IonTabButton className="azul" tab="agenda" onClick={navAgenda}>
-                  <IonIcon icon={calendar} className="icones"/>
-                  <IonLabel className="iconesTxt">Agenda</IonLabel>
-                </IonTabButton>
-              </div>
-              <div>
-                <IonTabButton className="azul" tab="flashcards" onClick={navFlashcards}>
-                  <IonIcon icon={star} className="icones"/>
-                  <IonLabel className="iconesTxt">Flashcards</IonLabel>
-                </IonTabButton>
-              </div>
-              <div>
-                <IonTabButton className="azul" tab="conteudos" onClick={navConteudos}>
-                    <IonIcon icon={documentText} className="icones"/>
-                    <IonLabel className="iconesTxt">Matérias</IonLabel>
-                  </IonTabButton>
-              </div>
+              <IonTabButton className="azul" tab="agenda" onClick={navAgenda}>
+                <IonIcon icon={calendar} className={`icones ${location.pathname.startsWith('/agenda') ? 'ativo' : ''}`} />
+                <IonLabel className={`iconesTxt ${location.pathname.startsWith('/agenda') ? 'ativo' : ''}`}>Agenda</IonLabel>
+              </IonTabButton>
+            </div>
+
+            <div>
+              <IonTabButton className="azul" tab="flashcards" onClick={navFlashcards}>
+                <IonIcon icon={star} className={`icones ${location.pathname.startsWith('/flashcards') ? 'ativo' : ''}`} />
+                <IonLabel className={`iconesTxt ${location.pathname.startsWith('/flashcards') ? 'ativo' : ''}`}>Flashcards</IonLabel>
+              </IonTabButton>
+            </div>
+
+            <div>
+              <IonTabButton className="azul" tab="conteudos" onClick={navConteudos}>
+                <IonIcon icon={documentText} className={`icones ${location.pathname.startsWith('/conteudos') ? 'ativo' : ''}`} />
+                <IonLabel className={`iconesTxt ${location.pathname.startsWith('/conteudos') ? 'ativo' : ''}`}>Matérias</IonLabel>
+              </IonTabButton>
+            </div>
           </div>
 
-          <div id="perfil" className="azul">
-            <IonTabButton tab="perfil" onClick={navPerfil}>
-                  <IonIcon icon={personCircle} className="icones"/>
-                  <IonLabel className="iconesTxt">Perfil</IonLabel>
-            </IonTabButton>
-          </div>     
+          <div>
+              <IonTabButton className="azul" tab="perfil" onClick={navPerfil}>
+                <IonIcon icon={personCircle} className={`icones ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`} />
+                <IonLabel className={`iconesTxt ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}>Perfil</IonLabel>
+              </IonTabButton>
+            </div> 
         </div>
        <IonButton
           id="popover-trigger"

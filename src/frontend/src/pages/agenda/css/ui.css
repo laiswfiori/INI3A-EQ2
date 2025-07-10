@@ -1,0 +1,114 @@
+.icones.ativo, .iconesTxt.ativo {
+  color: #ffe99d; 
+}
+
+.laranja {
+  --background: #ea7317 !important;
+  color: white !important;
+}
+
+ion-select::part(icon) {
+  color: black;
+}
+
+.view-segment {
+  --background: #fec601;
+  border-radius: 8px;
+}
+
+ion-segment-button {
+  --color: #5a5a5a;
+  --color-checked: black;
+  --indicator-color: #ffe99d; 
+  text-transform: none;
+}
+
+.days-of-week-header {
+  border-bottom: 1px solid #333;
+  background-color: #d4d4d4;
+}
+
+.day-header {
+  padding: 12px 4px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: black;
+}
+
+.calendar-day {
+  position: relative;
+  min-height: 110px;
+  padding: 8px;
+  border-bottom: 1px solid #333;
+  border-right: 1px solid #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.calendar-day:hover {
+  background-color: #d4d4d4;
+}
+
+
+.calendar-day:nth-child(7n) {
+  border-right: none;
+}
+
+.calendar-grid:last-child .calendar-day:nth-last-child(-n+7) {
+    border-bottom: none;
+}
+
+.day-number {
+  font-weight: 500;
+}
+
+.other-month {
+  color: #555;
+  cursor: default;
+}
+
+.other-month:hover {
+  background-color: transparent;
+}
+
+.today-highlight {
+  color: #ea7317;
+}
+
+.event-prova { background-color: #00296b; }
+.event-simulado { background-color: #ea3017; }
+.event-vestibular { background-color: #3da5d9; }
+.event-tarefa { background-color: #fec601; }
+.event-aula { background-color: #086e10; }
+
+.txtDescricao {
+  font-size: 1rem;
+  color: #494949;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.divAgenda {
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem !important;
+}
+
+.divNivel {
+  background-color: green;
+  color: darkgreen;
+  width: 15%;
+}
+
+.divData {
+  background-color: #333;
+  color: white;
+   width: 30%;
+}
+
+.sBorda {
+  border: none !important
+}

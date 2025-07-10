@@ -24,7 +24,7 @@ interface Flashcard {
 
 interface TimeRecord {
   cardId?: number;
-  timeSpent: number; // em segundos
+  timeSpent: number; 
   timestamp: Date;
 }
 
@@ -56,7 +56,7 @@ const Flashcards: React.FC = () => {
 
       try {
         const flashcard: Flashcard = await api.get(`flashcards/${flashcardId}`);
-        const cardsDoFlash: Card[] = await api.get(`flashcards/${flashcardId}/cards`);
+        const cardsDoFlash: Card[] = await api.get(`cards?flashcard_id=${flashcardId}`);
 
         setTituloDeck(flashcard.titulo || 'Estudo');
         setMaterias(flashcard.materias || []);
@@ -75,9 +75,7 @@ const Flashcards: React.FC = () => {
   }, [flashcardId]);
 
   useEffect(() => {
-    // Iniciar temporizador quando o card muda
     if (cards.length > 0) {
-      // Registrar tempo do card anterior (se existir)
       if (startTimeRef.current && currentCardIndex > 0) {
         const now = new Date();
         const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
@@ -91,16 +89,13 @@ const Flashcards: React.FC = () => {
         setTimeRecords(prev => [...prev, newRecord]);
       }
 
-      // Resetar para o novo card
       startTimeRef.current = new Date();
       setCurrentTime(0);
       
-      // Limpar temporizador anterior
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
       
-      // Iniciar novo temporizador
       timerRef.current = setInterval(() => {
         setCurrentTime(prev => prev + 1);
       }, 1000);
@@ -157,51 +152,57 @@ const Flashcards: React.FC = () => {
     setRespostas(novasRespostas);
     setCards(cardsAtualizados);
 
-    if (currentCardIndex + 1 < cards.length) {
-      setCurrentCardIndex(currentCardIndex + 1);
-      setMostrarVerso(false);
-      return;
+   if (currentCardIndex + 1 < cards.length) {
+    setCurrentCardIndex(currentCardIndex + 1);
+    setMostrarVerso(false);
+    return;
+  }
+
+  let updatedTimeRecords = timeRecords;
+
+  if (startTimeRef.current) {
+    const now = new Date();
+    const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
+
+    const newRecord: TimeRecord = {
+      cardId: cards[currentCardIndex]?.id,
+      timeSpent,
+      timestamp: now
+    };
+
+    updatedTimeRecords = [...timeRecords, newRecord];
+    setTimeRecords(updatedTimeRecords);
+  }
+
+  const total = cardsAtualizados.reduce((acc, c) => {
+    switch (c.nivelResposta) {
+      case 'muito fácil': return acc + 1;
+      case 'fácil': return acc + 2;
+      case 'médio': return acc + 3;
+      case 'difícil': return acc + 4;
+      case 'muito difícil': return acc + 5;
+      default: return acc;
     }
+  }, 0);
 
-    // Finalizar - registrar tempo do último card
-    if (startTimeRef.current) {
-      const now = new Date();
-      const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
-      
-      const newRecord: TimeRecord = {
-        cardId: cards[currentCardIndex]?.id,
-        timeSpent,
-        timestamp: now
-      };
-      
-      setTimeRecords(prev => [...prev, newRecord]);
-    }
+  const media = cardsAtualizados.length ? total / cardsAtualizados.length : 0;
+  const nivelFinal =
+    media <= 1.5 ? 'muito fácil' :
+    media <= 2.5 ? 'fácil' :
+    media <= 3.5 ? 'médio' :
+    media <= 4.5 ? 'difícil' : 'muito difícil';
 
-    const total = cardsAtualizados.reduce((acc, c) => {
-      switch (c.nivelResposta) {
-        case 'muito fácil': return acc + 1;
-        case 'fácil': return acc + 2;
-        case 'médio': return acc + 3;
-        case 'difícil': return acc + 4;
-        case 'muito difícil': return acc + 5;
-        default: return acc;
-      }
-    }, 0);
+  try {
+    await api.put(`flashcards/${flashcardId}`, { nivel: nivelFinal });
+  } catch (err) {
+    console.error('Erro ao salvar nível geral do flashcard:', err);
+  }
 
-    const media = cardsAtualizados.length ? total / cardsAtualizados.length : 0;
-    const nivelFinal =
-      media <= 1.5 ? 'muito fácil' :
-      media <= 2.5 ? 'fácil' :
-      media <= 3.5 ? 'médio' :
-      media <= 4.5 ? 'difícil' : 'muito difícil';
-
-    try {
-      await api.put(`flashcards/${flashcardId}`, { nivel: nivelFinal });
-    } catch (err) {
-      console.error('Erro ao salvar nível geral do flashcard:', err);
-    }
-
-    const timeStats = calculateTimeStats();
+  const timeStats = {
+    totalTime: updatedTimeRecords.reduce((sum, r) => sum + r.timeSpent, 0),
+    averageTime: updatedTimeRecords.length > 0 ? updatedTimeRecords.reduce((sum, r) => sum + r.timeSpent, 0) / updatedTimeRecords.length : 0,
+    timeRecords: updatedTimeRecords
+  };
 
     history.push('/flashcards/relatorio', {
       respostas: novasRespostas,
@@ -209,11 +210,7 @@ const Flashcards: React.FC = () => {
       nomeDeck: tituloDeck,
       revisaoGeral: false,
       materias,
-      timeStats: {
-        totalTime: timeStats.totalTime,
-        averageTime: timeStats.averageTime,
-        timeRecords
-      }
+      timeStats
     });
   };
 

@@ -1,3 +1,7 @@
+.icones.ativo, .iconesTxt.ativo {
+  color: #ffe99d; 
+}
+
 .emoji-botoes {
   margin-top: 5%;
   display: flex;

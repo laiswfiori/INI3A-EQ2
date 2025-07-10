@@ -1,3 +1,7 @@
+.icones.ativo, .iconesTxt.ativo {
+  color: #ffe99d; 
+}
+
 .linhaHorizontal {
     border-bottom: 2px solid #c0c0c0;  
     margin-bottom: 5%; 

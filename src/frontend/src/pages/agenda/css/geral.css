@@ -1,0 +1,142 @@
+.rowAgenda {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.txtAgenda {
+  font-size: 3rem !important;
+  text-align: center;
+}
+
+.calendar-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.month-navigation, .view-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.month-year-label {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.category-select {
+  --padding-start: 12px;
+  --padding-end: 12px;
+  min-height: 36px;
+  font-size: 0.9rem;
+  background-color: #ffc107;
+  border-radius: 8px;
+  color: black;
+}
+
+.calendar-grid-container {
+  background-color: white;
+  border: 1px solid #d4d4d4;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-left: 1%;
+  margin-right: 1%;
+  margin-top: 1%;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  width: 100%;
+}
+
+.events-container {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.event-tag {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: white;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.legend-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 20px;
+    padding: 0 8px;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #a0a0a0;
+}
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.rowCentro {
+  display: flex;
+  justify-content: space-around;
+}
+
+.colAtividades {
+  width: 60%;
+  max-width: 60%;
+  border: 1px solid #a0a0a0;
+  border-radius: 20px;
+}
+
+.flexRA {
+  display: flex;
+  justify-content: center;
+}
+
+.colGrafico {
+  width: 30%;
+  max-width: 30%;
+  border: 1px solid #a0a0a0;
+  border-radius: 20px;
+}
+
+.flexA {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #a0a0a0;
+  padding-bottom: 2%;
+}
+
+.ativAgenda {
+  width: 90% !important;
+  display: flex;
+  padding-bottom: 2% !important;
+}
+
+.rowA {
+  width: 100%;
+}
+
+.rowDivsA {
+  display: flex;
+  align-items: center;
+  gap: 2%;
+  margin-top: 1%;
+}
+

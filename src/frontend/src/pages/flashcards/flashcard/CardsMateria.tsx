@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // só adicionei useRef
 import { useParams, useHistory } from 'react-router-dom';
-import { IonPage, IonContent, IonButton, IonRow } from '@ionic/react';
+import { IonPage, IonContent, IonButton, IonRow, IonLabel } from '@ionic/react'; // adicionei IonLabel para exibir tempo (opcional)
 import './css/geral.css';
 import './css/ui.css';
 import './css/layouts.css';
@@ -29,6 +29,12 @@ interface Topico {
   materia_id: number;
 }
 
+interface TimeRecord {
+  cardId?: number;
+  timeSpent: number; 
+  timestamp: Date;
+}
+
 const api = new API();
 
 const CardsMateria: React.FC = () => {
@@ -43,7 +49,26 @@ const CardsMateria: React.FC = () => {
   const [titulo, setTitulo] = useState('');
   const [materias, setMaterias] = useState<string[]>([]);
 
+  const [timeRecords, setTimeRecords] = useState<TimeRecord[]>([]);
+  const [currentTime, setCurrentTime] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const startTimeRef = useRef<Date | null>(null);
+
+  const calculateTimeStats = () => {
+  const totalTime = timeRecords.reduce((sum, record) => sum + record.timeSpent, 0);
+  const averageTime = timeRecords.length > 0 ? totalTime / timeRecords.length : 0;
+    return {
+      totalTime,
+      averageTime,
+      totalCards: timeRecords.length
+    };
+  };
+
   const { playSomRespCerta, playSomRespErrada} = useSoundPlayer();
+
+  useEffect(() => {
+    console.log('Respostas atuais:', respostas);
+  }, [respostas]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,6 +114,14 @@ const CardsMateria: React.FC = () => {
         setCurrentCardIndex(0);
         setMostrarVerso(false);
         setRespostas([]);
+
+        setTimeRecords([]);
+        setCurrentTime(0);
+        startTimeRef.current = new Date();
+        if (timerRef.current) clearInterval(timerRef.current);
+        timerRef.current = setInterval(() => {
+          setCurrentTime(prev => prev + 1);
+        }, 1000);
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
       }
@@ -101,28 +134,42 @@ const CardsMateria: React.FC = () => {
     setMostrarVerso(false);
   }, [currentCardIndex]);
 
-  if (cards.length === 0) {
-    return (
-      <IonPage>
-        <Header />
-        <IonContent className="pagFlashcards">
-          <div className="loader-container"><div className="loader"></div></div>
-        </IonContent>
-      </IonPage>
-    );
-  }
+  useEffect(() => {
+    if (cards.length === 0) return;
 
-  const cardAtual = cards[currentCardIndex];
+    if (startTimeRef.current && currentCardIndex > 0) {
+      const now = new Date();
+      const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
+      const newRecord: TimeRecord = {
+        cardId: cards[currentCardIndex - 1]?.id,
+        timeSpent,
+        timestamp: now
+      };
+      setTimeRecords(prev => [...prev, newRecord]);
+    }
 
-  const niveis = [
-    { desc: 'muito fácil', emoji: '😄', cor: '#1e7e34' },
-    { desc: 'fácil', emoji: '😊', cor: '#28a745' },
-    { desc: 'médio', emoji: '😐', cor: '#ffc107' },
-    { desc: 'difícil', emoji: '😟', cor: '#fd7e14' },
-    { desc: 'muito difícil', emoji: '😣', cor: '#dc3545' },
-  ];
+    startTimeRef.current = new Date();
+    setCurrentTime(0);
+
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setCurrentTime(prev => prev + 1);
+    }, 1000);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [currentCardIndex, cards]);
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}m ${secs}s`;
+  };
 
   const handleNextCard = async (nivel: string) => {
+    const timeStats = calculateTimeStats();
+
     if (!mostrarVerso) return;
 
     if (nivel === 'muito fácil' || nivel === 'fácil') {
@@ -145,45 +192,32 @@ const CardsMateria: React.FC = () => {
       );
       setCards(cardsAtualizados);
 
+      if (startTimeRef.current) {
+        const now = new Date();
+        const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
+        const newRecord: TimeRecord = {
+          cardId: cardAtual.id,
+          timeSpent,
+          timestamp: now
+        };
+        setTimeRecords(prev => [...prev, newRecord]);
+      }
+
       if (currentCardIndex + 1 < cards.length) {
         setCurrentCardIndex(currentCardIndex + 1);
         setMostrarVerso(false);
       } else {
-        console.log('Calculando média.');
-        const pontuacaoTotal = cardsAtualizados.reduce((acc, card) => {
-          switch (card.nivelResposta) {
-            case 'muito fácil': return acc + 1;
-            case 'fácil': return acc + 2;
-            case 'médio': return acc + 3;
-            case 'difícil': return acc + 4;
-            case 'muito difícil': return acc + 5;
-            default: return acc;
-          }
-        }, 0);
-
-        const media = cardsAtualizados.length ? pontuacaoTotal / cardsAtualizados.length : 0;
-        const nivelFinal =
-          media <= 1.5 ? 'muito fácil' :
-          media <= 2.5 ? 'fácil' :
-          media <= 3.5 ? 'médio' :
-          media <= 4.5 ? 'difícil' : 'muito difícil';
-
-        try {
-          const flashcardIds = Array.from(new Set(cards.map(c => c.flashcard_id)));
-          await Promise.all(
-            flashcardIds.map(fid => fid && api.put(`flashcards/${fid}`, { nivel: nivelFinal }))
-          );
-          console.log('Média final registrada:', nivelFinal);
-        } catch (error) {
-          console.error('Erro ao registrar nível do flashcard:', error);
-        }
-
         history.push('/flashcards/relatorio', {
           respostas: novasRespostas,
           cardsComRespostas: cardsAtualizados,
           nomeDeck: titulo,
           revisaoGeral: false,
           materias,
+          timeStats: {
+          totalTime: timeStats.totalTime,
+          averageTime: timeStats.averageTime,
+          timeRecords
+          }
         });
       }
     } catch (error) {
@@ -191,10 +225,35 @@ const CardsMateria: React.FC = () => {
     }
   };
 
+  if (cards.length === 0) {
+    return (
+      <IonPage>
+        <Header />
+        <IonContent className="pagFlashcards">
+          <div className="loader-container"><div className="loader"></div></div>
+        </IonContent>
+      </IonPage>
+    );
+  }
+
+  const cardAtual = cards[currentCardIndex];
+
+  const niveis = [
+    { desc: 'muito fácil', emoji: '😄', cor: '#1e7e34' },
+    { desc: 'fácil', emoji: '😊', cor: '#28a745' },
+    { desc: 'médio', emoji: '😐', cor: '#ffc107' },
+    { desc: 'difícil', emoji: '😟', cor: '#fd7e14' },
+    { desc: 'muito difícil', emoji: '😣', cor: '#dc3545' },
+  ];
+
   return (
     <IonPage>
       <Header />
       <IonContent className="pagFlashcards">
+        <div className="time-display">
+          <IonLabel>Tempo no card: {formatTime(currentTime)}</IonLabel>
+        </div>
+
         {mostrarVerso && (
           <IonRow className="flexF" style={{ marginBottom: '10px' }}>
             <IonButton expand="block" onClick={() => setMostrarVerso(false)} className="btnVerso">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonContent, IonButton, IonRow } from '@ionic/react';
+import { IonPage, IonContent, IonButton, IonRow, IonLabel } from '@ionic/react';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layouts.css';
@@ -24,6 +24,12 @@ interface FlashcardData {
   cards?: Card[];
 }
 
+interface TimeRecord {
+  cardId?: number;
+  timeSpent: number;
+  timestamp: Date;
+}
+
 const api = new API();
 
 const RevisaoGeral: React.FC = () => {
@@ -40,7 +46,16 @@ const RevisaoGeral: React.FC = () => {
   const [flashcardTitulo, setFlashcardTitulo] = useState('');
   const [materias, setMaterias] = useState<string[]>([]);
 
+  const [timeRecords, setTimeRecords] = useState<TimeRecord[]>([]);
+  const [currentTime, setCurrentTime] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const startTimeRef = useRef<Date | null>(null);
+
   const { playSomRespCerta, playSomRespErrada} = useSoundPlayer();
+
+useEffect(() => {
+  console.log('Respostas acumuladas:', respostasAcumuladas);
+}, [respostasAcumuladas]);
 
   const didFetch = useRef(false);
 
@@ -77,6 +92,14 @@ const RevisaoGeral: React.FC = () => {
         setCurrentCardIndex(0);
         setMostrarVerso(false);
         setRespostasAcumuladas([]);
+
+        setTimeRecords([]);
+        setCurrentTime(0);
+        startTimeRef.current = new Date();
+        if (timerRef.current) clearInterval(timerRef.current);
+        timerRef.current = setInterval(() => {
+          setCurrentTime(prev => prev + 1);
+        }, 1000);
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
       }
@@ -88,6 +111,39 @@ const RevisaoGeral: React.FC = () => {
   useEffect(() => {
     setMostrarVerso(false);
   }, [currentCardIndex]);
+
+  useEffect(() => {
+    if (allCards.length === 0) return;
+
+    if (startTimeRef.current && currentCardIndex > 0) {
+      const now = new Date();
+      const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
+      const newRecord: TimeRecord = {
+        cardId: allCards.find(c => c.flashcard_id === flashcardsList[currentFlashcardIndex].id && c.id === allCards[currentCardIndex - 1]?.id)?.id,
+        timeSpent,
+        timestamp: now
+      };
+      setTimeRecords(prev => [...prev, newRecord]);
+    }
+
+    startTimeRef.current = new Date();
+    setCurrentTime(0);
+
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setCurrentTime(prev => prev + 1);
+    }, 1000);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [currentCardIndex, flashcardsList, allCards, currentFlashcardIndex]);
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}m ${secs}s`;
+  };
 
   if (flashcardsList.length === 0) {
     return (
@@ -122,9 +178,20 @@ const RevisaoGeral: React.FC = () => {
     { desc: 'médio', emoji: '😐', cor: '#ffc107' },
     { desc: 'difícil', emoji: '😟', cor: '#fd7e14' },
     { desc: 'muito difícil', emoji: '😣', cor: '#dc3545' },
-  ];
+  ]
+
+  const calculateTimeStats = () => {
+  const totalTime = timeRecords.reduce((sum, record) => sum + record.timeSpent, 0);
+  const averageTime = timeRecords.length > 0 ? totalTime / timeRecords.length : 0;
+    return {
+      totalTime,
+      averageTime,
+      totalCards: timeRecords.length
+    };
+  };
 
   const handleNextCardOrFlashcard = async (nivel: string) => {
+    const timeStats = calculateTimeStats();
     if (!mostrarVerso || !cardAtual || !cardAtual.id) return;
 
     try {
@@ -135,6 +202,17 @@ const RevisaoGeral: React.FC = () => {
 
     setRespostasAcumuladas(prev => [...prev, { cardId: cardAtual.id!, nivel }]);
     setAllCards(prev => prev.map(c => (c.id === cardAtual.id ? { ...c, nivelResposta: nivel } : c)));
+
+    if (startTimeRef.current) {
+      const now = new Date();
+      const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
+      const newRecord: TimeRecord = {
+        cardId: cardAtual.id,
+        timeSpent,
+        timestamp: now
+      };
+      setTimeRecords(prev => [...prev, newRecord]);
+    }
 
     if (currentCardIndex + 1 < cardsDoFlashcardAtual.length) {
       setCurrentCardIndex(currentCardIndex + 1);
@@ -185,11 +263,19 @@ const RevisaoGeral: React.FC = () => {
     }
 
     history.push('/flashcards/relatorio', {
-      respostas: [...respostasAcumuladas, { cardId: cardAtual.id!, nivel }],
-      cardsComRespostas: allCards.map(c => c.id === cardAtual.id ? { ...c, nivelResposta: nivel } : c),
+      respostas: [...respostasAcumuladas, { cardId: cardAtual.id!, nivel }]
+        .map(r => r.nivel), 
+      cardsComRespostas: allCards.map(c =>
+        c.id === cardAtual.id ? { ...c, nivelResposta: nivel } : c
+      ),
       nomeDeck: 'Revisão Geral',
       revisaoGeral: true,
       materias: [],
+      timeStats: {
+      totalTime: timeStats.totalTime,
+      averageTime: timeStats.averageTime,
+      timeRecords
+      }
     });
   };
 
@@ -214,6 +300,11 @@ const RevisaoGeral: React.FC = () => {
     <IonPage>
       <Header />
       <IonContent className="pagFlashcards">
+
+        <div className="time-display">
+          <IonLabel>Tempo no card: {formatTime(currentTime)}</IonLabel>
+        </div>
+
         {mostrarVerso && (
           <IonRow className="flexF" style={{ marginBottom: '10px' }}>
             <IonButton expand="block" onClick={handleVoltarFrente} className="btnVerso">

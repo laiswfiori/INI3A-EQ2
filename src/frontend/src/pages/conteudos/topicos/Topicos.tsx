@@ -47,7 +47,6 @@ const Topicos: React.FC = () => {
   const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
   const [modoModal, setModoModal] = useState<'adicionar' | 'editar'>('adicionar');
 
-  // Estado para ícones personalizados dos tópicos (não matérias)
   const [iconesTopicos, setIconesTopicos] = useState<{ [key: number]: string }>({});
 
   const [novoTopico, setNovoTopico] = useState({
@@ -87,7 +86,6 @@ const Topicos: React.FC = () => {
 
         setTopicos(topicosFiltrados);
 
-        // Carrega ícones dos tópicos do localStorage
         const iconesSalvos = localStorage.getItem('iconesTopicos');
         if (iconesSalvos) {
           setIconesTopicos(JSON.parse(iconesSalvos));
@@ -186,7 +184,6 @@ const Topicos: React.FC = () => {
     }
   };
 
-  // Função para salvar ícone personalizado do tópico no localStorage
   const salvarIconeTopico = (topicoId: number, dataUrl: string) => {
     setIconesTopicos(prev => {
       const novos = { ...prev, [topicoId]: dataUrl };
@@ -195,7 +192,7 @@ const Topicos: React.FC = () => {
     });
   };
 
-  // Handler para upload de imagem do ícone do tópico
+
   const handleIconeChange = (e: React.ChangeEvent<HTMLInputElement>, topicoId: number) => {
     const file = e.target.files?.[0];
     if (!file) return;

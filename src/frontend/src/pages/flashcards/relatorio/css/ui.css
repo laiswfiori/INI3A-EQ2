@@ -1,3 +1,7 @@
+.icones.ativo, .iconesTxt.ativo {
+  color: #ffe99d; 
+}
+
 h1 {
     font-size: 2rem !important;
     font-weight: 700 !important;
