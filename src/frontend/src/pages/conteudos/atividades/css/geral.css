@@ -45,8 +45,22 @@
 #containerConfig{
   display: flex;
   width: 100%;
+  height: 100%;;
   justify-content: flex-end;
   align-items: flex-start !important;
+}
+
+.larguraA {
+  width: 100%;
+  padding-left: 0.5%;
+  height: 100%;
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+.livroA {
+  align-self: flex-end !important;
 }
 
 .btnIC {

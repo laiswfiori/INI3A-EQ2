@@ -5,10 +5,12 @@ import { IonPage, IonToolbar, IonContent, IonButton, IonButtons, IonIcon, IonSel
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { chevronBack, chevronForward, chevronDown, documentText, rocket, school, calendar, flame } from 'ionicons/icons';
 import Header from '../../components/Header';
+import AnimacaoSVG from '../../components/AnimacaoSVG';  
 import API from '../../lib/api';
 import './css/geral.css'; 
 import './css/ui.css'; 
 import './css/layouts.css'; 
+import React from 'react';
 
 interface Atividade {
   id: number;
@@ -20,11 +22,17 @@ interface Atividade {
   status: string;
   tipo: string;
   nivel: string;
+  data_entrega?: string;
   created_at: string;
   updated_at: string;
 }
 
 export default function () {
+  const [menuAberto, setMenuAberto] = useState(false);
+  const toggleMenu = () => {
+    setMenuAberto(!menuAberto);
+  };
+
   const location = useLocation();
   const hoje = new Date();
 
@@ -151,6 +159,31 @@ export default function () {
 
   const diasDaSemana = semanaAtual();
 
+  const hojeZero = new Date();
+  hojeZero.setHours(0, 0, 0, 0);
+
+  const dataLimite = new Date(hojeZero);
+  dataLimite.setDate(dataLimite.getDate() + 7);
+
+  const atividadesFiltradas = atividades.filter((atividade) => {
+    if (atividade.status !== 'em andamento' && atividade.status !== 'não iniciado') {
+      return false;
+    }
+    
+    if (!atividade.data_entrega) {
+      return false;
+    }
+
+    const dataEntrega = new Date(atividade.data_entrega);
+    dataEntrega.setHours(0, 0, 0, 0);
+
+    return dataEntrega >= hojeZero && dataEntrega <= dataLimite;
+  });
+
+  const horarios = Array.from({ length: 24 }, (_, i) => {
+    const hora = i;
+    return `${hora.toString().padStart(2, '0')}h`;
+  });
 
   return (
     <IonPage>
@@ -159,7 +192,7 @@ export default function () {
         <IonRow className="rowAgenda">
           <h1 className="txtAgenda preto">Calendário</h1>
         </IonRow>
-        <IonToolbar className="laranja">
+        <IonToolbar className="laranja toolbarD">
           <div className="calendar-controls ion-padding-horizontal">
             <div className="month-navigation">
               <IonButtons>
@@ -188,21 +221,101 @@ export default function () {
                 <IonSelectOption value="aula">Aula</IonSelectOption>
               </IonSelect>
               
-              <IonSegment
-                value={viewMode}
-                onIonChange={(e) => setViewMode(e.detail.value as any)}
-                className="view-segment"
-              >
-                <IonSegmentButton value="Month">
-                  <IonLabel>Mês</IonLabel>
-                </IonSegmentButton>
-                <IonSegmentButton value="Week">
-                  <IonLabel>Semana</IonLabel>
-                </IonSegmentButton>
-              </IonSegment>
+              <div className="container">
+                <div className="tabs">
+                  <input
+                    type="radio"
+                    name="tabs"
+                    id="radio-1"   
+                    checked={viewMode === 'Mês'}
+                    onChange={() => setViewMode('Mês')}          
+                  />
+                  <label htmlFor="radio-1" className="tab">Mês</label>
+
+                  <input
+                    type="radio"
+                    name="tabs"
+                    id="radio-2"
+                    checked={viewMode === 'Semana'}
+                    onChange={() => setViewMode('Semana')}
+                  />
+                  <label htmlFor="radio-2" className="tab">Semana</label>
+
+                  <span className="glider" />
+                </div>
+              </div>
             </div>
           </div>
         </IonToolbar>
+        <IonToolbar className="laranja toolbarM">
+          <div className="month-navigation">
+            <div className="btnA">
+              <IonButtons>
+                <IonButton onClick={() => navigateMonth('prev')} fill="clear" color="light">
+                  <IonIcon slot="icon-only" icon={chevronBack} />
+                </IonButton>
+                <IonButton onClick={() => navigateMonth('next')} fill="clear" color="light">
+                  <IonIcon slot="icon-only" icon={chevronForward} />
+                </IonButton>
+              </IonButtons>
+              <span className="month-year-label">{currentMonthYear}</span>
+            </div>
+           <button
+            className={`menu-line ${menuAberto ? 'opened' : ''}`}
+            onClick={toggleMenu}
+            aria-label="Main Menu"
+            aria-expanded={menuAberto}
+          >
+            <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+              <path className="menu-line menu-line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+              <path className="menu-line menu-line2" d="M 20,50 H 80" />
+              <path className="menu-line menu-line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+            </svg>
+          </button>
+          </div>
+        </IonToolbar>
+        {menuAberto && (
+          <div className="view-controls laranja">
+              <IonSelect
+                className="category-select"
+                interface="popover"
+                placeholder="Categorias"
+                value="all"
+              >
+                <IonSelectOption value="all">Todas as Categorias</IonSelectOption>
+                <IonSelectOption value="prova">Prova</IonSelectOption>
+                <IonSelectOption value="simulado">Simulado</IonSelectOption>
+                <IonSelectOption value="vestibular">Vestibular</IonSelectOption>
+                <IonSelectOption value="tarefa">Tarefa</IonSelectOption>
+                <IonSelectOption value="aula">Aula</IonSelectOption>
+              </IonSelect>
+              
+              <div className="container">
+                <div className="tabs">
+                  <input
+                    type="radio"
+                    name="tabs"
+                    id="radio-1"     
+                    checked={viewMode === 'Mês'}
+                    onChange={() => setViewMode('Mês')}             
+                  />
+                  <label htmlFor="radio-1" className="tab">Mês</label>
+
+                  <input
+                    type="radio"
+                    name="tabs"
+                    id="radio-2"
+                    checked={viewMode === 'Semana'}
+                    onChange={() => setViewMode('Semana')}
+                  />
+                  <label htmlFor="radio-2" className="tab">Semana</label>
+
+                  <span className="glider" />
+                </div>
+              </div>
+            </div>
+        )}
+        {viewMode === 'Mês' && (
         <div className="calendar-grid-container">
           <div className="calendar-grid days-of-week-header">
             {daysOfWeek.map((day) => (
@@ -252,7 +365,37 @@ export default function () {
             ))}
           </div>
         </div>
-
+        )}
+       {viewMode === 'Semana' && (
+          <div className="calendar-grid-container semana">
+            <div className="calendar-grid days-of-week-header semana-header">
+              <div className="hora-header"></div> 
+              {diasDaSemana.map((dia, idx) => (
+                <div
+                  key={idx}
+                  className={`day-header ${dia.isHoje ? 'today-highlight' : ''} ${dia.ativo ? 'dia-ativo' : ''}`}
+                  onClick={() => {
+                    if (dia.ativo) setSelectedDate(dia.numero);
+                  }}
+                >
+                  <div className="day-number">{dia.numero}</div>
+                  <div className="day-name">{dia.nome}</div>
+                </div>
+              ))}
+            </div>
+            <div className="calendar-grid semana-horarios">
+              {horarios.map((hora, i) => (
+                <React.Fragment key={i}>
+                  <div className="hora-label">{hora}</div>
+                  {diasDaSemana.map((dia, j) => (
+                    <div key={j} className="calendar-day semana-dia-hora">
+                    </div>
+                  ))}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        )}
         <div className="legend-container">
             <div className="legend-item"><div className="legend-color event-prova"></div> Provas</div>
             <div className="legend-item"><div className="legend-color event-simulado"></div> Simulados</div>
@@ -315,7 +458,7 @@ export default function () {
               </IonRow>
               <div className="atividades-scroll">
               <IonRow className="flexRA">
-                {atividades.map((atividade) => (
+                {atividadesFiltradas.map((atividade) => (
                   <IonItem key={atividade.id} className="materia-item ativAgenda">
                     <IonRow className="containerMateria">
                       <IonCol className="col1MA">
@@ -345,12 +488,13 @@ export default function () {
                         </IonCol>
                         <IonCol className="divAgenda divData">
                           <p>
-                            {new Date(atividade.created_at).toLocaleString('pt-BR', {
-                              day: '2-digit',
-                              month: 'short',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}
+                            {atividade.data_entrega
+                              ? new Date(atividade.data_entrega).toLocaleDateString('pt-BR', {
+                                  day: '2-digit',
+                                  month: 'short',
+                                  year: 'numeric',
+                                })
+                              : 'Sem data de entrega'}
                           </p>
                         </IonCol>
                       </IonRow>
@@ -365,12 +509,7 @@ export default function () {
                 <h2>Progresso de estudo</h2>
                 <p className="txtDescricao">Acompanhe seu progresso usando o flashminder.</p>
               </IonRow>
-              <div
-                style={{
-                  width: '300px', 
-                  height: '300px',  
-                  margin: '0 auto', 
-                }}
+              <div id="grafico"
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -392,7 +531,7 @@ export default function () {
                   </PieChart>
                 </ResponsiveContainer>
               </div>
-              <IonRow className="rowOfensiva">
+              <IonRow className="rowOfensivaD">
                 <IonCol className="colOfensiva1">
                   <div className="divOfensiva">
                     <IonIcon icon={flame} className="iconeFogo" />
@@ -402,8 +541,8 @@ export default function () {
                 </IonCol>
                 <IonCol className="colOfensiva2">
                   <div className="diasOfensiva">
-                    <h3 className="dias1">5863</h3>
-                    <h4>/8000</h4>
+                    <h3 className="dias1">214</h3>
+                    <h4>/365</h4>
                   </div>
                   <IonRow className="barraA">
                     <div className="barraStatusA" style={{ width: `${50}%` }}></div>
@@ -431,6 +570,48 @@ export default function () {
                     </div>
                   </div>
                 </IonCol>
+              </IonRow>
+              <IonRow className="rowOfensivaT">
+                <IonCol className="colOfensiva1">
+                  <div className="divOfensiva">
+                    <IonIcon icon={flame} className="iconeFogo" />
+                    <h3 className="hOfensiva">116 dias</h3>
+                    <p className="txtDescricao pOfensiva">Sequência de login</p>
+                  </div>
+                </IonCol>
+                <IonCol className="colOfensiva2">
+                  <div className="diasOfensiva">
+                    <h3 className="dias1">214</h3>
+                    <h4>/365</h4>
+                  </div>               
+                  <IonRow className="barraA">
+                    <div className="barraStatusA" style={{ width: `${50}%` }}></div>
+                  </IonRow>
+                </IonCol>
+                <IonRow className="lA">
+                  <div className="date-nav-and-indicators">
+                    <div className="date-nav-container">
+                      {diasDaSemana.map((dia, index) => (
+                        <div
+                          key={index}
+                          className={`day-item ${dia.isHoje ? 'day-active' : ''}`}
+                        >
+                          <div className="day-number">{dia.numero}</div>
+                          <div className="day-name">{dia.nome}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="indicator-container">
+                      <div className="indicator-line" />
+                      {diasDaSemana.map((dia, index) => (
+                        <div
+                          key={index}
+                          className={`indicator-dot ${dia.ativo ? 'indicator-active' : ''}`}
+                        />
+                      ))}
+                    </div>
+                  </div>   
+                </IonRow>           
               </IonRow>
             </IonCol>
           </IonRow>  

@@ -22,31 +22,35 @@ class AtividadesController extends Controller
     }
 
 
-public function store(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'titulo' => 'required|string',
-        'descricao' => 'nullable|string',
-        'topico_id' => 'required|integer',
-        'status' => 'required|string',
-        'tipo' => 'required|string',
-        'conteudo' => 'nullable|array',
-        'conteudo.*.tipo' => 'required|in:texto,imagem,arquivo',
-        'conteudo.*.valor' => 'required|string',
-        'conteudo.*.nome' => 'nullable|string',
-    ]);
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'titulo' => 'required|string',
+            'descricao' => 'nullable|string',
+            'topico_id' => 'required|integer',
+            'status' => 'required|string',
+            'tipo' => 'required|string',
+            'conteudo' => 'nullable|array',
+            'conteudo.*.tipo' => 'required|in:texto,imagem,arquivo',
+            'conteudo.*.valor' => 'required|string',
+            'conteudo.*.nome' => 'nullable|string',
+            'data_entrega' => 'nullable|date'
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 422);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $data = $validator->validated();
+
+        if (empty($data['data_entrega'])) {
+            $data['data_entrega'] = null;
+        }
+
+        $atividade = Atividade::create($data);
+
+        return response()->json($atividade, 201);
     }
-
-    $data = $validator->validated();
-
-    $atividade = Atividade::create($data);
-
-    return response()->json($atividade, 201);
-}
-
 
 
     public function show($id)
@@ -73,8 +77,13 @@ public function store(Request $request)
             'conteudo',
             'status',
             'tipo',
-            'nivel'
+            'nivel',
+            'data_entrega'
         ]);
+
+        if (empty($dados['data_entrega'])) {
+            $dados['data_entrega'] = null;
+        }
 
         $atividade->update($dados);
 

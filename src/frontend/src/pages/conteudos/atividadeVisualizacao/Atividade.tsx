@@ -14,6 +14,7 @@ interface Atividade {
   conteudo: { tipo: 'texto' | 'imagem' | 'arquivo', valor: string, nome?: string }[];
   status: string;
   tipo: string;
+  data_entrega?: string;
 }
 
 const Atividade: React.FC = () => {

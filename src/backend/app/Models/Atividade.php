@@ -15,7 +15,8 @@ class Atividade extends Model
         'conteudo',
         'status',
         'tipo',
-        'nivel'
+        'nivel',
+        'data_entrega'
     ];
     protected $casts = [
         'conteudo' => 'array',

@@ -7,6 +7,7 @@ interface Atividade {
   tipo: string;
   status: string;
   nivel?: string | null;
+  data_entrega?: string;
   exercicios?: number | null;
   acertos?: number | null;
   nota?: number | null;

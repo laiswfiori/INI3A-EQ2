@@ -4,7 +4,7 @@ import {
   IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, 
   IonModal, IonPopover, IonInput, IonTextarea, IonRow, IonCol, IonSelect, IonSelectOption
 } from '@ionic/react';
-import { pencil, trash, flash, checkmarkDone, close, checkmark, arrowForward, documentText, reader, map, clipboard, newspaper, images } from 'ionicons/icons';
+import { pencil, trash, flash, checkmarkDone, close, checkmark, arrowForward, documentText, reader, map, clipboard, newspaper, images, documentAttach } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -24,6 +24,7 @@ interface Atividade {
   status: string;
   tipo: string;
   nivel: string;
+  data_entrega?: string;
   created_at: string;
   updated_at: string;
 }
@@ -42,6 +43,7 @@ const Atividades: React.FC = () => {
   const [imagensPreview, setImagensPreview] = useState<{ [atividadeId: number]: string }>({});
 
   const inputImagemRef = useRef<HTMLInputElement>(null);
+  const inputArquivoRef = useRef<HTMLInputElement>(null);
 
   const [showModalAvaliar, setShowModalAvaliar] = useState(false);
   const [atividadeAvaliar, setAtividadeAvaliar] = useState<Atividade | null>(null);
@@ -106,6 +108,7 @@ const Atividades: React.FC = () => {
     status: 'não iniciado',
     tipo: 'teórica',
     conteudo: [] as { tipo: 'texto' | 'imagem' | 'arquivo', valor: string, nome?: string }[],
+    data_entrega: '',
   });
 
   const history = useHistory();
@@ -171,6 +174,18 @@ const Atividades: React.FC = () => {
       return;
     }
 
+    if (novaAtividade.data_entrega) {
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0); 
+      const dataEntrega = new Date(novaAtividade.data_entrega);
+
+      if (dataEntrega < hoje) {
+        alert('A data de entrega deve ser hoje ou uma data futura.');
+        return;
+      }
+    }
+
+
     const conteudoFinal = textoTemp.trim()
       ? [...novaAtividade.conteudo, { tipo: 'texto', valor: textoTemp.trim() }]
       : novaAtividade.conteudo;
@@ -196,6 +211,17 @@ const Atividades: React.FC = () => {
         setAtividades(prev => [...prev, data]);
       }
 
+      const atividadeParaSalvar = {
+  ...novaAtividade,
+  conteudo: conteudoFinal,
+  data_entrega: novaAtividade.data_entrega && novaAtividade.data_entrega.trim() !== ''
+    ? novaAtividade.data_entrega
+    : undefined,
+};
+
+console.log('Objeto final para salvar:', atividadeParaSalvar)
+
+
       setTextoTemp('');
       setNovaAtividade({
         titulo: '',
@@ -204,6 +230,7 @@ const Atividades: React.FC = () => {
         status: 'não iniciado',
         tipo: '',
         conteudo: [],
+        data_entrega: '',
       });
 
       setShowModal(false);
@@ -223,6 +250,7 @@ const Atividades: React.FC = () => {
         status: atividadeSelecionada.status,
         tipo: atividadeSelecionada.tipo,
         conteudo: atividadeSelecionada.conteudo as { tipo: 'texto' | 'imagem' | 'arquivo', valor: string, nome?: string }[],
+        data_entrega: atividadeSelecionada.data_entrega || '', 
       });
       setModoModal('editar');
       setShowModal(true);
@@ -238,6 +266,7 @@ const Atividades: React.FC = () => {
       status: 'não iniciado',
       tipo: '',
       conteudo: [],
+      data_entrega: '',
     });
     setModoModal('adicionar');
     setShowModal(true);
@@ -303,6 +332,45 @@ const Atividades: React.FC = () => {
     return documentText; 
   };
 
+    const adicionarImagemAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNovaAtividade(prev => ({
+        ...prev,
+        conteudo: [...prev.conteudo, { tipo: 'imagem', valor: reader.result as string }]
+      }));
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const adicionarArquivoAoConteudo = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNovaAtividade(prev => ({
+        ...prev,
+        conteudo: [...prev.conteudo, {
+          tipo: 'arquivo',
+          valor: reader.result as string,
+          nome: file.name
+        }]
+      }));
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const removerItemConteudo = (index: number) => {
+  setNovaAtividade(prev => ({
+    ...prev,
+    conteudo: prev.conteudo.filter((_, idx) => idx !== index)
+  }));
+};
+
   return (
     <IonPage className={`pagina ${showModal ? 'desfocado' : ''}`}>
       <Header />
@@ -328,7 +396,7 @@ const Atividades: React.FC = () => {
               .map((atividade) => (
                 <IonItem key={atividade.id} className={`atividade-item ${atividade.status === 'concluído' ? 'concluida' : ''}`}>
                   <IonRow className="containerAtividade" style={{ position: 'relative' }}>
-                    <IonRow className="largura">
+                    <IonRow className="larguraA">
                       {imagensPreview[atividade.id] ? (
                         <img
                           src={imagensPreview[atividade.id]}
@@ -336,13 +404,14 @@ const Atividades: React.FC = () => {
                           className="imgMF imgMobile"
                         />
                       ) : (
-                        <IonIcon icon={getIconPorTipo(atividade.tipo)} className="livro" />
+                        <IonIcon icon={getIconPorTipo(atividade.tipo)} className="livro livroA" />
                       )}
 
                       <IonCol className="td">
                         <h2 className="txtTitMat">{atividade.titulo}</h2>
                         <p className="sRisco">{atividade.descricao}</p>
                         <p className="sRisco">Tipo: {atividade.tipo}</p>
+                        <p className="sRisco">Data de entrega: {atividade.data_entrega ? new Date(atividade.data_entrega).toLocaleDateString() : 'não definida'}</p>
                       </IonCol>
 
                       <IonCol id="containerConfig">
@@ -497,6 +566,14 @@ const Atividades: React.FC = () => {
                 <IonSelectOption value="tarefa">Tarefa</IonSelectOption>
                 <IonSelectOption value="simulado">Simulado</IonSelectOption>
               </IonSelect>
+
+              <p className="label">Data de entrega (opcional)</p>
+              <IonInput
+                type="date"
+                value={novaAtividade.data_entrega}
+                onIonChange={e => handleInputChange('data_entrega', e.detail.value ?? '')}
+                className="input"
+              />
               
               <p className="label">Conteúdo</p>
 
@@ -517,7 +594,65 @@ const Atividades: React.FC = () => {
                   }
                 }}
               />
+ <input
+                type="file"
+                accept="image/*"
+                onChange={adicionarImagemAoConteudo}
+                ref={inputImagemRef}
+                style={{ display: 'none' }}
+              />
 
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx,.ppt,.pptx"
+                onChange={adicionarArquivoAoConteudo}
+                ref={inputArquivoRef}
+                style={{ display: 'none' }}
+              />
+              <div className="conteudo-preview" style={{ marginTop: '10px' }}>
+                  {novaAtividade.conteudo.map((item, idx) => (
+                    <div key={idx} className="preview-item">
+                      {item.tipo === 'texto' && (
+                        <p>{item.valor}</p>
+                      )}
+                      {item.tipo === 'imagem' && (
+                        <div className="preview-img-container">
+                          <img src={item.valor} alt="imagem" className="preview-img"/>
+                          <IonIcon 
+                            icon={close} 
+                            className="icone-remover" 
+                            onClick={() => removerItemConteudo(idx)} 
+                          />
+                        </div>
+                      )}
+                      {item.tipo === 'arquivo' && (
+                        <div className="preview-arquivo">
+                          <a href={item.valor} download={item.nome}>{item.nome}</a>
+                          <IonIcon 
+                            icon={close} 
+                            className="icone-remover" 
+                            onClick={() => removerItemConteudo(idx)} 
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+
+
+              <IonRow className="flexInicio">
+                <IonIcon 
+                  icon={images} 
+                  className="iconesAdd" 
+                  onClick={() => inputImagemRef.current?.click()} 
+                />
+                <IonIcon 
+                  icon={documentAttach} 
+                  className="iconesAdd" 
+                  onClick={() => inputArquivoRef.current?.click()} 
+                />
+              </IonRow>
               <IonButton 
                 expand="block" 
                 onClick={handleSalvar} 

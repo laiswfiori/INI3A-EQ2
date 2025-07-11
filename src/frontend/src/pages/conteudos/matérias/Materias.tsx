@@ -22,6 +22,7 @@ interface Atividade {
   status: string;
   tipo: string;
   nivel: string;
+  data_entrega?: string;
   created_at: string;
   updated_at: string;
 }

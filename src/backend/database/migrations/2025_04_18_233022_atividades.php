@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('status', ['concluído', 'em andamento', 'não iniciado']);
             $table->enum('tipo', ['resumo', 'lista', 'mapa mental','prova','anotações','tarefa','simulado']);
             $table->enum('nivel', ['muito fácil', 'fácil', 'médio','difícil','muito difícil'])->nullable();
+            $table->date('data_entrega')->nullable();
 
             $table->foreign('topico_id')->references('id')->on('topicos')->onDelete('cascade');
 

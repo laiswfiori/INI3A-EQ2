@@ -20,11 +20,26 @@ export function validarTipoAtividade(tipo: string): string | null {
   return null;
 }
 
-export function validarCamposAtividade(atividade: { titulo: string; tipo: string; descricao: string }): string | null {
+export function validarDataEntrega(data_entrega: string | undefined): string | null {
+  if (!data_entrega) return null; 
+
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0); 
+
+  const data = new Date(data_entrega);
+  if (data < hoje) {
+    return 'A data de entrega deve ser hoje ou uma data futura.';
+  }
+
+  return null;
+}
+
+export function validarCamposAtividade(atividade: { titulo: string; tipo: string; descricao: string, data_entrega: string | undefined }): string | null {
   const erros = [
     validarTituloAtividade(atividade.titulo),
     validarDescricaoAtividade(atividade.descricao),
     validarTipoAtividade(atividade.tipo),
+    validarDataEntrega(atividade.data_entrega),
   ].filter(Boolean);
 
   if (erros.length > 0) return erros[0];

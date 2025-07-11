@@ -155,7 +155,7 @@
   margin-top: 1%;
 }
 
-.rowOfensiva {
+.rowOfensivaD {
   height: 200px;
   width: 100%;
   margin: 1%;
@@ -206,4 +206,128 @@
   flex-grow: 1;        
   overflow-y: auto;    
   padding-right: 8px;  
+}
+
+#grafico {
+  width: 300px;
+  height: 300px; 
+  margin: 0 auto; 
+}
+
+  .tabs {
+    display: flex;
+    position: relative;
+    background-color: #ffc107;
+    box-shadow:
+      0 0 1px 0 rgba(24, 94, 224, 0.15),
+      0 6px 12px 0 rgba(24, 94, 224, 0.15);
+    padding: 0.25rem;
+    border-radius: 12px;
+  }
+
+  .tabs * {
+    z-index: 2;
+  }
+
+  .container input[type="radio"] {
+    display: none;
+  }
+
+  .tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    width: 70px;
+    font-size: 0.8rem;
+    color: black;
+    font-weight: 500;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: color 0.15s ease-in;
+  }
+
+
+  .container input[type="radio"]:checked + label {
+    color: #000000;
+  }
+
+  .container input[id="radio-1"]:checked ~ .glider {
+    transform: translateX(0);
+  }
+
+  .container input[id="radio-2"]:checked ~ .glider {
+    transform: translateX(100%);
+  }
+
+  .container input[id="radio-3"]:checked ~ .glider {
+    transform: translateX(200%);
+  }
+
+  .glider {
+    position: absolute;
+    display: flex;
+    height: 30px;
+    width: 48%;
+    background-color: #fde499;
+    z-index: 1;
+    border-radius: 8px;
+    transition: 0.15s ease-out;
+  }
+
+.btnA {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.calendar-grid.days-of-week-header.semana-header {
+  display: grid;
+  grid-template-columns: 50px repeat(7, 1fr);
+  max-width: 100%;
+}
+
+.day-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  
+  align-items: center;      
+  cursor: default;
+  padding: 4px 0;
+  text-align: center;      
+}
+
+.day-header.dia-ativo {
+  cursor: pointer;
+}
+
+.calendar-grid.semana-horarios {
+  display: grid;
+  grid-template-columns: 50px repeat(7, 1fr);
+  row-gap: 4px;
+  column-gap: 4px;
+}
+
+.hora-header {
+  width: 50px;
+}
+
+.hora-label {
+  display: flex;
+  padding: 4px;
+  font-weight: bold;
+  text-align: center;
+  border-right: 1px solid #ccc;
+  align-items: center;   
+  justify-content: center !important;
+   height: 100%;
+}
+
+.calendar-day.semana-dia-hora {
+  border: 1px solid #ddd;
+  min-height: 40px;
+  background-color: #fafafa;
+  cursor: default;
 }
