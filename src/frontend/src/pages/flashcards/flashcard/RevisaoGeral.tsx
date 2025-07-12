@@ -1,3 +1,4 @@
+// Imports
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonButton, IonRow, IonLabel } from '@ionic/react';
@@ -9,6 +10,7 @@ import CardFlip from '../components/CardFlip';
 import Header from '../../../components/Header';
 import { useSoundPlayer } from '../../../utils/Som';
 
+// Interfaces
 interface Card {
   id?: number;
   flashcard_id?: number;
@@ -17,47 +19,39 @@ interface Card {
   nivelResposta?: string;
 }
 
-interface FlashcardData {
-  id: number;
-  titulo: string;
-  materias?: string[];
-  cards?: Card[];
-}
-
 interface TimeRecord {
   cardId?: number;
   timeSpent: number;
   timestamp: Date;
 }
 
-const api = new API();
+// Função para embaralhar
+function shuffleArray<T>(array: T[]): T[] {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
+// Componente principal
 const RevisaoGeral: React.FC = () => {
   const history = useHistory();
-
-  const [flashcardsList, setFlashcardsList] = useState<FlashcardData[]>([]);
-  const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
+  const api = new API();
 
   const [allCards, setAllCards] = useState<Card[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [mostrarVerso, setMostrarVerso] = useState(false);
   const [respostasAcumuladas, setRespostasAcumuladas] = useState<{ cardId: number; nivel: string }[]>([]);
-
-  const [flashcardTitulo, setFlashcardTitulo] = useState('');
-  const [materias, setMaterias] = useState<string[]>([]);
-
   const [timeRecords, setTimeRecords] = useState<TimeRecord[]>([]);
   const [currentTime, setCurrentTime] = useState(0);
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<Date | null>(null);
-
-  const { playSomRespCerta, playSomRespErrada} = useSoundPlayer();
-
-useEffect(() => {
-  console.log('Respostas acumuladas:', respostasAcumuladas);
-}, [respostasAcumuladas]);
-
   const didFetch = useRef(false);
+
+  const { playSomRespCerta, playSomRespErrada } = useSoundPlayer();
 
   useEffect(() => {
     if (didFetch.current) return;
@@ -65,38 +59,27 @@ useEffect(() => {
 
     const fetchData = async () => {
       try {
-        const flashcards: FlashcardData[] = await api.get('flashcards');
+        const flashcards = await api.get('flashcards');
 
-        if (flashcards.length === 0) {
-          setFlashcardsList([]);
-          setFlashcardTitulo('Nenhum flashcard disponível para revisão geral');
-          setAllCards([]);
-          return;
-        }
+        const allCardsFetched: Card[] = (
+          await Promise.all(
+            flashcards.map(async (f: any) => {
+              const cards: Card[] = await api.get(`cards?flashcard_id=${f.id}`);
+              return cards;
+            })
+          )
+        ).flat();
 
-        const flashcardsComCards = await Promise.all(
-          flashcards.map(async (flashcard) => {
-            const cards: Card[] = await api.get(`cards?flashcard_id=${flashcard.id}`);
-            return { ...flashcard, cards };
-          })
-        );
+        const shuffled = shuffleArray(allCardsFetched);
 
-        const todosCards = flashcardsComCards.flatMap(f => f.cards ?? []);
-
-        setFlashcardsList(flashcardsComCards);
-        setFlashcardTitulo(flashcardsComCards[0].titulo);
-        setMaterias(flashcardsComCards[0].materias ?? []);
-        setAllCards(todosCards);
-
-        setCurrentFlashcardIndex(0);
+        setAllCards(shuffled);
         setCurrentCardIndex(0);
         setMostrarVerso(false);
         setRespostasAcumuladas([]);
-
         setTimeRecords([]);
         setCurrentTime(0);
+
         startTimeRef.current = new Date();
-        if (timerRef.current) clearInterval(timerRef.current);
         timerRef.current = setInterval(() => {
           setCurrentTime(prev => prev + 1);
         }, 1000);
@@ -109,21 +92,14 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
-    setMostrarVerso(false);
-  }, [currentCardIndex]);
-
-  useEffect(() => {
-    if (allCards.length === 0) return;
-
     if (startTimeRef.current && currentCardIndex > 0) {
       const now = new Date();
       const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
-      const newRecord: TimeRecord = {
-        cardId: allCards.find(c => c.flashcard_id === flashcardsList[currentFlashcardIndex].id && c.id === allCards[currentCardIndex - 1]?.id)?.id,
-        timeSpent,
-        timestamp: now
-      };
-      setTimeRecords(prev => [...prev, newRecord]);
+
+      const prevCard = allCards[currentCardIndex - 1];
+      if (prevCard?.id) {
+        setTimeRecords(prev => [...prev, { cardId: prevCard.id, timeSpent, timestamp: now }]);
+      }
     }
 
     startTimeRef.current = new Date();
@@ -137,7 +113,7 @@ useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [currentCardIndex, flashcardsList, allCards, currentFlashcardIndex]);
+  }, [currentCardIndex]);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -145,7 +121,7 @@ useEffect(() => {
     return `${mins}m ${secs}s`;
   };
 
-  if (flashcardsList.length === 0) {
+  if (allCards.length === 0) {
     return (
       <IonPage>
         <Header />
@@ -156,21 +132,7 @@ useEffect(() => {
     );
   }
 
-  const flashcardAtual = flashcardsList[currentFlashcardIndex];
-  const cardsDoFlashcardAtual = allCards.filter(card => card.flashcard_id === flashcardAtual.id);
-
-  if (cardsDoFlashcardAtual.length === 0) {
-    return (
-      <IonPage>
-        <Header />
-        <IonContent className="pagFlashcards">
-          <div className="loader-container"><div className="loader"></div></div>
-        </IonContent>
-      </IonPage>
-    );
-  }
-
-  const cardAtual = cardsDoFlashcardAtual[currentCardIndex];
+  const cardAtual = allCards[currentCardIndex];
 
   const niveis = [
     { desc: 'muito fácil', emoji: '😄', cor: '#1e7e34' },
@@ -178,20 +140,15 @@ useEffect(() => {
     { desc: 'médio', emoji: '😐', cor: '#ffc107' },
     { desc: 'difícil', emoji: '😟', cor: '#fd7e14' },
     { desc: 'muito difícil', emoji: '😣', cor: '#dc3545' },
-  ]
+  ];
 
   const calculateTimeStats = () => {
-  const totalTime = timeRecords.reduce((sum, record) => sum + record.timeSpent, 0);
-  const averageTime = timeRecords.length > 0 ? totalTime / timeRecords.length : 0;
-    return {
-      totalTime,
-      averageTime,
-      totalCards: timeRecords.length
-    };
+    const totalTime = timeRecords.reduce((sum, record) => sum + record.timeSpent, 0);
+    const averageTime = timeRecords.length > 0 ? totalTime / timeRecords.length : 0;
+    return { totalTime, averageTime, totalCards: timeRecords.length };
   };
 
-  const handleNextCardOrFlashcard = async (nivel: string) => {
-    const timeStats = calculateTimeStats();
+  const handleNextCard = async (nivel: string) => {
     if (!mostrarVerso || !cardAtual || !cardAtual.id) return;
 
     try {
@@ -206,65 +163,19 @@ useEffect(() => {
     if (startTimeRef.current) {
       const now = new Date();
       const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
-      const newRecord: TimeRecord = {
-        cardId: cardAtual.id,
-        timeSpent,
-        timestamp: now
-      };
-      setTimeRecords(prev => [...prev, newRecord]);
+      setTimeRecords(prev => [...prev, { cardId: cardAtual.id, timeSpent, timestamp: now }]);
     }
 
-    if (currentCardIndex + 1 < cardsDoFlashcardAtual.length) {
+    if (currentCardIndex + 1 < allCards.length) {
       setCurrentCardIndex(currentCardIndex + 1);
       setMostrarVerso(false);
       return;
     }
 
-    const cardsAtualizados = allCards
-      .map(c => (c.flashcard_id === flashcardAtual.id ? c : null))
-      .filter(Boolean) as Card[];
-
-    const pontuacaoTotal = cardsAtualizados.reduce((acc, card) => {
-      switch (card.nivelResposta) {
-        case 'muito fácil': return acc + 1;
-        case 'fácil': return acc + 2;
-        case 'médio': return acc + 3;
-        case 'difícil': return acc + 4;
-        case 'muito difícil': return acc + 5;
-        default: return acc;
-      }
-    }, 0);
-
-    const media = cardsAtualizados.length ? pontuacaoTotal / cardsAtualizados.length : 0;
-
-    const nivelString =
-      media <= 1.5 ? 'muito fácil' :
-      media <= 2.5 ? 'fácil' :
-      media <= 3.5 ? 'médio' :
-      media <= 4.5 ? 'difícil' :
-      'muito difícil';
-
-    try {
-      await api.put(`flashcards/${flashcardAtual.id}`, { nivel: nivelString });
-    } catch (error: any) {
-      if (error.response?.status !== 404) {
-        console.error('Erro ao salvar nível do flashcard:', error);
-      }
-    }
-
-    if (currentFlashcardIndex + 1 < flashcardsList.length) {
-      const proximoFlashcard = flashcardsList[currentFlashcardIndex + 1];
-      setCurrentFlashcardIndex(currentFlashcardIndex + 1);
-      setFlashcardTitulo(proximoFlashcard.titulo);
-      setMaterias(proximoFlashcard.materias ?? []);
-      setCurrentCardIndex(0);
-      setMostrarVerso(false);
-      return;
-    }
+    const timeStats = calculateTimeStats();
 
     history.push('/flashcards/relatorio', {
-      respostas: [...respostasAcumuladas, { cardId: cardAtual.id!, nivel }]
-        .map(r => r.nivel), 
+      respostas: [...respostasAcumuladas, { cardId: cardAtual.id!, nivel }].map(r => r.nivel),
       cardsComRespostas: allCards.map(c =>
         c.id === cardAtual.id ? { ...c, nivelResposta: nivel } : c
       ),
@@ -272,9 +183,9 @@ useEffect(() => {
       revisaoGeral: true,
       materias: [],
       timeStats: {
-      totalTime: timeStats.totalTime,
-      averageTime: timeStats.averageTime,
-      timeRecords
+        totalTime: timeStats.totalTime,
+        averageTime: timeStats.averageTime,
+        timeRecords
       }
     });
   };
@@ -285,15 +196,7 @@ useEffect(() => {
     } else {
       playSomRespErrada();
     }
-    handleNextCardOrFlashcard(nivel);
-  };
-
-  const handleRevelarResposta = () => {
-    setMostrarVerso(true);
-  };
-
-  const handleVoltarFrente = () => {
-    setMostrarVerso(false);
+    handleNextCard(nivel);
   };
 
   return (
@@ -307,7 +210,7 @@ useEffect(() => {
 
         {mostrarVerso && (
           <IonRow className="flexF" style={{ marginBottom: '10px' }}>
-            <IonButton expand="block" onClick={handleVoltarFrente} className="btnVerso">
+            <IonButton expand="block" onClick={() => setMostrarVerso(false)} className="btnVerso">
               Voltar para a Frente
             </IonButton>
           </IonRow>
@@ -347,7 +250,7 @@ useEffect(() => {
 
         {!mostrarVerso && (
           <IonRow className="flexF">
-            <IonButton expand="block" onClick={handleRevelarResposta} className="btnVerso">
+            <IonButton expand="block" onClick={() => setMostrarVerso(true)} className="btnVerso">
               Revelar a resposta
             </IonButton>
           </IonRow>

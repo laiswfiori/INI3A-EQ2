@@ -31,10 +31,24 @@ export default class API {
 
     try {
       const response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+
+      if (response.status === 401) {
+        localStorage.removeItem('token'); // Limpa o token ruim
+        window.location.href = '/logincadastro/logincadastro'; // Força o redirecionamento
+        throw new Error("Sessão inválida. Redirecionando para o login...");
       }
-      return await response.json();
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        const error: any = new Error(`HTTP error! status: ${response.status}`);
+        error.response = response;
+        error.data = responseData;
+        throw error;
+      }
+
+      return responseData;
+      
     } catch (error) {
       console.error('Erro ao fazer requisição:', error);
       throw error;

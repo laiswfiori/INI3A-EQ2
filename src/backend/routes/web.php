@@ -38,6 +38,13 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->get('users', 'UserController@allUsers');
     });
 
+     // --- Rotas de Preferências de Estudo (ATUALIZADO) ---
+    $router->group(['prefix' => 'agenda_configuracoes', 'middleware' => 'auth'], function () use ($router) {
+        $router->get('/', 'AgendaConfiguracaoController@index');
+        $router->post('/', 'AgendaConfiguracaoController@store');
+    });
+
+
     // --- Rotas de Tópicos ---
     $router->group(['prefix' => 'topicos'], function () use ($router) {
         $router->get('/', 'TopicosController@index');
@@ -90,13 +97,5 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->get('/{id}', 'AgendaEventosController@show');
         $router->put('/{id}', 'AgendaEventosController@update');
         $router->delete('/{id}', 'AgendaEventosController@destroy');
-    });
-    
-    // --- Rota de Teste de Autenticação ---
-    $router->get('/teste-auth', function () {
-        return response()->json([
-            'message' => 'Autenticação bem-sucedida!',
-            'user' => auth()->user()
-        ]);
     });
 });
