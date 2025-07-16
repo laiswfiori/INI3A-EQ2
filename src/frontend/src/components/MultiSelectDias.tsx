@@ -1,37 +1,44 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Select, { MultiValue } from 'react-select';
-import './css/ui.css';
+
+export type Dia = 'Segunda-feira' | 'Terça-feira' | 'Quarta-feira' | 'Quinta-feira' | 'Sexta-feira' | 'Sábado' | 'Domingo';
 
 type DiaSemanaOption = {
-  value: string;
+  value: Dia;
   label: string;
 };
 
-const opcoesDias = [
-  { value: 'segunda', label: 'Segunda-feira' },
-  { value: 'terca', label: 'Terça-feira' },
-  { value: 'quarta', label: 'Quarta-feira' },
-  { value: 'quinta', label: 'Quinta-feira' },
-  { value: 'sexta', label: 'Sexta-feira' },
-  { value: 'sabado', label: 'Sábado' },
-  { value: 'domingo', label: 'Domingo' },
+const opcoesDias: DiaSemanaOption[] = [
+  { value: 'Segunda-feira', label: 'Segunda-feira' },
+  { value: 'Terça-feira', label: 'Terça-feira' },
+  { value: 'Quarta-feira', label: 'Quarta-feira' },
+  { value: 'Quinta-feira', label: 'Quinta-feira' },
+  { value: 'Sexta-feira', label: 'Sexta-feira' },
+  { value: 'Sábado', label: 'Sábado' },
+  { value: 'Domingo', label: 'Domingo' },
 ];
 
-const MultiSelectDias: React.FC = () => {
-  const [diasSelecionados, setDiasSelecionados] = useState<MultiValue<DiaSemanaOption>>([]);
+interface Props {
+  onChange: (dias: Dia[]) => void;
+  value: Dia[];
+}
 
+const MultiSelectDias: React.FC<Props> = ({ onChange, value }) => {
   const handleChange = (selectedOptions: MultiValue<DiaSemanaOption>) => {
-    setDiasSelecionados(selectedOptions);
-    console.log('Dias selecionados:', selectedOptions);
+    // Cast explícito para Dia[]
+    const diasSelecionados = selectedOptions.map(option => option.value) as Dia[];
+    onChange(diasSelecionados);
   };
+
+  const selectedOptions = opcoesDias.filter(option => value.includes(option.value));
 
   return (
     <div>
-      <h2 className="txtDias"><b>Selecione os dias da semana:</b></h2>
+      <h2 className="txtAddPE"><b>Selecione os dias da semana:</b></h2>
       <Select
         isMulti
         options={opcoesDias}
-        value={diasSelecionados}
+        value={selectedOptions}
         onChange={handleChange}
         placeholder="Escolha os dias..."
         menuPortalTarget={document.body}

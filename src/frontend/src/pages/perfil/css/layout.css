@@ -14,7 +14,7 @@
         margin-right: 5%;
     }
     h1 {
-        color: black !important;
+        color: var(--cor-branco) !important;
     }
     .titConfig {
         font-size: 1rem !important;

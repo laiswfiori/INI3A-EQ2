@@ -1,0 +1,19 @@
+:root {
+  /*cores perfil*/
+  --cor-branco: #ffffff;
+  --cor-preto: #000000;
+  --cor-azulE: #00296b;
+  --cor-azulC: #3da5d9;
+  --cor-laranja: #ea7317;
+  --cor-amarela: #ffe99d;
+}
+
+body.dark {
+  /*cores perfil*/
+  --cor-branco: #00296b;
+  --cor-preto: #ffffff;  
+  --cor-azulE:#3da5d9;
+  --cor-azulC: #00296b;
+  --cor-laranja: #ffe99d;
+  --cor-amarela: #ea7317;
+}

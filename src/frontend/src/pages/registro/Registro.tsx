@@ -47,7 +47,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
           setEmail('');
           setSenha('');
           localStorage.setItem('token', data.token); 
-          history.push('/pagInicial/home');
+          history.push('/configuracoes/configuracoes');
           window.location.reload();
         } else {
           setErro(data.mensagem || 'Erro ao cadastrar usuário.');

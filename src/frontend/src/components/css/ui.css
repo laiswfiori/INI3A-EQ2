@@ -113,32 +113,25 @@
     stroke-dasharray: 90 207;
     stroke-dashoffset: -134;
 }
-.txtAdd{
+.txtAddPE{
     text-align: left;
-    margin-bottom: -5px !important;
+    margin-bottom: 8px !important;
+    font-size: 1.3rem ;
     color: #ea7317;
 }
-.txtDias, .txtAdd{
+.txtDias {
     margin-bottom: 10px;
-    color: #ea7317;
-}
-.input{
-    border: 1px solid;
-    border-radius: 8px;
+    color: #e2955b;
 }
 .input2{
     border: 2px solid rgb(213, 213, 213);
-    border-radius: 8px;
-    padding: 6px 8px;
-}
-
-.input, .input2 {
-  width: 100%;
-  box-sizing: border-box;
+    box-sizing: border-box; 
+    height: 40px;
+    width: 100%;
 }
 
 ion-button.btn1::part(native){
-     margin-left: 8px; 
+     margin-left: 1px; 
      height: 36px;
      background-color: #ea7317;
      color: #ffe99d;
@@ -153,6 +146,11 @@ ion-button.btn1::part(native){
 ion-button.btn2::part(native){
      background-color: #3da5d9;
      color: #00296b;
+     margin-left: 1rem;
+     margin-top: 3px;
+}
+.btn2{
+    width: 95%;
 }
 
 .btn2::part(native):hover {
@@ -160,11 +158,6 @@ ion-button.btn2::part(native){
   color: white;
   border: 3px solid #3da5d9;
 }
-
-.divhr {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  flex-wrap: wrap;
-  width: 100%;
+.tt{
+    font-size: 0.9rem;
 }

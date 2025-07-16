@@ -160,13 +160,13 @@
   display: flex;
   flex-direction: column;
   border-radius: 0.5rem;
-  background-color: #EEE;
+  background-color: var(--cor-branco);
   box-sizing: border-box;
   box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
   padding: 0.25rem;
   width: 60%;
   font-size: 14px;
-  border: 2px solid #ea7317;
+  border: 2px solid var(--cor-laranja);
 }
 
 #opsConfig  .radio {
@@ -191,7 +191,7 @@
 }
 
 #opsConfig  .radio input:checked + .name {
-  background-color: #fff;
+  background-color: var(--cor-branco);
   font-weight: 600;
 }
 
@@ -211,7 +211,7 @@
 }
 
 .labelBioM {
-    color: black !important;
+    color: var(--cor-preto) !important;
     font-size: 1.2rem !important;
     font-weight: bold;
     padding: 0 !important;

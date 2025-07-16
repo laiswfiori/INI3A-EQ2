@@ -16,6 +16,8 @@ import './css/ui.css';
 import './css/layout.css';
 import './css/switch.css';
 import Header from '../../components/Header';
+import ThemeManager from '../../components/ThemeManager';
+import '../../components/css/variaveis.css';
 import { useSoundPlayer } from '../../utils/Som';
 
 // Interfaces
@@ -84,6 +86,24 @@ const Perfil: React.FC = () => {
   const [notificacoesAtivas, setNotificacoesAtivas] = useState(() => {
     return localStorage.getItem('notificacoesAtivas') !== 'false';
   });
+
+  //Tema claro e escuro
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+      // Verifica localStorage ao iniciar
+      return localStorage.getItem('theme') === 'dark';
+    });
+
+  const toggleTheme = () => {
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    if (newTheme) {
+      document.body.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.body.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
 
   // Effects
   useEffect(() => {
@@ -204,6 +224,7 @@ const Perfil: React.FC = () => {
       changeGoogleTranslateLanguage(language);
     }
   }, [language]);
+
 
   // Helper functions
   const toggleMateriaAberta = (materia: string) => {
@@ -400,6 +421,8 @@ const Perfil: React.FC = () => {
   // Loading states
   if (isLoading || authError) {
     return (
+      <>
+      <ThemeManager />
       <IonPage>
         <Header />
         <IonContent fullscreen className="ion-text-center ion-padding">
@@ -407,11 +430,14 @@ const Perfil: React.FC = () => {
           <p>Carregando...</p>
         </IonContent>
       </IonPage>
+      </>
     );
   }
 
   if (!userData) {
     return (
+      <>
+      <ThemeManager />
       <IonPage>
         <Header />
         <IonContent fullscreen className="ion-text-center ion-padding">
@@ -419,11 +445,14 @@ const Perfil: React.FC = () => {
           <p>Por favor, tente recarregar a página.</p>
         </IonContent>
       </IonPage>
+      </>
     );
   }
 
   // Render functions
   const renderDesktopView = () => (
+    <>
+      <ThemeManager />
     <IonRow id="lDesktop" className="pagPerfil">
       <IonCol className="ladoPerfil">
         <IonRow id="img">
@@ -438,26 +467,31 @@ const Perfil: React.FC = () => {
           <IonRow id="dBranco">
             {/* Theme toggle */}
             <IonRow className="rowContainer">
-              <div className="contConfig">
-                <div className="cor" id="tema"></div>
-                <p className="titConfig">Tema:</p>
-              </div>
-              <label className="switch">
-                <input defaultChecked={true} id="checkbox" type="checkbox" />
-                <span className="sliderr">
-                  <div className="star star_1"></div>
-                  <div className="star star_2"></div>
-                  <div className="star star_3"></div>
-                  <svg viewBox="0 0 16 16" className="cloud_1 cloud">
-                    <path
-                      transform="matrix(.77976 0 0 .78395-299.99-418.63)"
-                      fill="#fff"
-                      d="m391.84 540.91c-.421-.329-.949-.524-1.523-.524-1.351 0-2.451 1.084-2.485 2.435-1.395.526-2.388 1.88-2.388 3.466 0 1.874 1.385 3.423 3.182 3.667v.034h12.73v-.006c1.775-.104 3.182-1.584 3.182-3.395 0-1.747-1.309-3.186-2.994-3.379.007-.106.011-.214.011-.322 0-2.707-2.271-4.901-5.072-4.901-2.073 0-3.856 1.202-4.643 2.925"
-                    />
-                  </svg>
-                </span>
-              </label>
-            </IonRow>
+            <div className="contConfig">
+              <div className="cor" id="tema"></div>
+              <p className="titConfig">Tema:</p>
+            </div>
+
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={isDarkMode}
+                onChange={toggleTheme}
+              />
+              <span className="sliderr">
+                <div className="star star_1"></div>
+                <div className="star star_2"></div>
+                <div className="star star_3"></div>
+                <svg viewBox="0 0 16 16" className="cloud_1 cloud">
+                  <path
+                    transform="matrix(.77976 0 0 .78395-299.99-418.63)"
+                    fill="#fff"
+                    d="m391.84 540.91c-.421-.329-.949-.524-1.523-.524-1.351 0-2.451 1.084-2.485 2.435-1.395.526-2.388 1.88-2.388 3.466 0 1.874 1.385 3.423 3.182 3.667v.034h12.73v-.006c1.775-.104 3.182-1.584 3.182-3.395 0-1.747-1.309-3.186-2.994-3.379.007-.106.011-.214.011-.322 0-2.707-2.271-4.901-5.072-4.901-2.073 0-3.856 1.202-4.643 2.925"
+                  />
+                </svg>
+              </span>
+            </label>
+          </IonRow>
             
             {/* Sound toggle */}
             <IonRow className="rowContainer">
@@ -774,9 +808,12 @@ const Perfil: React.FC = () => {
         </IonCol>
       )}
     </IonRow>
+    </>
   );
 
   const renderMobileView = () => (
+    <>
+      <ThemeManager />
     <IonRow id="lMobile" className="pagPerfilM">
       <IonRow id="imgM">
         <IonIcon icon={personCircle} id="iconePerfil" />
@@ -1168,9 +1205,12 @@ const Perfil: React.FC = () => {
         </IonButton>
       </IonRow>
     </IonRow>
+    </>
   );
 
   return (
+    <>
+      <ThemeManager />
     <IonPage>
       <Header />
       <IonContent fullscreen className="altura">
@@ -1219,6 +1259,7 @@ const Perfil: React.FC = () => {
         />
       </IonContent>
     </IonPage>
+    </>
   );
 };
 
