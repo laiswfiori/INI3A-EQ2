@@ -29,10 +29,18 @@ class AgendaConfiguracaoController extends Controller
             'dias_disponiveis' => 'required|array|min:1',
             'dias_disponiveis.*.dia_semana' => 'required|in:segunda,terca,quarta,quinta,sexta,sabado,domingo',
             'dias_disponiveis.*.hora_inicio' => 'required|date_format:H:i',
-            'dias_disponiveis.*.hora_fim' => 'required|date_format:H:i|after:dias_disponiveis.*.hora_inicio',
+            'dias_disponiveis.*.hora_fim' => 'required|date_format:H:i',
             'dias_disponiveis.*.materia_id' => 'nullable|exists:materias,id',
         ]);
 
+        // Validação extra para garantir hora_fim > hora_inicio
+        foreach ($request->dias_disponiveis as $index => $dia) {
+            if (strtotime($dia['hora_fim']) <= strtotime($dia['hora_inicio'])) {
+                return response()->json([
+                    'message' => "A hora fim deve ser maior que hora início para o dia {$dia['dia_semana']} (índice {$index})"
+                ], 422);
+            }
+        }
         // Apagar antiga configuração do usuário (opcional)
         AgendaConfiguracao::where('usuario_id', $usuarioId)->delete();
 

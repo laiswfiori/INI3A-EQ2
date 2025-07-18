@@ -21,8 +21,8 @@ interface Materia {
 
 interface HorarioEstudo {
   dia_semana: string;
-  horario_inicio: string;
-  horario_fim: string;
+  hora_inicio: string;
+  hora_fim: string;
   materias: { id: number }[]; 
 }
 
@@ -44,17 +44,21 @@ const handleDiaToggle = (dia: string) => {
       if (existe) {
         return prev.filter(h => h.dia_semana !== dia);
       } else {
-        const novoHorario: HorarioEstudo = { dia_semana: dia, horario_inicio: '', horario_fim: '', materias: [] };
+        const novoHorario: HorarioEstudo = { dia_semana: dia, hora_inicio: '', hora_fim: '', materias: [] };
         return [...prev, novoHorario].sort((a, b) => diasSemana.indexOf(a.dia_semana) - diasSemana.indexOf(b.dia_semana));
       }
     });
   };
 
   const handleTimeChange = (dia: string, tipo: 'inicio' | 'fim', valor: string) => {
-    setHorariosDeEstudo(prev => prev.map(h => 
-      h.dia_semana === dia ? { ...h, [tipo === 'inicio' ? 'horario_inicio' : 'horario_fim']: valor } : h
-    ));
-  };
+  setHorariosDeEstudo(prev =>
+    prev.map(h =>
+      h.dia_semana === dia
+        ? { ...h, [tipo === 'inicio' ? 'hora_inicio' : 'hora_fim']: valor }
+        : h
+    )
+  );
+};
       const [materiasDisponiveis, setMateriasDisponiveis] = useState<Materia[]>([]);
   
  const handleMateriaSelect = (dia: string, materiaId: number) => {
@@ -73,7 +77,7 @@ const handleDiaToggle = (dia: string) => {
   };
 
  const handleSalvar = async () => {
-  if (horariosDeEstudo.some(h => !h.horario_inicio || !h.horario_fim)) {
+  if (horariosDeEstudo.some(h => !h.hora_inicio || !h.hora_fim)) {
     setShowAlert({ show: true, message: 'Preencha o horário de início e fim para todos os dias.' });
     return;
   }
@@ -85,11 +89,10 @@ const handleDiaToggle = (dia: string) => {
 
   // Monta o array dias_disponiveis conforme esperado
   const dias_disponiveis = horariosDeEstudo.map(h => ({
-    dia_semana: h.dia_semana.toLowerCase().replace('-feira', '').trim(), // ajusta para 'segunda', 'quarta', etc.
-    hora_inicio: h.horario_inicio,
-    hora_fim: h.horario_fim,
-    // Supondo que você tenha só uma materia_id preferida por dia (se tiver mais, ajuste aqui)
-    materia_id: h.materias.length > 0 ? h.materias[0].id : null,
+    dia_semana: h.dia_semana.toLowerCase().replace('-feira', '').trim(),
+    hora_inicio: formatToH_i(h.hora_inicio),
+    hora_fim: formatToH_i(h.hora_fim),
+    materia_id: h.materias.length > 0 ? h.materias[0].id : undefined,
   }));
 
   const payload = {
@@ -102,8 +105,12 @@ const handleDiaToggle = (dia: string) => {
     await saveAgendaConfiguracoes(payload);
     setShowAlert({ show: true, message: 'Configurações salvas com sucesso!' });
   } catch (error: any) {
-    setShowAlert({ show: true, message: error.data?.message || 'Erro ao salvar as configurações.' });
+  console.error('Erro ao salvar:', error);
+  if (error.data) {
+    console.error('Detalhes do erro:', error.data);
   }
+  setShowAlert({ show: true, message: error.data?.message || 'Erro ao salvar as configurações.' });
+}
 };
 
 useEffect(() => {
@@ -117,7 +124,8 @@ useEffect(() => {
   };
   carregarMaterias();
 }, []);
- useEffect(() => {
+
+useEffect(() => {
   const carregarConfiguracoes = async () => {
     try {
       const user = await getUserProfile();
@@ -127,11 +135,11 @@ useEffect(() => {
 
       if (config?.dias_disponiveis) {
         const dias: HorarioEstudo[] = config.dias_disponiveis.map((dia: any) => ({
-          dia_semana: dia.dia_semana.charAt(0).toUpperCase() + dia.dia_semana.slice(1) + '-feira',
-          horario_inicio: dia.hora_inicio,
-          horario_fim: dia.hora_fim,
-          materias: dia.materia_id ? [{ id: dia.materia_id }] : []
-        }));
+        dia_semana: dia.dia_semana.charAt(0).toUpperCase() + dia.dia_semana.slice(1) + '-feira',
+        hora_inicio: dia.hora_inicio.trim(),  // <-- trim aqui
+        hora_fim: dia.hora_fim.trim(),        // <-- trim aqui
+        materias: dia.materia_id ? [{ id: dia.materia_id }] : []
+      }));
         setHorariosDeEstudo(dias);
         setPeriodoEstudo({
           inicio: config.data_inicio || '',
@@ -145,6 +153,18 @@ useEffect(() => {
 
   carregarConfiguracoes();
 }, []);
+
+function formatToH_i(time: string): string {
+  if (!time) return '';
+  const [hourStr, minuteStr] = time.split(':');
+  if (!hourStr || !minuteStr) return '';
+  
+  // Remove zero à esquerda da hora, parseando para número
+  const hour = parseInt(hourStr, 10);
+  // Mantém minuto como está, com zero à esquerda se tiver
+  return `${hour}:${minuteStr}`;
+}
+
 
   return (
     <IonPage >
@@ -201,10 +221,28 @@ useEffect(() => {
                        <p style={{ fontWeight: 'bold' }}>2. Defina o horário:</p>
                        <IonRow >
                        <IonCol>
-                           <IonInput label="Início" labelPlacement="stacked" type="time" value={horario.horario_inicio} onIonChange={e => handleTimeChange(horario.dia_semana, 'inicio', e.detail.value!)} />
+                           <IonInput 
+                              label="Início" 
+                              labelPlacement="stacked" 
+                              type="time" 
+                              value={horario.hora_inicio || ''} 
+                              onIonChange={e => {
+                                console.log('hora_inicio:', e.detail.value);
+                                handleTimeChange(horario.dia_semana, 'inicio', e.detail.value || '');
+                              }}
+                           />
                        </IonCol>
                        <IonCol>
-                           <IonInput label="Fim" labelPlacement="stacked" type="time" value={horario.horario_fim} onIonChange={e => handleTimeChange(horario.dia_semana, 'fim', e.detail.value!)} />
+                           <IonInput 
+                              label="Fim" 
+                              labelPlacement="stacked" 
+                              type="time" 
+                              value={horario.hora_fim || ''} 
+                              onIonChange={e => {
+                                console.log('hora_fim:', e.detail.value);
+                                handleTimeChange(horario.dia_semana, 'fim', e.detail.value || '');
+                              }}
+                            />
                        </IonCol>
                        </IonRow>
            

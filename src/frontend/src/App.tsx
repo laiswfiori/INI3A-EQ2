@@ -25,6 +25,8 @@ import Confirmar from './pages/senha/confirmar/Confirmar';
 import Concluir from './pages/senha/concluir/Concluir';
 import Alterar from './pages/senha/alterar/Alterar';
 
+import Teste from './pages/perfil/Teste';
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
 
@@ -95,6 +97,8 @@ const App: React.FC = () => (
           <Route path="/flashcard/revisaoGeral" component={RevisaoGeral} exact />
           <Route path="/flashcard/materia/:id" component={CardsMateria} exact />
           <Route path="/flashcard/:id(\d+)" component={Flashcards} exact />
+
+          <Route path="/perfil/teste" component={Teste} exact />
 
           {}
           <Route exact path="/">

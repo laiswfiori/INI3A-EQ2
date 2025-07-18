@@ -95,26 +95,10 @@ export const getMaterias = async () => {
     }
 };
 
-interface HorariosData {
-    horarios: {
-        dia_semana: string;
-        horario_inicio: string;
-        horario_fim: string;
-        materias: {
-            id: number;
-            is_preferencial: boolean;
-        }[];
-    }[];
-}
-
 export const getAgendaConfiguracoes = async () => {
-  try {
-    const response = await api.get('/agenda_configuracoes');
-    return response.data;
-  } catch (error) {
-    console.error('Erro no endpoint getAgendaConfiguracoes:', error);
-    throw error;
-  }
+  const api = new API();
+  const token = localStorage.getItem('token');
+  return api.get('/agenda_configuracoes', token);
 };
 
 export const saveAgendaConfiguracoes = async (data: any) => {
