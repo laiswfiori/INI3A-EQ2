@@ -80,7 +80,7 @@ const normalizarNomeMateria = (nome: string) => {
     'MATEMÁTICA': 'm11'
   };
 
-  const classe = mapa[nomeUpper] || '';
+  const classe = (nomeUpper in mapa) ? mapa[nomeUpper as keyof typeof mapa] : '';
   return { nome: nomeUpper, classe };
 };
 

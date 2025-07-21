@@ -39,7 +39,7 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
     });
 
      // --- Rotas de Preferências de Estudo (ATUALIZADO) ---
-    $router->group(['prefix' => 'agenda_configuracoes', 'middleware' => 'auth'], function () use ($router) {
+    $router->group(['prefix' => 'agenda_configuracoes'], function () use ($router) {
         $router->get('/', 'AgendaConfiguracaoController@index');
         $router->post('/', 'AgendaConfiguracaoController@store');
     });
@@ -97,5 +97,23 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->get('/{id}', 'AgendaEventosController@show');
         $router->put('/{id}', 'AgendaEventosController@update');
         $router->delete('/{id}', 'AgendaEventosController@destroy');
+    });
+
+    // --- Rotas de Agenda Configurações ---
+    $router->group(['prefix' => 'agendaConfiguracao'], function () use ($router) {
+        $router->get('/', 'AgendaConfiguracaoController@index');
+        $router->post('/', 'AgendaConfiguracaoController@store');
+        //$router->get('/{id}', 'AgendaConfiguracaoController@show');
+        //$router->put('/{id}', 'AgendaConfiguracaoController@update');
+        //$router->delete('/{id}', 'AggendaConfiguracaoController@destroy');
+    });
+
+    // --- Rotas de Agenda Dia Disponível ---
+    $router->group(['prefix' => 'agendaDiaDisponivel'], function () use ($router) {
+        $router->get('/', 'AgendaDiaDisponivelController@index');
+        //$router->post('/', 'AgendaDiaDisponivelController@store');
+        //$router->get('/{id}', 'AgendaDiaDisponivelController@show');
+        $router->put('/{id}', 'AgendaDiaDisponivelController@update');
+        $router->delete('/{id}', 'AgendaDiaDisponivelController@destroy');
     });
 });

@@ -5,12 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\AgendaConfiguracao;
 use App\Models\AgendaDiaDisponivel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AgendaConfiguracaoController extends Controller
 {
-    public function index(Request $request)
+    public function __construct()
     {
-        $usuarioId = $request->user()->id;
+       $this->middleware('auth');//erro 401
+    }
+
+    public function index()
+    {
+        $usuarioId = Auth::id(); 
 
         $configuracao = AgendaConfiguracao::with('diasDisponiveis.materia')
             ->where('usuario_id', $usuarioId)
@@ -21,7 +27,7 @@ class AgendaConfiguracaoController extends Controller
 
     public function store(Request $request)
     {
-        $usuarioId = $request->user()->id;
+        $usuarioId = Auth::id();
 
         $this->validate($request, [
             'data_inicio' => 'required|date',

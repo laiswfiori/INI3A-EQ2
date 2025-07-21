@@ -7,13 +7,22 @@ import './css/geral.css';
 import MultiSelectDias from '../../components/MultiSelectDias';
 import PlanejamentoSemanal from '../../components/PlanejamentoSemanal';
 import PeriodoEstudo from '../../components/PeriodoEstudo';
+import { saveAgendaConfiguracoes } from '../../lib/endpoints';
+import { formatToH_i } from '../../utils/formatters';
+import API from '../../lib/api';
+import { validarCamposMateria } from '../../utils/erros';
 
 type Dia = 'Segunda-feira' | 'Terça-feira' | 'Quarta-feira' | 'Quinta-feira' | 'Sexta-feira' | 'Sábado' | 'Domingo';
 
 interface PlanejamentoDia {
-  dia: Dia;
-  materias: { nome: string }[];
+  dia: string;
+  materias: Materia[];
   horarios: { inicio: string; fim: string }[];
+}
+
+interface Materia{
+  nome: string;
+  id?: number;
 }
 
 interface Periodo {
@@ -28,6 +37,10 @@ const Configuracoes: React.FC = () => {
   const [planejamento, setPlanejamento] = useState<PlanejamentoDia[]>([]);
   const [periodo, setPeriodo] = useState<Periodo>({ dataInicio: '', dataFim: '' });
   const [erro, setErro] = useState<string | null>(null);
+  const [showAlert, setShowAlert] = useState<{ show: boolean; message: string }>({
+    show: false,
+    message: '',
+  });
 
   const isAuthenticated = () => {
     const token = localStorage.getItem('token');
@@ -38,36 +51,111 @@ const Configuracoes: React.FC = () => {
     history.push('/pagInicial/home');
   };
 
-  const salvar = () => {
-    if (validarPlanejamento()) {
-      // Salvar os dados se quiser
+  const salvar = async () => {
+    const sucesso = await validarPlanejamento();
+    if (sucesso) {
       history.push(isAuthenticated() ? '/perfil/perfil' : '/logincadastro/logincadastro');
     }
   };
 
-  const validarPlanejamento = (): boolean => {
-    if (diasSelecionados.length === 0) {
-      setErro('Selecione pelo menos um dia da semana.');
+  const validarPlanejamento = async () => {
+    if (!periodo.dataInicio || !periodo.dataFim) {
+      setShowAlert({ show: true, message: 'Preencha o período de estudo (início e fim).' });
       return false;
     }
 
-    if (!periodo.dataInicio || !periodo.dataFim) {
-      setErro('Preencha a data de início e a data de término do período de estudo.');
+    if (diasSelecionados.length === 0) {
+      setShowAlert({ show: true, message: 'Selecione pelo menos um dia da semana.' });
       return false;
     }
 
     for (const dia of planejamento) {
-      const temMateria = dia.materias.some((m) => m.nome.trim() !== '');
-      const temHorario = dia.horarios.some((h) => h.inicio.trim() !== '' && h.fim.trim() !== '');
+      const temMateria = dia.materias.some(m => m.nome.trim() !== '');
+      const temHorario = dia.horarios.some(h => h.inicio.trim() !== '' && h.fim.trim() !== '');
 
       if (!temMateria || !temHorario) {
-        setErro(`Preencha pelo menos uma matéria e um horário no dia ${dia.dia}.`);
+        setShowAlert({ show: true, message: `Preencha ao menos uma matéria e um horário no dia ${dia.dia}.` });
+        return false;
+      }
+
+      const combinacoesInvalidas = dia.materias.some((m, idx) => {
+        const h = dia.horarios[idx];
+        const materiaPreenchida = m.nome.trim() !== '';
+        const horarioPreenchido = h?.inicio.trim() !== '' && h?.fim.trim() !== '';
+        return (materiaPreenchida && !horarioPreenchido) || (!materiaPreenchida && horarioPreenchido);
+      });
+
+      if (combinacoesInvalidas) {
+        setShowAlert({ show: true, message: `Cada matéria precisa ter um horário correspondente no dia ${dia.dia}.` });
         return false;
       }
     }
 
-    setErro(null);
-    return true;
+    const materiasCriadas: Record<string, number> = {};
+    const api = new API();
+
+    // Cria todas as matérias (já que nenhuma tem id)
+    for (const dia of planejamento) {
+      for (const materia of dia.materias) {
+        const nomeTrim = materia.nome.trim();
+        if (!nomeTrim) continue;
+
+        if (!materiasCriadas[nomeTrim]) {
+          try {
+            const data = await api.post('materias', { nome: nomeTrim });
+            materiasCriadas[nomeTrim] = data.id;
+          } catch (e) {
+            setShowAlert({ show: true, message: `Erro ao criar matéria: ${nomeTrim}` });
+            return false;
+          }
+        }
+      }
+    }
+    
+    const dias_disponiveis: any[] = [];
+
+    for (const dia of planejamento) {
+      dia.materias.forEach((m, idx) => {
+        const h = dia.horarios[idx];
+        const nomeTrim = m.nome.trim();
+        const materiaId = materiasCriadas[nomeTrim];
+
+        if (nomeTrim && h?.inicio && h?.fim && materiaId) {
+          dias_disponiveis.push({
+            dia_semana: dia.dia.toLowerCase().replace('-feira', '').trim(),
+            hora_inicio: formatToH_i(h.inicio),
+            hora_fim: formatToH_i(h.fim),
+            materia_id: materiaId,
+          });
+        }
+      });
+    }
+
+    const payload = {
+      data_inicio: periodo.dataInicio,
+      data_fim: periodo.dataFim,
+      dias_disponiveis,
+    };
+
+    try {
+      await saveAgendaConfiguracoes(payload);
+      setShowAlert({ show: true, message: 'Planejamento salvo com sucesso!' });
+      return true;
+    } catch (error: any) {
+      console.error('Erro ao salvar:', error);
+
+      if (error.response) {
+        try {
+          const data = await error.response.json();
+          setShowAlert({ show: true, message: data.message || 'Erro ao salvar as configurações.' });
+        } catch {
+          setShowAlert({ show: true, message: 'Erro desconhecido na resposta da API.' });
+        }
+      } else {
+        setShowAlert({ show: true, message: 'Erro ao conectar-se à API.' });
+      }
+      return false;
+    }
   };
 
   return (
@@ -129,3 +217,5 @@ const Configuracoes: React.FC = () => {
 };
 
 export default Configuracoes;
+
+

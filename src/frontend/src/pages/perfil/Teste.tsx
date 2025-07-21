@@ -3,6 +3,8 @@ import {useState, useEffect } from 'react';
 import { IonPage, IonContent, IonRow, IonCol, IonIcon, useIonRouter, IonInput, IonItem, IonLabel, IonCheckbox, IonButton} from '@ionic/react';
 import { desktop } from 'ionicons/icons';
 import { getUserProfile, updateUserProfile, changeUserPassword, deleteUserAccount, getAgendaConfiguracoes, saveAgendaConfiguracoes, getMaterias } from '../../lib/endpoints';
+import { formatToH_i } from '../../utils/formatters';
+
 
 interface User {
     id: number;
@@ -61,57 +63,71 @@ const handleDiaToggle = (dia: string) => {
 };
       const [materiasDisponiveis, setMateriasDisponiveis] = useState<Materia[]>([]);
   
- const handleMateriaSelect = (dia: string, materiaId: number) => {
-    setHorariosDeEstudo(prev =>
-      prev.map(h => {
-        if (h.dia_semana === dia) {
-          const materiaExiste = h.materias.some(m => m.id === materiaId);
-          const novasMaterias = materiaExiste
-            ? h.materias.filter(m => m.id !== materiaId)
-            : [...h.materias, { id: materiaId }];
-          return { ...h, materias: novasMaterias };
-        }
-        return h;
-      })
-    );
-  };
-
- const handleSalvar = async () => {
-  if (horariosDeEstudo.some(h => !h.hora_inicio || !h.hora_fim)) {
-    setShowAlert({ show: true, message: 'Preencha o horário de início e fim para todos os dias.' });
-    return;
-  }
-
-  if (!periodoEstudo.inicio || !periodoEstudo.fim) {
-    setShowAlert({ show: true, message: 'Preencha o período total de estudo.' });
-    return;
-  }
-
-  // Monta o array dias_disponiveis conforme esperado
-  const dias_disponiveis = horariosDeEstudo.map(h => ({
-    dia_semana: h.dia_semana.toLowerCase().replace('-feira', '').trim(),
-    hora_inicio: formatToH_i(h.hora_inicio),
-    hora_fim: formatToH_i(h.hora_fim),
-    materia_id: h.materias.length > 0 ? h.materias[0].id : undefined,
-  }));
-
-  const payload = {
-    data_inicio: periodoEstudo.inicio,
-    data_fim: periodoEstudo.fim,
-    dias_disponiveis,
-  };
-
-  try {
-    await saveAgendaConfiguracoes(payload);
-    setShowAlert({ show: true, message: 'Configurações salvas com sucesso!' });
-  } catch (error: any) {
-  console.error('Erro ao salvar:', error);
-  if (error.data) {
-    console.error('Detalhes do erro:', error.data);
-  }
-  setShowAlert({ show: true, message: error.data?.message || 'Erro ao salvar as configurações.' });
-}
+// Atualiza as matérias selecionadas para um dia
+const handleMateriaSelect = (dia: string, materiaId: number) => {
+  setHorariosDeEstudo(prev =>
+    prev.map(h => {
+      if (h.dia_semana === dia) {
+        const materiaExiste = h.materias.some(m => m.id === materiaId);
+        const novasMaterias = materiaExiste
+          ? h.materias.filter(m => m.id !== materiaId)
+          : [...h.materias, { id: materiaId }];
+        return { ...h, materias: novasMaterias };
+      }
+      return h;
+    })
+  );
 };
+
+  const handleSalvar = async () => {
+    // Valida horários preenchidos
+    if (horariosDeEstudo.some(h => !h.hora_inicio || !h.hora_fim)) {
+      setShowAlert({ show: true, message: 'Preencha o horário de início e fim para todos os dias.' });
+      return;
+    }
+
+    // Valida período de estudo preenchido
+    if (!periodoEstudo.inicio || !periodoEstudo.fim) {
+      setShowAlert({ show: true, message: 'Preencha o período total de estudo.' });
+      return;
+    }
+
+    // Valida se todas as entradas têm pelo menos uma matéria selecionada
+    const diasSemMateria = horariosDeEstudo.filter(h => h.materias.length === 0);
+    if (diasSemMateria.length > 0) {
+      const nomesDias = diasSemMateria.map(d => d.dia_semana).join(', ');
+      setShowAlert({ show: true, message: `Selecione pelo menos uma matéria para: ${nomesDias}.` });
+      return;
+    }
+
+    const dias_disponiveis = horariosDeEstudo.map(h => ({
+      dia_semana: h.dia_semana.toLowerCase().replace('-feira', '').trim(),
+      hora_inicio: formatToH_i(h.hora_inicio),
+      hora_fim: formatToH_i(h.hora_fim),
+      materia_id: h.materias[0].id, 
+    }));
+
+    const payload = {
+      data_inicio: periodoEstudo.inicio,
+      data_fim: periodoEstudo.fim,
+      dias_disponiveis,
+    };
+
+    try {
+      await saveAgendaConfiguracoes(payload);
+      setShowAlert({ show: true, message: 'Configurações salvas com sucesso!' });
+    } catch (error: any) {
+      if (error.response) {
+        const data = await error.response.json();
+        console.error('Detalhado:', data);
+        setShowAlert({ show: true, message: data.message || 'Erro ao salvar as configurações.' });
+      } else {
+        console.error('Erro ao salvar:', error);
+        setShowAlert({ show: true, message: 'Erro ao salvar as configurações.' });
+      }
+    }
+  };
+
 
 useEffect(() => {
   const carregarMaterias = async () => {
@@ -154,16 +170,6 @@ useEffect(() => {
   carregarConfiguracoes();
 }, []);
 
-function formatToH_i(time: string): string {
-  if (!time) return '';
-  const [hourStr, minuteStr] = time.split(':');
-  if (!hourStr || !minuteStr) return '';
-  
-  // Remove zero à esquerda da hora, parseando para número
-  const hour = parseInt(hourStr, 10);
-  // Mantém minuto como está, com zero à esquerda se tiver
-  return `${hour}:${minuteStr}`;
-}
 
 
   return (

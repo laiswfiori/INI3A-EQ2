@@ -3,48 +3,51 @@
 namespace App\Http\Controllers;
 
 use App\Models\AgendaEventos;
+use App\Models\Materia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class AgendaEventosController extends Controller
 {
     
-    //:: => operador de resolução de escopo; acessa o model (estático)
     public function __construct()
     {
        $this->middleware('auth');//erro 401
     }
 
-   // Auth::user() // retorna o objeto do usuário logado
-    //Auth::id() retorna o ID do usuário autenticado
     public function index()
     {
-        $userId = Auth::id(); // ID do usuário logado
+        $userId = Auth::id(); 
 
-        // Filtra apenas as matérias daquele usuário
-        $materias = AgendaEventos::where('usuario_id', $userId)->get();
+        // Pega apenas a coluna 'materias' dos eventos do usuário
+        $materias = AgendaEventos::where('usuario_id', $userId)->pluck('materias');
 
         return response()->json($materias);
-    }
 
+    }
 
     public function store(Request $request)
     {
-        
         $dados = $request->only(['nome', 'data', 'materias', 'prioridade']);
-        
-        $materia = AgendaEventos::create([
-            'nome'     => $dados['nome'],
-            'usuario_id' =>  Auth::id(),
-            'data' =>  $dados['data'],
-            'materias' =>  $dados['materias'],
-            'prioridade' =>  $dados['prioridade'],
+        $userId = Auth::id();
+
+        $evento = AgendaEventos::create([
+            'nome'       => $dados['nome'],
+            'usuario_id' => $userId,
+            'data'       => $dados['data'],
+            'materias'   => $dados['materias'],
+            'prioridade' => $dados['prioridade'],
         ]);
 
-        return response()->json($materia, 201); // 201 = código https que significa created; criado c sucesso
+        // Se materias for string, converte em array
+        $listaMaterias = is_array($dados['materias'])
+            ? $dados['materias']
+            : array_map('trim', explode(',', $dados['materias']));
 
-        
+        return response()->json($evento, 201);
     }
+
+
 
     public function show($id)
     {
