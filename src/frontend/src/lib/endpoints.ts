@@ -25,13 +25,13 @@ export const loginUser = async (credentials: any) => {
 };
 
 export const getUserProfile = async () => {
-    try {
-        const response = await api.get('api/profile');
-        return response.user;
-    } catch (error) {
-        console.error("Erro no endpoint getUserProfile:", error);
-        throw error;
-    }
+  try {
+    const data = await api.get('api/profile');
+    return data.user; 
+  } catch (error) {
+    console.error("Erro no endpoint getUserProfile:", error);
+    throw error;
+  }
 };
 
 export const updateUserProfile = async (userData: { name: string, surname: string, email: string, biography: string | null }) => {

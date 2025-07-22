@@ -13,7 +13,11 @@ class AgendaDiaDisponivel extends Model
         'dia_semana',
         'hora_inicio',
         'hora_fim',
-        'materia_id',
+        'materia_ids',
+    ];
+
+    protected $casts = [
+        'materia_ids' => 'array', // Converte JSON para array automático
     ];
 
     public function configuracao()
@@ -21,8 +25,8 @@ class AgendaDiaDisponivel extends Model
         return $this->belongsTo(AgendaConfiguracao::class, 'agenda_configuracao_id');
     }
 
-    public function materia()
+    public function materias()
     {
-        return $this->belongsTo(Materia::class);
+        return \App\Models\Materia::whereIn('id', $this->materia_ids ?? [])->get();
     }
 }

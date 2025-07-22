@@ -14,11 +14,12 @@ return new class extends Migration
             $table->enum('dia_semana', ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo']);
             $table->time('hora_inicio');
             $table->time('hora_fim');
-            $table->unsignedBigInteger('materia_id')->nullable();
+            $table->json('materia_ids')->nullable(); // Permite múltiplas matérias
             $table->timestamps();
 
-            $table->foreign('agenda_configuracao_id')->references('id')->on('agenda_configuracoes')->onDelete('cascade');
-            $table->foreign('materia_id')->references('id')->on('materias')->onDelete('set null');
+            $table->foreign('agenda_configuracao_id')
+                  ->references('id')->on('agenda_configuracoes')
+                  ->onDelete('cascade');
         });
     }
 
@@ -26,6 +27,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('agenda_dias_disponiveis');
     }
-
 };
-

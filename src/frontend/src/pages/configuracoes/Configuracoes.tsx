@@ -10,7 +10,6 @@ import PeriodoEstudo from '../../components/PeriodoEstudo';
 import { saveAgendaConfiguracoes } from '../../lib/endpoints';
 import { formatToH_i } from '../../utils/formatters';
 import API from '../../lib/api';
-import { validarCamposMateria } from '../../utils/erros';
 
 type Dia = 'Segunda-feira' | 'Terça-feira' | 'Quarta-feira' | 'Quinta-feira' | 'Sexta-feira' | 'Sábado' | 'Domingo';
 
@@ -78,9 +77,9 @@ const Configuracoes: React.FC = () => {
         return false;
       }
 
-      const combinacoesInvalidas = dia.materias.some((m, idx) => {
-        const h = dia.horarios[idx];
-        const materiaPreenchida = m.nome.trim() !== '';
+      const combinacoesInvalidas = dia.horarios.some((h, idx) => {
+        const materia = dia.materias[idx];
+        const materiaPreenchida = materia?.nome.trim() !== '';
         const horarioPreenchido = h?.inicio.trim() !== '' && h?.fim.trim() !== '';
         return (materiaPreenchida && !horarioPreenchido) || (!materiaPreenchida && horarioPreenchido);
       });
@@ -94,7 +93,6 @@ const Configuracoes: React.FC = () => {
     const materiasCriadas: Record<string, number> = {};
     const api = new API();
 
-    // Cria todas as matérias (já que nenhuma tem id)
     for (const dia of planejamento) {
       for (const materia of dia.materias) {
         const nomeTrim = materia.nome.trim();
@@ -111,24 +109,40 @@ const Configuracoes: React.FC = () => {
         }
       }
     }
-    
+
     const dias_disponiveis: any[] = [];
 
     for (const dia of planejamento) {
-      dia.materias.forEach((m, idx) => {
-        const h = dia.horarios[idx];
-        const nomeTrim = m.nome.trim();
+      // Agrupar horários únicos com suas respectivas matérias
+      const horariosMap = new Map<string, { hora_inicio: string, hora_fim: string, materia_ids: number[] }>();
+
+      dia.horarios.forEach((h, idx) => {
+        const nomeTrim = dia.materias[idx]?.nome.trim();
         const materiaId = materiasCriadas[nomeTrim];
 
-        if (nomeTrim && h?.inicio && h?.fim && materiaId) {
-          dias_disponiveis.push({
-            dia_semana: dia.dia.toLowerCase().replace('-feira', '').trim(),
-            hora_inicio: formatToH_i(h.inicio),
-            hora_fim: formatToH_i(h.fim),
-            materia_id: materiaId,
+        if (!h.inicio || !h.fim || !materiaId) return;
+
+        const key = `${h.inicio}-${h.fim}`;
+        const hora_inicio = formatToH_i(h.inicio);
+        const hora_fim = formatToH_i(h.fim);
+
+        if (!horariosMap.has(key)) {
+          horariosMap.set(key, {
+            hora_inicio,
+            hora_fim,
+            materia_ids: [materiaId],
           });
+        } else {
+          horariosMap.get(key)!.materia_ids.push(materiaId);
         }
       });
+
+      for (const horario of horariosMap.values()) {
+        dias_disponiveis.push({
+          dia_semana: dia.dia.toLowerCase().replace('-feira', '').trim(),
+          ...horario
+        });
+      }
     }
 
     const payload = {
