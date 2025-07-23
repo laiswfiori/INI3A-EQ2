@@ -110,37 +110,63 @@ const Configuracoes: React.FC = () => {
       }
     }
 
+    const normalizarDia = (dia: string) => {
+      const mapa: Record<string, string> = {
+        'segunda-feira': 'segunda',
+        'segunda': 'segunda',
+        'terca-feira': 'terca',
+        'terça-feira': 'terca',
+        'terca': 'terca',
+        'terça': 'terca',
+        'quarta-feira': 'quarta',
+        'quarta': 'quarta',
+        'quinta-feira': 'quinta',
+        'quinta': 'quinta',
+        'sexta-feira': 'sexta',
+        'sexta': 'sexta',
+        'sabado': 'sabado',
+        'sábado': 'sabado',
+        'domingo': 'domingo',
+      };
+      return mapa[dia.toLowerCase()] || dia.toLowerCase();
+    };
+
     const dias_disponiveis: any[] = [];
 
     for (const dia of planejamento) {
-      // Agrupar horários únicos com suas respectivas matérias
-      const horariosMap = new Map<string, { hora_inicio: string, hora_fim: string, materia_ids: number[] }>();
+      const horariosMap = new Map<string, { hora_inicio: string; hora_fim: string; materia_ids: number[] }>();
 
-      dia.horarios.forEach((h, idx) => {
-        const nomeTrim = dia.materias[idx]?.nome.trim();
+      for (const materia of dia.materias) {
+        const nomeTrim = materia.nome.trim();
         const materiaId = materiasCriadas[nomeTrim];
+        if (!materiaId) continue;
 
-        if (!h.inicio || !h.fim || !materiaId) return;
+        for (const h of dia.horarios) {
+          if (!h.inicio.trim() || !h.fim.trim()) continue;
 
-        const key = `${h.inicio}-${h.fim}`;
-        const hora_inicio = formatToH_i(h.inicio);
-        const hora_fim = formatToH_i(h.fim);
+          const key = `${h.inicio}-${h.fim}`;
+          const hora_inicio = formatToH_i(h.inicio);
+          const hora_fim = formatToH_i(h.fim);
 
-        if (!horariosMap.has(key)) {
-          horariosMap.set(key, {
-            hora_inicio,
-            hora_fim,
-            materia_ids: [materiaId],
-          });
-        } else {
-          horariosMap.get(key)!.materia_ids.push(materiaId);
+          if (!horariosMap.has(key)) {
+            horariosMap.set(key, {
+              hora_inicio,
+              hora_fim,
+              materia_ids: [materiaId],
+            });
+          } else {
+            const item = horariosMap.get(key)!;
+            if (!item.materia_ids.includes(materiaId)) {
+              item.materia_ids.push(materiaId);
+            }
+          }
         }
-      });
+      }
 
       for (const horario of horariosMap.values()) {
         dias_disponiveis.push({
-          dia_semana: dia.dia.toLowerCase().replace('-feira', '').trim(),
-          ...horario
+          dia_semana: normalizarDia(dia.dia),
+          ...horario,
         });
       }
     }
@@ -156,8 +182,6 @@ const Configuracoes: React.FC = () => {
       setShowAlert({ show: true, message: 'Planejamento salvo com sucesso!' });
       return true;
     } catch (error: any) {
-      console.error('Erro ao salvar:', error);
-
       if (error.response) {
         try {
           const data = await error.response.json();
@@ -165,6 +189,8 @@ const Configuracoes: React.FC = () => {
         } catch {
           setShowAlert({ show: true, message: 'Erro desconhecido na resposta da API.' });
         }
+      } else if (error.message) {
+        setShowAlert({ show: true, message: error.message });
       } else {
         setShowAlert({ show: true, message: 'Erro ao conectar-se à API.' });
       }

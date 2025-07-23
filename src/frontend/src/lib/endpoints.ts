@@ -98,15 +98,15 @@ export const getMaterias = async () => {
 export const getAgendaConfiguracoes = async () => {
   const api = new API();
   const token = localStorage.getItem('token');
-  return api.get('/agenda_configuracoes', token);
+  return api.get('/agendaConfiguracao', token); 
 };
 
 export const saveAgendaConfiguracoes = async (data: any) => {
   try {
-    const response = await api.post('/agenda_configuracoes', data);
+    const response = await api.post('/agendaConfiguracao', data);
     return response.data;
   } catch (error) {
-    console.error('Erro ao salvar agenda_configuracoes:', error);
+    console.error('Erro ao salvar agendaConfiguracao:', error);
     throw error;
   }
 };

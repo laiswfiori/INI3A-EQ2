@@ -14,7 +14,7 @@ class AgendaDiaDisponivelController extends Controller
 
         $dias = AgendaDiaDisponivel::whereHas('configuracao', function ($query) use ($userId) {
             $query->where('usuario_id', $userId);
-        })->with('materia')->get();
+        })->get();
 
         return response()->json($dias);
     }
@@ -30,18 +30,13 @@ class AgendaDiaDisponivelController extends Controller
             'materia_ids.*' => 'exists:materias,id',
         ]);
 
-        $dia->update($request->only('hora_inicio', 'hora_fim'));
-
-        // Sincroniza matérias
-        $dia->materias()->sync($request->materia_ids);
+        $dia->update($request->only('hora_inicio', 'hora_fim', 'materia_ids'));
 
         return response()->json([
             'message' => 'Dia atualizado com sucesso.',
-            'dados'   => $dia->load('materias')
+            'dados'   => $dia,
         ]);
     }
-
-
 
     public function destroy($id)
     {

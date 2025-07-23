@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Models;
 
@@ -17,7 +17,7 @@ class AgendaDiaDisponivel extends Model
     ];
 
     protected $casts = [
-        'materia_ids' => 'array', // Converte JSON para array automático
+        'materia_ids' => 'array',
     ];
 
     public function configuracao()

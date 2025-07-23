@@ -16,15 +16,12 @@ class AgendaConfiguracaoController extends Controller
     
     public function index(Request $request)
     {
-        $usuarioId = Auth::id(); 
+        $usuarioId = Auth::id();
 
-        $configuracao = AgendaConfiguracao::with('diasDisponiveis.materias')  // plural aqui
-            ->where('usuario_id', $usuarioId)
-            ->first();
+        $configuracao = AgendaConfiguracao::with('diasDisponiveis')->where('usuario_id', $usuarioId)->first();
 
         return response()->json($configuracao);
     }
-
 
     public function store(Request $request)
     {
@@ -62,15 +59,13 @@ class AgendaConfiguracaoController extends Controller
         ]);
 
         foreach ($request->dias_disponiveis as $dia) {
-            foreach ($dia['materia_ids'] as $materiaId) {
-                AgendaDiaDisponivel::create([
-                    'agenda_configuracao_id' => $config->id,
-                    'dia_semana' => $dia['dia_semana'],
-                    'hora_inicio' => $dia['hora_inicio'],
-                    'hora_fim' => $dia['hora_fim'],
-                    'materia_id' => $materiaId,
-                ]);
-            }
+            AgendaDiaDisponivel::create([
+                'agenda_configuracao_id' => $config->id,
+                'dia_semana' => $dia['dia_semana'],
+                'hora_inicio' => $dia['hora_inicio'],
+                'hora_fim' => $dia['hora_fim'],
+                'materia_ids' => $dia['materia_ids'],
+            ]);
         }
 
         return response()->json(['message' => 'Configuração salva com sucesso.']);
