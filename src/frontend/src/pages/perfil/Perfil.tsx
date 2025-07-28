@@ -87,12 +87,12 @@ const Perfil: React.FC = () => {
 
   const [language, setLanguage] = useState(() => localStorage.getItem('language') || 'pt');
   const [notificacoesAtivas, setNotificacoesAtivas] = useState(() => localStorage.getItem('notificacoesAtivas') !== 'false');
-  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
+  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') !== 'dark');
 
   const toggleTheme = () => {
     const newTheme = !isDarkMode;
     setIsDarkMode(newTheme);
-    if (newTheme) {
+    if (!newTheme) { 
       document.body.classList.add('dark');
       localStorage.setItem('theme', 'dark');
     } else {
