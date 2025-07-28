@@ -291,3 +291,26 @@ ion-checkbox {
     --checkmark-color: var(--cor-branco) !important;
   }
 
+.semNegrito {
+    font-weight: 400 !important;
+}
+
+.iconeIdioma {
+    font-size: 2rem;
+}
+
+.iconeSetaDown {
+    font-size: 2rem;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+.containerIdioma {
+    width: 90%;
+    margin-left: 4%;
+}
+
+.traducaoGoogle {
+    width: 6%;
+    margin-left: 2%;
+}

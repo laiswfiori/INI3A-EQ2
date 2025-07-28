@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  IonPage, IonContent, IonCol, IonRow, IonIcon, IonButton,
+import { IonPage, IonContent, IonCol, IonRow, IonIcon, IonButton,
   IonInput, IonCheckbox, IonTextarea, IonAlert, IonSpinner,
-  IonItem, IonLabel, useIonRouter, IonSelect, IonSelectOption, IonText
+  IonItem, IonLabel, useIonRouter, IonSelect, IonSelectOption, IonText,
+  IonImg
 } from '@ionic/react';
-import { caretForward, personCircle, warning, logOut, chevronDown } from 'ionicons/icons';
-import {
-  getUserProfile, updateUserProfile, changeUserPassword,
+import { caretForward, personCircle, warning, logOut, chevronDown, language, chevronUp } from 'ionicons/icons';
+import { getUserProfile, updateUserProfile, changeUserPassword,
   deleteUserAccount, getAgendaConfiguracoes,
   saveAgendaConfiguracoes, getMaterias
 } from '../../lib/endpoints';
@@ -85,7 +84,6 @@ const Perfil: React.FC = () => {
   const [materiasDisponiveis, setMateriasDisponiveis] = useState<Materia[]>([]);
   const [novaMateriaNome, setNovaMateriaNome] = useState<string>('');
 
-  const [language, setLanguage] = useState(() => localStorage.getItem('language') || 'pt');
   const [notificacoesAtivas, setNotificacoesAtivas] = useState(() => localStorage.getItem('notificacoesAtivas') !== 'false');
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') !== 'dark');
 
@@ -101,9 +99,11 @@ const Perfil: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    localStorage.setItem('language', language);
-  }, [language]);
+  const [mostrarGuia, setMostrarGuia] = useState(false);
+  const toggleGuia = () => {
+    setMostrarGuia(!mostrarGuia);
+  };
+
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -191,48 +191,6 @@ const Perfil: React.FC = () => {
 
     carregarDadosEstudo();
   }, []);
-
-  const changeGoogleTranslateLanguage = (langCode: string) => {
-    const select = document.querySelector<HTMLSelectElement>('.goog-te-combo');
-    if (select) {
-      select.value = langCode;
-      select.dispatchEvent(new Event('change'));
-    }
-  };
-
-  useEffect(() => {
-    (window as any).googleTranslateElementInit = () => {
-      new (window as any).google.translate.TranslateElement(
-        {
-          pageLanguage: 'pt',
-          includedLanguages: 'en,pt',
-          layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE,
-        },
-        'google_translate_element'
-      );
-      setTimeout(() => {
-        changeGoogleTranslateLanguage(language);
-      }, 500);
-    };
-
-    const existingScript = document.getElementById('google-translate-script');
-    if (!existingScript) {
-      const script = document.createElement('script');
-      script.id = 'google-translate-script';
-      script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      document.body.appendChild(script);
-    } else {
-      if ((window as any).google && (window as any).google.translate) {
-        changeGoogleTranslateLanguage(language);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if ((window as any).google && (window as any).google.translate) {
-      changeGoogleTranslateLanguage(language);
-    }
-  }, [language]);
 
   const handleCheckboxChange = (e: CustomEvent) => {
     setIsChecked(e.detail.checked);
@@ -705,37 +663,6 @@ const Perfil: React.FC = () => {
 
               <IonRow className="rowContainer">
                 <div className="contConfig">
-                  <div className="cor" id="idioma"></div>
-                  <p className="titConfig">Idioma:</p>
-                </div>
-                <div className="containerIdioma">
-                  <form>
-                    <label>
-                      <input
-                        type="radio"
-                        name="language"
-                        checked={language === 'pt'}
-                        onChange={() => setLanguage('pt')}
-                      />
-                      <span>Português</span>
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        name="language"
-                        checked={language === 'en'}
-                        onChange={() => setLanguage('en')}
-                      />
-                      <span>Inglês</span>
-                    </label>
-                  </form>
-                </div>
-              </IonRow>
-
-              <div id="google_translate_element" style={{ width: 0, height: 0, overflow: 'hidden', position: 'absolute' }}></div>
-
-              <IonRow className="rowContainer">
-                <div className="contConfig">
                   <div className="cor" id="notificacoes"></div>
                   <p className="titConfig">Notificações:</p>
                 </div>
@@ -787,6 +714,32 @@ const Perfil: React.FC = () => {
                     <path d="M21 6V29" stroke="white" strokeWidth={4} />
                   </svg>
                 </button>
+              </IonRow>
+
+                <IonRow className="rowContainer">
+                <div className="contConfig" onClick={toggleGuia} style={{ cursor: 'pointer' }}>
+                  <div className="cor" id="idioma"></div>
+                  <IonIcon icon={language} className="iconeIdioma" />
+                  <p className="titConfig">: como mudar o idioma?</p>
+                  <IonIcon icon={mostrarGuia ? chevronUp : chevronDown} className="iconeSetaDown" />
+                </div>
+
+                {mostrarGuia && (
+                  <div className="containerIdioma">
+                    <li>
+                      <span className="rowTraduzir semNegrito">Clique no ícone
+                        <IonImg src="/imgs/traduzir.png" alt="ícone de tradução do google" className="traducaoGoogle"/></span>
+                      Obs: ele pode estar no lado direito da barra de navegação ou no menu com ⋮
+                    </li>
+                    <li>Clique em <span className="negrito">⋮</span></li>
+                    <li>Selecione <span className="negrito">Escolher outro idioma</span></li>
+                    <li>
+                      Selecione o idioma para o qual deseja traduzir dentre a lista de opções.
+                      Obs: por padrão ele será <span className="negrito">português</span>
+                    </li>
+                    <li>Clique em <span className="negrito">Traduzir</span></li>
+                  </div>
+                )}
               </IonRow>
             </IonRow>
 
@@ -991,34 +944,7 @@ const Perfil: React.FC = () => {
                 </div>
               </IonRow>
 
-              <IonRow className="rowContainer">
-                <div className="contConfig">
-                  <div className="cor" id="idioma"></div>
-                  <p className="titConfig">Idioma:</p>
-                </div>
-                <div className="containerIdioma">
-                  <form>
-                    <label>
-                      <input
-                        type="radio"
-                        name="language"
-                        checked={language === 'pt'}
-                        onChange={() => setLanguage('pt')}
-                      />
-                      <span>Português</span>
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        name="language"
-                        checked={language === 'en'}
-                        onChange={() => setLanguage('en')}
-                      />
-                      <span>Inglês</span>
-                    </label>
-                  </form>
-                </div>
-              </IonRow>
+              
 
               <IonRow className="rowContainer">
                 <div className="contConfig">
@@ -1073,6 +999,32 @@ const Perfil: React.FC = () => {
                     <path d="M21 6V29" stroke="white" strokeWidth={4} />
                   </svg>
                 </button>
+              </IonRow>
+
+                <IonRow className="rowContainer">
+                <div className="contConfig" onClick={toggleGuia} style={{ cursor: 'pointer' }}>
+                  <div className="cor" id="idioma"></div>
+                  <IonIcon icon={language} className="iconeIdioma" />
+                  <p className="titConfig">: como mudar o idioma?</p>
+                  <IonIcon icon={mostrarGuia ? chevronUp : chevronDown} className="iconeSetaDown" />
+                </div>
+
+                {mostrarGuia && (
+                  <div className="containerIdioma">
+                    <li>
+                      <span className="rowTraduzir semNegrito">Clique no ícone
+                        <IonImg src="/imgs/traduzir.png" alt="ícone de tradução do google" className="traducaoGoogle"/></span>
+                      Obs: ele pode estar no lado direito da barra de navegação ou no menu com ⋮
+                    </li>
+                    <li>Clique em <span className="negrito">⋮</span></li>
+                    <li>Selecione <span className="negrito">Escolher outro idioma</span></li>
+                    <li>
+                      Selecione o idioma para o qual deseja traduzir dentre a lista de opções.
+                      Obs: por padrão ele será <span className="negrito">português</span>
+                    </li>
+                    <li>Clique em <span className="negrito">Traduzir</span></li>
+                  </div>
+                )}
               </IonRow>
             </IonRow>
           </IonRow>

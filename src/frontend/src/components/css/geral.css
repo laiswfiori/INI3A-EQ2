@@ -15,10 +15,12 @@
     column-gap: 5%;
     align-items: center;
     width: 100%;
+    cursor: pointer;
 }
 
 #logo {
     width: 40%;
+    cursor: pointer;
 }
 
 #nav {
@@ -50,6 +52,7 @@
 
 #logoMobile {
     width: 20%;
+    cursor: pointer;
 }
 
 #mobileMenu {

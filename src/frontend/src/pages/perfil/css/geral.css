@@ -284,3 +284,8 @@ ion-input.inputBioM {
   text-align: center;
   margin-left: 1%;
 }
+
+.rowTraduzir {
+  display: flex;
+  flex-direction: row;
+}
