@@ -720,7 +720,7 @@ const Perfil: React.FC = () => {
                 <div className="contConfig" onClick={toggleGuia} style={{ cursor: 'pointer' }}>
                   <div className="cor" id="idioma"></div>
                   <IonIcon icon={language} className="iconeIdioma" />
-                  <p className="titConfig">: como mudar o idioma?</p>
+                  <p className="titConfig titIdioma">: como mudar o idioma?</p>
                   <IonIcon icon={mostrarGuia ? chevronUp : chevronDown} className="iconeSetaDown" />
                 </div>
 
@@ -1002,10 +1002,10 @@ const Perfil: React.FC = () => {
               </IonRow>
 
                 <IonRow className="rowContainer">
-                <div className="contConfig" onClick={toggleGuia} style={{ cursor: 'pointer' }}>
+                <div className="contConfig contConfigIdioma" onClick={toggleGuia} style={{ cursor: 'pointer' }}>
                   <div className="cor" id="idioma"></div>
                   <IonIcon icon={language} className="iconeIdioma" />
-                  <p className="titConfig">: como mudar o idioma?</p>
+                  <p className="titConfig titIdioma">: como mudar o idioma?</p>
                   <IonIcon icon={mostrarGuia ? chevronUp : chevronDown} className="iconeSetaDown" />
                 </div>
 

@@ -299,6 +299,10 @@ ion-checkbox {
     font-size: 2rem;
 }
 
+.titIdioma {
+    margin-left: 3% !important;
+}
+
 .iconeSetaDown {
     font-size: 2rem;
     cursor: pointer !important;
