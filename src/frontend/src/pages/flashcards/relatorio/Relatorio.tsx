@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { IonPage, IonContent, IonRow, IonCol, IonButton, IonGrid, IonIcon, IonLabel } from '@ionic/react';
+import { IonPage, IonContent, IonRow, IonCol, IonButton, IonGrid, IonIcon, IonLabel, useIonToast } from '@ionic/react';
 import { cellular, layers, print, checkmarkDone, download, timeOutline, speedometerOutline, chevronUp, chevronDown } from 'ionicons/icons';
 import { useLocation } from 'react-router-dom';
 import { getUserProfile } from '../../../lib/endpoints';
@@ -46,6 +46,7 @@ interface ConteudoItem {
 }
 
 const Relatorio: React.FC = () => {
+  const [present] = useIonToast();
   const location = useLocation<LocationState>();
   const {
     nomeDeck = 'Deck',
@@ -54,6 +55,9 @@ const Relatorio: React.FC = () => {
     materias = [],
     timeStats
   } = location.state || {};
+
+  console.log('location.state:', location.state);
+
 
   const [showDetailedTime, setShowDetailedTime] = useState(false);
   const [nomeUsuario, setNomeUsuario] = useState<string>('Usuário');
@@ -99,6 +103,7 @@ const Relatorio: React.FC = () => {
 
   const tempoTotal = timeStats?.totalTime ? formatTime(timeStats.totalTime) : '--';
   const tempoMedio = timeStats?.averageTime ? formatTime(timeStats.averageTime) : '--';
+  console.log(tempoTotal);
 
   const distribuicaoNiveis = [
     { name: 'muito fácil', value: respostas.filter(r => r === 'muito fácil').length },
@@ -162,6 +167,12 @@ const Relatorio: React.FC = () => {
    const contentRef = useRef<HTMLDivElement>(null);
 
 const gerarRelatorio = async () => {
+  present({
+    message: 'Relatório sendo gerado.',
+    duration: 2000,
+    color: 'success',
+    position: 'bottom'
+  });
   try {
     setShowDetailedTime(true);
     
