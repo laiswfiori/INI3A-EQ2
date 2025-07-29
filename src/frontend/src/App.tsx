@@ -9,7 +9,7 @@ import Home from './pages/pagInicial/Home';
 import Login from './pages/login/Login';
 import Registro from './pages/registro/Registro';
 import LoginCadastro from './pages/loginCadastro/loginCadastro';
-import Matérias from './pages/conteudos/matérias/Materias';
+import Matérias from './pages/conteudos/materias/Materias';
 import Topicos from './pages/conteudos/topicos/Topicos';
 import Atividades from './pages/conteudos/atividades/Atividades';
 import Atividade from './pages/conteudos/atividadeVisualizacao/Atividade';

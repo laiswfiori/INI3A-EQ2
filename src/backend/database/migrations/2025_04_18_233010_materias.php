@@ -15,6 +15,7 @@ return new class extends Migration
             $table->increments('id'); 
             $table->unsignedBigInteger('usuario_id');
             $table->string('nome', 255); 
+            $table->enum('dificuldade', ['fácil', 'médio','difícil'])->default('médio'); 
 
             $table->foreign('usuario_id')->references('id')->on('users')->onDelete('cascade');
             

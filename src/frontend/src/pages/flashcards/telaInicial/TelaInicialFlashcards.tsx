@@ -12,7 +12,7 @@ import API from '../../../lib/api';
 import CardEditor from '../components/CardEditor';
 import { useIonViewWillEnter } from '@ionic/react';
 import { useSoundPlayer } from '../../../utils/Som';
-import { iconePorMateriaNome } from '../../conteudos/matérias/Materias';
+import { iconePorMateriaNome } from '../../conteudos/materias/Materias';
 
 interface Topico {
   id: number;

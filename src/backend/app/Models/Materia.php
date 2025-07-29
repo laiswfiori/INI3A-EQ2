@@ -10,7 +10,8 @@ class Materia extends Model
     protected $table = "materias";
     protected $fillable = [
         'usuario_id',
-        'nome'
+        'nome', 
+        'dificuldade',
     ];
     protected $primaryKey = 'id';
 
