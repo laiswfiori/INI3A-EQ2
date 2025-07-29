@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonContent, IonButton, IonImg, IonText } from '@ionic/react';
+import { IonPage, IonContent, IonButton, IonImg, IonText, IonAlert } from '@ionic/react';
 import './css/ui.css';
 import './css/layout.css';
 import './css/geral.css';
@@ -201,6 +201,14 @@ const Configuracoes: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
+        <IonAlert
+          isOpen={showAlert.show}
+          onDidDismiss={() => setShowAlert({ show: false, message: '' })}
+          header="Atenção"
+          message={showAlert.message}
+          buttons={['OK']}
+        />
+
         <div id="body">
           <div className="bubble-background">
             <div className="bubble bubble1"></div>

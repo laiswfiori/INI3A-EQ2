@@ -103,6 +103,10 @@ export const getAgendaConfiguracoes = async () => {
 
 export const saveAgendaConfiguracoes = async (data: any) => {
   try {
+    let hIni = data.dias_disponiveis[0].hora_inicio.padStart(5, "0");
+    data.dias_disponiveis[0].hora_inicio = hIni;
+    let hFim = data.dias_disponiveis[0].hora_fim.padStart(5, "0");
+    data.dias_disponiveis[0].hora_fim = hFim;
     const response = await api.post('/agendaConfiguracao', data);
     return response.data;
   } catch (error) {
