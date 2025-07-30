@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
-class AgendaController extends Controller
+class CalendarioEstudosController extends Controller
 {
     protected $agendaService;
 
@@ -25,6 +25,10 @@ class AgendaController extends Controller
 
     public function gerarAgenda(int $configuracaoId)
     {
+
+        // $userId = Auth::id();
+        // $configuracaoId = AgendaConfiguracao::where('usuario_id', $userId)->get();
+        
         try {
             $config = AgendaConfiguracao::with('diasDisponiveis')->find($configuracaoId);
             if (!$config) {
@@ -137,8 +141,8 @@ class AgendaController extends Controller
                     'usuario_id' => Auth::id(),
                     'materia_id' => $item['materia_id'],
                     'dia' => $item['dia'],
-                    'hora_inicio' => $item['inicio'],
-                    'hora_fim' => $item['fim'],
+                    'hora_inicio' => $item['hora_inicio'],
+                    'hora_fim' => $item['hora_fim'],
                     'revisoes' => $revisoesParaSalvar,
                 ]);
             }

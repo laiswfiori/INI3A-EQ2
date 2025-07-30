@@ -104,6 +104,34 @@ export default function () {
     fetchAtividades();
   }, []);
 
+  const [eventosAgenda, setEventosAgenda] = useState<any[]>([]);
+
+useEffect(() => {
+  const fetchAgendaInteligente = async () => {
+    try {
+      const api = new API();
+      
+      const { agenda } = await api.get("/calendarioEstudo"); // ajuste para sua rota correta
+
+      const eventos = agenda.flatMap((item: any) =>
+        item.revisoes.map((data: string) => ({
+          data,
+          materia: item.materia_nome,
+          hora_inicio: item.hora_inicio,
+          hora_fim: item.hora_fim,
+        }))
+      );
+
+      setEventosAgenda(eventos);
+    } catch (error) {
+      console.error("Erro ao carregar a agenda inteligente:", error);
+    }
+  };
+
+  fetchAgendaInteligente();
+}, []);
+
+
 
   const contagemStatus = {
     'não iniciado': 0,
@@ -345,22 +373,22 @@ export default function () {
               >
                 <span className="day-number">{date.day}</span>
                 <div className="events-container">
-                    {date.isCurrentMonth && date.day === 15 && (
-                        <div className="event-tag event-prova">Prova</div>
-                    )}
-                    {date.isCurrentMonth && date.day === 22 && (
-                        <div className="event-tag event-simulado">Simulado</div>
-                    )}
-                    {date.isCurrentMonth && date.day === 16 && (
-                        <div className="event-tag event-vestibular">Vestibular</div>
-                    )}
-                    {date.isCurrentMonth && date.day === 28 && (
-                        <div className="event-tag event-tarefa">Tarefa</div>
-                    )}
-                    {date.isCurrentMonth && date.day === 27 && (
-                        <div className="event-tag event-aula">Aula</div>
-                    )}
+                  {eventosAgenda
+                    .filter((evento) => {
+                      const eventoDate = new Date(evento.data);
+                      return (
+                        eventoDate.getDate() === date.day &&
+                        eventoDate.getMonth() === currentDate.getMonth() &&
+                        eventoDate.getFullYear() === currentDate.getFullYear()
+                      );
+                    })
+                    .map((evento, idx) => (
+                      <div key={idx} className="event-tag event-aula">
+                        {evento.materia}
+                      </div>
+                    ))}
                 </div>
+
               </div>
             ))}
           </div>
@@ -387,10 +415,34 @@ export default function () {
               {horarios.map((hora, i) => (
                 <React.Fragment key={i}>
                   <div className="hora-label">{hora}</div>
-                  {diasDaSemana.map((dia, j) => (
-                    <div key={j} className="calendar-day semana-dia-hora">
-                    </div>
-                  ))}
+                  {diasDaSemana.map((dia, j) => {
+  const dataReferencia = new Date();
+  dataReferencia.setDate(dia.numero);
+  dataReferencia.setHours(0, 0, 0, 0);
+
+  const horaAtual = `${i.toString().padStart(2, '0')}:00`;
+
+  const evento = eventosAgenda.find(ev => {
+    const evDate = new Date(ev.data);
+    const mesmaData =
+      evDate.getDate() === dataReferencia.getDate() &&
+      evDate.getMonth() === dataReferencia.getMonth() &&
+      evDate.getFullYear() === dataReferencia.getFullYear();
+
+    return mesmaData && ev.hora_inicio.startsWith(horaAtual);
+  });
+
+  return (
+    <div key={j} className="calendar-day semana-dia-hora">
+      {evento && (
+        <div className="event-tag event-aula">
+          {evento.materia}
+        </div>
+      )}
+    </div>
+  );
+})}
+
                 </React.Fragment>
               ))}
             </div>

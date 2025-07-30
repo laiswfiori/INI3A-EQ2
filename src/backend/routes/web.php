@@ -117,5 +117,5 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->delete('/{id}', 'AgendaDiaDisponivelController@destroy');
     });
 
-    $router->get('agendaController/{configuracaoId}', 'AgendaController@gerarAgenda');
+    $router->get('calendarioEstudos/', 'CalendarioEstudosController@gerarAgenda');
 });
