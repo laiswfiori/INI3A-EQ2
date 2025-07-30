@@ -8,9 +8,12 @@ import { library, pencil, trash, close, arrowForward, image, globe, brush, book,
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
+import './css/darkmode.css';
 import Header from '../../../components/Header';
 import API from '../../../lib/api';
 import { validarCamposMateria } from '../../../utils/erros';
+import ThemeManager from '../../../components/ThemeManager';
+import '../../../components/css/variaveisCores.css';
 
 interface Atividade {
   id: number;
@@ -142,6 +145,7 @@ const Materias: React.FC = () => {
       topico.status === 'concluído'
     ).length;
     const progresso = totalTopicos > 0 ? (topicosConcluidos / totalTopicos) * 100 : 0;
+    console.log(totalTopicos, topicosConcluidos, progresso);
     return { totalTopicos, topicosConcluidos, progresso };
   };
 
@@ -246,10 +250,12 @@ const Materias: React.FC = () => {
   };
 
   return (
+    <>
+    <ThemeManager />
     <IonPage className={`pagina ${showModal ? 'desfocado' : ''}`}>
       <Header />
-      <IonContent className="body">
-        <h1 className="titulo">Matérias</h1>
+      <IonContent className="bodyM">
+        <h1 className="titulo titDarkMode">Matérias</h1>
         <div className="linhaHorizontal"></div>
         {loading ? (
           <div className="loader-container"><div className="loader"></div></div>
@@ -261,7 +267,7 @@ const Materias: React.FC = () => {
               const { totalTopicos, topicosConcluidos, progresso } = calcularProgresso(materia.topicos);
               return (
                 <IonItem key={materia.id} className="materia-item">
-                  <IonLabel>
+                  <IonLabel className="materia-label">
                     <IonRow className="containerMateria">
                       <IonCol className="col1M">
                         <div>
@@ -324,7 +330,7 @@ const Materias: React.FC = () => {
                       </IonCol>
                       <IonRow className="rowBarra">
                         <IonRow className="totalAtividades">
-                          <p>{totalTopicos} tópicos</p>
+                          <p className="pDarkmode">{totalTopicos} tópicos</p>
                           <p id="txtConc">{topicosConcluidos} concluídos</p>
                         </IonRow>
                         <IonRow className="barra">
@@ -353,7 +359,7 @@ const Materias: React.FC = () => {
               <IonIcon icon={close} className="iconeFecharM" onClick={() => setShowModal(false)} />
             </IonRow>
             <IonRow className="centroModal">
-              <h2 className="labelT">
+              <h2 className="labelT pDarkmode">
                 {modoModal === 'adicionar' ? 'Adicionar matéria' : 'Editar matéria'}
               </h2>
             </IonRow>
@@ -363,9 +369,9 @@ const Materias: React.FC = () => {
                 placeholder="Digite o nome da matéria"
                 value={novaMateria.nome}
                 onIonChange={(e) => handleInputChange('nome', e.detail.value!)}
-                className="input"
+                className="input inputDarkmode"
               />
-              <IonButton expand="block" onClick={handleSalvar} className="btnSalvar">
+              <IonButton expand="block" onClick={handleSalvar} className="btnSalvar btnSalvarDarkmode">
                 Salvar
               </IonButton>
             </div>
@@ -375,18 +381,20 @@ const Materias: React.FC = () => {
           isOpen={showPopover}
           event={popoverEvent}
           onDidDismiss={() => setShowPopover(false)}
+          className="popoverEE"
         >
           <IonButton expand="block" onClick={handleEditar} className="opcoes" id="btnLapis">
             <IonIcon icon={pencil} className="iconesPopover" id="lapis" />
             Editar
           </IonButton>
-          <IonButton expand="block" color="danger" onClick={handleExcluir} className="opcoes" id="btnLixo">
+          <IonButton expand="block" onClick={handleExcluir} className="opcoes" id="btnLixo">
             <IonIcon icon={trash} className="iconesPopover" id="lixo" />
             Excluir
           </IonButton>
         </IonPopover>
       </IonContent>
     </IonPage>
+    </>
   );
 };
 

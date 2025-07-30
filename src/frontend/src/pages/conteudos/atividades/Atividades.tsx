@@ -8,11 +8,14 @@ import { pencil, trash, flash, checkmarkDone, close, checkmark, arrowForward, do
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
+import './css/darkmode.css';
 import Header from '../../../components/Header';
 import API from '../../../lib/api';
 import AvaliarModal from './AvaliarModal'; 
 import { validarCamposAtividade } from '../../../utils/erros';
 import { useSoundPlayer } from '../../../utils/Som';
+import ThemeManager from '../../../components/ThemeManager';
+import '../../../components/css/variaveisCores.css';
 
 interface Atividade {
   id: number;
@@ -372,10 +375,12 @@ const removerItemConteudo = (index: number) => {
 };
 
   return (
+    <>
+    <ThemeManager />
     <IonPage className={`pagina ${showModal ? 'desfocado' : ''}`}>
       <Header />
-      <IonContent className="body">
-        <h1 className="titulo">Atividades</h1>
+      <IonContent className="bodyA">
+        <h1 className="titulo titDarkMode">Atividades</h1>
         <div className="linhaHorizontal"></div>
 
         {loading ? (
@@ -409,9 +414,9 @@ const removerItemConteudo = (index: number) => {
 
                       <IonCol className="td">
                         <h2 className="txtTitMat">{atividade.titulo}</h2>
-                        <p className="sRisco">{atividade.descricao}</p>
-                        <p className="sRisco">Tipo: {atividade.tipo}</p>
-                        <p className="sRisco">Data de entrega: {atividade.data_entrega ? new Date(atividade.data_entrega).toLocaleDateString() : 'não definida'}</p>
+                        <p className="sRisco p2Darkmode">{atividade.descricao}</p>
+                        <p className="sRisco p2Darkmode">Tipo: {atividade.tipo}</p>
+                        <p className="sRisco p2Darkmode">Data de entrega: {atividade.data_entrega ? new Date(atividade.data_entrega).toLocaleDateString() : 'não definida'}</p>
                       </IonCol>
 
                       <IonCol id="containerConfig">
@@ -530,12 +535,12 @@ const removerItemConteudo = (index: number) => {
               />
             </IonRow>
             <IonRow className="centroModal">
-              <h2 className="labelT">
+              <h2 className="labelT pDarkmode">
                 {modoModal === 'adicionar' ? 'Adicionar atividade' : 'Editar atividade'}
               </h2>
             </IonRow>
             <div id="pagAdicionar">
-              <p className="label">Título</p>
+              <p className="label pDarkmode">Título</p>
               <IonInput
                 placeholder="Digite o título da atividade"
                 value={novaAtividade.titulo}
@@ -543,7 +548,7 @@ const removerItemConteudo = (index: number) => {
                 className="input"
               />
               
-              <p className="label">Descrição</p>
+              <p className="label pDarkmode">Descrição</p>
               <IonTextarea
                 placeholder="Escreva uma breve descrição"
                 value={novaAtividade.descricao}
@@ -552,7 +557,7 @@ const removerItemConteudo = (index: number) => {
                 rows={4}
               />
               
-              <p className="label">Tipo</p>
+              <p className="label pDarkmode">Tipo</p>
               <IonSelect
                 value={novaAtividade.tipo}
                 className="input"
@@ -567,7 +572,7 @@ const removerItemConteudo = (index: number) => {
                 <IonSelectOption value="simulado">Simulado</IonSelectOption>
               </IonSelect>
 
-              <p className="label">Data de entrega (opcional)</p>
+              <p className="label pDarkmode">Data de entrega (opcional)</p>
               <IonInput
                 type="date"
                 value={novaAtividade.data_entrega}
@@ -575,7 +580,7 @@ const removerItemConteudo = (index: number) => {
                 className="input"
               />
               
-              <p className="label">Conteúdo</p>
+              <p className="label pDarkmode">Conteúdo</p>
 
               <IonTextarea
                 placeholder="Digite texto e clique fora para adicionar"
@@ -594,7 +599,7 @@ const removerItemConteudo = (index: number) => {
                   }
                 }}
               />
- <input
+              <input
                 type="file"
                 accept="image/*"
                 onChange={adicionarImagemAoConteudo}
@@ -656,7 +661,7 @@ const removerItemConteudo = (index: number) => {
               <IonButton 
                 expand="block" 
                 onClick={handleSalvar} 
-                className="btnSalvar"
+                className="btnSalvar btnSalvarDarkmode"
               >
                 <IonIcon icon={checkmark} slot="start" />
                 Salvar
@@ -672,6 +677,7 @@ const removerItemConteudo = (index: number) => {
             setShowPopover(false);
             setPopoverEvent(undefined);
           }}
+          className="popoverEE"
         >
           <IonButton expand="block" onClick={handleEditar} className="opcoes" id="btnLapis" >
             <IonIcon icon={pencil} className="iconesPopover" id="lapis" />
@@ -691,6 +697,7 @@ const removerItemConteudo = (index: number) => {
         />
       </IonContent>
     </IonPage>
+    </>
   );
 };
 

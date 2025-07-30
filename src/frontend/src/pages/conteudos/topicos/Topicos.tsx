@@ -8,9 +8,12 @@ import { layers, pencil, trash, arrowForward, image } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
+import './css/darkmode.css';
 import Header from '../../../components/Header';
 import API from '../../../lib/api';
 import { validarCamposTopico } from '../../../utils/erros';
+import ThemeManager from '../../../components/ThemeManager';
+import '../../../components/css/variaveisCores.css';
 
 interface Atividade {
   id: number;
@@ -47,6 +50,8 @@ const Topicos: React.FC = () => {
   const [topicoSelecionado, setTopicoSelecionado] = useState<Topico | null>(null);
   const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
   const [modoModal, setModoModal] = useState<'adicionar' | 'editar'>('adicionar');
+  const [progressoTopicos, setProgressoTopicos] = useState<{ [id: number]: number }>({});
+
 
   const [iconesTopicos, setIconesTopicos] = useState<{ [key: number]: string }>({});
 
@@ -101,13 +106,56 @@ const Topicos: React.FC = () => {
     fetchTopicos();
   }, [id]);
 
-  const barraProgresso = (topico: Topico): number => {
+  useEffect(() => {
+    const calcularProgresso = async () => {
+      const progressoMap: { [id: number]: number } = {};
+  
+      for (const topico of topicos) {
+        const progresso = await barraProgresso(topico);
+        progressoMap[topico.id] = progresso;
+      }
+  
+      setProgressoTopicos(progressoMap);
+    };
+  
+    if (topicos.length > 0) {
+      calcularProgresso();
+    }
+  }, [topicos]);
+  
+
+  const barraProgresso = async (topico: Topico): Promise<number> => {
     const totalAtividades = topico.atividades?.length || 0;
     const atividadesConcluidas =
       topico.atividades?.filter((atividade) => atividade.status === 'concluído').length || 0;
+  
+    if (
+      totalAtividades > 0 &&
+      atividadesConcluidas === totalAtividades &&
+      topico.status !== 'concluído'
+    ) {
+      try {
+        const api = new API();
+        await api.put(`topicos/${topico.id}`, {
+          titulo: topico.titulo,
+          descricao: topico.descricao,
+          materia_id: topico.materia_id,
+          status: 'concluído'
+        });
+        setTopicos((prev) =>
+          prev.map((t) =>
+            t.id === topico.id ? { ...t, status: 'concluído' } : t
+          )
+        );
+        
+      } catch (err) {
+        console.error('Erro ao atualizar status do tópico:', err);
+      }
+    }
+  
     return totalAtividades > 0 ? (atividadesConcluidas / totalAtividades) * 100 : 0;
   };
-
+  
   const handleInputChange = (field: keyof typeof novoTopico, value: string) => {
     setNovoTopico({ ...novoTopico, [field]: value });
   };
@@ -207,10 +255,12 @@ const Topicos: React.FC = () => {
   };
 
   return (
+    <>
+    <ThemeManager />
     <IonPage className={`pagina ${showModal ? 'desfocado' : ''}`}>
       <Header />
-      <IonContent className="body">
-        <h1 className="titulo">Tópicos</h1>
+      <IonContent className="bodyT">
+        <h1 className="titulo titDarkMode">Tópicos</h1>
         <div className="linhaHorizontal"></div>
 
         {loading ? (
@@ -230,7 +280,7 @@ const Topicos: React.FC = () => {
                   key={topico.id}
                   className="topico-item"
                 >
-                  <IonLabel>
+                  <IonLabel className="topico-label">
                     <IonRow className="containerTopico" >
                       <div>
                         {iconesTopicos[topico.id] ? (
@@ -246,7 +296,7 @@ const Topicos: React.FC = () => {
 
                       <IonCol className="td">
                         <h2 className="txtTitMat">{topico.titulo}</h2>
-                        <p>{topico.descricao}</p>
+                        <p className="pDarkmode">{topico.descricao}</p>
                       </IonCol>
                       <IonCol id="containerConfig">
                         <IonButton
@@ -283,13 +333,13 @@ const Topicos: React.FC = () => {
                     </IonRow>
 
                     <IonRow className="totalAtividades">
-                      <p>{totalAtividades} atividades</p>
+                      <p className="pDarkmode">{totalAtividades} atividades</p>
                       <p id="txtConc">{atividadesConcluidas} concluídas</p>
                     </IonRow>
                     <IonRow className="barra">
                       <div
                         className="barraStatus"
-                        style={{ width: `${barraProgresso(topico)}%` }}
+                        style={{ width: `${progressoTopicos[topico.id] || 0}%` }}
                       />
                     </IonRow>
                     <IonRow className="contIrTopicos">
@@ -317,26 +367,26 @@ const Topicos: React.FC = () => {
         <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} className="modalAddTopico">
           <IonContent className="ion-padding">
             <IonRow className="centroModal">
-              <h2 className="labelT">
+              <h2 className="labelT pDarkmode">
                 {modoModal === 'adicionar' ? 'Adicionar tópico' : 'Editar tópico'}
               </h2>
             </IonRow>
             <div id="pagAdicionar">
-              <p className="label">Título</p>
+              <p className="label pDarkmode">Título</p>
               <IonInput
                 placeholder="Digite o título do tópico"
                 value={novoTopico.titulo}
                 onIonChange={(e) => handleInputChange('titulo', e.detail.value!)}
-                className="input"
+                className="input inputDarkmode"
               />
-              <p className="label">Descrição</p>
+              <p className="label pDarkmode">Descrição</p>
               <IonTextarea
                 placeholder="Escreva uma breve descrição"
                 value={novoTopico.descricao}
                 onIonInput={(e) => handleInputChange('descricao', e.detail.value!)}
-                className="input"
+                className="input inputDarkmode"
               />
-              <IonButton expand="block" onClick={handleSalvar} className="btnSalvar">
+              <IonButton expand="block" onClick={handleSalvar} className="btnSalvar btnSalvarDarkmode">
                 Salvar
               </IonButton>
             </div>
@@ -350,6 +400,7 @@ const Topicos: React.FC = () => {
             setShowPopover(false);
             setPopoverEvent(undefined);
           }}
+          className="popoverEE"
         >
           <IonButton expand="block" onClick={handleEditar} className="opcoes" id="btnLapis">
             <IonIcon icon={pencil} className="iconesPopover" id="lapis" />
@@ -362,6 +413,7 @@ const Topicos: React.FC = () => {
         </IonPopover>
       </IonContent>
     </IonPage>
+    </>
   );
 };
 

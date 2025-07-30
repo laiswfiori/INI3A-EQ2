@@ -1,0 +1,95 @@
+.bodyA {
+    --background: var(--cor-branco) !important;
+}
+
+.titDarkMode {
+    color: var(--cor-preto) !important;
+}
+
+.atividades-list {
+    background-color: var(--cor-branco) !important;
+}
+
+ion-item.atividade-item, .atividade-label, .item-native::part(native) {
+    background-color: var(--cor-azulE2) !important;
+    --background: var(--cor-azulE2) !important;
+}
+
+.atividade-item {
+    border-color: var(--cor-cinzaA) !important;
+}
+
+.pDarkmode, .txtTitMat {
+    color: var(--cor-preto) !important;
+}
+
+.p2Darkmode {
+    color: var(--cor-cinza) !important;
+}
+
+#txtConc {
+    color: var(--cor-azulE) !important;
+}
+
+ion-button.config {
+    --background: var(--cor-branco) !important;
+    --color: var(--cor-preto) !important;
+}
+
+.atividade-item.concluida, .atividade-item.concluida ion-row, .atividade-item.concluida ion-col,
+.atividade-item.concluida .containerAtividade, .atividade-item.concluida .td,
+.atividade-item.concluida #containerConfig, .atividade-item.concluida .contIrTopicos {
+    background-color: var(--cor-verde) !important;
+}
+
+.btnIC::part(native) {
+    background-color: var(--cor-branco) !important;
+    color: var(--cor-preto) !important;
+}
+
+#ver {
+    color: var(--cor-preto) !important;
+}
+
+ion-modal.modalAddAtividade::part(content) {
+    --ion-background-color: var(--cor-azulM) !important;
+    --background: var(--cor-azulM) !important;
+    background: var(--cor-azulM) !important;
+    background-color: var(--cor-azulM) !important;
+}
+
+.inputDarkmode::part(native)::placeholder {
+    color: var(--cor-preto) !important;
+    --color: var(--cor-preto) !important;
+}
+
+.btnSalvarDarkmode::part(native) {
+    background-color: var(--cor-azulE) !important;
+}
+
+.iconesAdd {
+    color: var(--cor-azulE) !important;
+}
+
+ion-modal#modalAvaliar::part(content) {
+    --ion-background-color: var(--cor-azulM) !important;
+    --background: var(--cor-azulM) !important;
+    background: var(--cor-azulM) !important;
+    background-color: var(--cor-azulM) !important;
+}
+
+.popoverEE::part(content) {
+    --background: var(--cor-branco) !important; 
+    background-color: var(--cor-branco) !important;
+}
+
+.opcoes::part(native) {
+    --background: var(--cor-branco) !important; 
+    background-color: var(--cor-branco) !important;
+    color: var(--cor-preto) !important;
+}
+
+#lixo {
+    color: var(--cor-lixo) !important;
+}
+  

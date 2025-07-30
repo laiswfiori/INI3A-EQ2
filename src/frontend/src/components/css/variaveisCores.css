@@ -6,6 +6,15 @@
   --cor-azulC: #3da5d9;
   --cor-laranja: #ea7317;
   --cor-amarela: #ffe99d;
+
+  /*cores conteúdos*/
+  --cor-azulE2: #ffffff;
+  --cor-cinzaA: #ddd;
+  --cor-cinza: #444;
+  --cor-verde: #d4edda;
+  --cor-azulM: #ffffff;
+  --cor-lixo: #00296b;
+;
 }
 
 body.dark {
@@ -16,4 +25,12 @@ body.dark {
   --cor-azulC: #00296b;
   --cor-laranja: #ffe99d;
   --cor-amarela: #ea7317;
+
+  /*cores conteúdos*/
+  --cor-azulE2: #021025;
+  --cor-cinzaA:#3da5d9;
+  --cor-cinza: #ddd;
+  --cor-verde: #5b8a68;
+  --cor-azulM: #474c50;
+  --cor-lixo: #ddd;
 }

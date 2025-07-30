@@ -17,7 +17,7 @@ import './css/layout.css';
 import './css/switch.css';
 import Header from '../../components/Header';
 import ThemeManager from '../../components/ThemeManager';
-import '../../components/css/variaveis.css';
+import '../../components/css/variaveisCores.css';
 import { useSoundPlayer } from '../../utils/Som';
 
 interface User {
