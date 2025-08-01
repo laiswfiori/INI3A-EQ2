@@ -15,9 +15,10 @@ import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
 import './css/switch.css';
+import './css/darkmode.css';
 import Header from '../../components/Header';
-import ThemeManager from '../../components/ThemeManager';
-import '../../components/css/variaveisCores.css';
+import ThemeManager from '../../utils/ThemeManager';
+import '../../utils/css/variaveisCores.css';
 import { useSoundPlayer } from '../../utils/Som';
 
 interface User {
@@ -436,17 +437,40 @@ const Perfil: React.FC = () => {
     localStorage.setItem('notificacoesAtivas', checked.toString());
   };
 
-  const resetarConfiguracoes = () => {
-    setPeriodoEstudo({ inicio: '', fim: '' });
-    setHorariosDeEstudo([]);
-    toggleSom();
-    localStorage.setItem('somAtivo', 'true');
-    setNotificacoesAtivas(true);
-    localStorage.setItem('notificacoesAtivas', 'true');
-    setIsDarkMode(false);
-    localStorage.setItem('theme', 'light');
-    setShowAlert({show: true, message: 'Configurações resetadas com sucesso!'});
-  };
+const resetarConfiguracoes = () => {
+  // Exibindo os estados iniciais
+  console.log("Estados Iniciais:");
+  console.log("Som Ativo:", somAtivo);
+  console.log("Notificações Ativas:", notificacoesAtivas);
+  console.log("Tema (Dark Mode):", isDarkMode);
+
+  // Resetando as configurações
+  const somAtualizado = !somAtivo; // Alterna o som ao resetar
+  setSomAtivo(somAtualizado); // Atualiza o estado
+  localStorage.setItem('somAtivo', somAtualizado.toString());  // Atualizando o localStorage do som
+
+  // Notificações: Não altera o estado de notificações se não for necessário
+  setNotificacoesAtivas(true); 
+  localStorage.setItem('notificacoesAtivas', 'true');  // Atualizando notificações no localStorage
+
+  // Tema: O tema não deve ser alterado, mantenha o estado atual
+  const temaAtualizado = isDarkMode;  // Não altera o tema
+  setIsDarkMode(temaAtualizado); 
+  localStorage.setItem('theme', temaAtualizado ? 'dark' : 'light');  // Atualizando o localStorage do tema
+
+  // Exibindo a mensagem de sucesso
+  setShowAlert({ show: true, message: 'Configurações resetadas com sucesso!' });
+
+  // Exibindo os estados finais após a atualização
+  setTimeout(() => {
+    console.log("Estados Finais:");
+    console.log("Som Ativo:", somAtivo); 
+    console.log("Notificações Ativas:", notificacoesAtivas);
+    console.log("Tema (Dark Mode):", isDarkMode);
+  }, 0);
+};
+
+
 
   if (isLoading || authError) {
     return (
@@ -885,7 +909,7 @@ const Perfil: React.FC = () => {
 
         {mobileView === 'gerais' && (
           <IonRow id="confGerais">
-            <h1>Configurações gerais</h1>
+            <h1 className="pDarkmode">Configurações gerais</h1>
             <IonRow id="dBranco">
               <IonRow className="rowContainer">
                 <div className="contConfig">
@@ -1032,7 +1056,7 @@ const Perfil: React.FC = () => {
 
         {mobileView === 'perfil' && (
           <IonRow id="confPerfil">
-            <h1>Configurações de perfil</h1>
+            <h1 className="pDarkmode">Configurações de perfil</h1>
             <IonRow>
               <IonRow className="paddingConf">
                 <p className="labelBio">Nome</p>
@@ -1053,7 +1077,7 @@ const Perfil: React.FC = () => {
 
         {mobileView === 'seguranca' && (
           <IonRow id="confSeg">
-            <h1>Configurações de segurança</h1>
+            <h1 className="pDarkmode">Configurações de segurança</h1>
             <IonRow className="paddingConf">
               <p className="labelBioM">Alterar senha</p>
               <IonInput
@@ -1119,7 +1143,7 @@ const Perfil: React.FC = () => {
         )}
 
         <IonRow className="containerConfigM">
-          <IonButton className="btnConfiggM" type="button" onClick={(e) => {
+          <IonButton className="btnConfiggM btnSairM" type="button" onClick={(e) => {
             e.stopPropagation();
             logout();
           }}>

@@ -1,4 +1,9 @@
 :root {
+  /*cores header*/
+  --cor-azulL: #00296b;
+  --cor-azulA: #3da5d9;
+  --cor-amareloA: #ffe99d;
+
   /*cores perfil*/
   --cor-branco: #ffffff;
   --cor-preto: #000000;
@@ -6,6 +11,10 @@
   --cor-azulC: #3da5d9;
   --cor-laranja: #ea7317;
   --cor-amarela: #ffe99d;
+  --cor-azulC2: #3da5d9;
+  --cor-branco2: #ffffff;
+  --cor-azulC3: #3da5d9;
+  --cor-azulE3: #00296b;
 
   /*cores conteúdos*/
   --cor-azulE2: #ffffff;
@@ -14,10 +23,17 @@
   --cor-verde: #d4edda;
   --cor-azulM: #ffffff;
   --cor-lixo: #00296b;
+  --cor-hover: #e7e0e0;
+  --cor-cinza2: #334155;
 ;
 }
 
 body.dark {
+  /*cores header*/
+  --cor-azulL: #ea7317;
+  --cor-azulA: #ffe99d;
+  --cor-amareloA: #00296b;
+
   /*cores perfil*/
   --cor-branco: #00296b;
   --cor-preto: #ffffff;  
@@ -25,6 +41,11 @@ body.dark {
   --cor-azulC: #00296b;
   --cor-laranja: #ffe99d;
   --cor-amarela: #ea7317;
+  --cor-azulC2: #021025;
+  --cor-branco2: #3da5d9;
+  --cor-azulC3: #ffe99d;
+  --cor-azulE3: #ffffff;
+  --cor_cinza2: #7da1d3;
 
   /*cores conteúdos*/
   --cor-azulE2: #021025;
@@ -33,4 +54,5 @@ body.dark {
   --cor-verde: #5b8a68;
   --cor-azulM: #474c50;
   --cor-lixo: #ddd;
+  --cor-hover: #3b4246;
 }

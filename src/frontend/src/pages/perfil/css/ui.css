@@ -1,13 +1,6 @@
 .icones.ativo, .iconesTxt.ativo {
   color: #ffe99d; 
 }
-.ladoPerfil, #imgM {
-    background-color: var(--cor-azulC);
-}
-
-.ladoConfig{
-    background-color: var(--cor-branco);
-}
 
 #txtOi {
     color: white;
@@ -25,7 +18,6 @@ h1 {
 
 .btnConfigg {
     all: unset;
-    color: var(--cor-branco);
     font-size: 1.5rem !important;
     font-weight: 600;
     display: flex;
@@ -48,30 +40,8 @@ ion-button.btnConfigg::part(native) {
     padding: 0;
 }
 
-.btnConfigg:hover {
-    color: var(--cor-azulE);
-    .iconeSair {
-        color:  var(--cor-azulE);;
-    }
-    .iconesSeta {
-        color:  var(--cor-azulE);;
-    }
-}
-
-.iconeSairM {
-    color: var(--cor-branco);
-}
-
-.btnConfiggM:hover {
-    color: var(--cor-azulE);
-    .iconeSairM {
-        color:  var(--cor-azulE);;
-    }
-}
-
 .btnConfiggM {
     all: unset;
-    color: var(--cor-branco);
     font-size: 1rem !important;
     font-weight: 600;
     display: flex;
@@ -82,7 +52,6 @@ ion-button.btnConfigg::part(native) {
     pointer-events: auto;
     z-index: 1;
     position: relative;
-    background-color: var(--cor-azulC);
     width: 20%;
     height: 2.2rem;
     border-radius: 20px;
@@ -98,21 +67,16 @@ ion-button.btnConfiggM::part(native) {
     padding: 0;
 }
 
-.preto {
-    color: var(--cor-preto) !important;
-}
 
 #h1Titulo {
     font-size: 2.5rem !important;
 }
 
 .iconesSeta {
-    color: var(--cor-branco);
     font-size: 1.5rem;
 }
 
 .iconeSair {
-    color: var(--cor-branco);
     font-size: 2rem;
 }
 
@@ -141,14 +105,11 @@ ion-button.btnConfiggM::part(native) {
   }
 
 #dBranco {
-    background-color: var(--cor-branco) !important;
     padding-left: 3%;
     border-radius: 20px;
-    color: var(--cor-preto);
 }
 
 .labelBio {
-    color: var(--cor-preto) !important;
     font-size: 1.5rem !important;
     font-weight: bold;
     padding: 0 !important;
@@ -186,8 +147,6 @@ ion-input.inputBio{
 }
 
 ion-button.btnConfigBio {
-    --background: var(--cor-azulE); 
-    --color: var(--cor-branco); 
     border-radius: 12px;    
     width: 40%;     
 }
@@ -197,7 +156,6 @@ ion-button.btnConfigBio::part(native) {
 }
 
 ion-button.btnConfigBio::part(native):hover {
-    background-color: var(--cor-azulC);
     cursor: pointer;
 }
 
@@ -211,7 +169,6 @@ ion-button.btnConfigBio::part(native):hover {
 
 #excSenha, #excSenhaM {
     border-radius: 20px;
-    background-color: var(--cor-laranja);
     padding-left: 5%;
     padding-bottom: 2%;
     padding-right: 2%;
@@ -232,12 +189,10 @@ ion-button.btnConfigBio::part(native):hover {
 }
 
 .excp {
-    color: var(--cor-branco);
     font-size: 1.2rem;
 }
 
 .excpM {
-    color: var(--cor-branco);
     font-size: 1rem;
 }
 
@@ -248,13 +203,12 @@ ion-button.btnConfigBio::part(native):hover {
 
 #linhaVertical {
     width: 2px !important;
-    border-right: 2px dotted var(--cor-laranja);
     margin-right: 2%;
 }
 
 #linhaHorizontal {
     width: 100% !important;
-    border-right: 2px dotted var(--cor-laranja);
+
     margin-right: 2%;
 }
 
@@ -264,8 +218,6 @@ ion-button.btnConfigBio::part(native):hover {
 }
 
 ion-button.btnAddDM {
-    --background: var(--cor-azulE); 
-    --color: var(--cor-branco); 
     border-radius: 12px;    
     width: 40%;     
 }
@@ -279,17 +231,10 @@ ion-button.btnAddDM::part(native):hover {
     cursor: pointer;
 }
 
-ion-checkbox {
-    --checkbox-background-checked: var(--cor-laranja) !important;
-    --border-color-checked: var(--cor-laranja) !important;
-    --checkmark-color: var(--cor-branco) !important;
-  }
-
-  ion-checkbox#check {
+ion-checkbox#check {
     --checkbox-background-checked: #058f00 !important;
     --border-color-checked: #058f00 !important;
-    --checkmark-color: var(--cor-branco) !important;
-  }
+}
 
 .semNegrito {
     font-weight: 400 !important;

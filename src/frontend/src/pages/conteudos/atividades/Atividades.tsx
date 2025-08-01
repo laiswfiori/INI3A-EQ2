@@ -14,8 +14,8 @@ import API from '../../../lib/api';
 import AvaliarModal from './AvaliarModal'; 
 import { validarCamposAtividade } from '../../../utils/erros';
 import { useSoundPlayer } from '../../../utils/Som';
-import ThemeManager from '../../../components/ThemeManager';
-import '../../../components/css/variaveisCores.css';
+import ThemeManager from '../../../utils/ThemeManager';
+import '../../../utils/css/variaveisCores.css';
 
 interface Atividade {
   id: number;

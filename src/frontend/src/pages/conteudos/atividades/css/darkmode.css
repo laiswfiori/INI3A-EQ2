@@ -47,9 +47,18 @@ ion-button.config {
     color: var(--cor-preto) !important;
 }
 
-#ver {
-    color: var(--cor-preto) !important;
+ion-button#btnCheck::part(native):hover, ion-button#btnVer::part(native):hover, ion-button#btnRaio::part(native):hover {
+  background-color: var(--cor-hover) !important;
 }
+
+#ver {
+    color: var(--cor-azulE) !important;
+}
+
+ion-button#btnVer::part(native):hover {
+    color: var(--cor-azulE) !important;
+}
+
 
 ion-modal.modalAddAtividade::part(content) {
     --ion-background-color: var(--cor-azulM) !important;

@@ -66,6 +66,7 @@ ion-button {
   min-height: 50%;
   cursor: pointer;
   margin-top: 2%;
+  padding-top: 2% !important;
 }
 
 .containerTopico {

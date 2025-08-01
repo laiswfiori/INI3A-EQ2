@@ -12,8 +12,8 @@ import './css/darkmode.css';
 import Header from '../../../components/Header';
 import API from '../../../lib/api';
 import { validarCamposTopico } from '../../../utils/erros';
-import ThemeManager from '../../../components/ThemeManager';
-import '../../../components/css/variaveisCores.css';
+import ThemeManager from '../../../utils/ThemeManager';
+import '../../../utils/css/variaveisCores.css';
 
 interface Atividade {
   id: number;

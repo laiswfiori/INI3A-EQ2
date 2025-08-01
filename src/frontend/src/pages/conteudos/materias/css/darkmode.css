@@ -45,7 +45,7 @@ ion-modal.modalAddMateria::part(content) {
 }
 
 .btnSalvarDarkmode::part(native) {
-    background-color: var(--cor-azulE) !important;
+    background-color: var(--cor-hover) !important;
 }
 
 .popoverEE::part(content) {

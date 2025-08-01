@@ -26,7 +26,7 @@ ion-segment-button {
 
 .days-of-week-header {
   border-bottom: 1px solid #333;
-  background-color: #d4d4d4;
+  background-color: #00296b;
 }
 
 .day-header {
@@ -34,7 +34,7 @@ ion-segment-button {
   text-align: center;
   font-size: 0.8rem;
   font-weight: bold;
-  color: black;
+  color: white;
 }
 
 .calendar-day {
@@ -65,6 +65,7 @@ ion-segment-button {
 }
 
 .other-month {
+  background-color: #ddd;
   color: #555;
   cursor: default;
 }
@@ -203,7 +204,7 @@ ion-segment-button {
 .day-name {
   font-size: 0.7rem;
   height: 20px;
-  color: #666;
+  color: #ddd;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }
