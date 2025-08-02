@@ -4,10 +4,13 @@ import { IonPage, IonContent, IonButton, IonRow, IonLabel } from '@ionic/react';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layouts.css';
+import './css/darkmode.css';
 import API from '../../../lib/api';
 import CardFlip from '../components/CardFlip';
 import Header from '../../../components/Header';
 import { useSoundPlayer } from '../../../utils/Som';
+import ThemeManager from '../../../utils/ThemeManager';
+import '../../../utils/css/variaveisCores.css';
 
 interface Card {
   id?: number;
@@ -247,6 +250,8 @@ const CardsMateria: React.FC = () => {
   ];
 
   return (
+    <>
+    <ThemeManager />
     <IonPage>
       <Header />
       <IonContent className="pagFlashcards">
@@ -319,6 +324,7 @@ const CardsMateria: React.FC = () => {
         )}
       </IonContent>
     </IonPage>
+    </>
   );
 };
 

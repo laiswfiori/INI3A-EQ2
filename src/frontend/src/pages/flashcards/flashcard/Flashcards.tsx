@@ -8,6 +8,8 @@ import API from '../../../lib/api';
 import CardFlip from '../components/CardFlip';
 import Header from '../../../components/Header';
 import { useSoundPlayer } from '../../../utils/Som';
+import ThemeManager from '../../../utils/ThemeManager';
+import '../../../utils/css/variaveisCores.css';
 
 interface Card {
   id?: number;
@@ -247,6 +249,8 @@ const Flashcards: React.FC = () => {
   ];
 
   return (
+    <>
+    <ThemeManager />
     <IonPage>
       <Header />
       <IonContent className="pagFlashcards">
@@ -319,6 +323,7 @@ const Flashcards: React.FC = () => {
         )}
       </IonContent>
     </IonPage>
+    </>
   );
 };
 

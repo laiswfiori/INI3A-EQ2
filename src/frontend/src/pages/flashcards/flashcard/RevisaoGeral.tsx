@@ -1,4 +1,3 @@
-// Imports
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonButton, IonRow, IonLabel } from '@ionic/react';
@@ -9,8 +8,9 @@ import API from '../../../lib/api';
 import CardFlip from '../components/CardFlip';
 import Header from '../../../components/Header';
 import { useSoundPlayer } from '../../../utils/Som';
+import ThemeManager from '../../../utils/ThemeManager';
+import '../../../utils/css/variaveisCores.css';
 
-// Interfaces
 interface Card {
   id?: number;
   flashcard_id?: number;
@@ -25,7 +25,6 @@ interface TimeRecord {
   timestamp: Date;
 }
 
-// Função para embaralhar
 function shuffleArray<T>(array: T[]): T[] {
   const arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -35,7 +34,6 @@ function shuffleArray<T>(array: T[]): T[] {
   return arr;
 }
 
-// Componente principal
 const RevisaoGeral: React.FC = () => {
   const history = useHistory();
   const api = new API();
@@ -200,6 +198,8 @@ const RevisaoGeral: React.FC = () => {
   };
 
   return (
+    <>
+    <ThemeManager />
     <IonPage>
       <Header />
       <IonContent className="pagFlashcards">
@@ -273,6 +273,7 @@ const RevisaoGeral: React.FC = () => {
         )}
       </IonContent>
     </IonPage>
+    </>
   );
 };
 

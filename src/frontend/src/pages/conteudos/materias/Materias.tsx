@@ -364,12 +364,13 @@ const Materias: React.FC = () => {
               </h2>
             </IonRow>
             <div id="pagAdicionar">
+            <p className="label pDarkmode">Nome</p>
               <IonInput
                 labelPlacement="stacked"
                 placeholder="Digite o nome da matéria"
                 value={novaMateria.nome}
                 onIonChange={(e) => handleInputChange('nome', e.detail.value!)}
-                className="input inputDarkmode"
+                className="input pDarkmode"
               />
               <IonButton expand="block" onClick={handleSalvar} className="btnSalvar btnSalvarDarkmode">
                 Salvar

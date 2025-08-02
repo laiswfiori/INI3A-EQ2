@@ -545,7 +545,7 @@ const removerItemConteudo = (index: number) => {
                 placeholder="Digite o título da atividade"
                 value={novaAtividade.titulo}
                 onIonChange={(e) => handleInputChange('titulo', e.detail.value!)}
-                className="input"
+                className="input pDarkmode"
               />
               
               <p className="label pDarkmode">Descrição</p>
@@ -553,14 +553,14 @@ const removerItemConteudo = (index: number) => {
                 placeholder="Escreva uma breve descrição"
                 value={novaAtividade.descricao}
                 onIonChange={(e) => handleInputChange('descricao', e.detail.value!)}
-                className="input"
+                className="input pDarkmode"
                 rows={4}
               />
               
               <p className="label pDarkmode">Tipo</p>
               <IonSelect
                 value={novaAtividade.tipo}
-                className="input"
+                className="input pDarkmode"
                 onIonChange={(e) => handleInputChange('tipo', e.detail.value!)}
               >
                 <IonSelectOption value="resumo">Resumo</IonSelectOption>
@@ -577,14 +577,14 @@ const removerItemConteudo = (index: number) => {
                 type="date"
                 value={novaAtividade.data_entrega}
                 onIonChange={e => handleInputChange('data_entrega', e.detail.value ?? '')}
-                className="input"
+                className="input pDarkmode"
               />
               
               <p className="label pDarkmode">Conteúdo</p>
 
               <IonTextarea
                 placeholder="Digite texto e clique fora para adicionar"
-                className="input"
+                className="input pDarkmode"
                 rows={4}
                 value={textoTemp}
                 onIonChange={(e) => setTextoTemp(e.detail.value!)}

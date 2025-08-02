@@ -44,6 +44,15 @@
     height: fit-content;
   }
 
+#img {
+  position: absolute;
+  top: 0;
+}
+
+#linhaDivisora {
+  margin-top: 18rem;
+}
+
   .txtPading {
     padding: 0 !important;
     margin: 0 !important;

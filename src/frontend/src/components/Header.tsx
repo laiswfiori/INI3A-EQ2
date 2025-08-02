@@ -17,8 +17,8 @@ const Header: React.FC = () => {
   const [mostrarPopover, setMostrarPopover] = useState(false);
 
   const savedTheme = localStorage.getItem('theme');
-  const logoSrc = savedTheme === 'dark' ? '/imgs/logoInicioDarkmode.jpg' : '/imgs/logoInicio.png';
-  const logoMobileSrc = savedTheme === 'dark' ? '/imgs/logo3.jpg' : '/imgs/logo1.png';
+  const logoSrc = savedTheme === 'dark' ? '/imgs/logoInicioDarkmode.png' : '/imgs/logoInicio.png';
+  const logoMobileSrc = savedTheme === 'dark' ? '/imgs/logoMobileDarkmode.png' : '/imgs/logoMobile.png';
 
   const { playSomNotificacao } = useSoundPlayer();
 

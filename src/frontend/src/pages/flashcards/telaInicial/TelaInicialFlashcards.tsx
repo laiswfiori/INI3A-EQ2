@@ -8,11 +8,14 @@ import './css/geral.css';
 import './css/ui.css';
 import './css/layouts.css';
 import './css/pie.css';
+import './css/darkmode.css';
 import API from '../../../lib/api';
 import CardEditor from '../components/CardEditor';
 import { useIonViewWillEnter } from '@ionic/react';
 import { useSoundPlayer } from '../../../utils/Som';
 import { iconePorMateriaNome } from '../../conteudos/materias/Materias';
+import ThemeManager from '../../../utils/ThemeManager';
+import '../../../utils/css/variaveisCores.css';
 
 interface Topico {
   id: number;
@@ -406,16 +409,18 @@ const setShowCardEditorAndInitialData = (
 
 
   return (
+    <>
+    <ThemeManager />
     <IonPage className="pagina">
       <Header />
-      <IonContent>
+      <IonContent className="bodyFI">
         <IonGrid id="bodyTelaInicialFlashcards">
           <IonRow id="revisao">
             <IonCol id="dCapelo">
               <IonIcon icon={school} id="iconeCapelo" />
             </IonCol>
             <IonCol id="d1">
-              <p className="txtGeral">Revisão do dia!</p>
+              <p className="txtGeral pDarkmode">Revisão do dia!</p>
               <IonButton className="revisaoGeral" onClick={() => {
                   playSomIniciar();   
                   history.push('/flashcard/revisaoGeral');
@@ -444,7 +449,7 @@ const setShowCardEditorAndInitialData = (
                   <IonButton onClick={closePopover} id="btnFechar">
                     <IonIcon icon={close} className="iconeFechar" />
                   </IonButton>
-                  <p>
+                  <p className="pDarkmode">
                     O modo de revisão geral apresenta todos os flashcards do dia que devem ser
                     revisados (independente da matéria), para que você possa treinar todas as
                     matérias!
@@ -484,54 +489,54 @@ const setShowCardEditorAndInitialData = (
           {!mostrarEstatisticas && (
             <div className="botaoAbrirEstatisticas" onClick={() => setMostrarEstatisticas(true)}>
               <IonIcon icon={barChart} />
-              <p>Mostrar estatísticas</p>
+              <p className="pDarkmode">Mostrar estatísticas</p>
             </div>
           )}
           {mostrarEstatisticas && (
             <IonRow id="estatisticas">
               <div className="fecharMobile" onClick={() => setMostrarEstatisticas(false)}>
                 <IonIcon icon={close} className="iconeFechar" />
-                <p>Fechar estatísticas</p>
+                <p className="pDarkmode">Fechar estatísticas</p>
               </div>
               <div className="estDivs">
                 <IonRow className="espDiv">
                   <IonCol className="altD">
-                    <p className="txtGrande">{flashcards.length}</p> 
+                    <p className="txtGrande pDarkmode">{flashcards.length}</p> 
                   </IonCol>
                   <IonCol className="altD iconFim">
                     <IonIcon icon={layers} className="iconesTF" />
                   </IonCol>
                 </IonRow>
                 <IonRow>
-                  <p className="txtTF">Total de flashcards</p>
+                  <p className="txtTF pDarkmode">Total de flashcards</p>
                 </IonRow>
               </div>
 
               <div className="estDivs">
                 <IonRow className="espDiv">
                   <IonCol className="altD">
-                    <p className="txtGrande">{materias.length}</p>
+                    <p className="txtGrande pDarkmode">{materias.length}</p>
                   </IonCol>
                   <IonCol className="altD iconFim">
                     <IonIcon icon={library} className="iconesTF" />
                   </IonCol>
                 </IonRow>
                 <IonRow>
-                  <p className="txtTF">Matérias para estudar</p>
+                  <p className="txtTF pDarkmode">Matérias para estudar</p>
                 </IonRow>
               </div>
 
               <div className="estDivs">
                 <IonRow className="espDiv">
                   <IonCol className="altD">
-                    <p className="txtGrande">0</p> 
+                    <p className="txtGrande pDarkmode">0</p> 
                   </IonCol>
                   <IonCol className="altD iconFim">
                     <IonIcon icon={time} className="iconesTF" />
                   </IonCol>
                 </IonRow>
                 <IonRow>
-                  <p className="txtTF">Flashcards para revisar hoje</p>
+                  <p className="txtTF pDarkmode">Flashcards para revisar hoje</p>
                 </IonRow>
               </div>
             </IonRow>
@@ -589,7 +594,7 @@ const setShowCardEditorAndInitialData = (
                         </IonRow>
                       </IonRow>
                       <IonRow className="espDC">
-                        <p className="txtWC">{totalCardsMateria} cards</p>
+                        <p className="txtWC pDarkmode">{totalCardsMateria} cards</p>
                         <p className="txtWC" id="txtRevisar">{cardsParaRevisarMateria} para revisar</p>
                       </IonRow>
                       <IonRow className="barra">
@@ -659,9 +664,9 @@ const setShowCardEditorAndInitialData = (
                                       </IonCol>
                                       <IonCol className="botoes-flashcard">
                                         <IonButton
-                                          className={`btnFlash btnMostrar ${
+                                          className={`pDarkmode btnFlash btnMostrar ${
                                             flashcardsComOpcoesAbertas.includes(flashcard.id) ? 'btnFecharOpcoes' : ''
-                                          }`}
+                                          }`} 
                                           onClick={() => toggleOpcoesFlashcard(flashcard.id)}
                                         >
                                           <IonIcon
@@ -677,17 +682,17 @@ const setShowCardEditorAndInitialData = (
                                               playSomIniciar();
                                               history.push(`/flashcard/${flashcard.id}`);
                                             }}
-                                            className="btnFlash btnEstudar">
+                                            className="btnFlash btnEstudar pDarkmode">
                                               <IonIcon icon={flash} className="iconesOpFlash btnEstudar" />
                                               Estudar
                                             </IonButton>
 
-                                            <IonButton onClick={() => abrirModalEditarFlashcard(flashcard.id)} className="btnFlash btnEditar">
+                                            <IonButton onClick={() => abrirModalEditarFlashcard(flashcard.id)} className="btnFlash btnEditar pDarkmode">
                                               <IonIcon icon={pencil} className="iconesOpFlash btnEditar" />
                                               Editar
                                             </IonButton>
 
-                                            <IonButton onClick={() => deletarFlashcard(flashcard.id)} className="btnFlash btnExcluir">
+                                            <IonButton onClick={() => deletarFlashcard(flashcard.id)} className="btnFlash btnExcluir pDarkmode">
                                               <IonIcon icon={trash} className="iconesOpFlash btnExcluir" />
                                               Excluir
                                             </IonButton>
@@ -701,7 +706,7 @@ const setShowCardEditorAndInitialData = (
                             });
 
                           } else {
-                            return <p className="sem-topicos-aviso">Nenhum tópico com flashcards nesta matéria.</p>;
+                            return <p className="sem-topicos-aviso pDarkmode">Nenhum tópico com flashcards nesta matéria.</p>;
                           }
                         })()}
                       </div>
@@ -746,7 +751,7 @@ const setShowCardEditorAndInitialData = (
             {!showCardEditor && (
               <>
                 <IonRow className="centroModal">
-                  <h2 className="label">
+                  <h2 className="label pDarkmode">
                     {flashcardIdParaEditar ? 'Editar flashcard' : 'Criar novo flashcard'}
                   </h2>
                 </IonRow>
@@ -755,7 +760,7 @@ const setShowCardEditorAndInitialData = (
                   value={topicoSelecionadoParaNovoFlashcard}
                   placeholder="Escolha o tópico"
                   onIonChange={(e) => setTopicoSelecionadoParaNovoFlashcard(e.detail.value)}
-                  className="input iFlashcard"
+                  className="input iFlashcard pDarkmode"
                 >
                   {topicos
                     .filter(t => t.materia_id === modalMateriaSelecionada?.id)
@@ -771,11 +776,11 @@ const setShowCardEditorAndInitialData = (
                   placeholder="Digite o título do flashcard"
                   value={novoFlashcardTitulo}
                   onIonInput={(e) => setNovoFlashcardTitulo(e.detail.value!)}
-                  className="input"
+                  className="input pDarkmode"
                 />
 
                 <IonRow className="centroModal">
-                  <h3>{flashcardIdParaEditar ? 'Editar cards' : 'Adicionar cards'}</h3>
+                  <h3 className="pDarkmode">{flashcardIdParaEditar ? 'Editar cards' : 'Adicionar cards'}</h3>
                 </IonRow>
 
                 <IonButton
@@ -861,11 +866,12 @@ const setShowCardEditorAndInitialData = (
             {showCardEditor && (
               <>
                 <IonRow className="centroModal">
-                  <h3 className="modal-title">{editingCardIndex !== null ? 'Editar Card' : 'Adicionar Card'}</h3>
+                  <h3 className="modal-title pDarkmode">{editingCardIndex !== null ? 'Editar Card' : 'Adicionar Card'}</h3>
                   <IonButton
                     onClick={() => setShowCardEditorAndInitialData(false)}
                     color="medium"
                     fill="clear"
+                    className="fecharEditor"
                   >
                     Fechar Editor
                   </IonButton>
@@ -883,6 +889,7 @@ const setShowCardEditorAndInitialData = (
         </IonModal>
       </IonContent>
     </IonPage>
+    </>
   );
 };
 

@@ -377,14 +377,14 @@ const Topicos: React.FC = () => {
                 placeholder="Digite o título do tópico"
                 value={novoTopico.titulo}
                 onIonChange={(e) => handleInputChange('titulo', e.detail.value!)}
-                className="input inputDarkmode"
+                className="input pDarkmode"
               />
               <p className="label pDarkmode">Descrição</p>
               <IonTextarea
                 placeholder="Escreva uma breve descrição"
                 value={novoTopico.descricao}
                 onIonInput={(e) => handleInputChange('descricao', e.detail.value!)}
-                className="input inputDarkmode"
+                className="input pDarkmode"
               />
               <IonButton expand="block" onClick={handleSalvar} className="btnSalvar btnSalvarDarkmode">
                 Salvar

@@ -54,7 +54,8 @@ ion-button.config::part(native):hover {
 }
 
 ion-modal.modalAddMateria {
-    --max-height: 30%;
+    height: 40%;
+    --max-height: 50%;
     height: auto;
 }
 

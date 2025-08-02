@@ -4,6 +4,10 @@
   --cor-azulA: #3da5d9;
   --cor-amareloA: #ffe99d;
 
+  /*cores header*/
+  --cor-bege: #f1ebd7;
+  --cor-branco6: #ffffff;
+
   /*cores perfil*/
   --cor-branco: #ffffff;
   --cor-preto: #000000;
@@ -13,7 +17,7 @@
   --cor-amarela: #ffe99d;
   --cor-azulC2: #3da5d9;
   --cor-branco2: #ffffff;
-  --cor-azulC3: #3da5d9;
+  --cor-azulC3: #00296b;
   --cor-azulE3: #00296b;
 
   /*cores conteúdos*/
@@ -25,6 +29,16 @@
   --cor-lixo: #00296b;
   --cor-hover: #e7e0e0;
   --cor-cinza2: #334155;
+
+  /*cores flashcards*/
+  --cor-azulEA: #00296b;
+  --cor-brancoC: #ffffff;
+  --cor-amarela2: #fff7d8;
+  --cor-branco4: #ffffff;
+  --cor-branco5: #ffffff;
+  --cor-amareloA2: #ffe99d;
+  --cor-cinza3: #444;
+  --cor-azulCL: #3da5d9;
 ;
 }
 
@@ -33,6 +47,10 @@ body.dark {
   --cor-azulL: #ea7317;
   --cor-azulA: #ffe99d;
   --cor-amareloA: #00296b;
+
+  /*cores header*/
+  --cor-bege: #00296b;
+  --cor-branco6: #7da1d3;
 
   /*cores perfil*/
   --cor-branco: #00296b;
@@ -55,4 +73,14 @@ body.dark {
   --cor-azulM: #474c50;
   --cor-lixo: #ddd;
   --cor-hover: #3b4246;
+
+  /*cores flashcards*/
+  --cor-azulEA: #ffc107;
+  --cor-brancoC: #3b4246;
+  --cor-amarela2: #021025;
+  --cor-branco4: #3b4246;
+  --cor-branco5: #ddd;
+  --cor-amareloA2: #ffc107;
+  --cor-cinza3: #000000;
+  --cor-azulCL: #ea7317;
 }

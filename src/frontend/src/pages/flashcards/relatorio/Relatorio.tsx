@@ -8,9 +8,12 @@ import RelatorioPDF from './RelatorioPDF';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layouts.css';
+import './css/darkmode.css';
 import { PieChart, Pie, Cell, Legend } from 'recharts';
 import html2canvas from "html2canvas";
 import jsPDF from 'jspdf';
+import ThemeManager from '../../../utils/ThemeManager';
+import '../../../utils/css/variaveisCores.css';
 //import karlaBold '../../../fonts/Karla/Karla-bold.js';
 
 
@@ -551,7 +554,7 @@ const gerarRelatorio = async () => {
                 marginRight: '8px',
                 borderRadius: '2px'
               }} />
-              <span style={{ fontSize: '14px' }}>
+              <span className="legenda" style={{ fontSize: '14px' }}>
                 {nome.charAt(0).toUpperCase() + nome.slice(1)}
               </span>
             </div>
@@ -643,56 +646,58 @@ const gerarRelatorio = async () => {
 };
 
   return (
+    <>
+    <ThemeManager />
     <IonPage className="pagina">
       <Header />
-      <IonContent>
+      <IonContent className="bodyR">
         <IonGrid id="bodyRelatorio" className="no-print" ref={pdfRef}>
           <IonRow className="rowsRelatorio centroRelatorio">
-            <h1 className="preto">Parabéns, você concluiu esse deck!</h1>
-            <p id="pCentro">Você finalizou todos os flashcards desta etapa com sucesso.</p>
+            <h1 className="preto pDarkmode">Parabéns, você concluiu esse deck!</h1>
+            <p id="pCentro" className="pDarkmode">Você finalizou todos os flashcards desta etapa com sucesso.</p>
           </IonRow>
 
           <IonRow className="rowsRelatorio espacoRelatorio">
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">{totalCardsFeitos}</p>
+                  <p className="txtGrande pDarkmode">{totalCardsFeitos}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={layers} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Total de cards realizados</p>
+                <p className="txtTF pDarkmode">Total de cards realizados</p>
               </IonRow>
             </IonRow>
 
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">{totalAcertos}</p>
+                  <p className="txtGrande pDarkmode">{totalAcertos}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={checkmarkDone} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Total de cards fáceis ou muito fáceis</p>
+                <p className="txtTF pDarkmode">Total de cards fáceis ou muito fáceis</p>
               </IonRow>
             </IonRow>
 
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">{nivelFlashcard}</p>
+                  <p className="txtGrande pDarkmode">{nivelFlashcard}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={cellular} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow className="colDesempenho">
-                <p className="txtTF">Nível</p>
-                <p className="txtTF">Desempenho: <span>{desempenhoFlashcard}</span></p>
+                <p className="txtTF pDarkmode">Nível</p>
+                <p className="txtTF pDarkmode">Desempenho: <span>{desempenhoFlashcard}</span></p>
               </IonRow>
             </IonRow>
           </IonRow>
@@ -752,7 +757,7 @@ const gerarRelatorio = async () => {
           <IonRow className="rowsRelatorio grafico">
             <IonCol size="12" className="ion-text-center">
               <div className="grafico-wrapper">
-                <h2 className="titulo-grafico">Distribuição das respostas</h2>
+                <h2 className="titulo-grafico pDarkmode">Distribuição das respostas</h2>
                 <div className="chart-container">
                   <PieChart width={350} height={350}>
                     <Pie
@@ -784,7 +789,7 @@ const gerarRelatorio = async () => {
           <div className="relatorio-container">
             <IonRow>
               <IonCol size="12">
-                <h2 className="titulo-grafico">Detalhes por card</h2>
+                <h2 className="titulo-grafico pDarkmode">Detalhes por card</h2>
               </IonCol>
 
               {/* Bloco Fácil */}
@@ -898,10 +903,6 @@ const gerarRelatorio = async () => {
                 }}
               />
             )}
-            <IonButton onClick={() => window.print()} className="btnRelatorio">
-              <IonIcon icon={download} className="iconeImpressora" />
-              Salvar estatísticas
-            </IonButton>
           </IonRow>
 
         </IonGrid>
@@ -923,6 +924,7 @@ const gerarRelatorio = async () => {
         </div>
       </IonContent>
     </IonPage>
+    </>
   );
 };
 
