@@ -444,11 +444,11 @@ const resetarConfiguracoes = () => {
   console.log("Notificações Ativas:", notificacoesAtivas);
   console.log("Tema (Dark Mode):", isDarkMode);
 
-  // Resetando as configurações
+  /*// Resetando as configurações
   const somAtualizado = !somAtivo; // Alterna o som ao resetar
   setSomAtivo(somAtualizado); // Atualiza o estado
   localStorage.setItem('somAtivo', somAtualizado.toString());  // Atualizando o localStorage do som
-
+*/
   // Notificações: Não altera o estado de notificações se não for necessário
   setNotificacoesAtivas(true); 
   localStorage.setItem('notificacoesAtivas', 'true');  // Atualizando notificações no localStorage

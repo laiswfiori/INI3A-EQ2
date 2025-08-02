@@ -1,16 +1,43 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { IonPage, IonToolbar, IonContent, IonButton, IonButtons, IonIcon, IonSelect, 
-  IonSelectOption, IonSegment, IonSegmentButton, IonLabel, IonRow, IonCol, IonItem } from '@ionic/react';
+
+import { 
+  IonPage, 
+  IonToolbar, 
+  IonContent, 
+  IonButton, 
+  IonButtons, 
+  IonIcon, 
+  IonSelect, 
+  IonSelectOption, 
+  IonSegment, 
+  IonSegmentButton, 
+  IonLabel, 
+  IonRow, 
+  IonCol, 
+  IonItem, 
+  IonSpinner,
+  IonToast
+} from '@ionic/react';
+import { 
+  chevronBack, 
+  chevronForward, 
+  chevronDown, 
+  documentText, 
+  rocket, 
+  school, 
+  calendar, 
+  flame 
+} from 'ionicons/icons';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { chevronBack, chevronForward, chevronDown, documentText, rocket, school, calendar, flame } from 'ionicons/icons';
+
 import Header from '../../components/Header';
 import AnimacaoSVG from '../../components/AnimacaoSVG';  
 import API from '../../lib/api';
+
 import './css/geral.css'; 
 import './css/ui.css'; 
-import './css/layouts.css'; 
-import React from 'react';
+import './css/layouts.css';
 
 interface Atividade {
   id: number;
@@ -38,6 +65,9 @@ export default function () {
 
   const [currentDate, setCurrentDate] = useState(hoje);
   const [selectedDate, setSelectedDate] = useState(hoje.getDate());
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
 
   const [viewMode, setViewMode] = useState<'Mês' | 'Semana'>('Mês');
 
@@ -47,6 +77,22 @@ export default function () {
   ];
   const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
+  const gerarAgenda = async () => {
+    setLoading(true);
+
+    try {
+      const api = new API();
+      const response = await api.get("calendarioEstudos");
+      setMessage('Agenda gerada com sucesso!');
+      setShowToast(true);
+    } catch (error) {
+      setMessage('Erro ao gerar agenda. Tente novamente!');
+      setShowToast(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -131,17 +177,18 @@ useEffect(() => {
   fetchAgendaInteligente();
 }, []);
 
+  type Status = 'não iniciado' | 'em andamento' | 'concluído';
 
-
-  const contagemStatus = {
+  const contagemStatus: Record<Status, number> = {
     'não iniciado': 0,
     'em andamento': 0,
     'concluído': 0,
   };
 
   atividades.forEach((a) => {
-    if (contagemStatus.hasOwnProperty(a.status)) {
-      contagemStatus[a.status]++;
+    if (a.status in contagemStatus) {
+      // Asserção de tipo para garantir que a.status é do tipo 'Status'
+      contagemStatus[a.status as Status]++;
     }
   });
 
@@ -433,15 +480,16 @@ useEffect(() => {
   });
 
   return (
-    <div key={j} className="calendar-day semana-dia-hora">
-      {evento && (
-        <div className="event-tag event-aula">
-          {evento.materia}
-        </div>
-      )}
-    </div>
-  );
-})}
+      
+        <div key={j} className="calendar-day semana-dia-hora">
+        {evento && (
+          <div className="event-tag event-aula">
+            {evento.materia}
+          </div>
+        )}
+              </div>
+            );
+          })}
 
                 </React.Fragment>
               ))}
@@ -663,10 +711,21 @@ useEffect(() => {
                       ))}
                     </div>
                   </div>   
-                </IonRow>           
+                </IonRow>  
               </IonRow>
             </IonCol>
           </IonRow>  
+          <IonRow className="rowAgenda">
+                <IonButton
+                  fill="solid"
+                  color="primary"
+                  className="generate-agenda-button"
+                  onClick={gerarAgenda}
+                  disabled={loading} // Desativa o botão enquanto a agenda está sendo gerada
+                >
+                  <IonLabel>{loading ? 'Gerando...' : 'Gerar Agenda'}</IonLabel>
+                </IonButton>
+              </IonRow>
       </IonContent>
     </IonPage>
   );
