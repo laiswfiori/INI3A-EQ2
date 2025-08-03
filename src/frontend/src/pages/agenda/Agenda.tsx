@@ -37,6 +37,19 @@ export default function () {
     setMenuAberto(!menuAberto);
   };
 
+  
+  const [hoveredDay, setHoveredDay] = useState<number | null>(null);
+  const getEventColor = (tipo: string) => {
+  const colors: Record<string, string> = {
+    aula: '#ff4d4dff',
+    prova: '#ff9100ff',
+    simulado: '#1eff00ff',
+    tarefa: '#ff3995ff',
+    default: '#0095ffff'
+  };
+  return colors[tipo] || colors.default;
+};
+
   const location = useLocation();
   const hoje = new Date();
 
@@ -54,49 +67,39 @@ export default function () {
   ];
   const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-  const gerarAgenda = async () => {
-    setLoading(true);
+  const [expandedDay, setExpandedDay] = useState<number | null>(null);
 
-    try {
-      const api = new API();
-      const response = await api.get("calendarioEstudos");
-      setMessage('Agenda gerada com sucesso!');
-      setShowToast(true);
-    } catch (error) {
-      setMessage('Erro ao gerar agenda. Tente novamente!');
-      setShowToast(true);
-    } finally {
-      setLoading(false);
-    }
-  };
-  
   const getDaysInMonth = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay();
-    const days = [];
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const startingDayOfWeek = firstDay.getDay();
+  const days = [];
 
-    const prevMonth = new Date(year, month, 0);
-    const prevMonthDays = prevMonth.getDate();
-    for (let i = startingDayOfWeek; i > 0; i--) {
-      days.push({ day: prevMonthDays - i + 1, isCurrentMonth: false });
-    }
+  // Dias do mês anterior (para completar a primeira semana)
+  const prevMonth = new Date(year, month - 1, 1);
+  const prevMonthDays = new Date(year, month, 0).getDate();
+  for (let i = startingDayOfWeek; i > 0; i--) {
+    days.push({ day: prevMonthDays - i + 1, isCurrentMonth: false });
+  }
 
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push({ day, isCurrentMonth: true });
-    }
+  // Dias do mês atual
+  for (let day = 1; day <= daysInMonth; day++) {
+    days.push({ day, isCurrentMonth: true });
+  }
 
-    const totalCells = Math.ceil(days.length / 7) * 7;
-    let nextMonthDay = 1;
-    while (days.length < totalCells) {
-      days.push({ day: nextMonthDay, isCurrentMonth: false });
-      nextMonthDay++;
-    }
-    return days;
-  };
+  // Dias do próximo mês (para completar a última semana)
+  const totalCells = Math.ceil(days.length / 7) * 7;
+  let nextMonthDay = 1;
+  while (days.length < totalCells) {
+    days.push({ day: nextMonthDay, isCurrentMonth: false });
+    nextMonthDay++;
+  }
+
+  return days;
+};
 
   const navigateMonth = (direction: 'prev' | 'next') => {
     setCurrentDate((prev) => {
@@ -128,6 +131,7 @@ export default function () {
   }, []);
 
   const [eventosAgenda, setEventosAgenda] = useState<any[]>([]);
+
 
 useEffect(() => {
   const fetchAgendaInteligente = async () => {
@@ -232,10 +236,76 @@ useEffect(() => {
     return dataEntrega >= hojeZero && dataEntrega <= dataLimite;
   });
 
-  const horarios = Array.from({ length: 24 }, (_, i) => {
-    const hora = i;
-    return `${hora.toString().padStart(2, '0')}h`;
+ const horarios = Array.from({ length: 24 }, (_, i) => {
+  const hora = i;
+  return {
+    hora: hora.toString().padStart(2, '0'),
+    label: `${hora.toString().padStart(2, '0')}h`
+  };
+});
+
+const getEventosPorDiaEHora = (dia: number, hora: string) => {
+  return eventosAgenda.filter(evento => {
+    const eventoDate = new Date(evento.data);
+    return (
+      eventoDate.getDate() === dia &&
+      eventoDate.getMonth() === hoje.getMonth() &&
+      eventoDate.getFullYear() === hoje.getFullYear() &&
+      evento.hora_inicio.startsWith(`${hora}:`)
+    );
   });
+};
+
+
+  
+
+const fetchAgendaInteligente = async () => {
+  try {
+    const api = new API();
+    const { agenda } = await api.get("calendarioEstudos");
+
+    const eventos = agenda.flatMap((item: any) =>
+      item.revisoes.map((data: string) => ({
+        data,
+        materia: item.materia_nome,
+        hora_inicio: item.hora_inicio,
+        hora_fim: item.hora_fim,
+      }))
+    );
+
+    setEventosAgenda(eventos);
+  } catch (error) {
+    console.error("Erro ao carregar a agenda inteligente:", error);
+  }
+};
+
+// Quando abrir a página
+useEffect(() => {
+  fetchAgendaInteligente();
+}, []);
+// Função corrigida para parse de datas
+const parseDbDate = (dateString: string) => {
+  if (!dateString) return new Date();
+  
+  // Extrai a data no formato YYYY-MM-DD (ignora qualquer hora/fuso)
+  const datePart = dateString.split('T')[0];
+  const [year, month, day] = datePart.split('-').map(Number);
+  
+  return new Date(Date.UTC(year, month - 1, day, 12)); // Meio-dia UTC evita problemas de dia anterior
+};
+
+// Na visualização semanal, ajuste o filtro:
+const eventosNestaHora = eventosAgenda.filter(evento => {
+  const eventoDate = parseDbDate(evento.data);
+  const diaCorreto = new Date(eventoDate);
+  
+  // Ajuste para comparar com os dias da semana corretamente
+  return (
+    diaCorreto.getMonth() === hoje.getMonth() &&
+    diaCorreto.getFullYear() === hoje.getFullYear()
+  );
+});
+
 
   return (
     <IonPage>
@@ -367,112 +437,170 @@ useEffect(() => {
               </div>
             </div>
         )}
-        {viewMode === 'Mês' && (
-        <div className="calendar-grid-container">
-          <div className="calendar-grid days-of-week-header">
-            {daysOfWeek.map((day) => (
-              <div key={day} className="day-header">
-                {day}
-              </div>
-            ))}
-          </div>
 
-          <div className="calendar-grid">
-            {days.map((date, index) => (
-              <div
-                key={index}
-                className={`calendar-day 
-                  ${!date.isCurrentMonth ? 'other-month' : ''} 
-                  ${date.day === selectedDate && date.isCurrentMonth ? 'selected-day' : ''}
-                  ${
-                    date.day === hoje.getDate() &&
-                    currentDate.getMonth() === hoje.getMonth() &&
-                    currentDate.getFullYear() === hoje.getFullYear() &&
-                    date.isCurrentMonth
-                      ? 'today-highlight'
-                      : ''
-                  }
-                `}
-                onClick={() => date.isCurrentMonth && setSelectedDate(date.day)}
-              >
-                <span className="day-number">{date.day}</span>
-                <div className="events-container">
-                  {eventosAgenda
-                    .filter((evento) => {
-                      const eventoDate = new Date(evento.data);
-                      return (
-                        eventoDate.getDate() === date.day &&
-                        eventoDate.getMonth() === currentDate.getMonth() &&
-                        eventoDate.getFullYear() === currentDate.getFullYear()
-                      );
-                    })
-                    .map((evento, idx) => (
-                      <div key={idx} className="event-tag event-aula">
-                        {evento.materia}
-                      </div>
-                    ))}
-                </div>
-
-              </div>
-            ))}
-          </div>
+{viewMode === 'Mês' && (
+  <div className="calendar-grid-container">
+    <div className="calendar-grid days-of-week-header">
+      {daysOfWeek.map((day) => (
+        <div key={day} className="day-header">
+          {day}
         </div>
-        )}
-       {viewMode === 'Semana' && (
-          <div className="calendar-grid-container semana">
-            <div className="calendar-grid days-of-week-header semana-header">
-              <div className="hora-header"></div> 
-              {diasDaSemana.map((dia, idx) => (
-                <div
-                  key={idx}
-                  className={`day-header ${dia.isHoje ? 'today-highlight' : ''} ${dia.ativo ? 'dia-ativo' : ''}`}
-                  onClick={() => {
-                    if (dia.ativo) setSelectedDate(dia.numero);
-                  }}
-                >
-                  <div className="day-number">{dia.numero}</div>
-                  <div className="day-name">{dia.nome}</div>
+      ))}
+    </div>
+
+    <div className="calendar-grid">
+      {days.map((date, index) => {
+        // Filtra eventos APENAS para dias do mês atual
+        const currentDayEvents = date.isCurrentMonth 
+          ? eventosAgenda.filter((evento) => {
+              if (!evento.data) return false;
+              const eventoDate = parseDbDate(evento.data);
+              return (
+                eventoDate.getDate() === date.day &&
+                eventoDate.getMonth() === currentDate.getMonth() &&
+                eventoDate.getFullYear() === currentDate.getFullYear()
+              );
+            })
+          : [];
+
+        return (
+          <div
+            key={index}
+            className={`calendar-day ${!date.isCurrentMonth ? 'other-month' : ''}
+              ${date.day === selectedDate && date.isCurrentMonth ? 'selected-day' : ''}
+              ${
+                date.day === hoje.getDate() &&
+                currentDate.getMonth() === hoje.getMonth() &&
+                currentDate.getFullYear() === hoje.getFullYear() &&
+                date.isCurrentMonth
+                  ? 'today-highlight'
+                  : ''
+              }
+            `}
+            onClick={() => date.isCurrentMonth && setSelectedDate(date.day)}
+            onMouseEnter={() => setHoveredDay(date.day)}
+            onMouseLeave={() => setHoveredDay(null)}
+          >
+            <span className="day-number">{date.day}</span>
+            
+            {/* Mostra eventos apenas para dias do mês atual */}
+            {date.isCurrentMonth && (
+              <div className="events-container">
+                {currentDayEvents.slice(0, 2).map((evento, idx) => (
+                  <div 
+                    key={`${date.day}-${idx}`}
+                    className="event-tag"
+                    style={{ backgroundColor: getEventColor(evento.tipo) }}
+                  >
+                    <div className="event-title">{evento.materia}</div>
+                  </div>
+                ))}
+                {currentDayEvents.length > 2 && (
+                  <div className="more-events">+{currentDayEvents.length - 2}</div>
+                )}
+              </div>
+            )}
+
+            {/* Tooltip com todos os eventos (apenas para dias do mês atual) */}
+            {date.isCurrentMonth && hoveredDay === date.day && currentDayEvents.length > 0 && (
+              <div className="day-tooltip">
+                <div className="tooltip-content">
+                  {currentDayEvents.map((evento, idx) => (
+                    <div key={idx} className="tooltip-event">
+                      <span className="event-time">{evento.hora_inicio}</span>
+                      <span className="event-title">{evento.materia}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="calendar-grid semana-horarios">
-              {horarios.map((hora, i) => (
-                <React.Fragment key={i}>
-                  <div className="hora-label">{hora}</div>
-                  {diasDaSemana.map((dia, j) => {
-  const dataReferencia = new Date();
-  dataReferencia.setDate(dia.numero);
-  dataReferencia.setHours(0, 0, 0, 0);
-
-  const horaAtual = `${i.toString().padStart(2, '0')}:00`;
-
-  const evento = eventosAgenda.find(ev => {
-    const evDate = new Date(ev.data);
-    const mesmaData =
-      evDate.getDate() === dataReferencia.getDate() &&
-      evDate.getMonth() === dataReferencia.getMonth() &&
-      evDate.getFullYear() === dataReferencia.getFullYear();
-
-    return mesmaData && ev.hora_inicio.startsWith(horaAtual);
-  });
-
-  return (
-      
-        <div key={j} className="calendar-day semana-dia-hora">
-        {evento && (
-          <div className="event-tag event-aula">
-            {evento.materia}
+              </div>
+            )}
           </div>
-        )}
+        );
+      })}
+    </div>
+  </div>
+)}
+{viewMode === 'Semana' && (
+  <div className="calendar-grid-container semana">
+    <div className="calendar-grid days-of-week-header semana-header">
+      <div className="hora-header"></div>
+      {diasDaSemana.map((diaSemana, idx) => {
+        const diaAtual = new Date();
+        diaAtual.setDate(diaSemana.numero);
+        
+        const eventosDoDia = eventosAgenda.filter(evento => {
+          const eventoDate = parseDbDate(evento.data);
+          return (
+            eventoDate.getDate() === diaSemana.numero &&
+            eventoDate.getMonth() === diaAtual.getMonth() &&
+            eventoDate.getFullYear() === diaAtual.getFullYear()
+          );
+        });
+
+        return (
+          <div
+            key={idx}
+            className={`day-header ${diaSemana.isHoje ? 'today-highlight' : ''}`}
+          >
+            <div className="day-number">{diaSemana.numero}</div>
+            <div className="day-name">{diaSemana.nome}</div>
+            {eventosDoDia.length > 0 && <div className="event-dot"></div>}
+          </div>
+        );
+      })}
+    </div>
+
+    <div className="calendar-grid semana-horarios">
+      {horarios.map((horaObj, i) => (
+        <React.Fragment key={i}>
+          <div className="hora-label">{horaObj.label}</div>
+          {diasDaSemana.map((diaSemana, j) => {
+            const diaAtual = new Date();
+            diaAtual.setDate(diaSemana.numero);
+            
+            const eventos = eventosAgenda.filter(evento => {
+              const eventoDate = parseDbDate(evento.data);
+              const [horaInicio] = evento.hora_inicio.split(':').map(Number);
+              
+              return (
+                eventoDate.getDate() === diaSemana.numero &&
+                eventoDate.getMonth() === diaAtual.getMonth() &&
+                eventoDate.getFullYear() === diaAtual.getFullYear() &&
+                horaInicio === parseInt(horaObj.hora)
+              );
+            });
+
+            return (
+              <div 
+                key={j}
+                className={`calendar-day semana-dia-hora ${diaSemana.isHoje ? 'today-cell' : ''}`}
+              >
+                {eventos.map((evento, k) => {
+                  const [horaInicio, minInicio] = evento.hora_inicio.split(':').map(Number);
+                  const [horaFim, minFim] = evento.hora_fim.split(':').map(Number);
+                  const duracao = (horaFim - horaInicio) * 60 + (minFim - minInicio);
+                  
+                  return (
+                    <div
+                      key={k}
+                      className="event-tag event-aula"
+                      style={{ height: `${duracao}px` }}
+                    >
+                      <div className="event-title">{evento.materia}</div>
+                      <div className="event-time">
+                        {evento.hora_inicio} - {evento.hora_fim}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             );
           })}
-
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
-        )}
+        </React.Fragment>
+      ))}
+    </div>
+  </div>
+)}
         <div className="legend-container">
             <div className="legend-item"><div className="legend-color event-prova"></div> Provas</div>
             <div className="legend-item"><div className="legend-color event-simulado"></div> Simulados</div>
@@ -691,18 +819,7 @@ useEffect(() => {
                 </IonRow>  
               </IonRow>
             </IonCol>
-          </IonRow>  
-          <IonRow className="rowAgenda">
-                <IonButton
-                  fill="solid"
-                  color="primary"
-                  className="generate-agenda-button"
-                  onClick={gerarAgenda}
-                  disabled={loading} // Desativa o botão enquanto a agenda está sendo gerada
-                >
-                  <IonLabel>{loading ? 'Gerando...' : 'Gerar Agenda'}</IonLabel>
-                </IonButton>
-              </IonRow>
+          </IonRow>
       </IonContent>
     </IonPage>
   );
