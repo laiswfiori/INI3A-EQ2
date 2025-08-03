@@ -1,0 +1,78 @@
+@media (max-width: 320px) {
+    .timer-display {
+        font-size: 5rem;
+    }
+    .bodyE.light {
+        background-image: url('/imgs/estudo4.jpg');
+    }
+    .bodyE.dark {
+        background-image: url('/imgs/estudo4Darkmode.jpg');
+    }
+    .btnIniciarPausar, .btnEstudo {
+        width: 50%;
+    }
+    .btnIniciarPausar{
+        width: 20rem;
+    }
+    .btnIniciarPausar::part(native) {
+        font-size: 1.8rem !important;
+    }
+}
+
+@media (min-width: 321px) and (max-width: 425px) {
+    .timer-display {
+        font-size: 6rem;
+    }
+    .bodyE.light {
+        background-image: url('/imgs/estudo4.jpg');
+    }
+    .bodyE.dark {
+        background-image: url('/imgs/estudo4Darkmode.jpg');
+    }
+    .btnIniciarPausar, .btnEstudo {
+        width: 40%;
+    }
+    .btnIniciarPausar{
+        width: 20rem;
+    }
+}
+
+@media (min-width: 426px) and (max-width: 768px) {
+    .bodyE.light {
+        background-image: url('/imgs/estudo3.jpg');
+    }
+    .bodyE.dark {
+        background-image: url('/imgs/estudo3Darkmode.jpg');
+    }
+    .btnIniciarPausar, .btnEstudo {
+        width: 30%;
+    }
+    .btnIniciarPausar{
+        width: 14rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .bodyE.light {
+        background-image: url('/imgs/estudo2.jpg');
+    }
+    .bodyE.dark {
+        background-image: url('/imgs/estudo2Darkmode.jpg');
+    }
+    .btnIniciarPausar, .btnEstudo {
+        width: 20%;
+    }
+}
+
+@media (min-width: 1025px) {
+    .bodyE.light {
+        background-image: url('/imgs/estudo1.jpg');
+    }
+    .bodyE.dark {
+        background-image: url('/imgs/estudo1Darkmode.jpg');
+    }
+    .btnIniciarPausar, .btnEstudo {
+        width: 10%;
+    }
+}
+

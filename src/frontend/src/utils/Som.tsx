@@ -6,6 +6,8 @@ import somConcluir from '../assets/sounds/concluir.mp3';
 import somRespCerta from '../assets/sounds/respostaCerta.mp3';
 import somRespErrada from '../assets/sounds/respostaErrada.mp3'; 
 import somNotificacao from '../assets/sounds/notificacao.mp3'; 
+import somPaginas from '../assets/sounds/paginas.mp3';
+import somLareira from '../assets/sounds/lareira.mp3';
 
 type SoundContextType = {
   playSomIniciar: () => void;
@@ -13,6 +15,8 @@ type SoundContextType = {
   playSomRespCerta: () => void;
   playSomRespErrada: () => void;
   playSomNotificacao: () => void;
+  playSomPaginas: () => void;
+  playSomLareira: () => void;
   somAtivo: boolean;
   toggleSom: () => void;
 };
@@ -30,6 +34,8 @@ export const SoundProvider = ({ children }: { children: ReactNode }) => {
   const [playRespCerta] = useSound(somRespCerta);
   const [playRespErrada] = useSound(somRespErrada);
   const [playNotificacao] = useSound(somNotificacao);
+  const [playPaginas] = useSound(somPaginas);
+  const [playLareira] = useSound(somLareira);
 
   useEffect(() => {
     localStorage.setItem('somAtivo', somAtivo.toString());
@@ -40,6 +46,8 @@ export const SoundProvider = ({ children }: { children: ReactNode }) => {
   const playSomRespCerta = () => { if (somAtivo) playRespCerta(); };
   const playSomRespErrada = () => { if (somAtivo) playRespErrada(); };
   const playSomNotificacao = () => { if (somAtivo) playNotificacao(); };
+  const playSomPaginas = () => { if (somAtivo) playPaginas(); };
+  const playSomLareira = () => { if (somAtivo) playLareira(); };
 
   const toggleSom = () => setSomAtivo(prev => !prev);
 
@@ -49,6 +57,8 @@ export const SoundProvider = ({ children }: { children: ReactNode }) => {
     playSomRespCerta,
     playSomRespErrada,
     playSomNotificacao,
+    playSomPaginas,
+    playSomLareira,
     somAtivo,
     toggleSom,
   };

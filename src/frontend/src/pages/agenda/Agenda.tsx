@@ -1,43 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-
-import { 
-  IonPage, 
-  IonToolbar, 
-  IonContent, 
-  IonButton, 
-  IonButtons, 
-  IonIcon, 
-  IonSelect, 
-  IonSelectOption, 
-  IonSegment, 
-  IonSegmentButton, 
-  IonLabel, 
-  IonRow, 
-  IonCol, 
-  IonItem, 
-  IonSpinner,
-  IonToast
-} from '@ionic/react';
-import { 
-  chevronBack, 
-  chevronForward, 
-  chevronDown, 
-  documentText, 
-  rocket, 
-  school, 
-  calendar, 
-  flame 
-} from 'ionicons/icons';
+import { IonPage, IonToolbar, IonContent, IonButton, IonButtons, IonIcon, IonSelect, IonSelectOption, 
+  IonSegment, IonSegmentButton, IonLabel, IonRow, IonCol, IonItem, IonSpinner,IonToast } from '@ionic/react';
+import { chevronBack,  chevronForward,  chevronDown, documentText, rocket, school, calendar,  flame } from 'ionicons/icons';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-
+import './css/geral.css';
+import './css/ui.css';
+import './css/layouts.css';
+import './css/darkmode.css';
 import Header from '../../components/Header';
 import AnimacaoSVG from '../../components/AnimacaoSVG';  
 import API from '../../lib/api';
+import ThemeManager from '../../utils/ThemeManager';
+import '../../utils/css/variaveisCores.css';
 
-import './css/geral.css'; 
-import './css/ui.css'; 
-import './css/layouts.css';
+
 
 interface Atividade {
   id: number;

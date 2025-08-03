@@ -24,6 +24,7 @@ import Relatorio from './pages/flashcards/relatorio/Relatorio';
 import Confirmar from './pages/senha/confirmar/Confirmar';
 import Concluir from './pages/senha/concluir/Concluir';
 import Alterar from './pages/senha/alterar/Alterar';
+import Estudo from './pages/estudo/Estudo';
 
 import Teste from './pages/perfil/Teste';
 
@@ -93,6 +94,7 @@ const App: React.FC = () => {
             <Route path="/senha/confirmar" component={Confirmar} exact />
             <Route path="/senha/concluir" component={Concluir} exact />
             <Route path="/senha/alterar" component={Alterar} exact />
+            <Route path="/estudo/estudo" component={Estudo} exact />
 
             <Route path="/materias/:id" component={Topicos} exact />
             <Route path="/topicos/:id" component={Atividades} exact />

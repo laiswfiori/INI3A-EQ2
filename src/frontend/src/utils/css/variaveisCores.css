@@ -19,6 +19,7 @@
   --cor-branco2: #ffffff;
   --cor-azulC3: #00296b;
   --cor-azulE3: #00296b;
+  --cor-cinzaC: #ddd;
 
   /*cores conteúdos*/
   --cor-azulE2: #ffffff;
@@ -64,6 +65,7 @@ body.dark {
   --cor-azulC3: #ffe99d;
   --cor-azulE3: #ffffff;
   --cor_cinza2: #7da1d3;
+  --cor-cinzaC: #3b4246;
 
   /*cores conteúdos*/
   --cor-azulE2: #021025;

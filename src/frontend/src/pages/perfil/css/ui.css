@@ -85,24 +85,28 @@ ion-button.btnConfiggM::part(native) {
 }
 
 #tema {
-    background-color: rgb(20, 197, 197);
-  }
+    background-color: #14c5c5;
+}
   
-  #som {
-    background-color: rgb(20, 147, 197);
-  }
+#som {
+    background-color: #c51458;
+}
   
-  #idioma {
-    background-color: rgb(197, 171, 20);
-  }
+#idioma {
+    background-color: #c5ab14;
+}
   
-  #notificacoes {
-    background-color: rgb(46, 163, 0);
-  }
+#notificacoes {
+    background-color: #2ea300;
+}
   
-  #resetar {
-    background-color: rgb(197, 32, 20);
-  }
+#resetar {
+    background-color: #c52014;
+}
+
+#estudo {
+    background-color: #1493c5;
+}
 
 #dBranco {
     padding-left: 3%;

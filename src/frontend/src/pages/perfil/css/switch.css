@@ -415,3 +415,47 @@
   .bin-button:active {
     transform: scale(0.9);
   }
+
+
+  .switch2 {
+    --a: 0.5s ease-out;
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    border-radius: 0.5em;
+    box-shadow: 0 0 0 0.66em #aaa;
+    width: 2rem;    
+    aspect-ratio: 212.4992 / 84.4688;
+    height: auto; 
+    background-color: #aaa;
+    pointer-events: auto !important;
+    cursor: pointer;
+    margin-left: 5%;
+  }
+
+  #check2 {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .switch2 svg {
+    height: 100%;
+  }
+
+  .switch2 svg path {
+    color: #fff;
+    stroke-width: 14;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 130 230;
+    transition:
+      all var(--a),
+      0s transform;
+    transform-origin: center;
+  }
+
+  #check2:checked ~ .switch2 svg path {
+    stroke-dashoffset: 180;
+    transform: scaleY(-1);
+  }
