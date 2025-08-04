@@ -4,7 +4,7 @@ import {
   IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, 
   IonModal, IonPopover, IonInput, IonTextarea, IonRow, IonCol, IonSelect, IonSelectOption
 } from '@ionic/react';
-import { pencil, trash, flash, checkmarkDone, close, checkmark, arrowForward, documentText, reader, map, clipboard, newspaper, images, documentAttach } from 'ionicons/icons';
+import { pencil, trash, flash, checkmarkDone, close, checkmark, arrowForward, documentText, reader, map, clipboard, newspaper, images, documentAttach, returnDownBack } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -382,6 +382,10 @@ const removerItemConteudo = (index: number) => {
       <IonContent className="bodyA">
         <h1 className="titulo titDarkMode">Atividades</h1>
         <div className="linhaHorizontal"></div>
+        <IonRow className="contVoltarT"  onClick={() => history.goBack()}>
+          <IonIcon icon={returnDownBack} className="voltarT"/>
+          <p className="txtVoltarT">Voltar para tópicos</p>
+        </IonRow>
 
         {loading ? (
           <div className="loader-container">

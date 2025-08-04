@@ -81,6 +81,15 @@ ion-button {
   flex-direction: column;
 }
 
+.contVoltarT {
+  width: 100%;
+  margin-right: 15%;
+  margin-left: 15%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 ion-item.topico-item ion-label {
   margin-bottom: 5% !important;
   margin-left: 0 !important;

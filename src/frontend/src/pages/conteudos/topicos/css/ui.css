@@ -21,6 +21,10 @@ h1 {
     font-size: 3rem;
 }
 
+.voltarT, .txtVoltarT {
+  cursor: pointer;
+}
+
 ion-button.config {
   --background: #fff; 
   --color: black;  

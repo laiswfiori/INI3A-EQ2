@@ -4,7 +4,7 @@ import {
   IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, IonModal, IonPopover,
   IonInput, IonTextarea, IonRow, IonCol
 } from '@ionic/react';
-import { layers, pencil, trash, arrowForward, image } from 'ionicons/icons';
+import { layers, pencil, trash, arrowForward, image, returnDownBack } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -262,6 +262,10 @@ const Topicos: React.FC = () => {
       <IonContent className="bodyT">
         <h1 className="titulo titDarkMode">Tópicos</h1>
         <div className="linhaHorizontal"></div>
+        <IonRow className="contVoltarT"  onClick={() => history.goBack()}>
+            <IonIcon icon={returnDownBack} className="voltarT"/>
+            <p className="txtVoltarT">Voltar para matérias</p>
+        </IonRow>
 
         {loading ? (
           <div className="loader-container">

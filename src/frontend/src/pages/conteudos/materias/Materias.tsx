@@ -50,18 +50,24 @@ interface Materia {
     [nome: string]: { icon: string; className: string } 
   } = {
     'PORTUGUÊS': { icon: library, className: 'm1' },
+    'PORTUGUES': { icon: library, className: 'm1' },
     'LITERATURA': { icon: library, className: 'm1' },
     'INGLÊS': { icon: globe, className: 'm2' },
+    'INGLES': { icon: globe, className: 'm2' },
     'ESPANHOL': { icon: globe, className: 'm2' },
     'ARTES': { icon: brush, className: 'm3' },
     'HISTÓRIA': { icon: book, className: 'm4' },
+    'HISTORIA': { icon: book, className: 'm4' },
     'FILOSOFIA': { icon: school, className: 'm5' },
     'SOCIOLOGIA': { icon: accessibility, className: 'm6' },
     'GEOGRAFIA': { icon: earth, className: 'm7' },
     'BIOLOGIA': { icon: leaf, className: 'm8' },
     'QUÍMICA': { icon: flask, className: 'm9' },
+    'QUIMICA': { icon: flask, className: 'm9' },
     'FÍSICA': { icon: planet, className: 'm10' },
+    'FISICA': { icon: planet, className: 'm10' },
     'MATEMÁTICA': { icon: calculator, className: 'm11' },
+    'MATEMATICA': { icon: calculator, className: 'm11' },
   };
 
 const normalizarNomeMateria = (nome: string) => {
@@ -69,18 +75,24 @@ const normalizarNomeMateria = (nome: string) => {
 
   const mapa = {
     'PORTUGUÊS': 'm1',
+    'PORTUGUES': 'm1',
     'LITERATURA': 'm1',
     'INGLÊS': 'm2',
+    'INGLES': 'm2',
     'ESPANHOL': 'm2',
     'ARTES': 'm3',
     'HISTÓRIA': 'm4',
+    'HISToRIA': 'm4',
     'FILOSOFIA': 'm5',
     'SOCIOLOGIA': 'm6',
     'GEOGRAFIA': 'm7',
     'BIOLOGIA': 'm8',
     'QUÍMICA': 'm9',
+    'QUIMICA': 'm9',
     'FÍSICA': 'm10',
-    'MATEMÁTICA': 'm11'
+    'FISICA': 'm10',
+    'MATEMÁTICA': 'm11',
+    'MATEMATICA': 'm11'
   };
 
   const classe = mapa[nomeUpper] || '';

@@ -138,7 +138,7 @@ useEffect(() => {
     try {
       const api = new API();
       
-      const { agenda } = await api.get("/calendarioEstudo"); // ajuste para sua rota correta
+      const { agenda } = await api.get("/calendarioEstudos"); 
 
       const eventos = agenda.flatMap((item: any) =>
         item.revisoes.map((data: string) => ({
@@ -310,9 +310,9 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
   return (
     <IonPage>
       <Header />
-      <IonContent className="pagAgenda">
+      <IonContent className="bodyAG">
         <IonRow className="rowAgenda">
-          <h1 className="txtAgenda preto">Calendário</h1>
+          <h1 className="txtAgenda pDarkmode">Calendário</h1>
         </IonRow>
         <IonToolbar className="laranja toolbarD">
           <div className="calendar-controls ion-padding-horizontal">
@@ -616,49 +616,49 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">{atividades.length}</p>
+                  <p className="txtGrande pDarkmode">{atividades.length}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={documentText} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Total de atividades</p>
+                <p className="txtTF pDarkmode">Total de atividades</p>
               </IonRow>
             </IonRow>
 
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">{atividades.filter(a => a.status === "concluído").length}</p>
+                  <p className="txtGrande pDarkmode">{atividades.filter(a => a.status === "concluído").length}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={school} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Total de atividades concluídas</p>
+                <p className="txtTF pDarkmode">Total de atividades concluídas</p>
               </IonRow>
             </IonRow>
 
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">5</p>
+                  <p className="txtGrande pDarkmode">5</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={rocket} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Total de revisões feitas</p>
+                <p className="txtTF pDarkmode">Total de revisões feitas</p>
               </IonRow>
             </IonRow>
           </IonRow>  
           <IonRow className="rowA rowCentro rowScroll">
             <IonCol className="colAtividades">
               <IonRow className="flexA">
-                <h2>Próximas atividades</h2>
+                <h2 className="pDarkmode">Próximas atividades</h2>
                 <p className="txtDescricao">Atividades para os próximos 7 dias. Não acumule suas obrigações!</p>
               </IonRow>
               <div className="atividades-scroll">
@@ -672,13 +672,6 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
                             <h2 className="txtTMat">{atividade.titulo}</h2>
                             <p className="txtDescricao">{atividade.tipo}</p>
                           </IonCol>
-                      </IonCol>
-                      <IonCol className="col2M">
-                        <IonRow>
-                          <IonCol id="containerConfig">
-                            <IonButton className="config">...</IonButton>
-                          </IonCol>
-                        </IonRow>
                       </IonCol>
 
                       <IonRow className="rowA">
@@ -711,7 +704,7 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
             </IonCol>
             <IonCol className="colGrafico">
               <IonRow className="flexA sBorda">
-                <h2>Progresso de estudo</h2>
+                <h2 className="pDarkmode">Progresso de estudo</h2>
                 <p className="txtDescricao">Acompanhe seu progresso usando o flashminder.</p>
               </IonRow>
               <div id="grafico"
@@ -740,14 +733,14 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
                 <IonCol className="colOfensiva1">
                   <div className="divOfensiva">
                     <IonIcon icon={flame} className="iconeFogo" />
-                    <h3 className="hOfensiva">116 dias</h3>
+                    <h3 className="hOfensiva pDarkmode">116 dias</h3>
                     <p className="txtDescricao pOfensiva">Sequência de login</p>
                   </div>
                 </IonCol>
                 <IonCol className="colOfensiva2">
                   <div className="diasOfensiva">
-                    <h3 className="dias1">214</h3>
-                    <h4>/365</h4>
+                    <h3 className="dias1 pDarkmode">214</h3>
+                    <h4 className="pDarkmode">/365</h4>
                   </div>
                   <IonRow className="barraA">
                     <div className="barraStatusA" style={{ width: `${50}%` }}></div>
@@ -759,8 +752,8 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
                           key={index}
                           className={`day-item ${dia.isHoje ? 'day-active' : ''}`}
                         >
-                          <div className="day-number">{dia.numero}</div>
-                          <div className="day-name">{dia.nome}</div>
+                          <div className="day-number dayO">{dia.numero}</div>
+                          <div className="day-name dayNO">{dia.nome}</div>
                         </div>
                       ))}
                     </div>
@@ -780,14 +773,14 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
                 <IonCol className="colOfensiva1">
                   <div className="divOfensiva">
                     <IonIcon icon={flame} className="iconeFogo" />
-                    <h3 className="hOfensiva">116 dias</h3>
+                    <h3 className="hOfensiva pDarkmode">116 dias</h3>
                     <p className="txtDescricao pOfensiva">Sequência de login</p>
                   </div>
                 </IonCol>
                 <IonCol className="colOfensiva2">
                   <div className="diasOfensiva">
-                    <h3 className="dias1">214</h3>
-                    <h4>/365</h4>
+                    <h3 className="dias1 pDarkmode">214</h3>
+                    <h4 className="pDarkmode">/365</h4>
                   </div>               
                   <IonRow className="barraA">
                     <div className="barraStatusA" style={{ width: `${50}%` }}></div>
@@ -801,8 +794,8 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
                           key={index}
                           className={`day-item ${dia.isHoje ? 'day-active' : ''}`}
                         >
-                          <div className="day-number">{dia.numero}</div>
-                          <div className="day-name">{dia.nome}</div>
+                          <div className="day-number dayO">{dia.numero}</div>
+                          <div className="day-name dayNO">{dia.nome}</div>
                         </div>
                       ))}
                     </div>

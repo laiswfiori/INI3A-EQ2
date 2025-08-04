@@ -361,7 +361,6 @@
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
 }
 
 .calendar-day {
@@ -430,12 +429,9 @@
   color: var(--ion-color-medium);
 }
 
-/* Estilos para o calendário mensal melhorado */
 
-/* Tamanho reduzido dos dias */
 .calendar-grid {
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
 }
 
 .calendar-day {
@@ -515,8 +511,7 @@
 }
 
 .today-highlight {
-  background-color: #e3f2fd;
-  border-radius: 4px;
+  background-color: #ffe99d;
 }
 
 .event-dot {
