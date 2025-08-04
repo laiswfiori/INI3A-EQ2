@@ -10,9 +10,6 @@
         grid-column-start: 1;
         margin-right: 140px;
         margin-top: 2%;
-        .imgSize1{
-            width: 40px;
-        }
     }
     .div11{
         grid-row-start: 2;
@@ -96,9 +93,6 @@
         margin-right: 140px;
         margin-top: 2%;
         display: flex;
-        .imgSize1{
-            width: 35px;
-        }
     }
     .div11{
         grid-row-start: 2;
@@ -182,10 +176,6 @@
     grid-column-start: 1;
     margin-top: -90px;
     margin-left: -30px;
-  }
-
-.imgSize1 {
-    width: 30px;
   }
 
   .div22 {

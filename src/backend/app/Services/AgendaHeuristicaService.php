@@ -22,32 +22,18 @@ class AgendaHeuristicaService
             $inicio = Carbon::parse($dia->hora_inicio);
             $fim = Carbon::parse($dia->hora_fim);
 
-            
-
             $duracaoTotal = $inicio->diffInMinutes($fim);
-
-           
-            $somaDificuldades = $dia->materias->sum('dificuldade_numerica_temp') ?: 1;
-            
 
             foreach ($dia->materias as $materia) {
                 $materia->dificuldade_numerica_temp = $dificuldadeMap[$materia->dificuldade] ?? 30;
             }
 
-            // Evita divisão por zero
-            if ($somaDificuldades <= 0) {
-                Log::warning('Soma das dificuldades zero ou negativa no dia', ['dia' => $dia->dia_semana]);
-                continue;
-            }
-
-            $somaDificuldades = $dia->materias->sum('dificuldade_numerica_temp');
+            $somaDificuldades = $dia->materias->sum('dificuldade_numerica_temp') ?: 1;
 
             foreach ($dia->materias as $materia) {
-                $materia->dificuldade_numerica_temp = $dificuldadeMap[$materia->dificuldade] ?? 30; 
                 $proporcao = $materia->dificuldade_numerica_temp / $somaDificuldades;
                 $duracaoMateria = intval($duracaoTotal * $proporcao);
                 $horaFimMateria = $inicio->copy()->addMinutes($duracaoMateria);
-                
 
                 $agenda[] = [
                     'materia_id' => $materia->id,
@@ -55,7 +41,11 @@ class AgendaHeuristicaService
                     'dia' => $dia->dia_semana,
                     'hora_inicio' => $inicio->format('H:i'),
                     'hora_fim' => $horaFimMateria->format('H:i'),
-                    'revisoes' => $this->gerarRevisoes($config->data_fim, $materia->dificuldade)
+                    'revisoes' => $this->gerarRevisoes(
+                        $config->data_fim,
+                        $materia->dificuldade,
+                        $dia->dia_semana
+                    )
                 ];
 
                 $inicio = $horaFimMateria;
@@ -65,12 +55,11 @@ class AgendaHeuristicaService
         return $agenda;
     }
 
-    private function gerarRevisoes(string $dataFinal, string $dificuldade): \Illuminate\Support\Collection
+    private function gerarRevisoes(string $dataFinal, string $dificuldade, string $diaSemanaDisponivel): \Illuminate\Support\Collection
     {
         $hoje = Carbon::now();
         $fim = Carbon::parse($dataFinal);
 
-        // Multiplicador do espaçamento por dificuldade
         $multiplicador = match ($dificuldade) {
             'fácil' => 2.0,
             'médio' => 1.5,
@@ -78,23 +67,44 @@ class AgendaHeuristicaService
             default => 1.5,
         };
 
+        $mapDiasSemana = [
+            'domingo' => Carbon::SUNDAY,
+            'segunda' => Carbon::MONDAY,
+            'terca' => Carbon::TUESDAY,
+            'quarta' => Carbon::WEDNESDAY,
+            'quinta' => Carbon::THURSDAY,
+            'sexta' => Carbon::FRIDAY,
+            'sabado' => Carbon::SATURDAY,
+        ];
+        $numeroDiaDisponivel = $mapDiasSemana[strtolower($diaSemanaDisponivel)] ?? Carbon::MONDAY;
+
         $revisoes = [];
         $dias = 0;
-        $incremento = 1; // Intervalo inicial: 1 dia
-        $maxIncremento = 30; // Limite máximo de salto entre revisões em dias
+        $incremento = 1;
+        $maxIncremento = 30;
 
         while (true) {
             $dataRevisao = $hoje->copy()->addDays((int)round($dias));
+
+            // Se a data calculada não é o dia desejado, ajusta para o próximo dia da semana correto (sempre pra frente)
+            if ($dataRevisao->dayOfWeek !== $numeroDiaDisponivel) {
+                $diasParaAdicionar = ($numeroDiaDisponivel - $dataRevisao->dayOfWeek + 7) % 7;
+                if ($diasParaAdicionar === 0) {
+                    $diasParaAdicionar = 7; // garante que vá para a próxima semana
+                }
+                $dataRevisao->addDays($diasParaAdicionar);
+            }
+
             if ($dataRevisao->gt($fim)) {
                 break;
             }
+
             $revisoes[] = $dataRevisao->format('Y-m-d');
 
-            // Incrementa o próximo intervalo
             $incremento = min($incremento * $multiplicador, $maxIncremento);
             $dias += $incremento;
         }
 
-        return collect($revisoes);
+        return collect(array_values(array_unique($revisoes)));
     }
 }

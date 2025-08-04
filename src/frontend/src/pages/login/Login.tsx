@@ -52,8 +52,7 @@ interface LoginProps {
       <div id="bodyLogin">
         <div className="loginContainer">
           <IonRow className="contVoltar"  onClick={() => history.push('/pagInicial/home')}>
-             <IonIcon icon={returnDownBack} className="voltar"/>
-              <p className="txtVoltar">Voltar para home</p>
+             <IonIcon icon={returnDownBack} className="voltar1"/>
           </IonRow>
             <div className="div11">
                 <div id="apresentacao">

@@ -279,15 +279,13 @@ const fetchAgendaInteligente = async () => {
   }
 };
 
-// Quando abrir a página
 useEffect(() => {
   fetchAgendaInteligente();
 }, []);
-// Função corrigida para parse de datas
+
 const parseDbDate = (dateString: string) => {
   if (!dateString) return new Date();
   
-  // Extrai a data no formato YYYY-MM-DD (ignora qualquer hora/fuso)
   const datePart = dateString.split('T')[0];
   const [year, month, day] = datePart.split('-').map(Number);
   

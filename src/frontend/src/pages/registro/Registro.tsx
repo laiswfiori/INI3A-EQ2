@@ -75,7 +75,6 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
 
           <IonRow className="contVoltar"  onClick={() => history.push('/pagInicial/home')}>
              <IonIcon icon={returnDownBack} className="voltar"/>
-              <p className="txtVoltar">Voltar para home</p>
           </IonRow>
 
             <div className="div1">
