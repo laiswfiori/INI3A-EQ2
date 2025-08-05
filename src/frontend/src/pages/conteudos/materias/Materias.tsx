@@ -4,7 +4,8 @@ import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon,
   IonButton, IonModal, IonPopover, IonInput, IonRow, IonCol
 } from '@ionic/react';
 import { library, pencil, trash, close, arrowForward, image, globe, brush, book, school, accessibility,
-  earth, leaf, flask, planet, calculator } from 'ionicons/icons';
+  earth, leaf, flask, planet, calculator, 
+  colorPalette} from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -113,6 +114,8 @@ const Materias: React.FC = () => {
   const [iconesMaterias, setIconesMaterias] = useState<{ [key: number]: string }>({});
   const history = useHistory();
 
+  const [coresMaterias, setCoresMaterias] = useState<{ [key: number]: string }>({});
+
   useEffect(() => {
     const fetchMaterias = async () => {
       const api = new API();
@@ -149,7 +152,22 @@ const Materias: React.FC = () => {
     };
 
     fetchMaterias();
+
+    const coresSalvas = localStorage.getItem('coresMaterias');
+    if (coresSalvas) {
+      setCoresMaterias(JSON.parse(coresSalvas));
+    }
+
   }, []);
+
+  const salvarCorMateria = (materiaId: number, cor: string) => {
+    setCoresMaterias(prev => {
+      const novos = { ...prev, [materiaId]: cor };
+      localStorage.setItem('coresMaterias', JSON.stringify(novos));
+      return novos;
+    });
+  };
+  
 
   const calcularProgresso = (topicos: Topico[]) => {
     const totalTopicos = topicos.length;
@@ -296,6 +314,7 @@ const Materias: React.FC = () => {
                               <IonIcon
                                 icon={iconeData ? iconeData.icon : library}
                                 className={iconeData ? iconeData.className : 'livro'}
+                                style={{ color: coresMaterias[materia.id] || '' }}
                               />
                             );
                           })()}
@@ -317,6 +336,24 @@ const Materias: React.FC = () => {
                             style={{ display: 'none' }}
                             onChange={(e) => handleIconeChange(e, materia.id)}
                           />
+                          <IonIcon
+                            icon={colorPalette}
+                            className="iconImg"
+                            id="iconPaleta"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const input = document.getElementById(`color-picker-${materia.id}`) as HTMLInputElement;
+                              input?.click();
+                            }}
+                          />
+                          <input
+                            id={`color-picker-${materia.id}`}
+                            type="color"
+                            style={{ display: 'none' }}
+                            value={coresMaterias[materia.id] || '#ffffff'}
+                            onChange={(e) => salvarCorMateria(materia.id, e.target.value)}
+                          />
+
                         </IonRow>
                       </IonCol>
                       <IonCol className="col2M">

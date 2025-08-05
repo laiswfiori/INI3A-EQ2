@@ -39,25 +39,55 @@ export default function () {
 
   
   const [hoveredDay, setHoveredDay] = useState<number | null>(null);
-  const getEventColor = (tipo: string) => {
-  const colors: Record<string, string> = {
-    aula: '#ff4d4dff',
-    prova: '#ff9100ff',
-    simulado: '#1eff00ff',
-    tarefa: '#ff3995ff',
-    default: '#0095ffff'
-  };
-  return colors[tipo] || colors.default;
-};
+
+  const [coresMaterias, setCoresMaterias] = useState<{ [key: string]: string }>({});
+  const [isCoresCarregadas, setIsCoresCarregadas] = useState(false);
+
+  useEffect(() => {
+    const coresSalvas = localStorage.getItem('coresMaterias');
+    if (coresSalvas) {
+      setCoresMaterias(JSON.parse(coresSalvas));
+    }
+    setIsCoresCarregadas(true);
+  }, []);
+
+  const normalizarNomeMateria = (nome: string) => {
+    const nomeUpper = nome.trim().toUpperCase();
+  
+    const mapa: { [key: string]: string } = {
+      'PORTUGUÊS': 'm1',
+      'PORTUGUES': 'm1',
+      'LITERATURA': 'm1',
+      'INGLÊS': 'm2',
+      'INGLES': 'm2',
+      'ESPANHOL': 'm2',
+      'ARTES': 'm3',
+      'HISTÓRIA': 'm4',
+      'HISTORIA': 'm4',
+      'FILOSOFIA': 'm5',
+      'SOCIOLOGIA': 'm6',
+      'GEOGRAFIA': 'm7',
+      'BIOLOGIA': 'm8',
+      'QUÍMICA': 'm9',
+      'QUIMICA': 'm9',
+      'FÍSICA': 'm10',
+      'FISICA': 'm10',
+      'MATEMÁTICA': 'm11',
+      'MATEMATICA': 'm11'
+    };
+  
+    const classe = mapa[nomeUpper] || '';
+    return { nome: nomeUpper, classe };
+  };  
 
   const location = useLocation();
   const hoje = new Date();
-
   const [currentDate, setCurrentDate] = useState(hoje);
   const [selectedDate, setSelectedDate] = useState(hoje.getDate());
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [showToast, setShowToast] = useState(false);
+
 
   const [viewMode, setViewMode] = useState<'Mês' | 'Semana'>('Mês');
 
@@ -144,6 +174,7 @@ useEffect(() => {
         item.revisoes.map((data: string) => ({
           data,
           materia: item.materia_nome,
+          materia_id: item.materia_id,
           hora_inicio: item.hora_inicio,
           hora_fim: item.hora_fim,
         }))
@@ -255,9 +286,6 @@ const getEventosPorDiaEHora = (dia: number, hora: string) => {
     );
   });
 };
-
-
-  
 
 const fetchAgendaInteligente = async () => {
   try {
@@ -482,22 +510,29 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
             <span className="day-number">{date.day}</span>
             
             {/* Mostra eventos apenas para dias do mês atual */}
-            {date.isCurrentMonth && (
-              <div className="events-container">
-                {currentDayEvents.slice(0, 2).map((evento, idx) => (
-                  <div 
-                    key={`${date.day}-${idx}`}
-                    className="event-tag"
-                    style={{ backgroundColor: getEventColor(evento.tipo) }}
-                  >
-                    <div className="event-title">{evento.materia}</div>
-                  </div>
-                ))}
-                {currentDayEvents.length > 2 && (
-                  <div className="more-events">+{currentDayEvents.length - 2}</div>
-                )}
-              </div>
-            )}
+            {date.isCurrentMonth && isCoresCarregadas && (
+  <div className="events-container">
+    {currentDayEvents.slice(0, 2).map((evento, idx) => {
+      const materiaNome = evento.materia || '';
+      const materiaId = String(evento.materia_id || '');
+      const corSalva = coresMaterias[materiaId];
+      const { classe } = normalizarNomeMateria(materiaNome);
+
+      return (
+        <div 
+          key={`${date.day}-${idx}`}
+          className={`event-tag ${!corSalva && classe}`}
+          style={corSalva ? { backgroundColor: corSalva } : {}}
+        >
+          <div className="event-title">{materiaNome || 'Evento'}</div>
+        </div>
+      );
+    })}
+    {currentDayEvents.length > 2 && (
+      <div className="more-events">+{currentDayEvents.length - 2}</div>
+    )}
+  </div>
+)}
 
             {/* Tooltip com todos os eventos (apenas para dias do mês atual) */}
             {date.isCurrentMonth && hoveredDay === date.day && currentDayEvents.length > 0 && (

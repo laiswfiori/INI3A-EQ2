@@ -260,3 +260,70 @@ ion-segment-button {
   background-color: #e2e2e2;
   border-radius: 20px;
 }
+
+
+.event-tag.m1 {
+  background-color: rgb(185, 39, 39);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m2 {
+  background-color: rgb(88, 47, 7);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m3 {
+  background-color: rgb(64, 193, 216);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m4 {
+  background-color: rgb(161, 85, 22);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m5 {
+  background-color: rgb(206, 81, 139);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m6 {
+  background-color: rgb(202, 182, 5);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m7 {
+  background-color: rgb(24, 136, 211);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m8 {
+  background-color: rgb(58, 128, 18);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m9 {
+  background-color: rgb(219, 132, 19);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m10 {
+  background-color: rgb(112, 30, 179);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m11 {
+  background-color: rgb(196, 28, 6);
+  border-radius: 10px;
+  padding: 4%;
+}

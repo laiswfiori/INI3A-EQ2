@@ -2,7 +2,7 @@
     --background: var(--cor-branco) !important;
 }
 
-.pDarkmode, .day-number {
+.pDarkmode, .day-number, .hora-label {
     color: var(--cor-preto) !important;
 }
 
@@ -28,7 +28,7 @@
     color: var(--cor-laranja) !important;
 }
 
-.calendar-day {
+.calendar-day, .hora-label, .calendar-grid.semana-horarios {
     background-color: var(--cor-brancoC) !important;
     border-bottom: 1px solid var(--cor-cinza) !important;
     border-right: 1px solid var(--cor-cinza) !important;
@@ -57,4 +57,8 @@
 
 .dayNO {
     color: var(--cor-cinza7) !important;
+}
+
+.day-name {
+    color: var(--cor-cinza) !important;
 }

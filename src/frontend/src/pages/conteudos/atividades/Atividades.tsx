@@ -383,8 +383,8 @@ const removerItemConteudo = (index: number) => {
         <h1 className="titulo titDarkMode">Atividades</h1>
         <div className="linhaHorizontal"></div>
         <IonRow className="contVoltarT"  onClick={() => history.goBack()}>
-          <IonIcon icon={returnDownBack} className="voltarT"/>
-          <p className="txtVoltarT">Voltar para tópicos</p>
+          <IonIcon icon={returnDownBack} className="voltarT pDarkmode"/>
+          <p className="txtVoltarT pDarkmode">Voltar para tópicos</p>
         </IonRow>
 
         {loading ? (
