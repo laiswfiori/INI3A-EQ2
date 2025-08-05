@@ -26,7 +26,7 @@ return [
 
     // ALTERAÇÃO 1: Mude o 'ttl' para 15 minutos.
     // Isso garante que se o usuário fechar o site, o token será inválido após 15 minutos.
-    'ttl' => env('JWT_TTL', 15),
+    'ttl' => env('JWT_TTL', 2000),
 
     /*
     |--------------------------------------------------------------------------

@@ -7,7 +7,7 @@ type Dia = 'Segunda-feira' | 'Terça-feira' | 'Quarta-feira' | 'Quinta-feira' | 
 interface PlanejamentoDia {
   dia: Dia;
   materias: { nome: string }[];
-  horarios: { inicio: string; fim: string }[];
+  horario: { inicio: string; fim: string }; // apenas um único horário por dia
 }
 
 interface Props {
@@ -20,26 +20,27 @@ const PlanejamentoSemanal: React.FC<Props> = ({ diasSelecionados, onChange }) =>
     diasSelecionados.map((dia) => ({
       dia,
       materias: [{ nome: '' }],
-      horarios: [{ inicio: '', fim: '' }],
+      horario: { inicio: '', fim: '' },
     }))
   );
 
+  // Atualiza o planejamento quando há mudanças
   React.useEffect(() => {
     onChange(planejamento);
   }, [planejamento, onChange]);
 
+  // Atualiza/reinicia o planejamento se mudar os dias selecionados
   React.useEffect(() => {
-    // Atualiza planejamento se mudar os dias selecionados (reseta)
     setPlanejamento(
       diasSelecionados.map((dia) => ({
         dia,
         materias: [{ nome: '' }],
-        horarios: [{ inicio: '', fim: '' }],
+        horario: { inicio: '', fim: '' },
       }))
     );
   }, [diasSelecionados]);
 
-  const updateDia = (dia: Dia, campo: 'materias' | 'horarios', valor: any) => {
+  const updateDia = (dia: Dia, campo: keyof PlanejamentoDia, valor: any) => {
     setPlanejamento((prev) =>
       prev.map((p) =>
         p.dia === dia ? { ...p, [campo]: valor } : p
@@ -49,7 +50,7 @@ const PlanejamentoSemanal: React.FC<Props> = ({ diasSelecionados, onChange }) =>
 
   return (
     <div>
-      {planejamento.map(({ dia, materias, horarios }) => (
+      {planejamento.map(({ dia, materias, horario }) => (
         <div key={dia}>
           <h3 className="txtDias"><b>{dia}</b></h3>
 
@@ -82,47 +83,29 @@ const PlanejamentoSemanal: React.FC<Props> = ({ diasSelecionados, onChange }) =>
             + Adicionar matéria
           </IonButton>
 
-          {/* HORÁRIOS */}
-          <h4 className="tt">Horários</h4>
-          {horarios.map((h, idx) => (
-            <IonItem key={idx}>
-              <input
-                className='input2'
-                type="time"
-                value={h.inicio}
-                onChange={(e) => {
-                  const novos = [...horarios];
-                  novos[idx].inicio = e.target.value;
-                  updateDia(dia, 'horarios', novos);
-                }}
-                required
-              />
-              <span style={{ margin: '0 10px' }}>→</span>
-              <input
-                className='input2'
-                type="time"
-                value={h.fim}
-                onChange={(e) => {
-                  const novos = [...horarios];
-                  novos[idx].fim = e.target.value;
-                  updateDia(dia, 'horarios', novos);
-                }}
-                required
-              />
-              <IonButton
-                className='btn1'
-                onClick={() => {
-                  const novos = horarios.filter((_, i) => i !== idx);
-                  updateDia(dia, 'horarios', novos);
-                }}
-              >
-                <IonIcon icon={trash} />
-              </IonButton>
-            </IonItem>
-          ))}
-          <IonButton className='btn2' onClick={() => updateDia(dia, 'horarios', [...horarios, { inicio: '', fim: '' }])}>
-            + Adicionar horário
-          </IonButton>
+          {/* HORÁRIO ÚNICO */}
+          <h4 className="tt">Horário</h4>
+          <IonItem>
+            <input
+              className='input2'
+              type="time"
+              value={horario.inicio}
+              onChange={(e) => {
+                updateDia(dia, 'horario', { ...horario, inicio: e.target.value });
+              }}
+              required
+            />
+            <span style={{ margin: '0 10px' }}>→</span>
+            <input
+              className='input2'
+              type="time"
+              value={horario.fim}
+              onChange={(e) => {
+                updateDia(dia, 'horario', { ...horario, fim: e.target.value });
+              }}
+              required
+            />
+          </IonItem>
         </div>
       ))}
     </div>

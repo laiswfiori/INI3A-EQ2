@@ -16,7 +16,7 @@ type Dia = 'Segunda-feira' | 'Terça-feira' | 'Quarta-feira' | 'Quinta-feira' | 
 interface PlanejamentoDia {
   dia: string;
   materias: Materia[];
-  horarios: { inicio: string; fim: string }[];
+  horario: { inicio: string; fim: string };
 }
 
 interface Materia{
@@ -73,26 +73,23 @@ const validarPlanejamento = async () => {
   // Verificar se cada dia tem ao menos uma matéria e um horário
   for (const dia of planejamento) {
     const temMateria = dia.materias.some(m => m.nome.trim() !== '');
-    const temHorario = dia.horarios.some(h => h.inicio.trim() !== '' && h.fim.trim() !== '');
+    const temHorario = dia.horario.inicio.trim() !== '' && dia.horario.fim.trim() !== '';
 
     if (!temMateria || !temHorario) {
       setShowAlert({ show: true, message: `Preencha ao menos uma matéria e um horário no dia ${dia.dia}.` });
       return false;
-    }
+  }
 
-    // Verificar se as combinações de matéria e horário estão corretas
-    const combinacoesInvalidas = dia.horarios.some((h, idx) => {
-      const materia = dia.materias[idx];
-      const materiaPreenchida = materia?.nome.trim() !== '';
-      const horarioPreenchido = h?.inicio.trim() !== '' && h?.fim.trim() !== '';
-      return (materiaPreenchida && !horarioPreenchido) || (!materiaPreenchida && horarioPreenchido);
-    });
-
-    if (combinacoesInvalidas) {
-      setShowAlert({ show: true, message: `Cada matéria precisa ter um horário correspondente no dia ${dia.dia}.` });
+    const materiasPreenchidas = dia.materias.filter(m => m.nome.trim() !== '');
+    if (materiasPreenchidas.length === 0 && (dia.horario.inicio.trim() !== '' && dia.horario.fim.trim() !== '')) {
+      setShowAlert({ show: true, message: `Horário preenchido sem matéria no dia ${dia.dia}.` });
       return false;
     }
-  }
+    if (materiasPreenchidas.length > 0 && (dia.horario.inicio.trim() === '' || dia.horario.fim.trim() === '')) {
+      setShowAlert({ show: true, message: `Matéria preenchida sem horário no dia ${dia.dia}.` });
+      return false;
+    }
+    }
 
   // Agora, verificamos se as matérias precisam ser criadas e se tudo está correto
   const materiasCriadas: Record<string, number> = {};
@@ -140,46 +137,34 @@ const validarPlanejamento = async () => {
 
   const dias_disponiveis: any[] = [];
 
-  // Agora, estamos preparando o payload para enviar os dados
   for (const dia of planejamento) {
-    const horariosMap = new Map<string, { hora_inicio: string; hora_fim: string; materia_ids: number[] }>();
+    const { inicio, fim } = dia.horario;
 
-    // Para cada matéria, vamos verificar os horários
+    // Pula se o horário não estiver preenchido
+    if (!inicio.trim() || !fim.trim()) continue;
+
+    const hora_inicio = formatToH_i(inicio);
+    const hora_fim = formatToH_i(fim);
+
+    const materia_ids: number[] = [];
+
     for (const materia of dia.materias) {
       const nomeTrim = materia.nome.trim();
       const materiaId = materiasCriadas[nomeTrim];
-      if (!materiaId) continue;
-
-      for (const h of dia.horarios) {
-        if (!h.inicio.trim() || !h.fim.trim()) continue;
-
-        const key = `${h.inicio}-${h.fim}`;
-        const hora_inicio = formatToH_i(h.inicio);
-        const hora_fim = formatToH_i(h.fim);
-
-        // Preenche os horários no mapa
-        if (!horariosMap.has(key)) {
-          horariosMap.set(key, {
-            hora_inicio,
-            hora_fim,
-            materia_ids: [materiaId],
-          });
-        } else {
-          const item = horariosMap.get(key)!;
-          if (!item.materia_ids.includes(materiaId)) {
-            item.materia_ids.push(materiaId);
-          }
-        }
+      if (materiaId && !materia_ids.includes(materiaId)) {
+        materia_ids.push(materiaId);
       }
     }
 
-    // Adiciona os horários e matérias ao array final
-    for (const horario of horariosMap.values()) {
-      dias_disponiveis.push({
-        dia_semana: normalizarDia(dia.dia),
-        ...horario,
-      });
-    }
+    // Pula se não tiver matérias válidas
+    if (materia_ids.length === 0) continue;
+
+    dias_disponiveis.push({
+      dia_semana: normalizarDia(dia.dia),
+      hora_inicio,
+      hora_fim,
+      materia_ids,
+    });
   }
 
   const payload = {

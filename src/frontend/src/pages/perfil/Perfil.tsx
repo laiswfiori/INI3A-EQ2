@@ -89,6 +89,8 @@ const Perfil: React.FC = () => {
 
   const [notificacoesAtivas, setNotificacoesAtivas] = useState(() => localStorage.getItem('notificacoesAtivas') !== 'false');
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') !== 'dark');
+  const [existeConfiguracao, setExisteConfiguracao] = useState();
+
 
   const toggleTheme = () => {
     const newTheme = !isDarkMode;
@@ -105,6 +107,9 @@ const Perfil: React.FC = () => {
   useEffect(() => {
     setChecked(false);
   }, []);
+  useEffect(() => {
+    buscarConfiguracao();
+  }, []);
 
   const navEstudar = () => {
     history.push('/estudo/estudo');  
@@ -114,7 +119,6 @@ const Perfil: React.FC = () => {
   const toggleGuia = () => {
     setMostrarGuia(!mostrarGuia);
   };
-
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -419,9 +423,6 @@ const Perfil: React.FC = () => {
       data_fim: periodoEstudo.fim,
       dias_disponiveis,
     };
-
-    //console.log("Payload enviado:", JSON.stringify(payload, null, 2));
-
     console.log("Payload enviado:", JSON.stringify(payload, null, 2));
 
     try {
@@ -464,6 +465,25 @@ const resetarPreferencias = () => {
   window.location.reload();
 };
 
+const buscarConfiguracao = async () => {
+  try {
+    const api = new API();
+    const resposta = await api.get('agendaConfiguracao'); // ajuste para o endpoint correto
+    const configuracao = resposta; // se o API wrapper já estiver parseando o JSON
+
+    if (configuracao && configuracao.id) {
+      console.log('ID da configuração:', configuracao.id);
+      setExisteConfiguracao(true);
+
+      // você pode salvar em estado, navegar, ou usar como quiser
+    } else {
+      console.warn('Nenhuma configuração encontrada.');
+      setExisteConfiguracao(false);
+    }
+  } catch (error) {
+    console.error('Erro ao buscar configuração:', error);
+  }
+};
 
 
 const resetarConfiguracoes = async () => {
@@ -478,9 +498,10 @@ const resetarConfiguracoes = async () => {
       message: 'Configurações de estudo apagadas com sucesso.',
     });
 
-    // Aqui você pode também limpar o estado local, se quiser:
-    // setHorariosDeEstudo([]);
-    // setPeriodoEstudo({ inicio: '', fim: '' });
+    // Limpa os estados locais também
+    setHorariosDeEstudo([]);
+    setPeriodoEstudo({ inicio: '', fim: '' });
+    setNovaMateriaNome('');
 
   } catch (error: any) {
     console.error('Erro ao apagar configurações:', error);
@@ -496,6 +517,7 @@ const resetarConfiguracoes = async () => {
     setLoadingConfig(false);
   }
 };
+
 
   if (isLoading || authError) {
     return (
@@ -629,20 +651,22 @@ const resetarConfiguracoes = async () => {
           ))}
 
           {horariosDeEstudo.length > 0 && (
-            <IonButton expand="full" onClick={handleSalvar} disabled={loadingConfig} style={{ marginTop: '16px' }}>
-              Salvar Configurações de Estudo
-            </IonButton>
+              <IonButton expand="full" onClick={handleSalvar} disabled={loadingConfig} style={{ marginTop: '16px' }}>
+                Salvar Configurações de Estudo
+              </IonButton>
           )}
-
-          {loadingConfig && (
-          <IonButton
-            expand="full"
-            onClick={resetarConfiguracoes}
-            disabled={loadingConfig}
-            style={{ marginTop: '32px' }}
-          >
-            Apagar as Configurações de Estudo
-          </IonButton>
+          
+          
+          {existeConfiguracao && (
+            <IonButton
+              expand="full"
+              color="medium"
+              onClick={resetarConfiguracoes}
+              disabled={loadingConfig}
+              style={{ marginTop: '8px' }}
+            >
+              Resetar Configurações
+            </IonButton>
           )}
         </>
         
