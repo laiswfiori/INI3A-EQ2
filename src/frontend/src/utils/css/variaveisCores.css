@@ -29,7 +29,7 @@
   --cor-azulM: #ffffff;
   --cor-lixo: #00296b;
   --cor-hover: #e7e0e0;
-  --cor-cinza2: #334155;
+  --cor-cinza2: #ddd;
 
   /*cores flashcards*/
   --cor-azulEA: #00296b;
@@ -43,8 +43,8 @@
 
   /*cores agenda*/
   --cor-laranjaA: #ea7317;
-  --cor-amareloA: #ffc107;
-  --cor-amareloL: #fde499;
+  --cor-amareloL: #ffc107;
+  --cor-amareloL2: #fde499;
   --cor-cinza7: #ddd;
   --cor-cinza8: #555;
   --cor-cinza9: #e2e2e2;
@@ -84,6 +84,7 @@ body.dark {
   --cor-azulM: #474c50;
   --cor-lixo: #ddd;
   --cor-hover: #3b4246;
+  --cor-cinza2: #334155;
 
   /*cores flashcards*/
   --cor-azulEA: #ffc107;

@@ -35,7 +35,9 @@
   }
 }
 
-
+#iconPaleta {
+  margin-left: 0.5rem !important;
+}
 
 #containerConfig{
   display: flex;

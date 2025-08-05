@@ -263,8 +263,8 @@ const Topicos: React.FC = () => {
         <h1 className="titulo titDarkMode">Tópicos</h1>
         <div className="linhaHorizontal"></div>
         <IonRow className="contVoltarT"  onClick={() => history.goBack()}>
-            <IonIcon icon={returnDownBack} className="voltarT"/>
-            <p className="txtVoltarT">Voltar para matérias</p>
+            <IonIcon icon={returnDownBack} className="voltarT pDarkmode"/>
+            <p className="txtVoltarT pDarkmode">Voltar para matérias</p>
         </IonRow>
 
         {loading ? (

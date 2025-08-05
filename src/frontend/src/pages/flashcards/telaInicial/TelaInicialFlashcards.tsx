@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { IonPage, IonContent, IonIcon, IonButton, IonGrid, IonRow, IonCol, IonLabel,
   IonPopover, IonModal, IonSelect, IonSelectOption, IonTextarea, useIonToast } from '@ionic/react';
 import Header from '../../../components/Header';
@@ -76,7 +76,21 @@ const TelaInicialFlashcards: React.FC = () => {
   const [editingCardIndex, setEditingCardIndex] = useState<number | null>(null);
   const [cardEditorInitialFrente, setCardEditorInitialFrente] = useState<ConteudoItem[]>([]);
   const [cardEditorInitialVerso, setCardEditorInitialVerso] = useState<ConteudoItem[]>([]);
+
   const [iconesMaterias, setIconesMaterias] = useState<{ [key: number]: string }>({});
+
+  const [coresMaterias, setCoresMaterias] = useState<{ [key: number]: string }>({});
+  const { id: materiaId } = useParams<{ id: string }>();
+  const [corMateria, setCorMateria] = useState<string | undefined>();
+
+  useEffect(() => {
+    const storedCores = localStorage.getItem('coresMaterias');
+    if (storedCores) {
+      const cores = JSON.parse(storedCores);
+      console.log('Cores carregadas:', cores);
+      setCoresMaterias(cores);
+    }
+  }, []);
 
   useEffect(() => {
     const iconesSalvos = localStorage.getItem('iconesMaterias');
@@ -575,6 +589,7 @@ const setShowCardEditorAndInitialData = (
                               <IonIcon
                                 icon={iconeData ? iconeData.icon : library}
                                 className={iconeData ? iconeData.className : 'livroF'}
+                                style={{ color: coresMaterias[materia.id] || '' }}
                               />
                             );
                           })()}

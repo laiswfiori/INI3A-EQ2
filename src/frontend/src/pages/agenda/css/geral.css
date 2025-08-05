@@ -306,8 +306,6 @@
 .calendar-grid.semana-horarios {
   display: grid;
   grid-template-columns: 50px repeat(7, 1fr);
-  row-gap: 4px;
-  column-gap: 4px;
 }
 
 .hora-header {
