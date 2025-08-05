@@ -205,11 +205,17 @@
     .toolbarM {
         display: none;
     }
+    .month-year-label {
+        min-width: 40rem;
+    }
 }
 
 @media (max-width: 425px) {
     .month-navigation {
         justify-content: space-between;
+    }
+    .month-year-label {
+        max-width: 50%;
     }
     .view-controls {
         display: flex;

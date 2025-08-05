@@ -2,7 +2,11 @@
     --background: var(--cor-branco) !important;
 }
 
-.pDarkmode, .day-number, .hora-label {
+.day-number {
+    color: var(--cor-preto) !important;
+}
+
+.pDarkmode, .hora-label {
     color: var(--cor-preto) !important;
 }
 
@@ -20,7 +24,8 @@
 }
 
 .days-of-week-header {
-    background-color: var(--cor-azulE2) !important;
+    background-color: var(--cor-azulE5) !important;
+    --background: var(--cor-azulE2) !important;
 }
 
 .today-highlight {
@@ -28,7 +33,17 @@
     color: var(--cor-laranja) !important;
 }
 
-.calendar-day, .hora-label, .calendar-grid.semana-horarios {
+.today-highlight .day-number {
+    color: var(--cor-laranja) !important;
+}
+
+.calendar-day {
+    background-color: var(--cor-brancoC);
+    border-bottom: 1px solid var(--cor-cinza) !important;
+    border-right: 1px solid var(--cor-cinza) !important;
+}
+
+.hora-label, .calendar-grid.semana-horarios {
     background-color: var(--cor-brancoC) !important;
     border-bottom: 1px solid var(--cor-cinza) !important;
     border-right: 1px solid var(--cor-cinza) !important;
