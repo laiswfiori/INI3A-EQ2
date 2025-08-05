@@ -105,7 +105,7 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->post('/', 'AgendaConfiguracaoController@store');
         //$router->get('/{id}', 'AgendaConfiguracaoController@show');
         //$router->put('/{id}', 'AgendaConfiguracaoController@update');
-        //$router->delete('/{id}', 'AggendaConfiguracaoController@destroy');
+        $router->delete('/', 'AgendaConfiguracaoController@destroy');
     });
 
     // --- Rotas de Agenda Dia Disponível ---

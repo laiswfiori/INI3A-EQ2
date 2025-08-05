@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonRow, IonImg, IonIcon } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonRow, IonImg, IonIcon, useIonToast } from '@ionic/react';
 import { returnDownBack } from 'ionicons/icons';
 import './css/geral.css';
 import './css/layout.css';
 import './css/ui.css';
 import './../../components/Animacao.css';
+import API from '../../lib/api';
 
 interface RegistroProps {
   goToLogin: () => void;
@@ -19,52 +20,55 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
   const [password, setSenha] = useState('');
   const [erro, setErro] = useState('');
   const [mensagem, setMensagem] = useState('');
-
+  const [presentToast] = useIonToast();
+  
   const navHome = () => {
     history.push('/pagInicial/home');
   };
 
   const handleCadastrar = async () => {
-    setErro('');
-    setMensagem('');
+  setErro('');
+  setMensagem('');
 
-    if(password.length > 7){
-      try {
-        const response = await fetch('http://localhost:8000/api/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name, surname, email, password }),
-        });
+  if (password.length > 7) {
+    const api = new API();
 
-        const data = await response.json();
+    const novoUsuario = {
+      name,
+      surname,
+      email,
+      password,
+    };
 
-        if (response.ok) {
-          setMensagem('Cadastro realizado com sucesso!');
-          setNome('');
-          setSobrenome('');
-          setEmail('');
-          setSenha('');
-          localStorage.setItem('token', data.token); 
-          history.push('/configuracoes/configuracoes');
-          window.location.reload();
+    api.post('api/register', novoUsuario) // <- incluído 'api/' aqui
+      .then(data => {
+        setMensagem('Cadastro realizado com sucesso!');
+        setNome('');
+        setSobrenome('');
+        setEmail('');
+        setSenha('');
+        localStorage.setItem('token', data.token); 
+        history.push('/configuracoes/configuracoes');
+        window.location.reload();
+      })
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          console.error('Erro na requisição:', error.message);
+          setErro(error.message);
         } else {
-          setErro(data.mensagem || 'Erro ao cadastrar usuário.');
+          console.error('Erro desconhecido:', error);
+          setErro('Erro ao cadastrar usuário.');
         }
-      } catch (error) {
-        console.error('Erro na requisição:', error);
-        setErro('Erro de conexão com o servidor.');
-      }
-    }
-    else {
-      presentToast({
-        message: 'A senha deve ter pelo menos 8 algarismos.',
-        duration: 3000,
-        color: 'warning',
       });
-    }
-  };
+  } else {
+    presentToast({
+      message: 'A senha deve ter pelo menos 8 algarismos.',
+      duration: 3000,
+      color: 'warning',
+    });
+  }
+};
+
 
   
   return (
@@ -135,9 +139,3 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
 
 
 export default Registro;
-
-
-function presentToast(arg0: { message: string; duration: number; color: string; }) {
-  throw new Error('Function not implemented.');
-}
-

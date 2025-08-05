@@ -27,8 +27,6 @@ class CalendarioEstudosController extends Controller
     {
         $userId = Auth::id();
         $configuracaoId = AgendaConfiguracao::where('usuario_id', $userId)->first(); 
-        Log::info('Id:', ['id' => $userId ?? 'não existe']);
-        Log::info('Id config:', ['id config' => $configuracaoId ?? 'não existe']);
         
         try {
             $config = AgendaConfiguracao::with('diasDisponiveis')->find($configuracaoId->id);

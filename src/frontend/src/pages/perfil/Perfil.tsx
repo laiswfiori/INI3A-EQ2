@@ -416,6 +416,8 @@ const Perfil: React.FC = () => {
 
     //console.log("Payload enviado:", JSON.stringify(payload, null, 2));
 
+    console.log("Payload enviado:", JSON.stringify(payload, null, 2));
+
     try {
       await saveAgendaConfiguracoes(payload);
       setShowAlert({ show: true, message: 'Configurações salvas com sucesso!' });
@@ -441,40 +443,53 @@ const Perfil: React.FC = () => {
     localStorage.setItem('notificacoesAtivas', checked.toString());
   };
 
-const resetarConfiguracoes = () => {
-  // Exibindo os estados iniciais
-  console.log("Estados Iniciais:");
-  console.log("Som Ativo:", somAtivo);
-  console.log("Notificações Ativas:", notificacoesAtivas);
-  console.log("Tema (Dark Mode):", isDarkMode);
+const resetarPreferencias = () => {
+  localStorage.setItem('notificacoesAtivas', 'true');
+  setNotificacoesAtivas(true);
 
-  /*// Resetando as configurações
-  const somAtualizado = !somAtivo; // Alterna o som ao resetar
-  setSomAtivo(somAtualizado); // Atualiza o estado
-  localStorage.setItem('somAtivo', somAtualizado.toString());  // Atualizando o localStorage do som
-*/
-  // Notificações: Não altera o estado de notificações se não for necessário
-  setNotificacoesAtivas(true); 
-  localStorage.setItem('notificacoesAtivas', 'true');  // Atualizando notificações no localStorage
+  localStorage.setItem('theme', 'light');
+  setIsDarkMode(true);
+  
 
-  // Tema: O tema não deve ser alterado, mantenha o estado atual
-  const temaAtualizado = isDarkMode;  // Não altera o tema
-  setIsDarkMode(temaAtualizado); 
-  localStorage.setItem('theme', temaAtualizado ? 'dark' : 'light');  // Atualizando o localStorage do tema
+  if (!somAtivo) {
+    toggleSom(); 
+  }
 
-  // Exibindo a mensagem de sucesso
-  setShowAlert({ show: true, message: 'Configurações resetadas com sucesso!' });
-
-  // Exibindo os estados finais após a atualização
-  setTimeout(() => {
-    console.log("Estados Finais:");
-    console.log("Som Ativo:", somAtivo); 
-    console.log("Notificações Ativas:", notificacoesAtivas);
-    console.log("Tema (Dark Mode):", isDarkMode);
-  }, 0);
+  window.location.reload();
 };
 
 
+
+const resetarConfiguracoes = async () => {
+  setLoadingConfig(true);
+
+  try {
+    const api = new API();
+    await api.delete('agendaConfiguracao'); 
+
+    setShowAlert({
+      show: true,
+      message: 'Configurações de estudo apagadas com sucesso.',
+    });
+
+    // Aqui você pode também limpar o estado local, se quiser:
+    // setHorariosDeEstudo([]);
+    // setPeriodoEstudo({ inicio: '', fim: '' });
+
+  } catch (error: any) {
+    console.error('Erro ao apagar configurações:', error);
+
+    let msg = 'Erro ao apagar as configurações.';
+    if (error.message) msg = error.message;
+
+    setShowAlert({
+      show: true,
+      message: msg,
+    });
+  } finally {
+    setLoadingConfig(false);
+  }
+};
 
   if (isLoading || authError) {
     return (
@@ -612,7 +627,19 @@ const resetarConfiguracoes = () => {
               Salvar Configurações de Estudo
             </IonButton>
           )}
+
+          {loadingConfig && (
+          <IonButton
+            expand="full"
+            onClick={resetarConfiguracoes}
+            disabled={loadingConfig}
+            style={{ marginTop: '32px' }}
+          >
+            Apagar as Configurações de Estudo
+          </IonButton>
+          )}
         </>
+        
       )}
     </IonCol>
   );
@@ -728,7 +755,7 @@ const resetarConfiguracoes = () => {
                   <div className="cor" id="resetar"></div>
                   <p className="titConfig">Resetar:</p>
                 </div>
-                <button className="bin-button" onClick={resetarConfiguracoes}>
+                <button className="bin-button" onClick={resetarPreferencias}>
                   <svg className="bin-top" viewBox="0 0 39 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <line y1={5} x2={39} y2={5} stroke="white" strokeWidth={4} />
                     <line x1={12} y1="1.5" x2="26.0357" y2="1.5" stroke="white" strokeWidth={3} />
@@ -987,8 +1014,6 @@ const resetarConfiguracoes = () => {
                 </div>
               </IonRow>
 
-              
-
               <IonRow className="rowContainer">
                 <div className="contConfig">
                   <div className="cor" id="notificacoes"></div>
@@ -1028,7 +1053,7 @@ const resetarConfiguracoes = () => {
                   <div className="cor" id="resetar"></div>
                   <p className="titConfig">Resetar:</p>
                 </div>
-                <button className="bin-button" onClick={resetarConfiguracoes}>
+                <button className="bin-button" onClick={resetarPreferencias}>
                   <svg className="bin-top" viewBox="0 0 39 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <line y1={5} x2={39} y2={5} stroke="white" strokeWidth={4} />
                     <line x1={12} y1="1.5" x2="26.0357" y2="1.5" stroke="white" strokeWidth={3} />

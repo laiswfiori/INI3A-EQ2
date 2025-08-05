@@ -70,4 +70,20 @@ class AgendaConfiguracaoController extends Controller
 
         return response()->json(['message' => 'Configuração salva com sucesso.']);
     }
+
+    public function destroy()
+    {
+        $userId = Auth::id();
+
+        $config = AgendaConfiguracao::where('usuario_id', $userId)->first();
+
+        if (!$config) {
+            return response()->json(['message' => 'Configuração não encontrada.'], 404);
+        }
+
+        $config->delete();
+
+        return response()->json(['message' => 'Configuração deletada com sucesso.'], 200);
+    }
+
 }
