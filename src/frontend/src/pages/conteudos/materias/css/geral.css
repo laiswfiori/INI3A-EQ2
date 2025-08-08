@@ -245,3 +245,7 @@ ion-popover::part(backdrop) {
 .rowBarra {
   width: 100%;
 }
+
+.seletorCor {
+  align-self: center !important;
+}

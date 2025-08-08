@@ -63,4 +63,6 @@ ion-modal.modalAddMateria::part(content) {
     color: var(--cor-lixo) !important;
 }
   
-  
+.btnIrTopicos::part(native) {
+    border: 1px solid var(--cor-azulE) !important;
+}

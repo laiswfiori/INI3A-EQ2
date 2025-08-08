@@ -348,8 +348,9 @@ const Materias: React.FC = () => {
                           />
                           <input
                             id={`color-picker-${materia.id}`}
+                            className="seletorCor"
                             type="color"
-                            style={{ display: 'none' }}
+                            style={{ width: '0px', height: '0px', border: 'none', background: 'none', cursor: 'pointer' }}
                             value={coresMaterias[materia.id] || '#ffffff'}
                             onChange={(e) => salvarCorMateria(materia.id, e.target.value)}
                           />
