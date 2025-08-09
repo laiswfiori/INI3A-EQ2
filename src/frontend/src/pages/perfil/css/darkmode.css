@@ -11,7 +11,7 @@
 }
 
 .btnConfigg, .iconesSeta, .iconeSair {
-    color: var(--cor-branco2) !important;
+    color: white !important;
 }
 
 .btnConfigg:hover {
@@ -27,7 +27,7 @@
 }
 
 #opsConfig .radio {
-    background-color: var(--cor-branco2);
+    background-color: white !important;
 }
 
 .name {
@@ -35,7 +35,7 @@
 }
 
 #opsConfig .radio input:checked + .name {
-    background-color: var(--cor-branco2);
+    background-color: white !important;
 }
 
 .btnConfigg:hover {
@@ -136,4 +136,9 @@ ion-checkbox {
 
 ion-checkbox#check {
     --checkmark-color: var(--cor-branco) !important;
+}
+
+.inputDarkmode::part(native)::placeholder {
+    color: var(--cor-preto) !important;
+    --color: var(--cor-preto) !important;
 }

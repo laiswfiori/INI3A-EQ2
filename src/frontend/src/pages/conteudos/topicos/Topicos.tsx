@@ -41,6 +41,12 @@ interface Topico {
   atividades: Atividade[];
 }
 
+interface Materia {
+  id: number;
+  nome: string;
+  topicos: Topico[];
+}
+
 const Topicos: React.FC = () => {
   const [topicos, setTopicos] = useState<Topico[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,6 +57,17 @@ const Topicos: React.FC = () => {
   const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
   const [modoModal, setModoModal] = useState<'adicionar' | 'editar'>('adicionar');
   const [progressoTopicos, setProgressoTopicos] = useState<{ [id: number]: number }>({});
+
+  const [materias, setMaterias] = useState<{id:number, nome:string}[]>([]);
+
+  useEffect(() => {
+    async function fetchMaterias() {
+      const api = new API();
+      const data = await api.get('materias');
+      setMaterias(data);
+    }
+    fetchMaterias();
+  }, []);
 
 
   const [iconesTopicos, setIconesTopicos] = useState<{ [key: number]: string }>({});
@@ -63,6 +80,46 @@ const Topicos: React.FC = () => {
 
   const history = useHistory();
   const { id } = useParams<{ id: string }>();
+
+  const [coresMaterias, setCoresMaterias] = useState<{ [key: string]: string }>({});
+  const [isCoresCarregadas, setIsCoresCarregadas] = useState(false);
+  
+  useEffect(() => {
+    const coresSalvas = localStorage.getItem('coresMaterias');
+    if (coresSalvas) {
+      setCoresMaterias(JSON.parse(coresSalvas));
+    }
+    setIsCoresCarregadas(true);
+  }, []);
+  
+  const normalizarNomeMateria = (nome: string) => {
+    const nomeUpper = nome.trim().toUpperCase();
+  
+    const mapa: { [key: string]: string } = {
+      'PORTUGUÊS': 'm1',
+      'PORTUGUES': 'm1',
+      'LITERATURA': 'm1',
+      'INGLÊS': 'm2',
+      'INGLES': 'm2',
+      'ESPANHOL': 'm2',
+      'ARTES': 'm3',
+      'HISTÓRIA': 'm4',
+      'HISTORIA': 'm4',
+      'FILOSOFIA': 'm5',
+      'SOCIOLOGIA': 'm6',
+      'GEOGRAFIA': 'm7',
+      'BIOLOGIA': 'm8',
+      'QUÍMICA': 'm9',
+      'QUIMICA': 'm9',
+      'FÍSICA': 'm10',
+      'FISICA': 'm10',
+      'MATEMÁTICA': 'm11',
+      'MATEMATICA': 'm11'
+    };
+  
+    return mapa[nomeUpper] || '';
+  };
+  
 
   useEffect(() => {
     if (id) {
@@ -279,6 +336,10 @@ const Topicos: React.FC = () => {
               const totalAtividades = topico.atividades?.length || 0;
               const atividadesConcluidas = topico.atividades?.filter(a => a.status === 'concluído').length || 0;
 
+              const materia = materias.find(m => m.id === topico.materia_id);
+              const nomeMateria = materia ? materia.nome : '';
+              const classeMateria = normalizarNomeMateria(nomeMateria);
+
               return (
                 <IonItem
                   key={topico.id}
@@ -294,7 +355,8 @@ const Topicos: React.FC = () => {
                             className="imgMF imgMobile imgT"
                           />
                         ) : (
-                          <IonIcon icon={layers} className="livro" />
+                          <IonIcon icon={layers}
+                          className={`livro ${classeMateria}`} style={{ color: coresMaterias[String(topico.materia_id)] || undefined }} />
                         )}
                       </div>
 

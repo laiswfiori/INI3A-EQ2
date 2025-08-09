@@ -36,27 +36,27 @@ export default function () {
     setMenuAberto(!menuAberto);
   };
 
-const coresIniciais = (() => {
-  try {
+  const coresIniciais = (() => {
+    try {
+      const raw = localStorage.getItem('coresMaterias');
+      console.log('Cores carregadas do localStorage:', raw); 
+      return raw ? JSON.parse(raw) : {};
+    } catch (error) {
+      console.error('Erro ao ler cores do localStorage:', error);
+      return {};
+    }
+  })();
+
+  const [coresMaterias, setCoresMaterias] = useState<{ [key: string]: string }>(coresIniciais);
+  const [isCoresCarregadas, setIsCoresCarregadas] = useState(true);
+
+  useEffect(() => {
     const raw = localStorage.getItem('coresMaterias');
-    console.log('Cores carregadas do localStorage:', raw); // Verifique se as cores estão sendo lidas corretamente.
-    return raw ? JSON.parse(raw) : {};
-  } catch (error) {
-    console.error('Erro ao ler cores do localStorage:', error);
-    return {};
-  }
-})();
-
-const [coresMaterias, setCoresMaterias] = useState<{ [key: string]: string }>(coresIniciais);
-const [isCoresCarregadas, setIsCoresCarregadas] = useState(true);
-
-useEffect(() => {
-  const raw = localStorage.getItem('coresMaterias');
-  console.log('Cores carregadas do localStorage no useEffect:', raw); // Verifique a leitura de cores aqui
-  if (raw) {
-    setCoresMaterias(JSON.parse(raw));
-  }
-}, []);
+    console.log('Cores carregadas do localStorage no useEffect:', raw); 
+    if (raw) {
+      setCoresMaterias(JSON.parse(raw));
+    }
+  }, []);
   
   const [hoveredDay, setHoveredDay] = useState<number | null>(null);
 
@@ -195,7 +195,7 @@ useEffect(() => {
         item.revisoes.map((data: string) => ({
           data,
           materia: item.materia_nome,
-          materia_id: item.materia_id, // Aqui, materia_id deve ser número
+          materia_id: item.materia_id, 
           hora_inicio: item.hora_inicio,
           hora_fim: item.hora_fim,
         }))
@@ -220,7 +220,6 @@ useEffect(() => {
 
   atividades.forEach((a) => {
     if (a.status in contagemStatus) {
-      // Asserção de tipo para garantir que a.status é do tipo 'Status'
       contagemStatus[a.status as Status]++;
     }
   });
@@ -339,23 +338,20 @@ const parseDbDate = (dateString: string) => {
   const datePart = dateString.split('T')[0];
   const [year, month, day] = datePart.split('-').map(Number);
   
-  return new Date(Date.UTC(year, month - 1, day, 12)); // Meio-dia UTC evita problemas de dia anterior
+  return new Date(Date.UTC(year, month - 1, day, 12)); 
 };
 
-// Na visualização semanal, ajuste o filtro:
 const eventosNestaHora = eventosAgenda.filter(evento => {
   const eventoDate = parseDbDate(evento.data);
   const diaCorreto = new Date(eventoDate);
   
-  // Ajuste para comparar com os dias da semana corretamente
   return (
     diaCorreto.getMonth() === hoje.getMonth() &&
     diaCorreto.getFullYear() === hoje.getFullYear()
   );
 });
 
-const materiasUnicas = Array.from(new Set(eventosAgenda.map(evento => evento.materia))).sort();
-
+  const materiasUnicas = Array.from(new Set(eventosAgenda.map(evento => evento.materia))).sort();
 
 
   return (
@@ -565,9 +561,31 @@ const materiasUnicas = Array.from(new Set(eventosAgenda.map(evento => evento.mat
                     </div>
                   );
                 })}
-                {currentDayEvents.length > 2 && (
-                  <div className="more-events">+{currentDayEvents.length - 2}</div>
-                )}
+              {currentDayEvents.length > 2 && (
+                    <div className="more-events-wrapper">
+                      <div className="more-events">+{currentDayEvents.length - 2}</div>
+                      <div className="popover-extra">
+                        {currentDayEvents.slice(2).map((evento, idx) => {
+                          const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
+                          const corSalva = materiaId ? coresMaterias[materiaId] : undefined;
+                          const { classe } = normalizarNomeMateria(evento.materia || '');
+
+                          return (
+                            <div 
+                              key={`extra-${date.day}-${idx}`} 
+                              className={`hover-item ${corSalva ? '' : classe}`}
+                              style={{ backgroundColor: corSalva || undefined }}
+                            >
+                              <div className="event-title">{evento.materia}</div>
+                              <div className="event-time">
+                                {evento.hora_inicio} - {evento.hora_fim}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
               </div>
             )}
           </div>
@@ -630,11 +648,21 @@ const materiasUnicas = Array.from(new Set(eventosAgenda.map(evento => evento.mat
               <div
                 key={j}
                 className={`calendar-day semana-dia-hora ${diaSemana.isHoje ? 'today-cell' : ''}`}
+                style={{ position: 'relative' }}
               >
                 {eventos.map((evento, k) => {
-                  const [horaInicio, minInicio] = evento.hora_inicio.split(':').map(Number);
-                  const [horaFim, minFim] = evento.hora_fim.split(':').map(Number);
-                  const duracao = (horaFim - horaInicio) * 60 + (minFim - minInicio);
+                  const [horaInicioH, minInicio] = evento.hora_inicio.split(':').map(Number);
+                  const [horaFimH, minFim] = evento.hora_fim.split(':').map(Number);
+                  
+                  const duracaoMinutos = (horaFimH * 60 + minFim) - (horaInicioH * 60 + minInicio);
+                  
+                  const horaLabelEl = document.querySelector('.hora-label');
+                  const alturaHoraPx = horaLabelEl ? horaLabelEl.getBoundingClientRect().height : 60;
+                  
+                  const pxPorMinuto = alturaHoraPx / 60;
+                  
+                  const alturaPx = Math.max(1, duracaoMinutos * pxPorMinuto);
+                  const topDentroDaHoraPx = minInicio * pxPorMinuto;
                   const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
                   const corSalva = materiaId ? coresMaterias[materiaId] : undefined; 
 
@@ -645,8 +673,12 @@ const materiasUnicas = Array.from(new Set(eventosAgenda.map(evento => evento.mat
                       key={k}
                       className={`event-tag event-aula ${classe}`}
                       style={{
-                        height: `${duracao}px`,
-                        backgroundColor: corSalva || undefined 
+                        position: 'absolute',
+                        top: `${topDentroDaHoraPx}px`,
+                        left: 0,
+                        right: 0,
+                        height: `${alturaPx}px`,
+                        backgroundColor: corSalva || undefined,
                       }}
                     >
                       <div className="event-title eSemana">{evento.materia}</div>

@@ -32,6 +32,23 @@ interface Atividade {
   updated_at: string;
 }
 
+interface Topico {
+  id: number;
+  titulo: string;
+  descricao: string;
+  status: string;
+  materia_id: number;
+  created_at: string;
+  updated_at: string;
+  atividades: Atividade[];
+}
+
+interface Materia {
+  id: number;
+  nome: string;
+  topicos: Topico[];
+}
+
 const Atividades: React.FC = () => {
   const [atividades, setAtividades] = useState<Atividade[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,6 +67,66 @@ const Atividades: React.FC = () => {
 
   const [showModalAvaliar, setShowModalAvaliar] = useState(false);
   const [atividadeAvaliar, setAtividadeAvaliar] = useState<Atividade | null>(null);
+
+  const [topicos, setTopicos] = useState<Topico[]>([]);
+
+  useEffect(() => {
+    const fetchTopicos = async () => {
+      const api = new API();
+      const data = await api.get('topicos');
+      setTopicos(data);
+    };
+    fetchTopicos();
+  }, []);
+
+  const [materias, setMaterias] = useState<{ id: number; nome: string }[]>([]);
+
+  useEffect(() => {
+    const fetchMaterias = async () => {
+      const api = new API();
+      const data = await api.get('materias');
+      setMaterias(data);
+    };
+    fetchMaterias();
+  }, []);
+
+  const [coresMaterias, setCoresMaterias] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    const coresSalvas = localStorage.getItem('coresMaterias');
+    if (coresSalvas) {
+      setCoresMaterias(JSON.parse(coresSalvas));
+    }
+  }, []);
+
+  const normalizarNomeMateria = (nome: string) => {
+    const nomeUpper = nome.trim().toUpperCase();
+  
+    const mapa: { [key: string]: string } = {
+      'PORTUGUÊS': 'm1',
+      'PORTUGUES': 'm1',
+      'LITERATURA': 'm1',
+      'INGLÊS': 'm2',
+      'INGLES': 'm2',
+      'ESPANHOL': 'm2',
+      'ARTES': 'm3',
+      'HISTÓRIA': 'm4',
+      'HISTORIA': 'm4',
+      'FILOSOFIA': 'm5',
+      'SOCIOLOGIA': 'm6',
+      'GEOGRAFIA': 'm7',
+      'BIOLOGIA': 'm8',
+      'QUÍMICA': 'm9',
+      'QUIMICA': 'm9',
+      'FÍSICA': 'm10',
+      'FISICA': 'm10',
+      'MATEMÁTICA': 'm11',
+      'MATEMATICA': 'm11'
+    };
+  
+    return mapa[nomeUpper] || '';
+  };
+  
 
   const { playSomIniciar, playSomConcluir } = useSoundPlayer();
 
@@ -215,14 +292,14 @@ const Atividades: React.FC = () => {
       }
 
       const atividadeParaSalvar = {
-  ...novaAtividade,
-  conteudo: conteudoFinal,
-  data_entrega: novaAtividade.data_entrega && novaAtividade.data_entrega.trim() !== ''
-    ? novaAtividade.data_entrega
-    : undefined,
-};
+      ...novaAtividade,
+      conteudo: conteudoFinal,
+      data_entrega: novaAtividade.data_entrega && novaAtividade.data_entrega.trim() !== ''
+        ? novaAtividade.data_entrega
+        : undefined,
+    };
 
-console.log('Objeto final para salvar:', atividadeParaSalvar)
+    console.log('Objeto final para salvar:', atividadeParaSalvar)
 
 
       setTextoTemp('');
@@ -394,15 +471,21 @@ const removerItemConteudo = (index: number) => {
         ) : error ? (
           <p className="error-message">{error}</p>
         ) : (
-          <IonList className="atividades-list">
-            {atividades
-              .slice()
-              .sort((a, b) => {
-                if (a.status === 'concluído' && b.status !== 'concluído') return 1;
-                if (a.status !== 'concluído' && b.status === 'concluído') return -1;
-                return 0;
-              })
-              .map((atividade) => (
+        <IonList className="atividades-list">
+          {atividades
+            .slice()
+            .sort((a, b) => {
+              if (a.status === 'concluído' && b.status !== 'concluído') return 1;
+              if (a.status !== 'concluído' && b.status === 'concluído') return -1;
+              return 0;
+            })
+            .map((atividade) => {
+              const topico = topicos.find(t => t.id === atividade.topico_id);
+              const materia = topico ? materias.find(m => m.id === topico.materia_id) : null;
+              const nomeMateria = materia ? materia.nome : '';
+              const classeMateria = normalizarNomeMateria(nomeMateria);
+              console.log('nomeMateria:', nomeMateria, 'classeMateria:', classeMateria);
+              return (
                 <IonItem key={atividade.id} className={`atividade-item ${atividade.status === 'concluído' ? 'concluida' : ''}`}>
                   <IonRow className="containerAtividade" style={{ position: 'relative' }}>
                     <IonRow className="larguraA">
@@ -413,14 +496,19 @@ const removerItemConteudo = (index: number) => {
                           className="imgMF imgMobile"
                         />
                       ) : (
-                        <IonIcon icon={getIconPorTipo(atividade.tipo)} className="livro livroA" />
+                        <IonIcon 
+                          icon={getIconPorTipo(atividade.tipo)} 
+                          className={`livro ${classeMateria} livroA`}
+                        />
                       )}
 
                       <IonCol className="td">
                         <h2 className="txtTitMat">{atividade.titulo}</h2>
                         <p className="sRisco p2Darkmode">{atividade.descricao}</p>
                         <p className="sRisco p2Darkmode">Tipo: {atividade.tipo}</p>
-                        <p className="sRisco p2Darkmode">Data de entrega: {atividade.data_entrega ? new Date(atividade.data_entrega).toLocaleDateString() : 'não definida'}</p>
+                        <p className="sRisco p2Darkmode">
+                          Data de entrega: {atividade.data_entrega ? new Date(atividade.data_entrega).toLocaleDateString() : 'não definida'}
+                        </p>
                       </IonCol>
 
                       <IonCol id="containerConfig">
@@ -465,12 +553,12 @@ const removerItemConteudo = (index: number) => {
                           className="btnIC"
                           id="btnRaio"
                           onClick={async () => {
-                            playSomIniciar(); 
+                            playSomIniciar();
                             await alterarStatus(atividade, 'em andamento');
                             history.push(`/atividades/${atividade.id}`);
                           }}
                         >
-                          <IonIcon icon={flash} className="iconesPopover" id="raio"/>
+                          <IonIcon icon={flash} className="iconesPopover" id="raio" />
                           Iniciar
                         </IonButton>
                       )}
@@ -482,8 +570,8 @@ const removerItemConteudo = (index: number) => {
                             className="btnIC"
                             id="btnCheck"
                             onClick={() => {
-                              playSomConcluir(); 
-                              abrirModalAvaliar(atividade);  
+                              playSomConcluir();
+                              abrirModalAvaliar(atividade);
                             }}
                           >
                             <IonIcon icon={checkmarkDone} className="iconesPopover" id="check" />
@@ -496,7 +584,7 @@ const removerItemConteudo = (index: number) => {
                             id="btnVer"
                             onClick={() => history.push(`/atividades/${atividade.id}`)}
                           >
-                            <IonIcon icon={arrowForward} className="iconesPopover" id="ver"/>
+                            <IonIcon icon={arrowForward} className="iconesPopover" id="ver" />
                             Ver
                           </IonButton>
                         </>
@@ -509,15 +597,17 @@ const removerItemConteudo = (index: number) => {
                           id="btnVer"
                           onClick={() => history.push(`/atividades/${atividade.id}`)}
                         >
-                          <IonIcon icon={arrowForward} className="iconesPopover" id="ver"/>
+                          <IonIcon icon={arrowForward} className="iconesPopover" id="ver" />
                           Ver
                         </IonButton>
                       )}
                     </IonRow>
                   </IonRow>
                 </IonItem>
-              ))}
-          </IonList>
+              );
+            })}
+        </IonList>
+
         )}
 
         <IonButton 

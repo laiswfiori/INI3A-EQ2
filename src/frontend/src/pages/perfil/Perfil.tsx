@@ -888,19 +888,19 @@ const resetarConfiguracoes = async () => {
             <div id="flexColunas">
               <IonCol className="colunasConfig">
                 <p className="labelBio">Nome</p>
-                <IonInput name="name" value={userData.name} onIonChange={handleInputChange} className="inputBio" />
+                <IonInput name="name" value={userData.name} onIonChange={handleInputChange} className="inputBio pDarkmode" />
                 <p className="labelBio">Sobrenome</p>
-                <IonInput name="surname" value={userData.surname} onIonChange={handleInputChange} className="inputBio" />
+                <IonInput name="surname" value={userData.surname} onIonChange={handleInputChange} className="inputBio pDarkmode" />
                 <p className="labelBio">Email</p>
-                <IonInput type="email" name="email" value={userData.email} onIonChange={handleInputChange} className="inputBio" />
+                <IonInput type="email" name="email" value={userData.email} onIonChange={handleInputChange} className="inputBio pDarkmode" />
                 <p className="labelBio">Biografia</p>
-                <IonTextarea name="biography" value={userData.biography || ''} onIonChange={handleInputChange} className="inputBio" placeholder="Escreva sobre você..." />
+                <IonTextarea name="biography" value={userData.biography || ''} onIonChange={handleInputChange} className="inputBio pDarkmode" placeholder="Escreva sobre você..." />
                 <IonButton className="btnConfigBio" id="btnSalvarBio" onClick={handleSaveProfile}>Salvar</IonButton>
               </IonCol>
               <IonCol className="colunasConfig" id="col2">
                 <p className="labelBio">Alterar senha</p>
                 <IonInput
-                  className="inputBioSenha"
+                  className="inputBioSenha pDarkmode"
                   label="Senha atual"
                   labelPlacement="stacked"
                   type="password"
@@ -909,7 +909,7 @@ const resetarConfiguracoes = async () => {
                   onIonChange={handlePasswordInputChange}
                 />
                 <IonInput
-                  className="inputBioSenha"
+                  className="inputBioSenha pDarkmode"
                   label="Nova senha"
                   labelPlacement="stacked"
                   type="password"
@@ -918,7 +918,7 @@ const resetarConfiguracoes = async () => {
                   onIonChange={handlePasswordInputChange}
                 />
                 <IonInput
-                  className="inputBioSenha"
+                  className="inputBioSenha pDarkmode"
                   label="Confirmar senha"
                   labelPlacement="stacked"
                   type="password"
