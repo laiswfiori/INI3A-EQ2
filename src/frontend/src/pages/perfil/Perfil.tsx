@@ -549,8 +549,8 @@ const resetarConfiguracoes = async () => {
     );
   }
 
-  const renderEstudoSection = () => (
-    <IonCol>
+  const renderEstudoSectionD = () => (
+    <IonCol className="colAvancada">
       <h1 id="h1Titulo" className="ion-text-center">Configurações avançadas de estudo</h1>
 
       {loadingConfig ? (
@@ -560,12 +560,13 @@ const resetarConfiguracoes = async () => {
         </div>
       ) : (
         <>
-          <p style={{ marginTop: '20px', fontWeight: 'bold' }}>Período total de estudo:</p>
-          <IonRow>
+          <p style={{ marginTop: '20px', fontWeight: 'bold' }} className="pDarkmode">Período total de estudo:</p>
+          <IonRow className="larguraEstudo">
             <IonCol>
               <IonInput
                 label="Data de Início"
                 labelPlacement="stacked"
+                className="pDarkmode"
                 type="date"
                 value={periodoEstudo.inicio}
                 onIonChange={e => setPeriodoEstudo({ ...periodoEstudo, inicio: e.detail.value! })}
@@ -575,6 +576,7 @@ const resetarConfiguracoes = async () => {
               <IonInput
                 label="Data de Término"
                 labelPlacement="stacked"
+                className="pDarkmode"
                 type="date"
                 value={periodoEstudo.fim}
                 onIonChange={e => setPeriodoEstudo({ ...periodoEstudo, fim: e.detail.value! })}
@@ -582,11 +584,11 @@ const resetarConfiguracoes = async () => {
             </IonCol>
           </IonRow>
 
-          <p style={{ marginTop: '20px', fontWeight: 'bold' }}>1. Selecione os dias que você pode estudar:</p>
+          <p style={{ marginTop: '20px', fontWeight: 'bold' }} className="pDarkmode">1. Selecione os dias que você pode estudar:</p>
           <IonRow>
             {diasSemana.map(dia => (
               <IonCol size="12" size-sm="6" size-md="4" key={dia}>
-                <IonItem lines="none">
+                <IonItem lines="none" className="colDiasAvancados">
                   <IonCheckbox
                     checked={horariosDeEstudo.some(h => h.dia_semana === dia)}
                     onIonChange={() => handleDiaToggle(dia)}
@@ -599,21 +601,21 @@ const resetarConfiguracoes = async () => {
 
           {horariosDeEstudo.map((horario, index) => (
             <div key={index} style={{ border: '1px solid var(--ion-color-medium-tint)', borderRadius: '8px', marginBottom: '16px', padding: '16px' }}>
-              <h3 style={{ borderBottom: '1px solid var(--ion-color-light-shade)', paddingBottom: '8px', marginBottom: '16px' }}>{horario.dia_semana}</h3>
+              <h3 style={{ borderBottom: '1px solid var(--ion-color-light-shade)', paddingBottom: '8px', marginBottom: '16px' }} className="pDarkmode">{horario.dia_semana}</h3>
 
-              <p style={{ fontWeight: 'bold' }}>2. Defina o horário:</p>
+              <p style={{ fontWeight: 'bold' }} className="pDarkmode">2. Defina o horário:</p>
               <IonRow>
                 <IonCol>
-                  <IonInput label="Início" labelPlacement="stacked" type="time" value={horario.horario_inicio || ''} onIonChange={e => handleTimeChange(horario.dia_semana, 'inicio', e.detail.value || '')} />
+                  <IonInput label="Início" labelPlacement="stacked" className="pDarkmode" type="time" value={horario.horario_inicio || ''} onIonChange={e => handleTimeChange(horario.dia_semana, 'inicio', e.detail.value || '')} />
                 </IonCol>
                 <IonCol>
-                  <IonInput label="Fim" labelPlacement="stacked" type="time" value={horario.horario_fim || ''} onIonChange={e => handleTimeChange(horario.dia_semana, 'fim', e.detail.value || '')} />
+                  <IonInput label="Fim" labelPlacement="stacked" className="pDarkmode" type="time" value={horario.horario_fim || ''} onIonChange={e => handleTimeChange(horario.dia_semana, 'fim', e.detail.value || '')} />
                 </IonCol>
               </IonRow>
 
-              <p style={{ fontWeight: 'bold' }}>3. Selecione as matérias ou crie uma nova:</p>
+              <p style={{ fontWeight: 'bold' }} className="pDarkmode">3. Selecione as matérias ou crie uma nova:</p>
 
-              <IonItem className="ion-margin-bottom">
+              <IonItem className="ion-margin-bottom colDiasAvancados">
                 <IonInput
                   label="Nova Matéria"
                   labelPlacement="stacked"
@@ -622,13 +624,13 @@ const resetarConfiguracoes = async () => {
                   onIonChange={e => setNovaMateriaNome(e.detail.value!)}
                   disabled={loadingConfig}
                 />
-                <IonButton onClick={criarNovaMateria} slot="end" disabled={loadingConfig || !novaMateriaNome.trim()}>
+                <IonButton onClick={criarNovaMateria} slot="end" disabled={loadingConfig || !novaMateriaNome.trim()} className="btnCriar">
                   {loadingConfig ? 'Criando...' : 'Criar'}
                 </IonButton>
               </IonItem>
 
               {materiasDisponiveis.length > 0 ? (
-                <IonItem>
+                <IonItem className="colDiasAvancados">
                   <IonLabel>Materias existentes</IonLabel>
                   <IonSelect
                     value={horario.materias.map(m => m.id)}
@@ -650,24 +652,155 @@ const resetarConfiguracoes = async () => {
             </div>
           ))}
 
+          <IonRow className="rowAvancados">
           {horariosDeEstudo.length > 0 && (
-              <IonButton expand="full" onClick={handleSalvar} disabled={loadingConfig} style={{ marginTop: '16px' }}>
-                Salvar Configurações de Estudo
+              <IonButton onClick={handleSalvar} disabled={loadingConfig} style={{ marginTop: '16px' }} className="btnAvancados btnSalvarAvancados">
+                Salvar configurações de estudo
               </IonButton>
           )}
           
           
           {existeConfiguracao && (
             <IonButton
-              expand="full"
+              className="btnAvancados"
               color="medium"
               onClick={resetarConfiguracoes}
               disabled={loadingConfig}
               style={{ marginTop: '8px' }}
             >
-              Resetar Configurações
+              Resetar configurações
             </IonButton>
           )}
+          </IonRow>
+        </>
+        
+      )}
+    </IonCol>
+  );
+
+  const renderEstudoSectionM = () => (
+    <IonCol className="colAvancadaM larguraTeste">
+      <h1 id="h1Titulo" className="ion-text-center pDarkmode">Configurações avançadas de estudo</h1>
+
+      {loadingConfig ? (
+        <div className="ion-text-center ion-padding">
+          <IonSpinner name="crescent" />
+          <p>Carregando configurações de estudo...</p>
+        </div>
+      ) : (
+        <>
+          <p style={{ marginTop: '20px', fontWeight: 'bold' }} className="pDarkmode">Período total de estudo:</p>
+          <IonRow className="larguraEstudo">
+            <IonCol>
+              <IonInput
+                label="Data de Início"
+                labelPlacement="stacked"
+                className="pDarkmode"
+                type="date"
+                value={periodoEstudo.inicio}
+                onIonChange={e => setPeriodoEstudo({ ...periodoEstudo, inicio: e.detail.value! })}
+              />
+            </IonCol>
+            <IonCol>
+              <IonInput
+                label="Data de Término"
+                labelPlacement="stacked"
+                className="pDarkmode"
+                type="date"
+                value={periodoEstudo.fim}
+                onIonChange={e => setPeriodoEstudo({ ...periodoEstudo, fim: e.detail.value! })}
+              />
+            </IonCol>
+          </IonRow>
+
+          <p style={{ marginTop: '20px', fontWeight: 'bold' }} className="pDarkmode">1. Selecione os dias que você pode estudar:</p>
+          <IonRow className="larguraEstudo2">
+            {diasSemana.map(dia => (
+              <IonCol size="12" size-sm="6" size-md="4" key={dia}>
+                <IonItem lines="none" className="colDiasAvancados">
+                  <IonCheckbox
+                    checked={horariosDeEstudo.some(h => h.dia_semana === dia)}
+                    onIonChange={() => handleDiaToggle(dia)}
+                  />
+                  <IonLabel>{dia}</IonLabel>
+                </IonItem>
+              </IonCol>
+            ))}
+          </IonRow>
+
+          {horariosDeEstudo.map((horario, index) => (
+            <div key={index} style={{ border: '1px solid var(--ion-color-medium-tint)', borderRadius: '8px', marginBottom: '16px' }}>
+              <h3 style={{ borderBottom: '1px solid var(--ion-color-light-shade)', paddingBottom: '8px', marginBottom: '16px' }} className="pDarkmode">{horario.dia_semana}</h3>
+
+              <p style={{ fontWeight: 'bold' }} className="pDarkmode">2. Defina o horário:</p>
+              <IonRow>
+                <IonCol>
+                  <IonInput label="Início" labelPlacement="stacked" className="pDarkmode" type="time" value={horario.horario_inicio || ''} onIonChange={e => handleTimeChange(horario.dia_semana, 'inicio', e.detail.value || '')} />
+                </IonCol>
+                <IonCol>
+                  <IonInput label="Fim" labelPlacement="stacked" className="pDarkmode" type="time" value={horario.horario_fim || ''} onIonChange={e => handleTimeChange(horario.dia_semana, 'fim', e.detail.value || '')} />
+                </IonCol>
+              </IonRow>
+
+              <p style={{ fontWeight: 'bold' }} className="pDarkmode">3. Selecione as matérias ou crie uma nova:</p>
+
+              <IonItem className="ion-margin-bottom colDiasAvancados">
+                <IonInput
+                  label="Nova Matéria"
+                  labelPlacement="stacked"
+                  placeholder="Ex: Física Quântica"
+                  value={novaMateriaNome}
+                  onIonChange={e => setNovaMateriaNome(e.detail.value!)}
+                  disabled={loadingConfig}
+                />
+                <IonButton onClick={criarNovaMateria} slot="end" disabled={loadingConfig || !novaMateriaNome.trim()} className="btnCriar">
+                  {loadingConfig ? 'Criando...' : 'Criar'}
+                </IonButton>
+              </IonItem>
+
+              {materiasDisponiveis.length > 0 ? (
+                <IonItem className="colDiasAvancados">
+                  <IonLabel>Materias existentes</IonLabel>
+                  <IonSelect
+                    value={horario.materias.map(m => m.id)}
+                    multiple={true}
+                    placeholder="Selecione as matérias"
+                    onIonChange={e => handleMateriaSelect(horario.dia_semana, e.detail.value)}
+                    disabled={loadingConfig}
+                  >
+                    {materiasDisponiveis.map(materia => (
+                      <IonSelectOption key={materia.id} value={materia.id}>
+                        {materia.nome}
+                      </IonSelectOption>
+                    ))}
+                  </IonSelect>
+                </IonItem>
+              ) : (
+                <IonText color="medium">Nenhuma matéria disponível. Crie uma acima!</IonText>
+              )}
+            </div>
+          ))}
+
+          <IonRow className="rowAvancados">
+          {horariosDeEstudo.length > 0 && (
+              <IonButton onClick={handleSalvar} disabled={loadingConfig} style={{ marginTop: '16px' }} className="btnAvancados btnSalvarAvancados">
+                Salvar configurações de estudo
+              </IonButton>
+          )}
+          
+          
+          {existeConfiguracao && (
+            <IonButton
+              className="btnAvancados"
+              color="medium"
+              onClick={resetarConfiguracoes}
+              disabled={loadingConfig}
+              style={{ marginTop: '8px' }}
+            >
+              Resetar configurações
+            </IonButton>
+          )}
+          </IonRow>
         </>
         
       )}
@@ -950,7 +1083,7 @@ const resetarConfiguracoes = async () => {
           </IonCol>
         )}
 
-        {view === 'estudo' && renderEstudoSection()}
+        {view === 'estudo' && renderEstudoSectionD()}
       </IonRow>
     </>
   );
@@ -1156,13 +1289,13 @@ const resetarConfiguracoes = async () => {
             <IonRow>
               <IonRow className="paddingConf">
                 <p className="labelBio">Nome</p>
-                <IonInput name="name" value={userData.name} onIonChange={handleInputChange} className="inputBio" />
+                <IonInput name="name" value={userData.name} onIonChange={handleInputChange} className="inputBio pDarkmode" />
                 <p className="labelBio">Sobrenome</p>
-                <IonInput name="surname" value={userData.surname} onIonChange={handleInputChange} className="inputBio" />
+                <IonInput name="surname" value={userData.surname} onIonChange={handleInputChange} className="inputBio pDarkmode" />
                 <p className="labelBio">Email</p>
-                <IonInput type="email" name="email" value={userData.email} onIonChange={handleInputChange} className="inputBio" />
+                <IonInput type="email" name="email" value={userData.email} onIonChange={handleInputChange} className="inputBio pDarkmode" />
                 <p className="labelBio">Biografia</p>
-                <IonTextarea name="biography" value={userData.biography || ''} onIonChange={handleInputChange} className="inputBio" placeholder="Escreva sobre você..." />
+                <IonTextarea name="biography" value={userData.biography || ''} onIonChange={handleInputChange} className="inputBio pDarkmode" placeholder="Escreva sobre você..." />
               </IonRow>
               <IonRow className="contBtn">
                 <IonButton className="btnConfigBio" id="btnSalvarBio" onClick={handleSaveProfile}>Salvar</IonButton>
@@ -1177,7 +1310,7 @@ const resetarConfiguracoes = async () => {
             <IonRow className="paddingConf">
               <p className="labelBioM">Alterar senha</p>
               <IonInput
-                className="inputBioSenhaM"
+                className="inputBioSenhaM pDarkmode"
                 label="Senha atual"
                 labelPlacement="stacked"
                 type="password"
@@ -1187,7 +1320,7 @@ const resetarConfiguracoes = async () => {
               />
 
               <IonInput
-                className="inputBioSenhaM"
+                className="inputBioSenhaM pDarkmode"
                 label="Nova senha"
                 labelPlacement="stacked"
                 type="password"
@@ -1196,7 +1329,7 @@ const resetarConfiguracoes = async () => {
                 onIonChange={handlePasswordInputChange}
               />
               <IonInput
-                className="inputBioSenhaM"
+                className="inputBioSenhaM pDarkmode"
                 label="Confirmar senha"
                 labelPlacement="stacked"
                 type="password"
@@ -1234,7 +1367,7 @@ const resetarConfiguracoes = async () => {
 
         {mobileView === 'estudo' && (
           <IonRow id="confEstudo">
-            {renderEstudoSection()}
+            {renderEstudoSectionM()}
           </IonRow>
         )}
 

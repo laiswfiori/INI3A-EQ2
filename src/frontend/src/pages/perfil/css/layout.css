@@ -118,11 +118,17 @@
     .containerIdioma {
         margin-left: 9%;
     }
+    #confEstudo {
+        max-width: 320px !important;
+    }
 }
 
 @media (min-width: 321px) and (max-width: 425px) {
     .diasContainer2 {
         display: none;
+    }
+    #confEstudo {
+        max-width: 380px !important;
     }
 }
 
@@ -135,5 +141,8 @@
 @media (min-width: 426px) and (max-width: 768px) {
     .excp {
         font-size: 1rem !important;
+    }
+    #confEstudo {
+        max-width: 400px !important;
     }
 }

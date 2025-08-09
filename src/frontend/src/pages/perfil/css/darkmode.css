@@ -6,7 +6,7 @@
     border-bottom: 4px solid var(--cor_azulE) !important;
 }
 
-.ladoConfig{
+.ladoConfig, .colAvancada {
     background-color: var(--cor-branco);
 }
 
@@ -141,4 +141,9 @@ ion-checkbox#check {
 .inputDarkmode::part(native)::placeholder {
     color: var(--cor-preto) !important;
     --color: var(--cor-preto) !important;
+}
+
+.colDiasAvancados {
+    background-color: var(--cor-branco2) !important;
+    --background: var(--cor-branco2) !important;
 }

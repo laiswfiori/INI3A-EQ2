@@ -298,3 +298,37 @@ ion-input.inputBioM {
   display: flex;
   flex-direction: row;
 }
+
+.colAvancada {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+#confEstudo {
+  max-width: 75%;
+}
+
+.colAvancadaM {
+  padding: 5%;
+  width: 100%;
+}
+
+.rowAvancados {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.btnAvancados {
+  align-self: center;
+  width: 80%;
+  border-radius: 20px;
+}
+
+.larguraEstudo {
+  width: 100%;
+}
+
+.larguraEstudo2 {
+  width: 100%;
+}

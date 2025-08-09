@@ -267,3 +267,11 @@ ion-checkbox#check {
     width: 6%;
     margin-left: 2%;
 }
+
+.btnCriar::part(native) {
+    background-color: #00296b !important;
+}
+
+.btnSalvarAvancados::part(native) {
+    background-color: #ea7317 !important;
+}
