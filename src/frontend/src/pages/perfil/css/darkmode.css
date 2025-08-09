@@ -147,3 +147,20 @@ ion-checkbox#check {
     background-color: var(--cor-branco2) !important;
     --background: var(--cor-branco2) !important;
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0) brightness(1);
+}
+
+
+body.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(2);
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0) brightness(1);
+}
+
+body.dark input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(2);
+}

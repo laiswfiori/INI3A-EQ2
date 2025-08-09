@@ -551,7 +551,7 @@ const resetarConfiguracoes = async () => {
 
   const renderEstudoSectionD = () => (
     <IonCol className="colAvancada">
-      <h1 id="h1Titulo" className="ion-text-center">Configurações avançadas de estudo</h1>
+      <h1 id="h1Titulo" className="ion-text-center pDarkmode">Configurações avançadas de estudo</h1>
 
       {loadingConfig ? (
         <div className="ion-text-center ion-padding">

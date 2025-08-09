@@ -223,10 +223,12 @@ const CardsMateria: React.FC = () => {
           }
         });
       }
+      localStorage.setItem('flashcards_totalFeitos', String(novasRespostas.length));
     } catch (error) {
       console.error('Erro ao avançar para o próximo card:', error);
     }
   };
+
 
   if (cards.length === 0) {
     return (

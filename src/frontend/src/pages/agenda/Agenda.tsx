@@ -184,31 +184,31 @@ export default function () {
   const [eventosAgenda, setEventosAgenda] = useState<any[]>([]);
 
 
-useEffect(() => {
-  const fetchAgendaInteligente = async () => {
-    try {
-      const api = new API();
-      
-      const { agenda } = await api.get("/calendarioEstudos"); 
+  useEffect(() => {
+    const fetchAgendaInteligente = async () => {
+      try {
+        const api = new API();
+        
+        const { agenda } = await api.get("/calendarioEstudos"); 
 
-      const eventos = agenda.flatMap((item: any) =>
-        item.revisoes.map((data: string) => ({
-          data,
-          materia: item.materia_nome,
-          materia_id: item.materia_id, 
-          hora_inicio: item.hora_inicio,
-          hora_fim: item.hora_fim,
-        }))
-      );
+        const eventos = agenda.flatMap((item: any) =>
+          item.revisoes.map((data: string) => ({
+            data,
+            materia: item.materia_nome,
+            materia_id: item.materia_id, 
+            hora_inicio: item.hora_inicio,
+            hora_fim: item.hora_fim,
+          }))
+        );
 
-      setEventosAgenda(eventos);
-    } catch (error) {
-      console.error("Erro ao carregar a agenda inteligente:", error);
-    }
-  };
+        setEventosAgenda(eventos);
+      } catch (error) {
+        console.error("Erro ao carregar a agenda inteligente:", error);
+      }
+    };
 
-  fetchAgendaInteligente();
-}, []);
+    fetchAgendaInteligente();
+  }, []);
 
   type Status = 'não iniciado' | 'em andamento' | 'concluído';
 
@@ -573,11 +573,11 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
                           return (
                             <div 
                               key={`extra-${date.day}-${idx}`} 
-                              className={`hover-item ${corSalva ? '' : classe}`}
+                              className={`hover-item divHover ${corSalva ? '' : classe}`}
                               style={{ backgroundColor: corSalva || undefined }}
                             >
-                              <div className="event-title">{evento.materia}</div>
-                              <div className="event-time">
+                              <div className="event-title eventHover">{evento.materia}</div>
+                              <div className="event-time eventHover">
                                 {evento.hora_inicio} - {evento.hora_fim}
                               </div>
                             </div>

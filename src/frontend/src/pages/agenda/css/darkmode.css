@@ -77,3 +77,11 @@
 .day-name {
     color: var(--cor-cinza) !important;
 }
+
+.divHover {
+    background-color: var(--cor-brancoC) !important;
+}
+
+.eventHover {
+    color: var(--cor-preto) !important;
+}

@@ -162,6 +162,8 @@ const Flashcards: React.FC = () => {
 
   let updatedTimeRecords = timeRecords;
 
+  localStorage.setItem('flashcards_totalFeitos', String(novasRespostas.length));
+
   if (startTimeRef.current) {
     const now = new Date();
     const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;

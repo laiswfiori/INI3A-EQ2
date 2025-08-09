@@ -19,7 +19,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;   
-    justify-content: center;   
     pointer-events: none !important;
     height: 100%;
 }
@@ -304,9 +303,6 @@ ion-input.inputBioM {
   width: 100% !important;
 }
 
-#confEstudo {
-  max-width: 75%;
-}
 
 .colAvancadaM {
   padding: 5%;

@@ -421,6 +421,18 @@ const setShowCardEditorAndInitialData = (
     );
   };
 
+  const [totalCardsFeitos, setTotalCardsFeitos] = useState(0);
+  const [totalCards, setTotalCards] = useState(0);
+
+  useEffect(() => {
+    const respostasSalvas = localStorage.getItem('flashcards_respostas');
+    const respostas = respostasSalvas ? JSON.parse(respostasSalvas) : [];
+    setTotalCardsFeitos(respostas.length);
+    setTotalCards(flashcards.length);
+  }, [flashcards]); 
+
+  const progress = totalCards > 0 ? (totalCardsFeitos / totalCards) * 100 : 0;
+  console.log(totalCards, totalCardsFeitos, progress)
 
   return (
     <>
@@ -472,7 +484,7 @@ const setShowCardEditorAndInitialData = (
               </IonPopover>
             </IonCol>
             <IonCol className="colFlex">
-              <svg viewBox="0 0 250 250" className="circular-progress">
+              <svg viewBox="0 0 250 250" className="circular-progress" style={{ '--progress': progress } as React.CSSProperties}>
                 <circle
                   className="bg"
                   cx="125"
@@ -536,7 +548,7 @@ const setShowCardEditorAndInitialData = (
                   </IonCol>
                 </IonRow>
                 <IonRow>
-                  <p className="txtTF pDarkmode">Matérias para estudar</p>
+                  <p className="txtTF pDarkmode">Total de matérias</p>
                 </IonRow>
               </div>
 
@@ -550,7 +562,7 @@ const setShowCardEditorAndInitialData = (
                   </IonCol>
                 </IonRow>
                 <IonRow>
-                  <p className="txtTF pDarkmode">Flashcards para revisar hoje</p>
+                  <p className="txtTF pDarkmode">Matérias para revisar hoje</p>
                 </IonRow>
               </div>
             </IonRow>

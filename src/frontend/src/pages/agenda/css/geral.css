@@ -352,13 +352,13 @@
   grid-auto-rows: 60px;
 }
 
-/* Estilos para visualização mensal */
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 }
 
 .calendar-day {
+  padding: 2%;
   min-height: 100px;
   position: relative;
 }
@@ -384,7 +384,6 @@
   font-weight: bold;
 }
 
-/* Estilos para visualização semanal */
 .semana-horarios {
   display: grid;
   grid-template-columns: 60px repeat(7, 1fr);

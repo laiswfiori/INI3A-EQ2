@@ -146,47 +146,54 @@ const RevisaoGeral: React.FC = () => {
     return { totalTime, averageTime, totalCards: timeRecords.length };
   };
 
-  const handleNextCard = async (nivel: string) => {
-    if (!mostrarVerso || !cardAtual || !cardAtual.id) return;
+const handleNextCard = async (nivel: string) => {
+  if (!mostrarVerso || !cardAtual || !cardAtual.id) return;
 
-    try {
-      await api.put(`cards/${cardAtual.id}`, { nivel });
-    } catch (error) {
-      console.error(`Erro ao salvar nível do card ${cardAtual.id}:`, error);
+  try {
+    await api.put(`cards/${cardAtual.id}`, { nivel });
+  } catch (error) {
+    console.error(`Erro ao salvar nível do card ${cardAtual.id}:`, error);
+  }
+
+  const novasRespostas = [...respostasAcumuladas, { cardId: cardAtual.id!, nivel }];
+
+  setRespostasAcumuladas(novasRespostas);
+  localStorage.setItem('flashcards_totalFeitos', String(novasRespostas.length));
+  localStorage.setItem('flashcards_respostas', JSON.stringify(novasRespostas));
+
+  setAllCards(prev =>
+    prev.map(c => (c.id === cardAtual.id ? { ...c, nivelResposta: nivel } : c))
+  );
+
+  if (startTimeRef.current) {
+    const now = new Date();
+    const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
+    setTimeRecords(prev => [...prev, { cardId: cardAtual.id!, timeSpent, timestamp: now }]);
+  }
+
+  if (currentCardIndex + 1 < allCards.length) {
+    setCurrentCardIndex(currentCardIndex + 1);
+    setMostrarVerso(false);
+    return;
+  }
+
+  const timeStats = calculateTimeStats();
+
+  history.push('/flashcards/relatorio', {
+    respostas: novasRespostas.map(r => r.nivel),
+    cardsComRespostas: allCards.map(c =>
+      c.id === cardAtual.id ? { ...c, nivelResposta: nivel } : c
+    ),
+    nomeDeck: 'Revisão Geral',
+    revisaoGeral: true,
+    materias: [],
+    timeStats: {
+      totalTime: timeStats.totalTime,
+      averageTime: timeStats.averageTime,
+      timeRecords
     }
-
-    setRespostasAcumuladas(prev => [...prev, { cardId: cardAtual.id!, nivel }]);
-    setAllCards(prev => prev.map(c => (c.id === cardAtual.id ? { ...c, nivelResposta: nivel } : c)));
-
-    if (startTimeRef.current) {
-      const now = new Date();
-      const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
-      setTimeRecords(prev => [...prev, { cardId: cardAtual.id, timeSpent, timestamp: now }]);
-    }
-
-    if (currentCardIndex + 1 < allCards.length) {
-      setCurrentCardIndex(currentCardIndex + 1);
-      setMostrarVerso(false);
-      return;
-    }
-
-    const timeStats = calculateTimeStats();
-
-    history.push('/flashcards/relatorio', {
-      respostas: [...respostasAcumuladas, { cardId: cardAtual.id!, nivel }].map(r => r.nivel),
-      cardsComRespostas: allCards.map(c =>
-        c.id === cardAtual.id ? { ...c, nivelResposta: nivel } : c
-      ),
-      nomeDeck: 'Revisão Geral',
-      revisaoGeral: true,
-      materias: [],
-      timeStats: {
-        totalTime: timeStats.totalTime,
-        averageTime: timeStats.averageTime,
-        timeRecords
-      }
-    });
-  };
+  });
+};
 
   const handleEmojiClick = (nivel: string) => {
     if (nivel === 'muito fácil' || nivel === 'fácil') {

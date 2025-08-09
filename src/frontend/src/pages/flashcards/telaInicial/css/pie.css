@@ -5,7 +5,6 @@ circle.fg {
 
   .circular-progress {
     --size: 50%;
-    --progress: 70;
     --half-size: calc(var(--size) / 2);
     --stroke-width: 20px;
     --radius: calc((var(--size) - var(--stroke-width)) / 2);
