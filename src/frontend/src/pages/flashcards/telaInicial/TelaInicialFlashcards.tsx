@@ -425,12 +425,55 @@ const setShowCardEditorAndInitialData = (
   const [totalCards, setTotalCards] = useState(0);
 
   useEffect(() => {
-    const respostasSalvas = localStorage.getItem('flashcards_respostas');
-    const respostas = respostasSalvas ? JSON.parse(respostasSalvas) : [];
-    setTotalCardsFeitos(respostas.length);
-    setTotalCards(flashcards.length);
-  }, [flashcards]); 
+    const atualizarRespostas = () => {
+      const respostasSalvas = localStorage.getItem('flashcards_respostas');
+      const respostas = respostasSalvas ? JSON.parse(respostasSalvas) : [];
+      setTotalCardsFeitos(respostas.length);
+      setTotalCards(cards.length);
+    };
+  
+    const checarReset = () => {
+      const agora = new Date();
+      console.log("checando reset", agora.toLocaleTimeString());
+    
+      const horarioReset = new Date();
+      horarioReset.setHours(0, 0, 0, 0);
+    
+      const ultimaResetStr = localStorage.getItem('flashcards_resetDiario');
+      const ultimaReset = ultimaResetStr ? new Date(ultimaResetStr) : null;
 
+      console.log("agora:", agora.toLocaleTimeString());
+      console.log("horarioReset:", horarioReset.toLocaleTimeString());
+    
+      const jaPassouHorario = agora >= horarioReset;
+      const jaResetouHoje =
+        ultimaReset &&
+        ultimaReset.getDate() === agora.getDate() &&
+        ultimaReset.getMonth() === agora.getMonth() &&
+        ultimaReset.getFullYear() === agora.getFullYear();
+    
+      console.log({ jaPassouHorario, jaResetouHoje });
+    
+      if (jaPassouHorario && !jaResetouHoje) {
+        localStorage.setItem('flashcards_respostas', JSON.stringify([]));
+        localStorage.setItem('flashcards_totalFeitos', '0');
+        localStorage.setItem('flashcards_resetDiario', agora.toISOString());
+      }
+    };
+  
+    checarReset();
+    atualizarRespostas();
+  
+    const intervalo = setInterval(() => {
+      checarReset();
+      atualizarRespostas();
+    }, 7 * 24 * 60 * 60 * 1000); 
+  
+    return () => clearInterval(intervalo);
+  }, [cards]);
+  
+  
+  
   const progress = totalCards > 0 ? (totalCardsFeitos / totalCards) * 100 : 0;
   console.log(totalCards, totalCardsFeitos, progress)
 
@@ -527,14 +570,14 @@ const setShowCardEditorAndInitialData = (
               <div className="estDivs">
                 <IonRow className="espDiv">
                   <IonCol className="altD">
-                    <p className="txtGrande pDarkmode">{flashcards.length}</p> 
+                    <p className="txtGrande pDarkmode">{cards.length}</p> 
                   </IonCol>
                   <IonCol className="altD iconFim">
                     <IonIcon icon={layers} className="iconesTF" />
                   </IonCol>
                 </IonRow>
                 <IonRow>
-                  <p className="txtTF pDarkmode">Total de flashcards</p>
+                  <p className="txtTF pDarkmode">Total de cards</p>
                 </IonRow>
               </div>
 
@@ -574,12 +617,18 @@ const setShowCardEditorAndInitialData = (
                 const flashcardsDaMateria = flashcards.filter(f =>
                   topicosDaMateria.some(t => t.id === f.topico_id)
                 );
-                const totalCardsMateria = flashcardsDaMateria.reduce((total, flashcard) => {
-                const numCards = Array.isArray(flashcard.cards) ? flashcard.cards.length : 0;
-                  return total + numCards;}, 0
+                const totalCardsMateria = flashcardsDaMateria.length;
+                const respostasSalvas = localStorage.getItem('flashcards_respostas');
+                const respostas = respostasSalvas ? JSON.parse(respostasSalvas) : [];
+                const respostasDaMateria = respostas.filter(r =>
+                  flashcardsDaMateria.some(f => f.id === r.flashcard_id)
                 );
-                const cardsParaRevisarMateria = 0; 
-                const progresso = totalCardsMateria > 0 ? (cardsParaRevisarMateria / totalCardsMateria) * 100 : 0;
+                const cardsParaRevisarMateria = Math.max(totalCardsMateria - respostasDaMateria.length, 0);
+                const cardsFeitosMateria = respostasDaMateria.length;
+                const progresso = totalCardsMateria > 0 
+                  ? (cardsFeitosMateria / totalCardsMateria) * 100 
+                  : 0;
+                  
                 const estaExpandida = materiaExpandidaId === materia.id;
 
                 return (
@@ -606,7 +655,7 @@ const setShowCardEditorAndInitialData = (
                             );
                           })()}
                           </div>
-                          <IonCol className="td centro">
+                          <IonCol className="colNomeMat">
                             <h2 className="txtTitMat">{materia.nome}</h2>
                           </IonCol>
                           <IonCol className="iconFim">
@@ -621,7 +670,7 @@ const setShowCardEditorAndInitialData = (
                         </IonRow>
                       </IonRow>
                       <IonRow className="espDC">
-                        <p className="txtWC pDarkmode">{totalCardsMateria} cards</p>
+                        <p className="txtWC pDarkmode">{totalCardsMateria} flashcards</p>
                         <p className="txtWC" id="txtRevisar">{cardsParaRevisarMateria} para revisar</p>
                       </IonRow>
                       <IonRow className="barra">
@@ -678,7 +727,7 @@ const setShowCardEditorAndInitialData = (
                                 <div key={topico.id} className="topico-com-flashcards">
                                   <IonRow className="contSetaTopico">
                                     <IonIcon icon={arrowForward} className="setaTopico" />
-                                    <p className="txtTopico">{topico.titulo}</p>
+                                    <p className="txtTopico pDarkmode">{topico.titulo}</p>
                                   </IonRow>
 
                                   {flashcardsDoTopico.map(flashcard => (

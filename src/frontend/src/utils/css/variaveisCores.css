@@ -50,6 +50,7 @@
   --cor-cinza8: #555;
   --cor-cinza9: #e2e2e2;
   --cor-branco7: #000000;
+  --cor-cinza10: #ddd;
 ;
 }
 
@@ -106,4 +107,5 @@ body.dark {
   --cor-cinza8: #999;
   --cor-cinza9: #5f5f5f;
   --cor-branco7: #ffffff;
+  --cor-cinza10: #26313f;
 }

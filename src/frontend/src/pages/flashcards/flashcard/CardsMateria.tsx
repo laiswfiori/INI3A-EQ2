@@ -172,29 +172,44 @@ const CardsMateria: React.FC = () => {
 
   const handleNextCard = async (nivel: string) => {
     const timeStats = calculateTimeStats();
-
+  
     if (!mostrarVerso) return;
-
+  
     if (nivel === 'muito fácil' || nivel === 'fácil') {
       playSomRespCerta();
     } else {
       playSomRespErrada();
     }
-
+  
     try {
       if (cardAtual.id) {
         await api.put(`cards/${cardAtual.id}`, { nivel });
         console.log(`Registrado card ${cardAtual.id} como "${nivel}"`);
       }
-
+  
       const novasRespostas = [...respostas, nivel];
       setRespostas(novasRespostas);
-
+  
       const cardsAtualizados = cards.map((c, idx) =>
         idx === currentCardIndex ? { ...c, nivelResposta: nivel } : c
       );
       setCards(cardsAtualizados);
-
+  
+      const respostasSalvas = localStorage.getItem('flashcards_respostas');
+      const respostasAcumuladas = respostasSalvas ? JSON.parse(respostasSalvas) : [];
+  
+      const novasRespostasAcumuladas = [
+        ...respostasAcumuladas,
+        {
+          flashcard_id: cardAtual.flashcard_id,
+          cardId: cardAtual.id,
+          nivel
+        }
+      ];
+  
+      localStorage.setItem('flashcards_respostas', JSON.stringify(novasRespostasAcumuladas));
+      localStorage.setItem('flashcards_totalFeitos', String(novasRespostasAcumuladas.length));
+  
       if (startTimeRef.current) {
         const now = new Date();
         const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
@@ -205,7 +220,7 @@ const CardsMateria: React.FC = () => {
         };
         setTimeRecords(prev => [...prev, newRecord]);
       }
-
+  
       if (currentCardIndex + 1 < cards.length) {
         setCurrentCardIndex(currentCardIndex + 1);
         setMostrarVerso(false);
@@ -217,17 +232,17 @@ const CardsMateria: React.FC = () => {
           revisaoGeral: false,
           materias,
           timeStats: {
-          totalTime: timeStats.totalTime,
-          averageTime: timeStats.averageTime,
-          timeRecords
+            totalTime: timeStats.totalTime,
+            averageTime: timeStats.averageTime,
+            timeRecords
           }
         });
       }
-      localStorage.setItem('flashcards_totalFeitos', String(novasRespostas.length));
     } catch (error) {
       console.error('Erro ao avançar para o próximo card:', error);
     }
   };
+  
 
 
   if (cards.length === 0) {

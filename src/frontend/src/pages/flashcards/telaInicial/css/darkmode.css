@@ -79,3 +79,15 @@ ion-modal.modalFlashcards::part(content) {
 .card-side {
     background-color: var(--cor-branco5) !important;
 }
+
+.verTopicos::part(native) {
+    background-color: var(--cor-azulE) !important;  
+}
+
+.verTopicos::part(native):hover {
+    background-color: var(--cor-azulCL) !important;  
+}
+
+#btnEstudar::part(native):hover {
+    background-color: var(--cor-azulL) !important;  
+}

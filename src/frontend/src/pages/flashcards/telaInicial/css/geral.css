@@ -347,5 +347,19 @@ ion-modal.modalFlashcards::part(content) {
 .rowIN {
     width: 100%;
     display: flex;
+    flex-direction: row;
     justify-content: space-around;
+}
+
+.colNomeMat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start !important;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 40% !important;
+}
+
+.iconFim {
+    max-width: 30% !important;
 }

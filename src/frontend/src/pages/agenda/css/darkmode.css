@@ -85,3 +85,23 @@
 .eventHover {
     color: var(--cor-preto) !important;
 }
+
+.ativAgenda {
+    border-color: #ddd !important;
+}
+
+.date-nav-container {
+    background-color: var(--cor-brancoC) !important;
+}
+
+.day-item:hover .dayO {
+    background-color: var(--cor-cinza10) !important;
+}
+  
+.day-item:hover .dayNO {
+    background-color: var(--cor-cinza10) !important;
+}
+
+.day-active .day-number, .day-active .day-name {
+    background-color:  var(--cor-amarela) !important;
+}

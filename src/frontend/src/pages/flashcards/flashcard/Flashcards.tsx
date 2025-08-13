@@ -133,81 +133,94 @@ const Flashcards: React.FC = () => {
 
   const handleResponder = async (nivel: string) => {
     if (!mostrarVerso || !cards[currentCardIndex]?.id) return;
-
+  
     if (nivel === 'muito fácil' || nivel === 'fácil') {
       playSomRespCerta();
     } else {
       playSomRespErrada();
     }
-
+  
     try {
       await api.put(`cards/${cards[currentCardIndex].id}`, { nivel });
     } catch (error) {
       console.error('Erro ao salvar nível do card:', error);
     }
-
+  
     const novasRespostas = [...respostas, nivel];
     const cardsAtualizados = cards.map((c, i) =>
       i === currentCardIndex ? { ...c, nivelResposta: nivel } : c
     );
-
     setRespostas(novasRespostas);
     setCards(cardsAtualizados);
-
-   if (currentCardIndex + 1 < cards.length) {
-    setCurrentCardIndex(currentCardIndex + 1);
-    setMostrarVerso(false);
-    return;
-  }
-
-  let updatedTimeRecords = timeRecords;
-
-  localStorage.setItem('flashcards_totalFeitos', String(novasRespostas.length));
-
-  if (startTimeRef.current) {
-    const now = new Date();
-    const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
-
-    const newRecord: TimeRecord = {
-      cardId: cards[currentCardIndex]?.id,
-      timeSpent,
-      timestamp: now
-    };
-
-    updatedTimeRecords = [...timeRecords, newRecord];
-    setTimeRecords(updatedTimeRecords);
-  }
-
-  const total = cardsAtualizados.reduce((acc, c) => {
-    switch (c.nivelResposta) {
-      case 'muito fácil': return acc + 1;
-      case 'fácil': return acc + 2;
-      case 'médio': return acc + 3;
-      case 'difícil': return acc + 4;
-      case 'muito difícil': return acc + 5;
-      default: return acc;
+  
+    const respostasSalvas = localStorage.getItem('flashcards_respostas');
+    const respostasAcumuladas = respostasSalvas ? JSON.parse(respostasSalvas) : [];
+  
+    const novasRespostasAcumuladas = [
+      ...respostasAcumuladas,
+      {
+        flashcard_id: cards[currentCardIndex]?.flashcard_id,
+        cardId: cards[currentCardIndex]?.id,
+        nivel
+      }
+    ];
+  
+    localStorage.setItem('flashcards_respostas', JSON.stringify(novasRespostasAcumuladas));
+    localStorage.setItem('flashcards_totalFeitos', String(novasRespostasAcumuladas.length));
+  
+    if (currentCardIndex + 1 < cards.length) {
+      setCurrentCardIndex(currentCardIndex + 1);
+      setMostrarVerso(false);
+      return;
     }
-  }, 0);
 
-  const media = cardsAtualizados.length ? total / cardsAtualizados.length : 0;
-  const nivelFinal =
-    media <= 1.5 ? 'muito fácil' :
-    media <= 2.5 ? 'fácil' :
-    media <= 3.5 ? 'médio' :
-    media <= 4.5 ? 'difícil' : 'muito difícil';
-
-  try {
-    await api.put(`flashcards/${flashcardId}`, { nivel: nivelFinal });
-  } catch (err) {
-    console.error('Erro ao salvar nível geral do flashcard:', err);
-  }
-
-  const timeStats = {
-    totalTime: updatedTimeRecords.reduce((sum, r) => sum + r.timeSpent, 0),
-    averageTime: updatedTimeRecords.length > 0 ? updatedTimeRecords.reduce((sum, r) => sum + r.timeSpent, 0) / updatedTimeRecords.length : 0,
-    timeRecords: updatedTimeRecords
-  };
-
+    let updatedTimeRecords = timeRecords;
+    if (startTimeRef.current) {
+      const now = new Date();
+      const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
+  
+      const newRecord: TimeRecord = {
+        cardId: cards[currentCardIndex]?.id,
+        timeSpent,
+        timestamp: now
+      };
+  
+      updatedTimeRecords = [...timeRecords, newRecord];
+      setTimeRecords(updatedTimeRecords);
+    }
+  
+    const total = cardsAtualizados.reduce((acc, c) => {
+      switch (c.nivelResposta) {
+        case 'muito fácil': return acc + 1;
+        case 'fácil': return acc + 2;
+        case 'médio': return acc + 3;
+        case 'difícil': return acc + 4;
+        case 'muito difícil': return acc + 5;
+        default: return acc;
+      }
+    }, 0);
+  
+    const media = cardsAtualizados.length ? total / cardsAtualizados.length : 0;
+    const nivelFinal =
+      media <= 1.5 ? 'muito fácil' :
+      media <= 2.5 ? 'fácil' :
+      media <= 3.5 ? 'médio' :
+      media <= 4.5 ? 'difícil' : 'muito difícil';
+  
+    try {
+      await api.put(`flashcards/${flashcardId}`, { nivel: nivelFinal });
+    } catch (err) {
+      console.error('Erro ao salvar nível geral do flashcard:', err);
+    }
+  
+    const timeStats = {
+      totalTime: updatedTimeRecords.reduce((sum, r) => sum + r.timeSpent, 0),
+      averageTime: updatedTimeRecords.length > 0
+        ? updatedTimeRecords.reduce((sum, r) => sum + r.timeSpent, 0) / updatedTimeRecords.length
+        : 0,
+      timeRecords: updatedTimeRecords
+    };
+  
     history.push('/flashcards/relatorio', {
       respostas: novasRespostas,
       cardsComRespostas: cardsAtualizados,
@@ -217,6 +230,7 @@ const Flashcards: React.FC = () => {
       timeStats
     });
   };
+  
 
   if (!isIdValido) {
     return (

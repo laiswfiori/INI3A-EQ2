@@ -47,16 +47,15 @@ const Estudo: React.FC = () => {
 
     useEffect(() => {
     if (somAtivo) {
-        // Toca som a cada X segundos (duração estimada dos áudios)
         playSomPaginas();
         estudoRef.current.intervalPag = window.setInterval(() => {
         playSomPaginas();
-        }, 10000); // ajuste conforme duração real do som
+        }, 10000); 
 
         playSomLareira();
         estudoRef.current.intervalLareira = window.setInterval(() => {
         playSomLareira();
-        }, 15000); // ajuste conforme duração real do som
+        }, 15000); 
     }
 
     return () => {
