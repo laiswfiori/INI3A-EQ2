@@ -24,6 +24,23 @@ export const loginUser = async (credentials: any) => {
     }
 };
 
+/**
+ * ✅ FUNÇÃO ADICIONADA AQUI
+ * Envia o token do Google para o backend para autenticação.
+ * @param {string} googleToken - O token de credencial fornecido pelo Google.
+ */
+export const loginWithGoogle = async (googleToken: string) => {
+    try {
+        // O corpo da requisição precisa ser um objeto com a chave 'token'
+        const response = await api.post('api/auth/google/callback', { token: googleToken });
+        return response;
+    } catch (error) {
+        console.error("Erro no endpoint loginWithGoogle:", error);
+        throw error;
+    }
+};
+
+
 export const getUserProfile = async () => {
   try {
     const data = await api.get('api/profile');

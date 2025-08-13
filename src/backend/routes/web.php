@@ -11,6 +11,7 @@ $router->get('/', function () {
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
+    $router->post('auth/google/callback', 'AuthController@handleGoogleCallback');
 });
 
 // --- Rotas de Redefinição de Senha ---

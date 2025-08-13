@@ -66,8 +66,8 @@ export default class API {
     const authToken = token || this.getToken();
     const url = `${this.apiUrl.replace(/\/$/, '')}/${endpoint.replace(/^\//, '')}`;
 
-    // Não Tenta renovar o token na tela de login/registro
-    const isAuthEndpoint = endpoint.includes('login') || endpoint.includes('register');
+    // ✅ Verificação atualizada para incluir o endpoint do google
+    const isAuthEndpoint = endpoint.includes('login') || endpoint.includes('register') || endpoint.includes('auth/google/callback');
 
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
@@ -114,8 +114,8 @@ export default class API {
         throw error;
       }
 
-      // IMPORTANTE: Se o endpoint for 'login' ou 'register', salve o novo token
-      if (endpoint.includes('login') || endpoint.includes('register')) {
+      // ✅ Condição atualizada para salvar o token do login com Google também
+      if (isAuthEndpoint) {
           if (responseData.access_token) {
               this.setToken(responseData.access_token);
           }
