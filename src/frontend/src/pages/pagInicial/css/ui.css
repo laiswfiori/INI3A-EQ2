@@ -7,7 +7,6 @@
 }
 
 .titulo {
-    font-family: Gill Sans, sans-serif !important;
     font-weight: 700 !important;
     padding: 0 !important;
     text-align: center !important;
@@ -15,7 +14,6 @@
 }
 
 .subtitulo {
-    font-family: Gill Sans, sans-serif !important;
     font-weight: 500 !important;
     padding: 0;
     text-align: center;
