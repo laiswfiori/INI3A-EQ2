@@ -664,7 +664,7 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
                   const alturaPx = Math.max(1, duracaoMinutos * pxPorMinuto);
                   const topDentroDaHoraPx = minInicio * pxPorMinuto;
                   const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
-                  const corSalva = materiaId ? coresMaterias[materiaId] : undefined; 
+                  const corSalva = materiaId ? coresMaterias[materiaId] : "#3da5d9"; 
 
                   const { classe } = normalizarNomeMateria(evento.materia); 
 
@@ -678,7 +678,7 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
                         left: 0,
                         right: 0,
                         height: `${alturaPx}px`,
-                        backgroundColor: corSalva || undefined,
+                        backgroundColor: corSalva,
                       }}
                     >
                       <div className="event-title eSemana">{evento.materia}</div>
