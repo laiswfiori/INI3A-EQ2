@@ -1,57 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import {
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonText,
-} from '@ionic/react';
+import React, { useEffect, useState } from 'react';
+import { IonItem, IonLabel, IonInput, IonText } from '@ionic/react';
 import './css/ui.css';
 
 interface Props {
   onChange?: (periodo: { dataInicio: string; dataFim: string }) => void;
+  onValidityChange?: (isValid: boolean) => void;
 }
 
-const PeriodoEstudo: React.FC<Props> = ({ onChange }) => {
+const PeriodoEstudo: React.FC<Props> = ({ onChange, onValidityChange }) => {
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
   const [error, setError] = useState('');
 
-  const hojeISO = new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
-
-  function validate() {
-    const dataInicio = new Date(start);
-    const dataFim = new Date(end);
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-
-    if (!start || !end) {
-      setError('Preencha ambas as datas.');
-      return;
-    }
-
-    if (isNaN(dataInicio.getTime()) || isNaN(dataFim.getTime())) {
-      setError('Datas inválidas.');
-      return;
-    }
-
-    if (dataFim < hoje) {
-      setError('A data de término não pode ser no passado.');
-      return;
-    }
-
-    if (dataFim <= dataInicio) {
-      setError('A data de término deve ser após a de início.');
-      return;
-    }
-
-    setError('');
-  }
+  const hojeISO = new Date().toISOString().split('T')[0];
 
   useEffect(() => {
-    if (onChange) {
-      onChange({ dataInicio: start, dataFim: end });
+    validate();
+    if (onChange) onChange({ dataInicio: start, dataFim: end });
+  }, [start, end]);
+
+  function validate() {
+    let mensagemErro = '';
+
+    if (!start || !end) {
+      mensagemErro = 'As datas precisam ser preenchidas.';
+    } else {
+      // Comparar strings YYYY-MM-DD diretamente:
+      if (start < hojeISO) {
+        mensagemErro = 'Data de início não pode ser anterior ao dia atual.';
+      } else if (end <= start) {
+        mensagemErro = 'Data de término precisa ser após a de início.';
+      }
     }
-  }, [start, end, onChange]);
+
+    setError(mensagemErro);
+    if (onValidityChange) onValidityChange(mensagemErro === '');
+  }
 
   return (
     <div>
@@ -63,7 +47,7 @@ const PeriodoEstudo: React.FC<Props> = ({ onChange }) => {
           type="date"
           value={start}
           onIonChange={(e) => setStart(e.detail.value!)}
-          onIonBlur={validate}
+          min={hojeISO}  // Permite data de início igual ou maior que hoje
           max="2100-12-31"
         />
       </IonItem>
@@ -74,7 +58,6 @@ const PeriodoEstudo: React.FC<Props> = ({ onChange }) => {
           type="date"
           value={end}
           onIonChange={(e) => setEnd(e.detail.value!)}
-          onIonBlur={validate}
           min={hojeISO}
         />
       </IonItem>

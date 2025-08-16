@@ -129,14 +129,46 @@
 }
 .txtDias {
     margin-bottom: 10px;
-    color: #e2955b;
+    color: #d15e06;
 }
-.input2{
-    border: 2px solid rgb(213, 213, 213);
-    box-sizing: border-box; 
-    height: 40px;
-    width: 100%;
+
+.input2, input[type="text"], input[type="time"], textarea, .input {
+  color: #333333;
+  border: 2px solid rgb(213, 213, 213);
+  box-sizing: border-box;
+  height: 40px;
+  width: 100%;
+  transition: color 0.3s, border-color 0.3s;
 }
+
+.input2:focus,
+input[type="text"]:focus,
+input[type="time"]:focus,
+textarea:focus,
+.input:focus {
+  border-color: #00296b !important;
+  outline: none;
+}
+
+.react-select-custom__control {
+  border: 2px solid rgb(213, 213, 213) !important;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  box-sizing: border-box;
+  font-family: 'Karla', sans-serif;
+  color: #666;
+  transition: border-color 0.3s;
+}
+
+.react-select-custom__control--is-focused {
+  border-color: #00296b !important;
+  border-width: 2px !important; 
+  box-shadow: none !important;
+}
+
+
 
 ion-button.btn1::part(native){
      margin-left: 1px; 

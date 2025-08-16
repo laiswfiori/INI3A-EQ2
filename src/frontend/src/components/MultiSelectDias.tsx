@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Select, { MultiValue } from 'react-select';
 
 export type Dia = 'Segunda-feira' | 'Terça-feira' | 'Quarta-feira' | 'Quinta-feira' | 'Sexta-feira' | 'Sábado' | 'Domingo';
@@ -21,11 +21,19 @@ const opcoesDias: DiaSemanaOption[] = [
 interface Props {
   onChange: (dias: Dia[]) => void;
   value: Dia[];
+  onValidityChange?: (isValid: boolean) => void;
 }
 
-const MultiSelectDias: React.FC<Props> = ({ onChange, value }) => {
+const MultiSelectDias: React.FC<Props> = ({ onChange, value, onValidityChange }) => {
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const isValid = value.length > 0;
+    setError(isValid ? '' : 'Selecione pelo menos um dia da semana.');
+    if (onValidityChange) onValidityChange(isValid);
+  }, [value, onValidityChange]);
+
   const handleChange = (selectedOptions: MultiValue<DiaSemanaOption>) => {
-    // Cast explícito para Dia[]
     const diasSelecionados = selectedOptions.map(option => option.value) as Dia[];
     onChange(diasSelecionados);
   };
@@ -42,10 +50,10 @@ const MultiSelectDias: React.FC<Props> = ({ onChange, value }) => {
         onChange={handleChange}
         placeholder="Escolha os dias..."
         menuPortalTarget={document.body}
-        styles={{
-          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-        }}
+        classNamePrefix="react-select-custom"
+        styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
       />
+      {error && <p style={{ color: '#b82020', paddingLeft: 4 }}>{error}</p>}
     </div>
   );
 };
