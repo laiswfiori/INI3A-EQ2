@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { IonPage, IonContent, IonIcon, IonButton, IonGrid, IonRow, IonCol, IonLabel,
-  IonPopover, IonModal, IonSelect, IonSelectOption, IonTextarea, useIonToast } from '@ionic/react';
+  IonPopover, IonModal, IonSelect, IonSelectOption, IonTextarea, useIonToast, 
+  IonInput} from '@ionic/react';
 import Header from '../../../components/Header';
 import { alertCircle, school, close, layers, time, library, arrowForward, card, barChart, trash, pencil, flash, chevronDown } from 'ionicons/icons'; 
 import './css/geral.css';
@@ -76,6 +77,52 @@ const TelaInicialFlashcards: React.FC = () => {
   const [editingCardIndex, setEditingCardIndex] = useState<number | null>(null);
   const [cardEditorInitialFrente, setCardEditorInitialFrente] = useState<ConteudoItem[]>([]);
   const [cardEditorInitialVerso, setCardEditorInitialVerso] = useState<ConteudoItem[]>([]);
+  
+  const [showModalNovoTopico, setShowModalNovoTopico] = useState(false);
+  
+  const [novoTopico, setNovoTopico] = useState<{ titulo: string; descricao: string; materia_id: number | null }>({
+    titulo: "",
+    descricao: "",
+    materia_id: null,
+  });
+  
+  const criarTopico = async () => {
+    if (!novoTopico.titulo.trim() || !materiaExpandidaId) {
+      presentToast({
+        message: 'Insira um título para o tópico.',
+        duration: 3000,
+        color: 'warning',
+      });
+      return;
+    }
+  
+    try {
+      await api.post('topicos', {
+        titulo: novoTopico.titulo,
+        descricao: novoTopico.descricao || '',
+        materia_id: materiaExpandidaId,
+      });
+  
+      presentToast({
+        message: 'Tópico criado com sucesso!',
+        duration: 2000,
+        color: 'success',
+      });
+  
+      setNovoTopico({ titulo: '', descricao: '', materia_id: null });
+      setShowModalNovoTopico(false);
+      await fetchData();
+    } catch (error) {
+      console.error('Erro ao criar tópico:', error);
+      presentToast({
+        message: 'Erro ao criar tópico.',
+        duration: 3000,
+        color: 'danger',
+      });
+    }
+    console.log(novoTopico.titulo, novoTopico.descricao)
+  };
+  
 
   const [iconesMaterias, setIconesMaterias] = useState<{ [key: number]: string }>({});
 
@@ -472,8 +519,6 @@ const setShowCardEditorAndInitialData = (
     return () => clearInterval(intervalo);
   }, [cards]);
   
-  
-  
   const progress = totalCards > 0 ? (totalCardsFeitos / totalCards) * 100 : 0;
   console.log(totalCards, totalCardsFeitos, progress)
 
@@ -714,6 +759,9 @@ const setShowCardEditorAndInitialData = (
 
                     {estaExpandida && (
                       <div className="listaTopicos">
+                        <IonRow>
+                          <IonButton onClick={() => setShowModalNovoTopico(true)} className="criarTopico">Criar tópico</IonButton>
+                        </IonRow>
                         {(() => {
                           const topicosComFlashcardsNaMateria = topicosDaMateria.filter(topico =>
                             flashcards.some(f => f.topico_id === topico.id)
@@ -963,6 +1011,26 @@ const setShowCardEditorAndInitialData = (
             )}
           </div>
         </IonModal>
+        <IonModal isOpen={showModalNovoTopico} onDidDismiss={() => setShowModalNovoTopico(false)}>
+  <IonContent className="ion-padding">
+    <h2>Criar Tópico</h2>
+    <IonInput
+      placeholder="Título"
+      value={novoTopico.titulo}
+      onIonChange={(e) => setNovoTopico({ ...novoTopico, titulo: e.detail.value! })}
+    />
+    <IonTextarea
+      placeholder="Descrição (opcional)"
+      value={novoTopico.descricao}
+      onIonInput={(e) => setNovoTopico({ ...novoTopico, descricao: e.detail.value! })}
+    />
+    <IonButton expand="block" onClick={criarTopico}>
+      Salvar
+    </IonButton>
+  </IonContent>
+</IonModal>
+
+
       </IonContent>
     </IonPage>
     </>

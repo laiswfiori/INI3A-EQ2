@@ -27,7 +27,7 @@
     color: var(--cor-azulE) !important;
 }
 
-#btnMais, ion-button#btnMais::part(native) {
+#btnMais, ion-button#btnMais::part(native), .criarTopico, ion-button.criarTopico::part(native) {
     color: var(--cor-preto) !important;
 }
 
