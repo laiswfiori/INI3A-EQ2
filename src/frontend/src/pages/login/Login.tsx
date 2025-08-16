@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'; 
-import { loginWithGoogle } from '../../lib/endpoints'; 
+import React, { useState, useEffect } from 'react';
+// ✅ Importe as funções de endpoint
+import { loginUser, loginWithGoogle } from '../../lib/endpoints';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonImg, IonButton, IonRow, IonIcon} from '@ionic/react';
+import { IonPage, IonButton, IonRow, IonIcon } from '@ionic/react';
 import { returnDownBack } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
 import './../../components/Animacao.css';
-
 
 declare global {
   interface Window {
@@ -25,63 +25,51 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
   const [password, setSenha] = useState('');
   const [erro, setErro] = useState('');
 
-  const navHome = () => {
-    history.push('/pagInicial/home');
-  };
-
+  // ✅ Função handleLogar CORRIGIDA para usar a API
   const handleLogar = async () => {
+    setErro('');
     try {
-      const response = await fetch('http://localhost:8000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const data = await loginUser({ email, password });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (data && data.access_token) {
         console.log('Usuário logado com sucesso:', data);
-
+        // A classe API já salva o token, mas para garantir:
         localStorage.setItem('token', data.access_token);
         history.push('/pagInicial/home');
         window.location.reload();
       } else {
-        setErro(data.message || 'Erro ao fazer login');
+        setErro('Credenciais inválidas.');
       }
-    } catch (error) {
-      console.error('Erro na requisição:', error);
-      setErro('Erro de conexão com o servidor.');
+    } catch (error: any) {
+      console.error('Erro na requisição de login:', error);
+      const errorMessage = error.data?.message || 'Erro ao fazer login. Verifique suas credenciais.';
+      setErro(errorMessage);
     }
   };
 
-
-    const handleGoogleCredentialResponse = async (googleResponse: any) => {
-      setErro('');
-      try {
-
-          const data = await loginWithGoogle(googleResponse.credential);
-
-          if (data && data.access_token) {
-              console.log('Usuário logado/cadastrado com sucesso via Google:', data);
-              localStorage.setItem('token', data.access_token); 
-              history.push('/pagInicial/home');
-              window.location.reload();
-          } else {
-              throw new Error("A resposta do servidor não continha um token de acesso.");
-          }
-      } catch (error: any) {
-          const errorMessage = error.data?.message || error.message || 'Falha na autenticação com Google.';
-          setErro(errorMessage);
-          console.error('Erro na requisição ao backend:', error);
+  const handleGoogleCredentialResponse = async (googleResponse: any) => {
+    setErro('');
+    try {
+      const data = await loginWithGoogle(googleResponse.credential);
+      if (data && data.access_token) {
+        console.log('Usuário logado/cadastrado com sucesso via Google:', data);
+        localStorage.setItem('token', data.access_token);
+        history.push('/pagInicial/home');
+        window.location.reload();
+      } else {
+        throw new Error("A resposta do servidor não continha um token de acesso.");
       }
+    } catch (error: any) {
+      const errorMessage = error.data?.message || error.message || 'Falha na autenticação com Google.';
+      setErro(errorMessage);
+      console.error('Erro na requisição ao backend:', error);
+    }
   };
 
   useEffect(() => {
     if (window.google?.accounts?.id) {
       window.google.accounts.id.initialize({
-        client_id: '448256851441-oa5ui8qjsd98vqfmsn57jcf8ahl96uo4.apps.googleusercontent.com',
+        client_id: '448256851441-0r3lsjp8kqtanb3a0dhkp4vcoq55v3sa.apps.googleusercontent.com',
         callback: handleGoogleCredentialResponse,
       });
 
@@ -89,8 +77,6 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
         document.getElementById("googleSignInDiv"),
         { theme: 'outline', size: 'large', type: 'standard', text: 'continue_with', shape: 'pill', logo_alignment: 'left' }
       );
-    } else {
-      console.log("API do Google ainda não carregada...");
     }
   }, []);
 
@@ -98,54 +84,51 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
     <IonPage>
       <div id="bodyLogin">
         <div className="loginContainer">
-          <IonRow className="contVoltar"  onClick={() => history.push('/pagInicial/home')}>
-             <IonIcon icon={returnDownBack} className="voltar1"/>
+          <IonRow className="contVoltar" onClick={() => history.push('/pagInicial/home')}>
+            <IonIcon icon={returnDownBack} className="voltar1" />
           </IonRow>
-            <div className="div11">
-                <div id="apresentacao">
-                <h1 className="h11"><b>Sentimos saudades!</b></h1>
-                <h2 className="h22">Pronto para começar?</h2>
-                <div id="img1">
-                  <img src="/imgs/logoSemFundo.png" alt="Logo png" />
-                </div>
+          <div className="div11">
+            <div id="apresentacao">
+              <h1 className="h11"><b>Sentimos saudades!</b></h1>
+              <h2 className="h22">Pronto para começar?</h2>
+              <div id="img1">
+                <img src="/imgs/logoSemFundo.png" alt="Logo png" />
+              </div>
             </div>
-                <div className="bolas bola11"></div>
-                <div className="bolas bola22"></div>
-                <div className="bolas bola33"></div>
-            </div>
+            <div className="bolas bola11"></div>
+            <div className="bolas bola22"></div>
+            <div className="bolas bola33"></div>
+          </div>
 
-            <div className="div22">
-                <h1 className="h11"><b>Login</b></h1>
-                <h3 className="h33 obs" id="conta"> Não possui uma conta?</h3>
-                <IonButton onClick={goToCadastro} className="btnCadastrar1"><h3 className='h33'>Cadastre-se</h3></IonButton>
-                {}
-                {erro && <p style={{ color: 'red', textAlign: 'center' }}>{erro}</p>}
-                <h2 className="h22"><b>Email</b></h2>
-                <input
-                  type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="inputForm1"/>
-                <h2 className="h22"><b>Senha</b></h2>
-                <input
-                  type="password" 
-                  value={password}
-                  onChange={(e) => setSenha(e.target.value)}
-                  className="inputForm1"/>
-                <h3 className="h33 obs2" onClick={() => history.push('/senha/confirmar')}>Esqueci minha senha</h3>
-                <IonButton className="btnEntrar" onClick={handleLogar}> <h3 className='h33'>Entrar</h3></IonButton>
-                <div id="ou1">
-                  <div className="linhass"></div>
-                  <h3 className="h33" id="txtOu1" >Ou</h3>
-                  <div className="linhass"></div>
-                </div>
-               
-                {}
-                <div id="googleSignInDiv" style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}></div>
+          <div className="div22">
+            <h1 className="h11"><b>Login</b></h1>
+            <h3 className="h33 obs" id="conta"> Não possui uma conta?</h3>
+            <IonButton onClick={goToCadastro} className="btnCadastrar1"><h3 className='h33'>Cadastre-se</h3></IonButton>
+            {erro && <p style={{ color: 'red', textAlign: 'center' }}>{erro}</p>}
+            <h2 className="h22"><b>Email</b></h2>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="inputForm1" />
+            <h2 className="h22"><b>Senha</b></h2>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setSenha(e.target.value)}
+              className="inputForm1" />
+            <h3 className="h33 obs2" onClick={() => history.push('/senha/confirmar')}>Esqueci minha senha</h3>
+            <IonButton className="btnEntrar" onClick={handleLogar}> <h3 className='h33'>Entrar</h3></IonButton>
+            <div id="ou1">
+              <div className="linhass"></div>
+              <h3 className="h33" id="txtOu1" >Ou</h3>
+              <div className="linhass"></div>
             </div>
+            <div id="googleSignInDiv" style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}></div>
+          </div>
         </div>
       </div>
-      </IonPage>
+    </IonPage>
   );
 };
 
