@@ -115,7 +115,6 @@ ion-segment-button {
   color: #ffde72;
 }
 
-
 .divData {
   background-color: #333;
   color: white;
@@ -260,6 +259,10 @@ ion-segment-button {
   border-radius: 20px;
 }
 
+.event-tag {
+  background-color: #3da5d9;
+}
+
 
 .event-tag.m1 {
   background-color: rgb(185, 39, 39);
@@ -328,7 +331,6 @@ ion-segment-button {
 }
 
 .event-tag {
-  background-color: transparent;
   border-radius: 10px;
   padding: 4%;
 }

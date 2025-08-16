@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { IonPage, IonToolbar, IonContent, IonButton, IonButtons, IonIcon, IonSelect, IonSelectOption, 
   IonSegment, IonSegmentButton, IonLabel, IonRow, IonCol, IonItem, IonSpinner,IonToast } from '@ionic/react';
-import { chevronBack,  chevronForward,  chevronDown, documentText, rocket, school, calendar,  flame } from 'ionicons/icons';
+import { chevronBack,  chevronForward,  chevronDown, documentText, rocket, school, calendar,  flame, arrowForward, settings } from 'ionicons/icons';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import './css/geral.css';
 import './css/ui.css';
@@ -352,6 +352,7 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
 });
 
   const materiasUnicas = Array.from(new Set(eventosAgenda.map(evento => evento.materia))).sort();
+  const history = useHistory();
 
 
   return (
@@ -664,7 +665,7 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
                   const alturaPx = Math.max(1, duracaoMinutos * pxPorMinuto);
                   const topDentroDaHoraPx = minInicio * pxPorMinuto;
                   const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
-                  const corSalva = materiaId ? coresMaterias[materiaId] : undefined; 
+                  const corSalva = materiaId ? coresMaterias[materiaId] : "#3da5d9"; 
 
                   const { classe } = normalizarNomeMateria(evento.materia); 
 
@@ -678,7 +679,7 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
                         left: 0,
                         right: 0,
                         height: `${alturaPx}px`,
-                        backgroundColor: corSalva || undefined,
+                        backgroundColor: corSalva,
                       }}
                     >
                       <div className="event-title eSemana">{evento.materia}</div>
@@ -693,7 +694,15 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
     </div>
   </div>
 )}
-
+        <IonRow className="rowIrMat">
+          <p className="pDarkmode addMaisMats">Quer adicionar mais matérias?</p>
+          <div className="contIrMat" onClick={(e) => {  
+            history.push(`/perfil/perfil`);
+          }}>
+            <IonIcon icon={arrowForward} className="iconesIrMat" />
+            <IonIcon icon={settings} className="iconesIrMat" />
+          </div>
+        </IonRow>
         <IonRow className="linhaHorizontal"></IonRow>
         <IonRow className="rowAgenda">
           <h1 className="txtAgenda preto">Review semanal</h1>

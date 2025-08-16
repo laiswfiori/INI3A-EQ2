@@ -363,3 +363,27 @@ ion-modal.modalFlashcards::part(content) {
 .iconFim {
     max-width: 30% !important;
 }
+
+ion-button.criarTopico::part(native) {
+    all: unset;
+    cursor: pointer;
+    pointer-events: auto;
+    border: 2px solid #3da5d9;
+    width: 100%;
+    border-radius: 15px;
+    color: black;
+    font-size: 1.2rem;
+    padding: 1%;
+  }
+  
+  .criarTopico {
+    display: flex;
+    justify-content: flex-start;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  ion-button.criarTopico::part(native):hover {
+    background-color: #00296b;
+    color: white;
+  }
