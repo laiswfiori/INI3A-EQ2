@@ -1,0 +1,330 @@
+.altura {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.pagPerfil {
+  flex: 1; 
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: 1fr;
+}
+
+.ladoPerfil {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;   
+    pointer-events: none !important;
+    height: 100%;
+}
+
+#flexColunas {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;   
+  justify-content: center;  
+}
+
+.colunasConfig {
+  width: 100%;
+}
+
+  #img, #imgM {
+    width: 100%;
+    padding: 5%;
+    display: flex;
+    align-items: center;   
+    justify-content: center;   
+    height: fit-content;
+  }
+
+#img {
+  position: absolute;
+  top: 0;
+}
+
+#linhaDivisora {
+  margin-top: 18rem;
+}
+
+  .txtPading {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  #iconePerfil {
+    align-self: flex-start;
+    font-size: 10rem;
+    color: white;
+    margin: 0;
+    padding: 0;
+  }
+
+#linhaDivisora, #linhaDivisoraM {
+  height: 5px;
+  width: 100%;
+  border-bottom: 2px solid white;
+  margin-bottom: 4%;
+}
+
+#imgM {
+  border-bottom: 4px solid #00296b;
+}
+
+#configs {
+    padding-left: 2%;
+    display: flex;
+    flex-direction: row;
+}
+
+#dBranco {
+  display: flex;
+  flex-direction: column;
+  max-height: fit-content;
+  height: fit-content; 
+  overflow: hidden;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.rowContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  height: 5%;
+  max-height: 5%;
+}
+
+.contConfig {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-right: 5%;
+  height: 100%;
+}
+
+.cor {
+  width: 6px;
+  height: 40px;
+}
+
+#col2 {
+  padding-right: 5%;
+}
+
+.containerConfig, .containerConfigM {
+  text-align: center;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 2%;
+}
+
+.containerConfigM {
+  width: 100%;
+  margin-left: 5%;
+}
+
+.ladoConfig, .ladoEstudo {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    padding-left: 5%;
+}
+
+.msmLinha {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2%;
+}
+
+#flexColunasEstudo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#contOpsConfig {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-top: 5%;
+}
+
+#opsConfig {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  background-color: var(--cor-branco);
+  box-sizing: border-box;
+  box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+  padding: 0.25rem;
+  width: 60%;
+  font-size: 14px;
+  border: 2px solid var(--cor-laranja);
+}
+
+#opsConfig  .radio {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+#opsConfig  .radio input {
+  display: none;
+}
+
+#opsConfig  .radio .name {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  padding: .5rem 0;
+  color: rgba(51, 65, 85, 1);
+  transition: all .15s ease-in-out;
+}
+
+#opsConfig  .radio input:checked + .name {
+  background-color: var(--cor-branco);
+  font-weight: 600;
+}
+
+#confGerais, #confPerfil, #confSeg, #confEstudo {
+  margin-top: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.txtCentro {
+  text-align: center;
+}
+
+.paddingConf {
+  padding-left: 5%;
+}
+
+.labelBioM {
+    color: var(--cor-preto) !important;
+    font-size: 1.2rem !important;
+    font-weight: bold;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+ion-input.inputBioM {
+    padding: 0;
+}
+
+.inputBioM {
+    font-size: 1rem;
+}
+
+.inputBioM {
+    border: 2px solid #d6d6d6; 
+    border-radius: 8px;        
+    padding-right: 1%;     
+    padding-left: 1%;
+    padding-top: 0 !important;    
+    padding-bottom: 0 !important;         
+    width: 90%;                
+    box-sizing: border-box; 
+    height: 1.5rem;    
+  }
+
+.contBtn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.inputBioSenhaM {
+  width: 90% !important;
+}
+
+.flexRow {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+}
+
+.centro {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.larguraMat {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+.larguraDias {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  margin-left: 1%;
+}
+
+.rowTraduzir {
+  display: flex;
+  flex-direction: row;
+}
+
+.colAvancada {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+
+.colAvancadaM {
+  padding: 5%;
+  width: 100%;
+}
+
+.rowAvancados {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.btnAvancados {
+  align-self: center;
+  width: 80%;
+  border-radius: 20px;
+}
+
+.larguraEstudo {
+  width: 100%;
+}
+
+.larguraEstudo2 {
+  width: 100%;
+}

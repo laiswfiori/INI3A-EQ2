@@ -1,0 +1,8 @@
+.bodyR {
+    --background: var(--cor-branco) !important;
+    background-color: var(--cor-branco) !important;
+}
+
+.pDarkmode {
+    color: var(--cor-preto) !important;
+}

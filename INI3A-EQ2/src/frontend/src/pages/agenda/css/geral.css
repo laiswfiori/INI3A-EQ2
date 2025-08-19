@@ -1,0 +1,620 @@
+.rowAgenda {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.txtAgenda {
+  font-size: 3rem !important;
+  text-align: center;
+}
+
+.calendar-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.month-navigation, .view-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.month-year-label {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.category-select {
+  --padding-start: 12px;
+  --padding-end: 12px;
+  min-height: 36px;
+  font-size: 0.9rem;
+  background-color: #ffc107;
+  border-radius: 8px;
+  color: black;
+}
+
+.calendar-grid-container {
+  background-color: white;
+  border: 1px solid #d4d4d4;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-left: 1%;
+  margin-right: 1%;
+  margin-top: 1%;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  width: 100%;
+}
+
+.events-container {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.event-tag {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: white;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.legend-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 20px;
+    padding: 0 8px;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #a0a0a0;
+}
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.rowCentro {
+  display: flex;
+  justify-content: space-around;
+}
+
+.col1MA {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.colAtividades {
+  height: 100%;
+  width: 60%;
+  max-width: 60%;
+  border: 1px solid #a0a0a0;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.flexRA {
+  display: flex;
+  justify-content: center;
+}
+
+.colGrafico {
+  height: 100%;
+  width: 30%;
+  max-width: 30%;
+  border: 1px solid #a0a0a0;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.flexA {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #a0a0a0;
+  padding-bottom: 2%;
+}
+
+.ativAgenda {
+  width: 90% !important;
+  display: flex;
+  padding-bottom: 2% !important;
+}
+
+.rowA {
+  width: 100%;
+}
+
+.rowDivsA {
+  display: flex;
+  align-items: center;
+  gap: 2%;
+  margin-top: 1%;
+}
+
+.rowOfensivaD {
+  height: 200px;
+  width: 100%;
+  margin: 1%;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch !important;
+}
+
+.colOfensiva1 {
+  width: 30%;
+  max-width: 30%;
+  min-height: 100%;
+  height: 100%;
+  align-self: stretch;
+  display: flex;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.colOfensiva2 {
+  width: 70%;
+  height: 100%;
+}
+
+.divOfensiva {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.diasOfensiva {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.rowScroll {
+  height: 600px;
+  max-height: 600px;
+  margin-bottom: 2%;
+}
+
+.atividades-scroll {
+  flex-grow: 1;        
+  overflow-y: auto;    
+  padding-right: 8px;  
+}
+
+#grafico {
+  width: 300px;
+  height: 300px; 
+  margin: 0 auto; 
+}
+
+  .tabs {
+    display: flex;
+    position: relative;
+    background-color: #ffc107;
+    box-shadow:
+      0 0 1px 0 rgba(24, 94, 224, 0.15),
+      0 6px 12px 0 rgba(24, 94, 224, 0.15);
+    padding: 0.25rem;
+    border-radius: 12px;
+  }
+
+  .tabs * {
+    z-index: 2;
+  }
+
+  .container input[type="radio"] {
+    display: none;
+  }
+
+  .tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    width: 70px;
+    font-size: 0.8rem;
+    color: black;
+    font-weight: 500;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: color 0.15s ease-in;
+  }
+
+
+  .container input[type="radio"]:checked + label {
+    color: #000000;
+  }
+
+  .container input[id="radio-1"]:checked ~ .glider {
+    transform: translateX(0);
+  }
+
+  .container input[id="radio-2"]:checked ~ .glider {
+    transform: translateX(100%);
+  }
+
+  .container input[id="radio-3"]:checked ~ .glider {
+    transform: translateX(200%);
+  }
+
+  .glider {
+    position: absolute;
+    display: flex;
+    height: 30px;
+    width: 48%;
+    background-color: #fde499;
+    z-index: 1;
+    border-radius: 8px;
+    transition: 0.15s ease-out;
+  }
+
+.btnA {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.calendar-grid.days-of-week-header.semana-header {
+  display: grid;
+  grid-template-columns: 50px repeat(7, 1fr);
+  max-width: 100%;
+}
+
+.day-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  
+  align-items: center;      
+  cursor: default;
+  padding: 4px 0;
+  text-align: center;      
+}
+
+.day-header.dia-ativo {
+  cursor: pointer;
+}
+
+.calendar-grid.semana-horarios {
+  display: grid;
+  grid-template-columns: 50px repeat(7, 1fr);
+}
+
+.hora-header {
+  width: 50px;
+}
+
+.hora-label {
+  display: flex;
+  padding: 4px;
+  font-weight: bold;
+  text-align: center;
+  border-right: 1px solid #ccc;
+  align-items: center;   
+  justify-content: center !important;
+   height: 100%;
+}
+
+.calendar-day.semana-dia-hora {
+  border: 1px solid #ddd;
+  min-height: 40px;
+  cursor: default;
+}
+.event-tag.event-aula {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  padding: 4px;
+  overflow: hidden;
+  z-index: 1;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.calendar-day.semana-dia-hora {
+  position: relative;
+  min-height: 60px;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.semana-horarios {
+  grid-auto-rows: 60px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-day {
+  padding: 2%;
+  min-height: 100px;
+  position: relative;
+}
+
+.events-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.event-tag {
+  font-size: 0.75rem;
+  padding: 2px 4px;
+  border-radius: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.more-events {
+  margin-left: 4px;
+  font-weight: bold;
+}
+
+.semana-horarios {
+  display: grid;
+  grid-template-columns: 60px repeat(7, 1fr);
+  grid-auto-rows: 60px;
+}
+
+.calendar-day.semana-dia-hora {
+  position: relative;
+  border: 1px solid #eee;
+}
+
+.event-tag.event-aula {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.event-content {
+  padding: 4px;
+}
+
+.event-title {
+  font-weight: bold;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-time {
+  font-size: 0.7rem;
+  color: var(--ion-color-medium);
+}
+
+
+.calendar-grid {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-day {
+  min-height: 60px;
+  position: relative;
+}
+
+.events-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.event-tag {
+  padding: 3px;
+  font-size: 0.7rem;
+  border-radius: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.more-events {
+  font-size: 0.6rem;
+  color: #666;
+  text-align: center;
+}
+
+/* Tooltip estilos */
+.day-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  width: 200px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  border-radius: 4px;
+  padding: 8px;
+  margin-top: 4px;
+}
+
+.tooltip-event {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.tooltip-event:last-child {
+  border-bottom: none;
+}
+
+.event-time {
+  font-size: 0.7rem;
+  color: #000000;
+  min-width: 40px;
+}
+
+/* Estilos para os dias da semana */
+.day-header {
+  padding: 8px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.day-number {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.day-name {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.today-highlight {
+  background-color: #ffe99d;
+}
+
+.event-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #2196F3;
+  border-radius: 50%;
+  margin: 4px auto 0;
+}
+
+.rowMobileMonth {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.menu-line {
+  width: 2rem;
+}
+
+.classBtnMenu {
+  width: 100%;
+    display: flex;
+    justify-content: flex-end !important;  
+    align-items: center;
+}
+
+.hidden-month-nav {
+  display: none !important;
+}
+
+.hidden-month-nav .menu-line-opned {
+  display: block !important;
+}
+
+.view-controls {
+  width: 100%;
+    display: flex;
+    justify-content: flex-end !important;  
+    align-items: center;
+}
+
+.category-select {
+    max-width: 40%;
+}
+
+
+.more-events-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.popover-extra {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  padding: 6px;
+  min-width: 160px;
+  z-index: 20;
+}
+
+.more-events-wrapper:hover .popover-extra {
+  display: block;
+}
+
+.hover-item {
+  font-size: 0.85rem;
+  padding: 4px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  color: #fff; 
+}
+
+.hover-item:last-child {
+  margin-bottom: 0;
+}
+
+.semana-horarios { position: relative; } 
+.semana-dia-hora { position: relative; overflow: visible; }
+
+.event-tag.event-aula {
+  position: absolute;
+  border-radius: 6px;
+  padding: 4px 6px;
+  box-sizing: border-box;
+  color: white;
+  overflow: hidden;
+}
+
+.addMaisMats, .iconesIrMat {
+  font-size: 1.2rem;
+  color: var(--cor-preto) !important;
+}
+
+.rowIrMat {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.contIrMat {
+  height: 100%;
+  padding: 0.2%;
+  border: 1px solid  var(--cor-azulE) !important; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}

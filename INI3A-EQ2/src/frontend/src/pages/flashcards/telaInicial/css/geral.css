@@ -1,0 +1,389 @@
+#bodyTelaInicialFlashcards {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2%;
+    padding: 0;
+}
+
+#btnAlerta, .revisaoGeral {
+    pointer-events: auto; 
+}
+
+#revisao {
+    margin-right: 10%;
+    margin-left: 10%;
+}
+
+#dCapelo {
+    max-width: fit-content;
+    padding: 1%;
+}
+
+#divisoes {
+    display: flex;
+    flex-direction: column;
+}
+
+.p0 {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#decks {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#linhaDecks {
+    margin-top: 1%;
+    padding: 0;
+    width: 100%;
+    background-color:  #3da5d9;
+    border-top: 2px solid #c0c0c0;
+    display: flex;
+    justify-content: center;
+}
+
+#revisao {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 20%;
+}
+
+#d1 {
+    margin-left: 1%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#iconeCapelo {
+    font-size: 7rem;
+    color: white;
+    background-color: #00296b;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    padding-left: 2%;
+    padding-right: 3%;
+    border-radius: 20px;
+}
+
+.colFlex {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+#branco {
+    padding-left: 1%;
+    width: 40%;
+    background-color: white;
+    border: 2px solid #3da5d9;
+}
+
+ion-popover.popoverGeral::part(content) {
+    background-color: transparent;
+    width: 40%;
+    max-width: unset;
+    min-width: unset;
+}
+
+.popoverGeral {
+    width: 40%;
+    background-color: transparent;
+}
+
+#estatisticas {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: fit-content;
+    width: 100%;
+}
+
+.altD {
+    height: 100%;
+}
+
+.estDivs {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 25%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.espDiv {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.iconFim {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.txtGrande {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.materia-itemF {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 12px;
+  padding-bottom: 0 !important;
+  background-color: white;
+  cursor: pointer;
+  margin-top: 2%;
+  margin-left: 1%;
+  margin-right: 1%;
+  min-width: calc(33.33% - 1rem);
+  width: calc(33.33% - 1rem);
+  max-width:  calc(33.33% - 1rem);
+}
+
+ion-item.materia-itemF ion-label {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+}
+
+.materia-itemF .icon-placeholder {
+  width: 40px;
+  height: 40px;
+  background-color: #ddd;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none !important;
+}
+
+.materia-itemF h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  pointer-events: none !important;
+}
+
+.materia-itemF .progress-bar-fill {
+  height: 100%;
+  width: 40%; 
+  background-color: #000;
+  pointer-events: none !important;
+}
+
+.iconesTF {
+    color: #3da5d9;
+    font-size: 3rem;
+    pointer-events: none !important;
+}
+
+.txtTF {
+    font-size: 1.2rem;
+    pointer-events: none !important;
+}
+
+.espDC {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none !important;
+}
+
+.larguraC {
+    width: 100%;
+    gap: 0;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none !important;
+}
+
+.centro {
+    justify-content: center !important;
+}
+
+.listaTopicos {
+    all: unset;
+    padding: 0;
+    margin: 0;
+    margin-top: 1%;
+  }
+
+.listaTopicos::part(native) {
+    all: unset;
+    display: flex  !important;
+    justify-content: flex-start !important;
+    align-items: center  !important;
+    width: 100%;
+}
+
+.contSetaTopico {
+    all: unset;
+    display: flex  !important;
+    justify-content: flex-start !important;
+    align-items: center  !important;
+    width: 100%;
+}
+
+.botaoMateria::part(native) {
+    justify-content: flex-start !important;
+    text-align: left !important;
+  }
+
+.largura {
+    width: 100%;
+    padding-left: 0.5%;
+    height: 100%;
+    display: flex  !important;
+    justify-content: flex-start !important;
+    align-items: center  !important;
+}
+
+.contFecharModal {
+    display: flex  !important;
+    justify-content: flex-end !important;
+}
+
+.centroModal {
+    width: 100%;
+    display: flex  !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-bottom: 1%;
+}
+
+ion-modal.modalFlashcards {
+    --max-height: 100%;
+    height: auto;
+}
+
+ion-modal.modalFlashcards::part(content) {
+  border-radius: 16px; 
+  padding: 1%;
+  max-height: 50vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.iFlashcard {
+    margin-bottom: 1%;
+}
+
+.bntSFlashcard {
+    margin-top: 2% !important;
+}
+
+.listaCardsPreview {
+  margin-top: 1rem;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.listaCardsPreview ul {
+  padding-left: 1rem;
+  margin: 0;
+}
+
+.listaCardsPreview li {
+  margin-bottom: 0.75rem;
+}
+
+.scroll-modal {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 8px;
+  overflow-x: hidden;
+}
+
+.info-cards {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.cardPreviewContent {
+    background-color: white;
+    border-radius: 20px;
+    border: 0.5px solid #00296b;
+    padding: 1%;
+    margin-bottom: 2%;
+}
+
+.rowRC {
+    display: flex;
+    justify-content: space-between;
+}
+
+.colRC {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.scroll-modal {
+    max-height: 100% !important;
+    min-height: 100% !important;
+    height: 100% !important;
+}
+
+.rowIN {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.colNomeMat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start !important;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 40% !important;
+}
+
+.iconFim {
+    max-width: 30% !important;
+}
+
+ion-button.criarTopico::part(native) {
+    all: unset;
+    cursor: pointer;
+    pointer-events: auto;
+    border: 2px solid #3da5d9;
+    width: 100%;
+    border-radius: 15px;
+    color: black;
+    font-size: 1.2rem;
+    padding: 1%;
+  }
+  
+  .criarTopico {
+    display: flex;
+    justify-content: flex-start;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  ion-button.criarTopico::part(native):hover {
+    background-color: #00296b;
+    color: white;
+  }
