@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// ✅ Importe as funções de endpoint
 import { loginUser, loginWithGoogle } from '../../lib/endpoints';
 import { useHistory } from 'react-router-dom';
 import { IonPage, IonButton, IonRow, IonIcon } from '@ionic/react';
@@ -8,6 +7,7 @@ import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
 import './../../components/Animacao.css';
+import  AnimacaoSVG  from '../../components/AnimacaoSVG';
 
 declare global {
   interface Window {
@@ -25,7 +25,6 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
   const [password, setSenha] = useState('');
   const [erro, setErro] = useState('');
 
-  // ✅ Função handleLogar CORRIGIDA para usar a API
   const handleLogar = async () => {
     setErro('');
     try {
@@ -33,7 +32,6 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
 
       if (data && data.access_token) {
         console.log('Usuário logado com sucesso:', data);
-        // A classe API já salva o token, mas para garantir:
         localStorage.setItem('token', data.access_token);
         history.push('/pagInicial/home');
         window.location.reload();
@@ -69,7 +67,7 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
   useEffect(() => {
     if (window.google?.accounts?.id) {
       window.google.accounts.id.initialize({
-        client_id: '448256851441-0r3lsjp8kqtanb3a0dhkp4vcoq55v3sa.apps.googleusercontent.com',
+        client_id: '1094556818868-ol27r3asqj39iu9mnm3tp5dfidpm4gar.apps.googleusercontent.com',
         callback: handleGoogleCredentialResponse,
       });
 

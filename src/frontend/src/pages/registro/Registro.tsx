@@ -7,6 +7,7 @@ import './css/layout.css';
 import './css/ui.css';
 import './../../components/Animacao.css';
 import { registerUser, loginWithGoogle } from '../../lib/endpoints';
+import  AnimacaoSVG  from '../../components/AnimacaoSVG';
 
 declare global {
   interface Window {
@@ -25,25 +26,20 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setSenha] = useState('');
   const [erro, setErro] = useState('');
-
-  // Estados para a validação em tempo real
   const [emailError, setEmailError] = useState('');
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [formValid, setFormValid] = useState(false);
   const [showRequiredFieldsMsg, setShowRequiredFieldsMsg] = useState(false);
 
-  // ✅ Lógica de validação COMPLETA restaurada
   useEffect(() => {
     let valid = true;
     let anyEmptyField = false;
 
-    // Verifica se algum campo está vazio
     if (!name.trim() || !surname.trim() || !email.trim() || !password.trim()) {
       anyEmptyField = true;
       valid = false;
     }
 
-    // Validação do Email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email.trim() && !emailRegex.test(email.trim())) {
       setEmailError('Insira um email válido.');
@@ -52,29 +48,17 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
       setEmailError('');
     }
 
-    // Validação da Senha
     const errors: string[] = [];
-    if (password) { // Só valida se a senha não estiver vazia
-      if (password.length < 8) {
-        errors.push('A senha deve conter pelo menos 8 caracteres.');
-        valid = false;
-      }
-      if (!/[A-Z]/.test(password)) {
-        errors.push('A senha deve conter pelo menos 1 letra maiúscula.');
-        valid = false;
-      }
-      if (!/[!@#$%^&*(),.?":{}|<>_]/.test(password)) {
-        errors.push('A senha deve conter pelo menos 1 caractere especial.');
-        valid = false;
-      }
-      if (/\s/.test(password)) {
-        errors.push('A senha não pode conter espaços.');
-        valid = false;
-      }
+    if (password) {
+      if (password.length < 8) errors.push('A senha deve conter pelo menos 8 caracteres.');
+      if (!/[A-Z]/.test(password)) errors.push('A senha deve conter pelo menos 1 letra maiúscula.');
+      if (!/[!@#$%^&*(),.?":{}|<>_]/.test(password)) errors.push('A senha deve conter pelo menos 1 caractere especial.');
+      if (/\s/.test(password)) errors.push('A senha não pode conter espaços.');
+      if (errors.length > 0) valid = false;
     }
     setPasswordErrors(errors);
 
-    setShowRequiredFieldsMsg(anyEmptyField && password.length === 0); // Mostra "campos obrigatórios" apenas se a senha estiver vazia
+    setShowRequiredFieldsMsg(anyEmptyField && password.length === 0);
     setFormValid(valid && !anyEmptyField);
   }, [name, surname, email, password]);
 
@@ -98,7 +82,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
   useEffect(() => {
     if (window.google?.accounts?.id) {
       window.google.accounts.id.initialize({
-        client_id: '448256851441-0r3lsjp8kqtanb3a0dhkp4vcoq55v3sa.apps.googleusercontent.com',
+        client_id: '1094556818868-ol27r3asqj39iu9mnm3tp5dfidpm4gar.apps.googleusercontent.com',
         callback: handleGoogleCredentialResponse,
       });
       window.google.accounts.id.renderButton(
@@ -174,7 +158,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
           <IonButton className="h3 btnLogin" onClick={goToLogin}>Faça login</IonButton>
         </div>
         <div className="div2">
-          {/* ... sua animação ... */}
+           <AnimacaoSVG />
         </div>
       </div>
     </div>

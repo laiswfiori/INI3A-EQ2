@@ -12,7 +12,6 @@ export default class API {
     return localStorage.getItem('token');
   }
 
-  // Função para salvar o token. Lembre-se que a resposta do login agora é um objeto.
   private setToken(token: string): void {
     localStorage.setItem('token', token);
   }
@@ -21,14 +20,11 @@ export default class API {
     localStorage.removeItem('token');
   }
 
-  // Função para deslogar o usuário e redirecionar
   private handleLogout(): void {
     this.clearToken();
-    // Use replace para que o usuário não possa voltar para a página anterior no histórico
     window.location.replace('/logincadastro/logincadastro'); 
   }
 
-  // Nova função para tentar renovar o token
   private async refreshToken(): Promise<string> {
     console.log("Tentando renovar o token...");
     try {
@@ -66,7 +62,6 @@ export default class API {
     const authToken = token || this.getToken();
     const url = `${this.apiUrl.replace(/\/$/, '')}/${endpoint.replace(/^\//, '')}`;
 
-    // ✅ Verificação atualizada para incluir o endpoint do google
     const isAuthEndpoint = endpoint.includes('login') || endpoint.includes('register') || endpoint.includes('auth/google/callback');
 
     const headers: Record<string, string> = {
@@ -86,22 +81,17 @@ export default class API {
     try {
       const response = await fetch(url, options);
 
-      // Lógica de renovação do token
       if (response.status === 401 && !isRetry && !isAuthEndpoint) {
         if (this.isRefreshing) {
-            // Se já existe uma tentativa de refresh em andamento, apenas aguarde e tente novamente depois.
-            // Para uma implementação mais robusta, seria necessário uma fila de requests.
-            // Por enquanto, vamos apenas lançar o erro para evitar loops.
-            throw new Error("Refresh de token já em andamento.");
+          throw new Error("Refresh de token já em andamento.");
         }
 
         this.isRefreshing = true;
         try {
-            const newToken = await this.refreshToken();
-            // Tenta a requisição original novamente com o novo token
-            return this.makeRequest(method, endpoint, data, newToken, true);
+          const newToken = await this.refreshToken();
+          return this.makeRequest(method, endpoint, data, newToken, true);
         } finally {
-            this.isRefreshing = false;
+          this.isRefreshing = false;
         }
       }
 
@@ -114,20 +104,18 @@ export default class API {
         throw error;
       }
 
-      // ✅ Condição atualizada para salvar o token do login com Google também
       if (isAuthEndpoint) {
-          if (responseData.access_token) {
-              this.setToken(responseData.access_token);
-          }
+        if (responseData.access_token) {
+          this.setToken(responseData.access_token);
+        }
       }
 
       return responseData;
 
-    } catch (error: any) { // Adicionado 'any' para acessar 'error.response'
+    } catch (error: any) {
       console.error('Erro ao fazer requisição:', error);
-      // Se o erro for de token inválido e já for uma nova tentativa, deslogue.
       if (error.response?.status === 401 && isRetry) {
-          this.handleLogout();
+        this.handleLogout();
       }
       throw error;
     }
