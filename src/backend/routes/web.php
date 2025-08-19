@@ -33,6 +33,9 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->put('usuario/alterar-senha', 'UserController@changePassword');
         $router->delete('user', 'UserController@deleteAccount');
 
+        $router->post('profile/upload-base64', 'UserController@uploadBase64ProfileImage');
+        $router->delete('profile/profile-image', 'UserController@deleteProfileImage');
+
         // Rotas de listagem de usuários
         $router->get('users/{id}', 'UserController@singleUser');
         $router->get('users', 'UserController@allUsers');

@@ -1,35 +1,41 @@
+// src/components/PrivateRoute.tsx
+
 import React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
+import { IonPage, IonLoading } from '@ionic/react';
+import { useUserProfile } from '../contexts/UserProfileContext';
 
-// Este componente verifica se o usuário tem um token salvo.
-// Se tiver, ele mostra a página que o usuário pediu.
-// Se não tiver, ele redireciona para a tela de login.
-const PrivateRoute: React.FC<RouteProps> = ({ component: Component, ...rest }) => {
-  
-  // 1. Pega o token do armazenamento local do navegador
-  const token = localStorage.getItem('token');
+// Estendemos RouteProps para aceitar nosso 'component'
+interface PrivateRouteProps extends RouteProps {
+  component: React.ComponentType<any>;
+}
 
-  // Garante que o componente a ser renderizado foi passado corretamente
-  if (!Component) {
-    return null;
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ component: Component, ...rest }) => {
+  // Usamos o nosso contexto para saber o status real da autenticação
+  const { userProfile, isLoadingProfile } = useUserProfile();
+
+  // 1. ESTADO DE CARREGANDO
+  // Enquanto o contexto está verificando o usuário na API, mostramos uma tela de loading.
+  // Isso evita o "flash" da tela de login e o loop.
+  if (isLoadingProfile) {
+    return (
+      <IonPage>
+        <IonLoading isOpen={true} message={'Verificando autenticação...'} />
+      </IonPage>
+    );
   }
 
-  // 2. Renderiza a rota
-  return (
-    <Route
-      {...rest}
-      render={props =>
-        // 3. A decisão:
-        token ? (
-          // Se TEM token, mostra a página (ex: Perfil)
-          <Component {...props} />
-        ) : (
-          // Se NÃO TEM token, redireciona para o login
-          <Redirect to="/logincadastro/logincadastro" />
-        )
-      }
-    />
-  );
+  // 2. ESTADO NÃO AUTENTICADO
+  // Se a verificação terminou (isLoadingProfile é false) e não há usuário,
+  // então redirecionamos para o login.
+  if (!userProfile) {
+    return <Redirect to="/logincadastro/logincadastro" />;
+  }
+
+  // 3. ESTADO AUTENTICADO
+  // Se a verificação terminou e TEMOS um usuário,
+  // renderizamos a página que foi solicitada.
+  return <Route {...rest} render={props => <Component {...props} />} />;
 };
 
 export default PrivateRoute;

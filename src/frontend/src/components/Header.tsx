@@ -6,9 +6,11 @@ import './css/ui.css';
 import './css/geral.css';
 import './css/layouts.css';
 import { useSoundPlayer } from './../utils/Som';
+import { useUserProfile } from '../contexts/UserProfileContext';
 
 const Header: React.FC = () => {
   const history = useHistory();
+  const { userProfile } = useUserProfile();
   const [menuAberto, setMenuAberto] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
   const [mostrarPopover, setMostrarPopover] = useState(false);
@@ -128,9 +130,21 @@ const Header: React.FC = () => {
           </div>
 
           <div>
-              <IonTabButton className="azul" tab="perfil" onClick={navPerfil}>
-                <IonIcon icon={personCircle} className={`icones ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`} />
-                <IonLabel className={`iconesTxt ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}>Perfil</IonLabel>
+              <IonTabButton className="azul btn-perfil" tab="perfil" onClick={navPerfil}>
+                {userProfile?.profile_image_url ? (
+                <img 
+                  src={userProfile.profile_image_url} 
+                  alt="Foto de Perfil" 
+                  className={`icones ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}
+                  
+                />
+                ) : (
+                <IonIcon 
+                  icon={personCircle} className={`icones ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`} 
+                />
+              )}
+              <IonLabel className={`iconesTxt ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}>Perfil</IonLabel>
+            
               </IonTabButton>
             </div> 
         </div>
@@ -214,7 +228,21 @@ const Header: React.FC = () => {
                 <IonLabel className={`iconesTxt ${rotaMateriasAtiva ? 'ativo' : ''}`}>Conteúdos</IonLabel>
               </div>
               <div className="menu2" onClick={navPerfil}>
+                {userProfile?.profile_image_url ? (
+                <img 
+                  src={userProfile.profile_image_url} 
+                  alt="Foto de Perfil" 
+                  className={`icones ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}
+                  style={{
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    width: '2rem',
+                    height: '2rem'
+                  }}
+                />
+              ) : (
                 <IonIcon icon={personCircle} className={`iconesMobile ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`} />
+              )}
                 <IonLabel className={`iconesTxt ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}>Perfil</IonLabel>
               </div>
             </div>

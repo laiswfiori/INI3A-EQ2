@@ -11,6 +11,13 @@
     color: white;
 }
 
+.btn-perfil .icones{
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .iconesTxt {
     font-size: 1.1rem !important; 
     color: white;

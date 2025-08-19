@@ -26,11 +26,14 @@ export const loginUser = async (credentials: any) => {
 
 export const getUserProfile = async () => {
   try {
-    const data = await api.get('api/profile');
-    return data.user; 
+    const data = await api.get('/api/profile');
+
+        // ----> NOVO DETETIVE NA FONTE <----
+        console.log('DETETIVE 0: RESPOSTA DIRETA DA API:', data);
+
+        return data.user;
   } catch (error) {
     console.error("Erro no endpoint getUserProfile:", error);
-    throw error;
   }
 };
 
@@ -40,6 +43,33 @@ export const updateUserProfile = async (userData: { name: string, surname: strin
         return response;
     } catch (error) {
         console.error("Erro no endpoint updateUserProfile:", error);
+        throw error;
+    }
+};
+
+export const uploadUserProfileImage = async (base64String: string) => {
+    try {
+        // NOVO: Cria um objeto JSON para enviar a string base64
+        const payload = {
+            profile_image_base64: base64String
+        };
+
+        // NOVO: Envia o objeto JSON para o endpoint
+        const response = await api.post('api/profile/upload-base64', payload);
+
+        return response;
+    } catch (error) {
+        console.error("Erro no endpoint uploadUserProfileImage:", error);
+        throw error;
+    }
+};
+
+export const deleteUserProfileImage = async () => {
+    try {
+        const response = await api.delete('api/profile/profile-image');
+        return response;
+    } catch (error) {
+        console.error("Erro ao apagar foto de perfil:", error);
         throw error;
     }
 };

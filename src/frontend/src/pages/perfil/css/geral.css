@@ -289,3 +289,76 @@ ion-input.inputBioM {
   display: flex;
   flex-direction: row;
 }
+
+#img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* O contêiner da imagem de perfil e da câmera */
+.profile-image-container {
+  /* Essencial para posicionar a câmera de forma absoluta sobre a imagem */
+  position: relative;
+  z-index: 10;
+  pointer-events: all;
+  width: 15rem;
+  height: 15rem;
+  border-radius: 50%;
+  
+  /* Permita o "clique" na div inteira */
+  cursor: pointer;
+  
+  /* Esconda o que estiver fora do círculo */
+  overflow: hidden;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Garante que a imagem preencha o círculo sem distorção */
+  border-radius: 50%; /* Faz a imagem ter formato de círculo */
+  display:block;
+}
+
+/* Estilo para o ícone de perfil */
+#iconePerfil {
+  width: 100%;
+  height: 100%;
+  font-size: 15rem;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+/* A camada de sobreposição com a câmera */
+.overlay {
+  /* Posiciona a câmera sobre a imagem/ícone */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Fundo semi-transparente */
+  
+  /* Centraliza o ícone da câmera */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* Inicialmente, o overlay pode estar invisível e só aparecer no hover */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Faz o overlay aparecer quando o usuário passa o mouse por cima */
+.profile-image-container:hover .overlay {
+  opacity: 1;
+}
+
+/* Estilo para o ícone da câmera */
+.camera-icon {
+  font-size: 3rem; /* Tamanho do ícone da câmera */
+  color: white;
+}

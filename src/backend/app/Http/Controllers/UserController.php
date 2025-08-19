@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -40,6 +41,43 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Profile updated successfully!',
             'user'    => $user
+        ], 200);
+    }
+
+    public function uploadBase64ProfileImage(Request $request)
+    {
+        $user = Auth::user(); 
+
+        // verifica se o campo existe
+        $this->validate($request, [
+            'profile_image_base64' => 'required|string',
+        ]);
+
+        // salva a string base64 no banco de dados
+        // **ATENÇÃO:** O tipo da coluna `profile_image_url` precisa ser `TEXT` ou `LONGTEXT`.
+        $user->profile_image_url = $request->input('profile_image_base64');
+        $user->save();
+
+        // retorna a URL (que agora é a própria string base64)
+        return response()->json([
+            'message' => 'Foto de perfil atualizada com sucesso!',
+            'imageUrl' => $user->profile_image_url
+        ], 200);
+    }
+
+    public function deleteProfileImage(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Usuário não autenticado.'], 401);
+        }
+
+        $user->profile_image_url = null;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Foto de perfil removida com sucesso!',
+            'imageUrl' => null // Retorna null para o frontend
         ], 200);
     }
 

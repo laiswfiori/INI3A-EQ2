@@ -14,20 +14,33 @@ export default class API {
   async makeRequest(method: string, endpoint: string, data: any = null, token: string | null = null) {
     const authToken = this.getToken(token);
     const url = `${this.apiUrl.replace(/\/$/, '')}/${endpoint.replace(/^\//, '')}`;
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
+    
+    // DEFINIMOS OS HEADERS E O BODY DE FORMA CONDICIONAL
+    const headers: HeadersInit = {};
+    let requestBody: any = null;
 
     if (authToken) {
       headers['Authorization'] = `Bearer ${authToken}`;
     }
 
+    if (data instanceof FormData) {
+        // Se for FormData, não definimos o Content-Type manualmente.
+        // O navegador irá definir automaticamente para 'multipart/form-data'.
+        // Passamos o FormData diretamente para o body.
+        requestBody = data;
+    } else if (data !== null) {
+        // Se NÃO for FormData, assumimos que é JSON.
+        // Definimos o Content-Type para 'application/json'.
+        // Convertemos o objeto para string JSON.
+        headers['Content-Type'] = 'application/json';
+        requestBody = JSON.stringify(data);
+    }
+
     const options: RequestInit = {
-      method,
-      headers,
-      body: data ? JSON.stringify(data) : null,
+        method,
+        headers,
+        body: requestBody,
     };
-    
 
     try {
       const response = await fetch(url, options);
