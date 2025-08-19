@@ -1,0 +1,77 @@
+#bodyLogin {
+    background-color: #00296b;
+    height: 100vh;
+    padding-left: 2%;
+}
+
+.div11{
+  height: 100%;
+        background-color: white;
+        position: relative;        
+        overflow: hidden;
+
+        h1,h2,h3, img{
+            position: relative;
+            z-index: 2;
+        }
+    }
+
+    .div22{
+        background-color: #f7d868;
+
+      h1 {
+        text-align: center;
+      }
+    }
+
+#conta{
+  text-align: center;
+}
+
+#ou1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#img1{
+    display: flex;
+    align-items: flex-end;
+    height: 100%;
+}
+
+#apresentacao{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.voltar1{
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  color: white;
+}
+
+  .bolas {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    z-index: 1;
+  }
+
+  .bola11 {
+    top: -150px;
+    left: -150px;
+  }
+  
+  .bola22 {
+    bottom: -150px;
+    right: -150px;
+  }
+  
+  .bola33 {
+    top: 50%;
+    left: -150px;
+  }

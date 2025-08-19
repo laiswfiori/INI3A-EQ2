@@ -1,0 +1,115 @@
+@media (max-width: 767px) {
+  #header {
+    display: none;
+  }
+
+  #headerMobile {
+    display: flex;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .iconesTxt {
+    font-size: 0.8rem; 
+  }
+
+  #headerMobile {
+    display: none;
+  }
+}
+
+@media (min-width: 1025px) {
+  .iconesTxt {
+    font-size: 1.3rem; 
+  }
+  
+  #headerMobile {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  #logo {
+    width: 200% !important;
+    height: 200%;
+}
+}
+
+@media (min-width: 1025px) {
+  .txtAddPE{
+    font-size: 1.6rem;
+  }
+  .txtDias{
+    font-size: 1.2rem !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .txtAddPE{
+    font-size: 1.6rem !important;
+  }
+  .txtDias{
+    font-size: 1.2rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .txtAddPE{
+    font-size: 1.3rem;
+  }
+  .txtDias{
+    font-size: 1rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .popoverPosicao {
+    --width: 100% !important;
+    width: 100% !important;
+    --height: 120px !important;
+    height: 120px !important;
+    left: 0 !important;
+    right: auto !important;
+    transform: none !important;
+    border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
+
+  .popoverPosicao #header {
+    height: 120px !important;
+    min-height: 120px !important;
+    max-height: 120px !important;
+  }
+
+  .grid-popover-container {
+    flex-direction: row !important; 
+    height: 100% !important;
+  }
+
+  .popoverPosicao ion-content::part(scroll) {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 120px !important;
+  }
+
+  .ion-delegate-host {
+    height: 120px !important;
+  }
+
+  .popover-col2 {
+    width: 80% !important;
+    height: 100% !important;
+  }
+  .popoverPosicao::part(content),
+.popoverPosicao::part(container),
+.popoverPosicao::part(background),
+.popoverPosicao::part(delegate-host) {
+  width: 100% !important;
+  left: 0 !important;
+  right: auto !important;
+  transform: none !important;
+  border-radius: 0 !important;
+}
+}

@@ -1,0 +1,209 @@
+@media (max-width: 767px) {
+    section {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .titulo {
+        font-size: 2rem !important;
+    }
+    .subtitulo {
+        font-size: 1.5rem !important;
+    }
+
+    .iconesTxtM {
+        font-size: 1rem; 
+    }
+
+    #celular {
+        width: 90%;
+    }
+
+    .lupa {
+        align-items: flex-start ;
+        margin-top: 8%;
+    }
+
+    .cardFraquezas {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    section {
+        display: grid;
+    }
+
+    #s1 {
+       grid-template-columns: 1fr 1fr;
+    }
+
+    .titulo {
+        font-size: 3rem !important;
+    }
+    .subtitulo {
+        font-size: 1.5rem !important;
+    }
+
+    .iconesTxtM {
+        font-size: 2rem !important; 
+    }
+
+    #celular {
+        width: 40% ;
+    }
+
+    .lupa {
+        align-items: flex-start;
+        margin-top: -10%;
+    }
+
+    .book {
+        display: none;
+    }
+}
+
+
+@media (min-width: 1025px) {
+    section {
+        display: grid;
+    }
+
+    #s1, #s2 {
+        grid-template-columns: 1fr 1fr;
+    }
+    #s3, #s4 {
+        grid-template-rows: 1fr 1fr;
+    }
+
+    .titulo {
+        font-size: 3.5rem !important;
+    }
+    .subtitulo {
+        font-size: 2rem !important;
+    }
+
+    .iconesTxtM {
+        font-size: 2rem !important; 
+    }
+
+    .lupa {
+        align-items: flex-end;
+        margin-top: 10%;
+    }
+
+    .book {
+        display: none;
+    }
+}
+
+@media (min-width: 1440px) {
+    #s1 {
+        padding-bottom: 15%;
+    }
+    #card1 {
+        left: 35% !important;
+        top: 5% !important;
+    }
+    #card2 {
+        left: 10% !important;
+        top: 35% !important;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+    #s1 {
+        padding-bottom: 7%;
+    }
+    #card1 {
+        left: 35% !important;
+        top: 15% !important;
+    }
+    #card2 {
+        left: 10% !important;
+        top: 35% !important;
+    }
+
+    .cardFraquezas {
+        width: 70% !important;
+    }
+    #logo {
+        width: 60% !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    #s1 {
+        padding-bottom: 0;
+    }
+    #card1 {
+        left: 35% !important;
+        top: 25% !important;
+    }
+    #card2 {
+        left: 10% !important;
+        top: 35% !important;
+    }
+
+    .carta {
+        width: 100%;
+    }
+
+    .cardFraquezas {
+        width: 90% !important;
+    }
+}
+
+@media (min-width: 425px) and (max-width: 767px) {
+    #s1 {
+        padding-bottom: 90%;
+    }
+    #card1 {
+        left: 20% !important;
+        top: 45px !important;
+    }
+    #card2 {
+        left: -15% !important;
+        top: 70px !important;
+    }
+
+    .carta {
+        width: 90%;
+    }
+}
+
+@media (min-width: 375px) and (max-width: 424px) {
+    #s1 {
+        padding-bottom: 80%;
+    }
+    #card1 {
+        left: 20% !important;
+        top: -7px !important;
+    }
+    #card2 {
+        left: -15% !important;
+        top: 30px !important;
+    }
+
+    .carta {
+        width: 90%;
+    }
+}
+
+@media (max-width: 374px) {
+    #s1 {
+        padding-bottom: 80%;
+    }
+    #card1 {
+        left: 15% !important;
+        top: -20px !important;
+    }
+    #card2 {
+        left: -20% !important;
+        top: 5px !important;
+    }
+
+    .carta {
+        width: 100%;
+    }
+}

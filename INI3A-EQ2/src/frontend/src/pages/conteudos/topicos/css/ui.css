@@ -1,0 +1,207 @@
+.icones.ativo, .iconesTxt.ativo {
+  color: #ffe99d; 
+}
+
+.linhaHorizontal {
+    border-bottom: 2px solid #c0c0c0;  
+    margin-bottom: 5%; 
+    margin-right: 15%;
+    margin-left: 15%;
+  }
+  
+.titulo {
+    font-weight: 700;
+    padding: 0 !important;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 2% !important;
+    font-size: 3rem;
+}
+
+.voltarT, .txtVoltarT {
+  cursor: pointer;
+}
+
+ion-button.config {
+  --background: #fff; 
+  --color: black;  
+  /* display: flex;
+  justify-content: flex-end;
+  align-items: flex-start !important;
+  overflow: hidden; */
+}
+
+ion-button.config::part(native) {
+  all: unset;   
+  font-weight: 700;
+  /* display: flex;
+  justify-content: flex-end;
+  align-items: flex-start !important;
+  overflow: hidden; */
+}
+
+ion-button.config::part(native):hover {
+  cursor: pointer;
+}
+
+ion-modal.modalAddTopico {
+    --max-height: 45%;
+    height: auto;
+}
+
+ion-modal.modalAddTopico::part(content) {
+    border-radius: 16px; 
+  }
+
+#pagAdicionar {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+}
+
+ion-item.topico-item {
+  --border-width: 0;
+  --inner-border-width: 0;
+  padding: 0;
+}
+
+ion-input.input input {
+    padding: 10px;
+  }
+
+.input {
+    font-size: 1rem;
+}
+
+.input {
+    border: 2px solid #d6d6d6; 
+    border-radius: 8px;        
+    padding-right: 1%;     
+    padding-left: 1%;
+    padding-top: 0 !important;    
+    padding-bottom: 0 !important;         
+    width: 100%;                
+    box-sizing: border-box;     
+  }
+
+ion-button.btnSalvar {
+    margin-top: 7%;
+    --background: #00296b; 
+    --color: #fff;        
+  }
+
+  ion-button.btnSalvar::part(native) {
+    border-radius: 12px;  
+  }
+
+  ion-button.btnSalvar::part(native):hover {
+    background-color: #3da5d9;
+    cursor: pointer;
+  }
+
+.label{
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 0 !important;
+    margin-bottom: 1% !important;
+    margin-top: 2% !important;
+}
+
+.barra {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.barraStatus {
+  height: 100%;
+  border-radius: 4px;
+  background-color: #ea7317; 
+  transition: width 0.3s ease-in-out;
+}
+
+.livro {
+  font-size: 3rem;
+}
+
+.iconesPopover {
+  margin-right: 5%;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+#lapis {
+  color: #3da5d9;
+}
+
+ion-button#btnLapis::part(native):hover {
+  color: #3da5d9 !important;
+  background-color: rgb(231, 224, 224) !important;
+  cursor: pointer;
+}
+
+#lixo {
+  color: #00296b;
+}
+
+ion-button#btnLixo::part(native):hover {
+  color: #00296b !important;
+  background-color: rgb(231, 224, 224) !important;
+  cursor: pointer;
+}
+
+.labelT{
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding: 0 !important;
+    margin-bottom: 1% !important;
+    margin-top: 2% !important;
+}
+
+.livro.m1 {
+  color: rgb(185, 39, 39);
+}
+
+.livro.m2 {
+  color: rgb(88, 47, 7);
+}
+
+.livro.m3 {
+  color: rgb(64, 193, 216);
+}
+
+.livro.m4 {
+  color: rgb(161, 85, 22);
+}
+
+.livro.m5 {
+  color: rgb(206, 81, 139);
+}
+
+.livro.m6 {
+  color: rgb(202, 182, 5);
+}
+
+.livro.m7 {
+  color: rgb(24, 136, 211);
+}
+
+.livro.m8 {
+  color: rgb(58, 128, 18);
+}
+
+.livro.m9 {
+  color: rgb(219, 132, 19);
+}
+
+.livro.m10 {
+  color: rgb(112, 30, 179);
+}
+
+.livro.m11 {
+  color: rgb(196, 28, 6);
+}

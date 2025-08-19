@@ -1,0 +1,111 @@
+:root {
+  /*cores header*/
+  --cor-azulL: #00296b;
+  --cor-azulA: #3da5d9;
+  --cor-amareloA: #ffe99d;
+
+  /*cores header*/
+  --cor-bege: #f1ebd7;
+  --cor-branco6: #ffffff;
+
+  /*cores perfil*/
+  --cor-branco: #ffffff;
+  --cor-preto: #000000;
+  --cor-azulE: #00296b;
+  --cor-azulC: #3da5d9;
+  --cor-laranja: #ea7317;
+  --cor-amarela: #ffe99d;
+  --cor-azulC2: #3da5d9;
+  --cor-branco2: #ffffff;
+  --cor-azulC3: #00296b;
+  --cor-azulE3: #00296b;
+  --cor-cinzaC: #ddd;
+
+  /*cores conteúdos*/
+  --cor-azulE5: #3da5d9;
+  --cor-azulE2: #ffffff;
+  --cor-cinzaA: #ddd;
+  --cor-cinza: #444;
+  --cor-verde: #d4edda;
+  --cor-azulM: #ffffff;
+  --cor-lixo: #00296b;
+  --cor-hover: #e7e0e0;
+  --cor-cinza2: #ddd;
+
+  /*cores flashcards*/
+  --cor-azulEA: #00296b;
+  --cor-brancoC: #ffffff;
+  --cor-amarela2: #fff7d8;
+  --cor-branco4: #ffffff;
+  --cor-branco5: #ffffff;
+  --cor-amareloA2: #ffe99d;
+  --cor-cinza3: #444;
+  --cor-azulCL: #3da5d9;
+
+  /*cores agenda*/
+  --cor-laranjaA: #ea7317;
+  --cor-amareloL: #ffc107;
+  --cor-amareloL2: #fde499;
+  --cor-cinza7: #ddd;
+  --cor-cinza8: #555;
+  --cor-cinza9: #e2e2e2;
+  --cor-branco7: #000000;
+  --cor-cinza10: #ddd;
+;
+}
+
+body.dark {
+  /*cores header*/
+  --cor-azulL: #ea7317;
+  --cor-azulA: #ffe99d;
+  --cor-amareloA: #00296b;
+
+  /*cores header*/
+  --cor-bege: #00296b;
+  --cor-branco6: #7da1d3;
+
+  /*cores perfil*/
+  --cor-branco: #021025;
+  --cor-preto: #ffffff;  
+  --cor-azulE:#3da5d9;
+  --cor-azulC: #00296b;
+  --cor-laranja: #ffe99d;
+  --cor-amarela: #ea7317;
+  --cor-azulC2: #00296b;
+  --cor-branco2: #3da5d9;
+  --cor-azulC3: #ffe99d;
+  --cor-azulE3: #ffffff;
+  --cor_cinza2: #7da1d3;
+  --cor-cinzaC: #3b4246;
+
+  /*cores conteúdos*/
+  --cor-azulE2: #00296b;
+  --cor-cinzaA:#00296b;
+  --cor-cinza: #ddd;
+  --cor-verde: #5b8a68;
+  --cor-azulM: #474c50;
+  --cor-lixo: #ddd;
+  --cor-hover: #3b4246;
+  --cor-cinza2: #334155;
+  --cor-azulE5: #021025;
+
+  /*cores flashcards*/
+  --cor-azulEA: #ffc107;
+  --cor-brancoC: #3b4246;
+  --cor-amarela2: #00296b;
+  --cor-branco4: #3b4246;
+  --cor-branco5: #ddd;
+  --cor-amareloA2: #ffc107;
+  --cor-cinza3: #000000;
+  --cor-azulCL: #ea7317;
+
+  /*cores agenda*/
+  --cor-laranjaA: #3da5d9;
+  --cor-amareloL: #ea7317;
+  --cor-amareloL2: #eeb487;
+  --cor-cinza7: #7e7e7e;
+  --cor-cinza8: #999;
+  --cor-cinza9: #5f5f5f;
+  --cor-branco7: #ffffff;
+  --cor-cinza10: #26313f;
+}
