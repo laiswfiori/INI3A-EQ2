@@ -4,11 +4,11 @@
         position: relative;
         overflow: hidden;
 
-        h1, #img{
+        h1, h2, #img{
             position: relative;
             z-index: 2;
             text-align: center;
-        }        
+        }     
     }
     .voltar{
       display: flex;
@@ -64,4 +64,8 @@
   .bola3 {
     top: 50%;
     left: -150px;
+  }
+  .btnGoogle{
+    margin-top: 1rem !important;
+    margin-bottom: 0.8rem !important;
   }

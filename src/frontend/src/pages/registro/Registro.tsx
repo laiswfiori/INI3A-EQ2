@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import { useHistory } from 'react-router-dom';
 import { IonButton, IonRow, IonIcon } from '@ionic/react';
 import { returnDownBack } from 'ionicons/icons';
@@ -58,7 +58,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
     }
     setPasswordErrors(errors);
 
-    setShowRequiredFieldsMsg(anyEmptyField && password.length === 0);
+    setShowRequiredFieldsMsg(anyEmptyField);  // linha corrigida
     setFormValid(valid && !anyEmptyField);
   }, [name, surname, email, password]);
 
@@ -124,7 +124,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
         </IonRow>
         <div className="div1">
           <h1 className="h1"><b>Cadastre-se em nossa plataforma!</b></h1><br />
-          <div id="googleSignInDivRegistro" style={{ display: 'flex', justifyContent: 'center' }}></div><br />
+          <div id="googleSignInDivRegistro" className="btnGoogle" style={{ display: 'flex', justifyContent: 'center' }}></div><br />
           <div id="ou">
             <div className="linhas"></div>
             <h3 className="h3">Ou</h3>
@@ -158,7 +158,16 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
           <IonButton className="h3 btnLogin" onClick={goToLogin}>Faça login</IonButton>
         </div>
         <div className="div2">
-           <AnimacaoSVG />
+           <div id="apresentacao">
+              <h1 className="h1"><b>Seja bem-vindo!</b></h1><br></br><br></br>
+              <h2 className="h2">Venha explorar um mundo de possibilidades!</h2>
+              <div id="img">
+                <img src="/imgs/logoSemFundo.png" alt="Logo png" />
+              </div>
+            </div>
+            <div className="bola bola1"></div>
+            <div className="bola bola2"></div>
+            <div className="bola bola3"></div>
         </div>
       </div>
     </div>

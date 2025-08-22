@@ -24,11 +24,52 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
   const [email, setEmail] = useState('');
   const [password, setSenha] = useState('');
   const [erro, setErro] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
+  const [formValid, setFormValid] = useState(false);
+  const [requiredFieldsError, setRequiredFieldsError] = useState('');
+
+  useEffect(() => {
+    let valid = true;
+    setRequiredFieldsError('');
+
+    // Verifica se todos os campos foram preenchidos
+    if (!email.trim() || !password) {
+      setRequiredFieldsError('*Todos os campos são obrigatórios.');
+      valid = false;
+    }
+
+    // Validação do email (apenas se preenchido)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email.trim() && !emailRegex.test(email.trim())) {
+      setEmailError('Insira um email válido.');
+      valid = false;
+    } else {
+      setEmailError('');
+    }
+
+    // Validação da senha (apenas se preenchida)
+    const errors: string[] = [];
+    if (password) {
+      if (password.length < 8) errors.push('A senha deve conter pelo menos 8 caracteres.');
+      if (!/[A-Z]/.test(password)) errors.push('A senha deve conter pelo menos 1 letra maiúscula.');
+      if (!/[!@#$%^&*(),.?":{}|<>_]/.test(password)) errors.push('A senha deve conter pelo menos 1 caractere especial.');
+      if (/\s/.test(password)) errors.push('A senha não pode conter espaços.');
+      if (errors.length > 0) valid = false;
+    } else {
+      // Se a senha estiver vazia, já tratamos acima (requiredFieldsError)
+      // Então limpa os erros específicos da senha
+      setPasswordErrors([]);
+    }
+    setPasswordErrors(errors);
+
+    setFormValid(valid);
+  }, [email, password]);
 
   const handleLogar = async () => {
     setErro('');
     try {
-      const data = await loginUser({ email, password });
+      const data = await loginUser({ email: email.trim(), password });
 
       if (data && data.access_token) {
         console.log('Usuário logado com sucesso:', data);
@@ -102,21 +143,49 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
             <h1 className="h11"><b>Login</b></h1>
             <h3 className="h33 obs" id="conta"> Não possui uma conta?</h3>
             <IonButton onClick={goToCadastro} className="btnCadastrar1"><h3 className='h33'>Cadastre-se</h3></IonButton>
-            {erro && <p style={{ color: 'red', textAlign: 'center' }}>{erro}</p>}
+
+            {/* Mensagem geral de campos obrigatórios */}
+            {requiredFieldsError && (
+              <p className="nameError2" style={{ color: 'red', textAlign: 'center', marginBottom: '10px' }}>
+                {requiredFieldsError}
+              </p>
+            )}
+
+            {/* Mensagem de erro do backend */}
+            {erro && (
+              <p style={{ color: 'red', textAlign: 'center', marginBottom: '10px' }}>
+                {erro} 
+              </p>
+            )}
+
             <h2 className="h22"><b>Email</b></h2>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="inputForm1" />
+              className="inputForm1"
+            />
+            {/* Apenas erro de formato do email */}
+            {emailError && <p className="nameError2">{emailError}</p>}
+
             <h2 className="h22"><b>Senha</b></h2>
             <input
               type="password"
               value={password}
               onChange={(e) => setSenha(e.target.value)}
-              className="inputForm1" />
+              className="inputForm1"
+            />
+            {/* Erros específicos da senha */}
+            {passwordErrors.length > 0 && (
+              <ul className="nameError2">
+                {passwordErrors.map((err, idx) => <li key={idx}>{err}</li>)}
+              </ul>
+            )}
+
             <h3 className="h33 obs2" onClick={() => history.push('/senha/confirmar')}>Esqueci minha senha</h3>
-            <IonButton className="btnEntrar" onClick={handleLogar}> <h3 className='h33'>Entrar</h3></IonButton>
+            <IonButton className="btnEntrar" onClick={handleLogar} disabled={!formValid}>
+              <h3 className='h33'>Entrar</h3>
+            </IonButton>
             <div id="ou1">
               <div className="linhass"></div>
               <h3 className="h33" id="txtOu1" >Ou</h3>
