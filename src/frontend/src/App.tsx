@@ -9,7 +9,7 @@ import Home from './pages/pagInicial/Home';
 import Login from './pages/login/Login';
 import Registro from './pages/registro/Registro';
 import LoginCadastro from './pages/loginCadastro/loginCadastro';
-import Matérias from './pages/conteudos/matérias/Materias';
+import Matérias from './pages/conteudos/materias/Materias';
 import Topicos from './pages/conteudos/topicos/Topicos';
 import Atividades from './pages/conteudos/atividades/Atividades';
 import Atividade from './pages/conteudos/atividadeVisualizacao/Atividade';
@@ -24,8 +24,9 @@ import Relatorio from './pages/flashcards/relatorio/Relatorio';
 import Confirmar from './pages/senha/confirmar/Confirmar';
 import Concluir from './pages/senha/concluir/Concluir';
 import Alterar from './pages/senha/alterar/Alterar';
+import Estudo from './pages/estudo/Estudo';
 
-import Teste from './pages/perfil/Teste';
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -81,7 +82,6 @@ const App: React.FC = () => {
               <Route path="/login/login" component={Login} exact />
               <Route path="/registro/registro" component={Registro} exact />
               <Route path="/logincadastro/logincadastro" component={LoginCadastro} exact />
-
               <Route path="/senha/confirmar" component={Confirmar} exact />
               <Route path="/senha/concluir" component={Concluir} exact />
               <Route path="/senha/alterar" component={Alterar} exact />
@@ -104,8 +104,6 @@ const App: React.FC = () => {
               <PrivateRoute path="/flashcard/revisaoGeral" component={RevisaoGeral} exact />
               <PrivateRoute path="/flashcard/materia/:id" component={CardsMateria} exact />
               <PrivateRoute path="/flashcard/:id(\d+)" component={Flashcards} exact />
-
-              <PrivateRoute path="/perfil/teste" component={Teste} exact />
 
               <Route exact path="/">
                 <Redirect to="/pagInicial/home" />

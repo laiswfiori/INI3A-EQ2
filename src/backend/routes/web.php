@@ -11,6 +11,7 @@ $router->get('/', function () {
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
+    $router->post('auth/google/callback', 'AuthController@handleGoogleCallback');
 });
 
 // --- Rotas de Redefinição de Senha ---
@@ -108,7 +109,7 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->post('/', 'AgendaConfiguracaoController@store');
         //$router->get('/{id}', 'AgendaConfiguracaoController@show');
         //$router->put('/{id}', 'AgendaConfiguracaoController@update');
-        //$router->delete('/{id}', 'AggendaConfiguracaoController@destroy');
+        $router->delete('/', 'AgendaConfiguracaoController@destroy');
     });
 
     // --- Rotas de Agenda Dia Disponível ---
@@ -119,4 +120,6 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->put('/{id}', 'AgendaDiaDisponivelController@update');
         $router->delete('/{id}', 'AgendaDiaDisponivelController@destroy');
     });
+
+    $router->get('calendarioEstudos/', 'CalendarioEstudosController@gerarAgenda');
 });

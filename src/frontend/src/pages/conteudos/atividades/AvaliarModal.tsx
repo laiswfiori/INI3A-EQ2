@@ -100,7 +100,7 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
     <IonRow className="centro">
       <IonModal isOpen={isOpen} onDidDismiss={onClose} id="modalAvaliar">
         <div style={{ padding: 20 }}>
-          <h2>Avaliar atividade: {atividade.titulo}</h2>
+          <h2 className="pDarkmode">Avaliar atividade: {atividade.titulo}</h2>
 
           {podeAvaliarNivel && (
             <IonRow style={{ justifyContent: 'center', gap: '30px', marginTop: 20, flexWrap: 'wrap' }}>
@@ -132,14 +132,14 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
 
           {podeAvaliarLista && (
             <>
-              <IonLabel>Número de exercícios</IonLabel>
+              <IonLabel className="pDarkmode">Número de exercícios</IonLabel>
               <IonInput
                 type="number"
                 value={exercicios ?? ''}
                 onIonChange={e => setExercicios(Number(e.detail.value))}
                 min={0}
               />
-              <IonLabel>Número de acertos</IonLabel>
+              <IonLabel className="pDarkmode">Número de acertos</IonLabel>
               <IonInput
                 type="number"
                 value={acertos ?? ''}
@@ -152,14 +152,14 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
 
           {podeAvaliarProva && (
             <>
-              <IonLabel>Nota obtida</IonLabel>
+              <IonLabel className="pDarkmode">Nota obtida</IonLabel>
               <IonInput
                 type="number"
                 value={nota ?? ''}
                 onIonChange={e => setNota(Number(e.detail.value))}
                 min={0}
               />
-              <IonLabel>Valor total</IonLabel>
+              <IonLabel className="pDarkmode">Valor total</IonLabel>
               <IonInput
                 type="number"
                 value={valor ?? ''}

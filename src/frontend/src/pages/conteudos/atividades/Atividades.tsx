@@ -4,15 +4,18 @@ import {
   IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, 
   IonModal, IonPopover, IonInput, IonTextarea, IonRow, IonCol, IonSelect, IonSelectOption
 } from '@ionic/react';
-import { pencil, trash, flash, checkmarkDone, close, checkmark, arrowForward, documentText, reader, map, clipboard, newspaper, images, documentAttach } from 'ionicons/icons';
+import { pencil, trash, flash, checkmarkDone, close, checkmark, arrowForward, documentText, reader, map, clipboard, newspaper, images, documentAttach, returnDownBack } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
+import './css/darkmode.css';
 import Header from '../../../components/Header';
 import API from '../../../lib/api';
 import AvaliarModal from './AvaliarModal'; 
 import { validarCamposAtividade } from '../../../utils/erros';
 import { useSoundPlayer } from '../../../utils/Som';
+import ThemeManager from '../../../utils/ThemeManager';
+import '../../../utils/css/variaveisCores.css';
 
 interface Atividade {
   id: number;
@@ -27,6 +30,23 @@ interface Atividade {
   data_entrega?: string;
   created_at: string;
   updated_at: string;
+}
+
+interface Topico {
+  id: number;
+  titulo: string;
+  descricao: string;
+  status: string;
+  materia_id: number;
+  created_at: string;
+  updated_at: string;
+  atividades: Atividade[];
+}
+
+interface Materia {
+  id: number;
+  nome: string;
+  topicos: Topico[];
 }
 
 const Atividades: React.FC = () => {
@@ -47,6 +67,66 @@ const Atividades: React.FC = () => {
 
   const [showModalAvaliar, setShowModalAvaliar] = useState(false);
   const [atividadeAvaliar, setAtividadeAvaliar] = useState<Atividade | null>(null);
+
+  const [topicos, setTopicos] = useState<Topico[]>([]);
+
+  useEffect(() => {
+    const fetchTopicos = async () => {
+      const api = new API();
+      const data = await api.get('topicos');
+      setTopicos(data);
+    };
+    fetchTopicos();
+  }, []);
+
+  const [materias, setMaterias] = useState<{ id: number; nome: string }[]>([]);
+
+  useEffect(() => {
+    const fetchMaterias = async () => {
+      const api = new API();
+      const data = await api.get('materias');
+      setMaterias(data);
+    };
+    fetchMaterias();
+  }, []);
+
+  const [coresMaterias, setCoresMaterias] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    const coresSalvas = localStorage.getItem('coresMaterias');
+    if (coresSalvas) {
+      setCoresMaterias(JSON.parse(coresSalvas));
+    }
+  }, []);
+
+  const normalizarNomeMateria = (nome: string) => {
+    const nomeUpper = nome.trim().toUpperCase();
+  
+    const mapa: { [key: string]: string } = {
+      'PORTUGUÊS': 'm1',
+      'PORTUGUES': 'm1',
+      'LITERATURA': 'm1',
+      'INGLÊS': 'm2',
+      'INGLES': 'm2',
+      'ESPANHOL': 'm2',
+      'ARTES': 'm3',
+      'HISTÓRIA': 'm4',
+      'HISTORIA': 'm4',
+      'FILOSOFIA': 'm5',
+      'SOCIOLOGIA': 'm6',
+      'GEOGRAFIA': 'm7',
+      'BIOLOGIA': 'm8',
+      'QUÍMICA': 'm9',
+      'QUIMICA': 'm9',
+      'FÍSICA': 'm10',
+      'FISICA': 'm10',
+      'MATEMÁTICA': 'm11',
+      'MATEMATICA': 'm11'
+    };
+  
+    return mapa[nomeUpper] || '';
+  };
+  
 
   const { playSomIniciar, playSomConcluir } = useSoundPlayer();
 
@@ -212,14 +292,14 @@ const Atividades: React.FC = () => {
       }
 
       const atividadeParaSalvar = {
-  ...novaAtividade,
-  conteudo: conteudoFinal,
-  data_entrega: novaAtividade.data_entrega && novaAtividade.data_entrega.trim() !== ''
-    ? novaAtividade.data_entrega
-    : undefined,
-};
+      ...novaAtividade,
+      conteudo: conteudoFinal,
+      data_entrega: novaAtividade.data_entrega && novaAtividade.data_entrega.trim() !== ''
+        ? novaAtividade.data_entrega
+        : undefined,
+    };
 
-console.log('Objeto final para salvar:', atividadeParaSalvar)
+    console.log('Objeto final para salvar:', atividadeParaSalvar)
 
 
       setTextoTemp('');
@@ -372,11 +452,17 @@ const removerItemConteudo = (index: number) => {
 };
 
   return (
+    <>
+    <ThemeManager />
     <IonPage className={`pagina ${showModal ? 'desfocado' : ''}`}>
       <Header />
-      <IonContent className="body">
-        <h1 className="titulo">Atividades</h1>
+      <IonContent className="bodyA">
+        <h1 className="titulo titDarkMode">Atividades</h1>
         <div className="linhaHorizontal"></div>
+        <IonRow className="contVoltarT"  onClick={() => history.goBack()}>
+          <IonIcon icon={returnDownBack} className="voltarT pDarkmode"/>
+          <p className="txtVoltarT pDarkmode">Voltar para tópicos</p>
+        </IonRow>
 
         {loading ? (
           <div className="loader-container">
@@ -385,15 +471,21 @@ const removerItemConteudo = (index: number) => {
         ) : error ? (
           <p className="error-message">{error}</p>
         ) : (
-          <IonList className="atividades-list">
-            {atividades
-              .slice()
-              .sort((a, b) => {
-                if (a.status === 'concluído' && b.status !== 'concluído') return 1;
-                if (a.status !== 'concluído' && b.status === 'concluído') return -1;
-                return 0;
-              })
-              .map((atividade) => (
+        <IonList className="atividades-list">
+          {atividades
+            .slice()
+            .sort((a, b) => {
+              if (a.status === 'concluído' && b.status !== 'concluído') return 1;
+              if (a.status !== 'concluído' && b.status === 'concluído') return -1;
+              return 0;
+            })
+            .map((atividade) => {
+              const topico = topicos.find(t => t.id === atividade.topico_id);
+              const materia = topico ? materias.find(m => m.id === topico.materia_id) : null;
+              const nomeMateria = materia ? materia.nome : '';
+              const classeMateria = normalizarNomeMateria(nomeMateria);
+              console.log('nomeMateria:', nomeMateria, 'classeMateria:', classeMateria);
+              return (
                 <IonItem key={atividade.id} className={`atividade-item ${atividade.status === 'concluído' ? 'concluida' : ''}`}>
                   <IonRow className="containerAtividade" style={{ position: 'relative' }}>
                     <IonRow className="larguraA">
@@ -404,14 +496,19 @@ const removerItemConteudo = (index: number) => {
                           className="imgMF imgMobile"
                         />
                       ) : (
-                        <IonIcon icon={getIconPorTipo(atividade.tipo)} className="livro livroA" />
+                        <IonIcon 
+                          icon={getIconPorTipo(atividade.tipo)} 
+                          className={`livro ${classeMateria} livroA`}
+                        />
                       )}
 
                       <IonCol className="td">
                         <h2 className="txtTitMat">{atividade.titulo}</h2>
-                        <p className="sRisco">{atividade.descricao}</p>
-                        <p className="sRisco">Tipo: {atividade.tipo}</p>
-                        <p className="sRisco">Data de entrega: {atividade.data_entrega ? new Date(atividade.data_entrega).toLocaleDateString() : 'não definida'}</p>
+                        <p className="sRisco p2Darkmode">{atividade.descricao}</p>
+                        <p className="sRisco p2Darkmode">Tipo: {atividade.tipo}</p>
+                        <p className="sRisco p2Darkmode">
+                          Data de entrega: {atividade.data_entrega ? new Date(atividade.data_entrega).toLocaleDateString() : 'não definida'}
+                        </p>
                       </IonCol>
 
                       <IonCol id="containerConfig">
@@ -456,12 +553,12 @@ const removerItemConteudo = (index: number) => {
                           className="btnIC"
                           id="btnRaio"
                           onClick={async () => {
-                            playSomIniciar(); 
+                            playSomIniciar();
                             await alterarStatus(atividade, 'em andamento');
                             history.push(`/atividades/${atividade.id}`);
                           }}
                         >
-                          <IonIcon icon={flash} className="iconesPopover" id="raio"/>
+                          <IonIcon icon={flash} className="iconesPopover" id="raio" />
                           Iniciar
                         </IonButton>
                       )}
@@ -473,8 +570,8 @@ const removerItemConteudo = (index: number) => {
                             className="btnIC"
                             id="btnCheck"
                             onClick={() => {
-                              playSomConcluir(); 
-                              abrirModalAvaliar(atividade);  
+                              playSomConcluir();
+                              abrirModalAvaliar(atividade);
                             }}
                           >
                             <IonIcon icon={checkmarkDone} className="iconesPopover" id="check" />
@@ -487,7 +584,7 @@ const removerItemConteudo = (index: number) => {
                             id="btnVer"
                             onClick={() => history.push(`/atividades/${atividade.id}`)}
                           >
-                            <IonIcon icon={arrowForward} className="iconesPopover" id="ver"/>
+                            <IonIcon icon={arrowForward} className="iconesPopover" id="ver" />
                             Ver
                           </IonButton>
                         </>
@@ -500,15 +597,17 @@ const removerItemConteudo = (index: number) => {
                           id="btnVer"
                           onClick={() => history.push(`/atividades/${atividade.id}`)}
                         >
-                          <IonIcon icon={arrowForward} className="iconesPopover" id="ver"/>
+                          <IonIcon icon={arrowForward} className="iconesPopover" id="ver" />
                           Ver
                         </IonButton>
                       )}
                     </IonRow>
                   </IonRow>
                 </IonItem>
-              ))}
-          </IonList>
+              );
+            })}
+        </IonList>
+
         )}
 
         <IonButton 
@@ -530,32 +629,32 @@ const removerItemConteudo = (index: number) => {
               />
             </IonRow>
             <IonRow className="centroModal">
-              <h2 className="labelT">
+              <h2 className="labelT pDarkmode">
                 {modoModal === 'adicionar' ? 'Adicionar atividade' : 'Editar atividade'}
               </h2>
             </IonRow>
             <div id="pagAdicionar">
-              <p className="label">Título</p>
+              <p className="label pDarkmode">Título</p>
               <IonInput
                 placeholder="Digite o título da atividade"
                 value={novaAtividade.titulo}
                 onIonChange={(e) => handleInputChange('titulo', e.detail.value!)}
-                className="input"
+                className="input pDarkmode"
               />
               
-              <p className="label">Descrição</p>
+              <p className="label pDarkmode">Descrição</p>
               <IonTextarea
                 placeholder="Escreva uma breve descrição"
                 value={novaAtividade.descricao}
                 onIonChange={(e) => handleInputChange('descricao', e.detail.value!)}
-                className="input"
+                className="input pDarkmode"
                 rows={4}
               />
               
-              <p className="label">Tipo</p>
+              <p className="label pDarkmode">Tipo</p>
               <IonSelect
                 value={novaAtividade.tipo}
-                className="input"
+                className="input pDarkmode"
                 onIonChange={(e) => handleInputChange('tipo', e.detail.value!)}
               >
                 <IonSelectOption value="resumo">Resumo</IonSelectOption>
@@ -567,19 +666,19 @@ const removerItemConteudo = (index: number) => {
                 <IonSelectOption value="simulado">Simulado</IonSelectOption>
               </IonSelect>
 
-              <p className="label">Data de entrega (opcional)</p>
+              <p className="label pDarkmode">Data de entrega (opcional)</p>
               <IonInput
                 type="date"
                 value={novaAtividade.data_entrega}
                 onIonChange={e => handleInputChange('data_entrega', e.detail.value ?? '')}
-                className="input"
+                className="input pDarkmode"
               />
               
-              <p className="label">Conteúdo</p>
+              <p className="label pDarkmode">Conteúdo</p>
 
               <IonTextarea
                 placeholder="Digite texto e clique fora para adicionar"
-                className="input"
+                className="input pDarkmode"
                 rows={4}
                 value={textoTemp}
                 onIonChange={(e) => setTextoTemp(e.detail.value!)}
@@ -594,7 +693,7 @@ const removerItemConteudo = (index: number) => {
                   }
                 }}
               />
- <input
+              <input
                 type="file"
                 accept="image/*"
                 onChange={adicionarImagemAoConteudo}
@@ -656,7 +755,7 @@ const removerItemConteudo = (index: number) => {
               <IonButton 
                 expand="block" 
                 onClick={handleSalvar} 
-                className="btnSalvar"
+                className="btnSalvar btnSalvarDarkmode"
               >
                 <IonIcon icon={checkmark} slot="start" />
                 Salvar
@@ -672,6 +771,7 @@ const removerItemConteudo = (index: number) => {
             setShowPopover(false);
             setPopoverEvent(undefined);
           }}
+          className="popoverEE"
         >
           <IonButton expand="block" onClick={handleEditar} className="opcoes" id="btnLapis" >
             <IonIcon icon={pencil} className="iconesPopover" id="lapis" />
@@ -691,6 +791,7 @@ const removerItemConteudo = (index: number) => {
         />
       </IonContent>
     </IonPage>
+    </>
   );
 };
 

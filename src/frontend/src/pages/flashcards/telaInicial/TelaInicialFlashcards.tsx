@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { IonPage, IonContent, IonIcon, IonButton, IonGrid, IonRow, IonCol, IonLabel,
-  IonPopover, IonModal, IonSelect, IonSelectOption, IonTextarea, useIonToast } from '@ionic/react';
+  IonPopover, IonModal, IonSelect, IonSelectOption, IonTextarea, useIonToast, 
+  IonInput} from '@ionic/react';
 import Header from '../../../components/Header';
 import { alertCircle, school, close, layers, time, library, arrowForward, card, barChart, trash, pencil, flash, chevronDown } from 'ionicons/icons'; 
 import './css/geral.css';
 import './css/ui.css';
 import './css/layouts.css';
 import './css/pie.css';
+import './css/darkmode.css';
 import API from '../../../lib/api';
 import CardEditor from '../components/CardEditor';
 import { useIonViewWillEnter } from '@ionic/react';
 import { useSoundPlayer } from '../../../utils/Som';
-import { iconePorMateriaNome } from '../../conteudos/matérias/Materias';
+import { iconePorMateriaNome } from '../../conteudos/materias/Materias';
+import ThemeManager from '../../../utils/ThemeManager';
+import '../../../utils/css/variaveisCores.css';
 
 interface Topico {
   id: number;
@@ -73,7 +77,67 @@ const TelaInicialFlashcards: React.FC = () => {
   const [editingCardIndex, setEditingCardIndex] = useState<number | null>(null);
   const [cardEditorInitialFrente, setCardEditorInitialFrente] = useState<ConteudoItem[]>([]);
   const [cardEditorInitialVerso, setCardEditorInitialVerso] = useState<ConteudoItem[]>([]);
+  
+  const [showModalNovoTopico, setShowModalNovoTopico] = useState(false);
+  
+  const [novoTopico, setNovoTopico] = useState<{ titulo: string; descricao: string; materia_id: number | null }>({
+    titulo: "",
+    descricao: "",
+    materia_id: null,
+  });
+  
+  const criarTopico = async () => {
+    if (!novoTopico.titulo.trim() || !materiaExpandidaId) {
+      presentToast({
+        message: 'Insira um título para o tópico.',
+        duration: 3000,
+        color: 'warning',
+      });
+      return;
+    }
+  
+    try {
+      await api.post('topicos', {
+        titulo: novoTopico.titulo,
+        descricao: novoTopico.descricao || '',
+        materia_id: materiaExpandidaId,
+      });
+  
+      presentToast({
+        message: 'Tópico criado com sucesso!',
+        duration: 2000,
+        color: 'success',
+      });
+  
+      setNovoTopico({ titulo: '', descricao: '', materia_id: null });
+      setShowModalNovoTopico(false);
+      await fetchData();
+    } catch (error) {
+      console.error('Erro ao criar tópico:', error);
+      presentToast({
+        message: 'Erro ao criar tópico.',
+        duration: 3000,
+        color: 'danger',
+      });
+    }
+    console.log(novoTopico.titulo, novoTopico.descricao)
+  };
+  
+
   const [iconesMaterias, setIconesMaterias] = useState<{ [key: number]: string }>({});
+
+  const [coresMaterias, setCoresMaterias] = useState<{ [key: number]: string }>({});
+  const { id: materiaId } = useParams<{ id: string }>();
+  const [corMateria, setCorMateria] = useState<string | undefined>();
+
+  useEffect(() => {
+    const storedCores = localStorage.getItem('coresMaterias');
+    if (storedCores) {
+      const cores = JSON.parse(storedCores);
+      console.log('Cores carregadas:', cores);
+      setCoresMaterias(cores);
+    }
+  }, []);
 
   useEffect(() => {
     const iconesSalvos = localStorage.getItem('iconesMaterias');
@@ -404,18 +468,73 @@ const setShowCardEditorAndInitialData = (
     );
   };
 
+  const [totalCardsFeitos, setTotalCardsFeitos] = useState(0);
+  const [totalCards, setTotalCards] = useState(0);
+
+  useEffect(() => {
+    const atualizarRespostas = () => {
+      const respostasSalvas = localStorage.getItem('flashcards_respostas');
+      const respostas = respostasSalvas ? JSON.parse(respostasSalvas) : [];
+      setTotalCardsFeitos(respostas.length);
+      setTotalCards(cards.length);
+    };
+  
+    const checarReset = () => {
+      const agora = new Date();
+      console.log("checando reset", agora.toLocaleTimeString());
+    
+      const horarioReset = new Date();
+      horarioReset.setHours(0, 0, 0, 0);
+    
+      const ultimaResetStr = localStorage.getItem('flashcards_resetDiario');
+      const ultimaReset = ultimaResetStr ? new Date(ultimaResetStr) : null;
+
+      console.log("agora:", agora.toLocaleTimeString());
+      console.log("horarioReset:", horarioReset.toLocaleTimeString());
+    
+      const jaPassouHorario = agora >= horarioReset;
+      const jaResetouHoje =
+        ultimaReset &&
+        ultimaReset.getDate() === agora.getDate() &&
+        ultimaReset.getMonth() === agora.getMonth() &&
+        ultimaReset.getFullYear() === agora.getFullYear();
+    
+      console.log({ jaPassouHorario, jaResetouHoje });
+    
+      if (jaPassouHorario && !jaResetouHoje) {
+        localStorage.setItem('flashcards_respostas', JSON.stringify([]));
+        localStorage.setItem('flashcards_totalFeitos', '0');
+        localStorage.setItem('flashcards_resetDiario', agora.toISOString());
+      }
+    };
+  
+    checarReset();
+    atualizarRespostas();
+  
+    const intervalo = setInterval(() => {
+      checarReset();
+      atualizarRespostas();
+    }, 7 * 24 * 60 * 60 * 1000); 
+  
+    return () => clearInterval(intervalo);
+  }, [cards]);
+  
+  const progress = totalCards > 0 ? (totalCardsFeitos / totalCards) * 100 : 0;
+  console.log(totalCards, totalCardsFeitos, progress)
 
   return (
+    <>
+    <ThemeManager />
     <IonPage className="pagina">
       <Header />
-      <IonContent>
+      <IonContent className="bodyFI">
         <IonGrid id="bodyTelaInicialFlashcards">
           <IonRow id="revisao">
             <IonCol id="dCapelo">
               <IonIcon icon={school} id="iconeCapelo" />
             </IonCol>
             <IonCol id="d1">
-              <p className="txtGeral">Revisão do dia!</p>
+              <p className="txtGeral pDarkmode">Revisão do dia!</p>
               <IonButton className="revisaoGeral" onClick={() => {
                   playSomIniciar();   
                   history.push('/flashcard/revisaoGeral');
@@ -444,7 +563,7 @@ const setShowCardEditorAndInitialData = (
                   <IonButton onClick={closePopover} id="btnFechar">
                     <IonIcon icon={close} className="iconeFechar" />
                   </IonButton>
-                  <p>
+                  <p className="pDarkmode">
                     O modo de revisão geral apresenta todos os flashcards do dia que devem ser
                     revisados (independente da matéria), para que você possa treinar todas as
                     matérias!
@@ -453,7 +572,7 @@ const setShowCardEditorAndInitialData = (
               </IonPopover>
             </IonCol>
             <IonCol className="colFlex">
-              <svg viewBox="0 0 250 250" className="circular-progress">
+              <svg viewBox="0 0 250 250" className="circular-progress" style={{ '--progress': progress } as React.CSSProperties}>
                 <circle
                   className="bg"
                   cx="125"
@@ -484,54 +603,54 @@ const setShowCardEditorAndInitialData = (
           {!mostrarEstatisticas && (
             <div className="botaoAbrirEstatisticas" onClick={() => setMostrarEstatisticas(true)}>
               <IonIcon icon={barChart} />
-              <p>Mostrar estatísticas</p>
+              <p className="pDarkmode">Mostrar estatísticas</p>
             </div>
           )}
           {mostrarEstatisticas && (
             <IonRow id="estatisticas">
               <div className="fecharMobile" onClick={() => setMostrarEstatisticas(false)}>
                 <IonIcon icon={close} className="iconeFechar" />
-                <p>Fechar estatísticas</p>
+                <p className="pDarkmode">Fechar estatísticas</p>
               </div>
               <div className="estDivs">
                 <IonRow className="espDiv">
                   <IonCol className="altD">
-                    <p className="txtGrande">{flashcards.length}</p> 
+                    <p className="txtGrande pDarkmode">{cards.length}</p> 
                   </IonCol>
                   <IonCol className="altD iconFim">
                     <IonIcon icon={layers} className="iconesTF" />
                   </IonCol>
                 </IonRow>
                 <IonRow>
-                  <p className="txtTF">Total de flashcards</p>
+                  <p className="txtTF pDarkmode">Total de cards</p>
                 </IonRow>
               </div>
 
               <div className="estDivs">
                 <IonRow className="espDiv">
                   <IonCol className="altD">
-                    <p className="txtGrande">{materias.length}</p>
+                    <p className="txtGrande pDarkmode">{materias.length}</p>
                   </IonCol>
                   <IonCol className="altD iconFim">
                     <IonIcon icon={library} className="iconesTF" />
                   </IonCol>
                 </IonRow>
                 <IonRow>
-                  <p className="txtTF">Matérias para estudar</p>
+                  <p className="txtTF pDarkmode">Total de matérias</p>
                 </IonRow>
               </div>
 
               <div className="estDivs">
                 <IonRow className="espDiv">
                   <IonCol className="altD">
-                    <p className="txtGrande">0</p> 
+                    <p className="txtGrande pDarkmode">0</p> 
                   </IonCol>
                   <IonCol className="altD iconFim">
                     <IonIcon icon={time} className="iconesTF" />
                   </IonCol>
                 </IonRow>
                 <IonRow>
-                  <p className="txtTF">Flashcards para revisar hoje</p>
+                  <p className="txtTF pDarkmode">Matérias para revisar hoje</p>
                 </IonRow>
               </div>
             </IonRow>
@@ -543,12 +662,18 @@ const setShowCardEditorAndInitialData = (
                 const flashcardsDaMateria = flashcards.filter(f =>
                   topicosDaMateria.some(t => t.id === f.topico_id)
                 );
-                const totalCardsMateria = flashcardsDaMateria.reduce((total, flashcard) => {
-                const numCards = Array.isArray(flashcard.cards) ? flashcard.cards.length : 0;
-                  return total + numCards;}, 0
+                const totalCardsMateria = flashcardsDaMateria.length;
+                const respostasSalvas = localStorage.getItem('flashcards_respostas');
+                const respostas = respostasSalvas ? JSON.parse(respostasSalvas) : [];
+                const respostasDaMateria = respostas.filter(r =>
+                  flashcardsDaMateria.some(f => f.id === r.flashcard_id)
                 );
-                const cardsParaRevisarMateria = 0; 
-                const progresso = totalCardsMateria > 0 ? (cardsParaRevisarMateria / totalCardsMateria) * 100 : 0;
+                const cardsParaRevisarMateria = Math.max(totalCardsMateria - respostasDaMateria.length, 0);
+                const cardsFeitosMateria = respostasDaMateria.length;
+                const progresso = totalCardsMateria > 0 
+                  ? (cardsFeitosMateria / totalCardsMateria) * 100 
+                  : 0;
+                  
                 const estaExpandida = materiaExpandidaId === materia.id;
 
                 return (
@@ -570,11 +695,12 @@ const setShowCardEditorAndInitialData = (
                               <IonIcon
                                 icon={iconeData ? iconeData.icon : library}
                                 className={iconeData ? iconeData.className : 'livroF'}
+                                style={{ color: coresMaterias[materia.id] || '' }}
                               />
                             );
                           })()}
                           </div>
-                          <IonCol className="td centro">
+                          <IonCol className="colNomeMat">
                             <h2 className="txtTitMat">{materia.nome}</h2>
                           </IonCol>
                           <IonCol className="iconFim">
@@ -589,7 +715,7 @@ const setShowCardEditorAndInitialData = (
                         </IonRow>
                       </IonRow>
                       <IonRow className="espDC">
-                        <p className="txtWC">{totalCardsMateria} cards</p>
+                        <p className="txtWC pDarkmode">{totalCardsMateria} flashcards</p>
                         <p className="txtWC" id="txtRevisar">{cardsParaRevisarMateria} para revisar</p>
                       </IonRow>
                       <IonRow className="barra">
@@ -633,6 +759,9 @@ const setShowCardEditorAndInitialData = (
 
                     {estaExpandida && (
                       <div className="listaTopicos">
+                        <IonRow>
+                          <IonButton onClick={() => setShowModalNovoTopico(true)} className="criarTopico">Criar tópico</IonButton>
+                        </IonRow>
                         {(() => {
                           const topicosComFlashcardsNaMateria = topicosDaMateria.filter(topico =>
                             flashcards.some(f => f.topico_id === topico.id)
@@ -646,7 +775,7 @@ const setShowCardEditorAndInitialData = (
                                 <div key={topico.id} className="topico-com-flashcards">
                                   <IonRow className="contSetaTopico">
                                     <IonIcon icon={arrowForward} className="setaTopico" />
-                                    <p className="txtTopico">{topico.titulo}</p>
+                                    <p className="txtTopico pDarkmode">{topico.titulo}</p>
                                   </IonRow>
 
                                   {flashcardsDoTopico.map(flashcard => (
@@ -659,9 +788,9 @@ const setShowCardEditorAndInitialData = (
                                       </IonCol>
                                       <IonCol className="botoes-flashcard">
                                         <IonButton
-                                          className={`btnFlash btnMostrar ${
+                                          className={`pDarkmode btnFlash btnMostrar ${
                                             flashcardsComOpcoesAbertas.includes(flashcard.id) ? 'btnFecharOpcoes' : ''
-                                          }`}
+                                          }`} 
                                           onClick={() => toggleOpcoesFlashcard(flashcard.id)}
                                         >
                                           <IonIcon
@@ -677,17 +806,17 @@ const setShowCardEditorAndInitialData = (
                                               playSomIniciar();
                                               history.push(`/flashcard/${flashcard.id}`);
                                             }}
-                                            className="btnFlash btnEstudar">
+                                            className="btnFlash btnEstudar pDarkmode">
                                               <IonIcon icon={flash} className="iconesOpFlash btnEstudar" />
                                               Estudar
                                             </IonButton>
 
-                                            <IonButton onClick={() => abrirModalEditarFlashcard(flashcard.id)} className="btnFlash btnEditar">
+                                            <IonButton onClick={() => abrirModalEditarFlashcard(flashcard.id)} className="btnFlash btnEditar pDarkmode">
                                               <IonIcon icon={pencil} className="iconesOpFlash btnEditar" />
                                               Editar
                                             </IonButton>
 
-                                            <IonButton onClick={() => deletarFlashcard(flashcard.id)} className="btnFlash btnExcluir">
+                                            <IonButton onClick={() => deletarFlashcard(flashcard.id)} className="btnFlash btnExcluir pDarkmode">
                                               <IonIcon icon={trash} className="iconesOpFlash btnExcluir" />
                                               Excluir
                                             </IonButton>
@@ -701,7 +830,7 @@ const setShowCardEditorAndInitialData = (
                             });
 
                           } else {
-                            return <p className="sem-topicos-aviso">Nenhum tópico com flashcards nesta matéria.</p>;
+                            return <p className="sem-topicos-aviso pDarkmode">Nenhum tópico com flashcards nesta matéria.</p>;
                           }
                         })()}
                       </div>
@@ -746,7 +875,7 @@ const setShowCardEditorAndInitialData = (
             {!showCardEditor && (
               <>
                 <IonRow className="centroModal">
-                  <h2 className="label">
+                  <h2 className="label pDarkmode">
                     {flashcardIdParaEditar ? 'Editar flashcard' : 'Criar novo flashcard'}
                   </h2>
                 </IonRow>
@@ -755,7 +884,7 @@ const setShowCardEditorAndInitialData = (
                   value={topicoSelecionadoParaNovoFlashcard}
                   placeholder="Escolha o tópico"
                   onIonChange={(e) => setTopicoSelecionadoParaNovoFlashcard(e.detail.value)}
-                  className="input iFlashcard"
+                  className="input iFlashcard pDarkmode"
                 >
                   {topicos
                     .filter(t => t.materia_id === modalMateriaSelecionada?.id)
@@ -771,11 +900,11 @@ const setShowCardEditorAndInitialData = (
                   placeholder="Digite o título do flashcard"
                   value={novoFlashcardTitulo}
                   onIonInput={(e) => setNovoFlashcardTitulo(e.detail.value!)}
-                  className="input"
+                  className="input pDarkmode"
                 />
 
                 <IonRow className="centroModal">
-                  <h3>{flashcardIdParaEditar ? 'Editar cards' : 'Adicionar cards'}</h3>
+                  <h3 className="pDarkmode">{flashcardIdParaEditar ? 'Editar cards' : 'Adicionar cards'}</h3>
                 </IonRow>
 
                 <IonButton
@@ -861,11 +990,12 @@ const setShowCardEditorAndInitialData = (
             {showCardEditor && (
               <>
                 <IonRow className="centroModal">
-                  <h3 className="modal-title">{editingCardIndex !== null ? 'Editar Card' : 'Adicionar Card'}</h3>
+                  <h3 className="modal-title pDarkmode">{editingCardIndex !== null ? 'Editar Card' : 'Adicionar Card'}</h3>
                   <IonButton
                     onClick={() => setShowCardEditorAndInitialData(false)}
                     color="medium"
                     fill="clear"
+                    className="fecharEditor"
                   >
                     Fechar Editor
                   </IonButton>
@@ -881,8 +1011,29 @@ const setShowCardEditorAndInitialData = (
             )}
           </div>
         </IonModal>
+        <IonModal isOpen={showModalNovoTopico} onDidDismiss={() => setShowModalNovoTopico(false)}>
+  <IonContent className="ion-padding">
+    <h2>Criar Tópico</h2>
+    <IonInput
+      placeholder="Título"
+      value={novoTopico.titulo}
+      onIonChange={(e) => setNovoTopico({ ...novoTopico, titulo: e.detail.value! })}
+    />
+    <IonTextarea
+      placeholder="Descrição (opcional)"
+      value={novoTopico.descricao}
+      onIonInput={(e) => setNovoTopico({ ...novoTopico, descricao: e.detail.value! })}
+    />
+    <IonButton expand="block" onClick={criarTopico}>
+      Salvar
+    </IonButton>
+  </IonContent>
+</IonModal>
+
+
       </IonContent>
     </IonPage>
+    </>
   );
 };
 

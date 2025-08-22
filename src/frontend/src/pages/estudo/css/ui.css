@@ -1,0 +1,24 @@
+.btnIniciarPausar::part(native) { 
+    all: unset;
+    border-radius: 60px;
+    background-color: #ddd;
+    font-size: 2rem;
+    width: 100%;
+    color: black;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.btnEstudo::part(native) {
+    all: unset;
+    border-radius: 50px;
+    width: 100%;
+    background-color: none;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.iconeReiniciar {
+    color: black;
+    font-size: 3rem;
+}

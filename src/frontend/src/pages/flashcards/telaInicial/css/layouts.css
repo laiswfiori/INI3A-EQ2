@@ -6,6 +6,9 @@
         display: flex !important;
         justify-content: center !important;
     }
+    .criarTopico {
+        width: 50%;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 1023px){
@@ -21,6 +24,9 @@
     .ion-delegate-host {
         display: flex !important;
         justify-content: flex-end !important;
+    }
+    .criarTopico {
+        width: 60%;
     }
 }
 
@@ -68,6 +74,9 @@
     }
     #branco {
         width: 25% !important;
+    }
+    .criarTopico {
+        width: 60%;
     }
 }
 

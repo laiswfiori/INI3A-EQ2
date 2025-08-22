@@ -1,17 +1,21 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { IonPage, IonContent, IonRow, IonCol, IonButton, IonGrid, IonIcon, IonLabel } from '@ionic/react';
+import { IonPage, IonContent, IonRow, IonCol, IonButton, IonGrid, IonIcon, IonLabel, useIonToast } from '@ionic/react';
 import { cellular, layers, print, checkmarkDone, download, timeOutline, speedometerOutline, chevronUp, chevronDown } from 'ionicons/icons';
 import { useLocation } from 'react-router-dom';
 import { getUserProfile } from '../../../lib/endpoints';
-import { useReactToPrint } from 'react-to-print';
 import Header from '../../../components/Header';
 import RelatorioPDF from './RelatorioPDF';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layouts.css';
+import './css/darkmode.css';
 import { PieChart, Pie, Cell, Legend } from 'recharts';
 import html2canvas from "html2canvas";
 import jsPDF from 'jspdf';
+import ThemeManager from '../../../utils/ThemeManager';
+import '../../../utils/css/variaveisCores.css';
+//import karlaBold '../../../fonts/Karla/Karla-bold.js';
+
 
 interface Card {
   id?: number;
@@ -45,6 +49,7 @@ interface ConteudoItem {
 }
 
 const Relatorio: React.FC = () => {
+  const [present] = useIonToast();
   const location = useLocation<LocationState>();
   const {
     nomeDeck = 'Deck',
@@ -53,6 +58,9 @@ const Relatorio: React.FC = () => {
     materias = [],
     timeStats
   } = location.state || {};
+
+  console.log('location.state:', location.state);
+
 
   const [showDetailedTime, setShowDetailedTime] = useState(false);
   const [nomeUsuario, setNomeUsuario] = useState<string>('Usuário');
@@ -98,6 +106,7 @@ const Relatorio: React.FC = () => {
 
   const tempoTotal = timeStats?.totalTime ? formatTime(timeStats.totalTime) : '--';
   const tempoMedio = timeStats?.averageTime ? formatTime(timeStats.averageTime) : '--';
+  console.log(tempoTotal);
 
   const distribuicaoNiveis = [
     { name: 'muito fácil', value: respostas.filter(r => r === 'muito fácil').length },
@@ -161,6 +170,12 @@ const Relatorio: React.FC = () => {
    const contentRef = useRef<HTMLDivElement>(null);
 
 const gerarRelatorio = async () => {
+  present({
+    message: 'Relatório sendo gerado.',
+    duration: 2000,
+    color: 'success',
+    position: 'bottom'
+  });
   try {
     setShowDetailedTime(true);
     
@@ -179,9 +194,9 @@ const gerarRelatorio = async () => {
 
     const COR_AZUL: [number, number, number] = [0, 41, 107];       
     const COR_LARANJA: [number, number, number] = [234, 115, 23]; 
+    const COR_AMARELO: [number, number, number] = [255, 233, 157];
     const COR_BRANCA: [number, number, number] = [255, 255, 255];
     const COR_CINZA: [number, number, number] = [240, 240, 240];
-
 
     const logoUrl = '/../../../../imgs/logoCompleta.png';
     
@@ -202,27 +217,46 @@ const gerarRelatorio = async () => {
     if (imgData) {
       doc.addImage(imgData, 'PNG', margin, yPosition - 10, 60, 60);
     }
-
-    doc.setFillColor(...COR_BRANCA);
-    doc.rect(margin + 70, yPosition - 15, pageWidth - margin - 110, 60, 'F');
-    doc.setDrawColor(...COR_BRANCA);
-    doc.rect(margin + 70, yPosition - 15, pageWidth - margin - 110, 60);
     
+    //doc.addFileToVFS('Karla-Bold.ttf', karlaBold);
+    //doc.addFont('Karla-Bold.ttf', 'Karla', 'bold');
+    //doc.setFont('Karla', 'bold');
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(24);
-    doc.text('RELATÓRIO DE ESTUDO', margin + 80, yPosition + 15);
+    doc.text('Relatório de estudo', pageWidth - margin - 220, yPosition + 15);
     
-    yPosition += 70;
+    yPosition += 90;
 
+    doc.setFontSize(20);
+    doc.setTextColor(0, 0, 0); 
+    doc.text('Dados gerais', margin, yPosition);
+    const lineY = yPosition + 10;
+    doc.setLineWidth(1);
+    doc.setDrawColor(100);
+    doc.line(margin, lineY, pageWidth - margin, lineY);
+    
+    const boxY = lineY + 10;
+    const boxHeight = 30;
+    const boxWidth = 8;
     doc.setFillColor(...COR_LARANJA);
-    doc.rect(margin, yPosition, pageWidth - 2 * margin, 80, 'F');
-    doc.setDrawColor(...COR_LARANJA);
-    doc.rect(margin, yPosition, pageWidth - 2 * margin, 80);
+    doc.rect(margin, boxY, boxWidth, boxHeight, 'F');
+    
+    const textX = margin + boxWidth + 10;
+    const labelY = boxY + 10;
+    const valueY = boxY + 25;
     
     doc.setFontSize(12);
-    doc.setTextColor(...COR_BRANCA);
-    doc.text(`Aluno: ${nomeUsuario}`, margin + 15, yPosition + 25);
-    doc.text(`Deck: ${nomeDeck}`, margin + 15, yPosition + 45);
+    const col1X = textX;         
+    const col2X = textX + 200;   
+
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0); 
+    doc.text('Nome:', col1X, labelY);
+    doc.text('Deck:', col2X, labelY);
+
+    doc.setTextColor(100); 
+    doc.text(nomeUsuario, col1X, valueY);
+    doc.text(nomeDeck, col2X, valueY);
     
     if (materias?.length) {
       doc.text(`Matéria: ${materias.join(', ')}`, margin + 15, yPosition + 65);
@@ -231,14 +265,32 @@ const gerarRelatorio = async () => {
       yPosition += 70;
     }
 
-    doc.setFillColor(...COR_AZUL);
-    doc.rect(margin, yPosition - 10, pageWidth - 2 * margin, 35, 'F');
-    doc.setDrawColor(...COR_AZUL);
-    doc.rect(margin, yPosition - 10, pageWidth - 2 * margin, 35);
-    doc.setFontSize(16);
-    doc.setTextColor(...COR_BRANCA);
-    doc.text('DESTAQUES', margin + 15, yPosition + 15);
+    yPosition += 20;
+    doc.setFontSize(20);
+    doc.setTextColor(0, 0, 0); 
+    doc.text('Destaques', margin, yPosition);
+    const lineY2 = yPosition + 10;
+    doc.setLineWidth(1);
+    doc.setDrawColor(100);
+    doc.line(margin, lineY2, pageWidth - margin, lineY2);
     yPosition += 35;
+
+    const paddingLeft = 20;
+    const paddingRight = 20;
+    
+    const rectX = margin;
+    const rectY = yPosition - 10;
+    const rectWidth = pageWidth - 2 * margin;
+    const rectHeight = 35 + 80;
+    
+    doc.setFillColor(...COR_AZUL);
+    doc.rect(rectX, rectY, rectWidth, rectHeight, 'F');
+    doc.setDrawColor(...COR_AZUL);
+    doc.rect(rectX, rectY, rectWidth, rectHeight);
+    
+    const contentXStart = rectX + paddingLeft;
+    const contentXEnd = rectX + rectWidth - paddingRight;
+    
 
     const highlights = [
       { title: 'TOTAL DE CARDS', value: totalCardsFeitos, color: COR_BRANCA },
@@ -246,10 +298,10 @@ const gerarRelatorio = async () => {
       { title: 'NÍVEL GERAL', value: nivelFlashcard, color: COR_BRANCA }
     ];
 
-    const cardWidth = (pageWidth - 2 * margin - 20) / 3;
+    const cardWidth = (contentXEnd - contentXStart - 20) / 3;
     
     highlights.forEach((hl, index) => {
-      const x = margin + index * (cardWidth + 10);
+      const x = contentXStart + index * (cardWidth + 10);
       
       doc.setFillColor(...hl.color);
       doc.rect(x, yPosition, cardWidth, 90, 'F');
@@ -272,20 +324,20 @@ const gerarRelatorio = async () => {
       
       doc.text(hl.value.toString(), x + 10, yPosition + 60);
     });
-    yPosition += 110;
+    yPosition += 130;
 
-    doc.setFillColor(...COR_AZUL);
-    doc.rect(margin, yPosition - 10, pageWidth - 2 * margin, 35, 'F');
-    doc.setDrawColor(...COR_AZUL);
-    doc.rect(margin, yPosition - 10, pageWidth - 2 * margin, 35);
-    doc.setFontSize(16);
-    doc.setTextColor(...COR_BRANCA);
-    doc.text('TEMPO DE ESTUDO', margin + 15, yPosition + 15);
-    yPosition += 35;
+    doc.setFontSize(20);
+    doc.setTextColor(0);
+    doc.text('Tempo de estudo', margin, yPosition + 25);
+    const lineY3 = yPosition + 35;
+    doc.setLineWidth(1);
+    doc.setDrawColor(100);
+    doc.line(margin, lineY3, pageWidth - margin, lineY3);
+    yPosition += 55;
 
-    doc.setFillColor(...COR_CINZA);
+    doc.setFillColor(...COR_AMARELO);
     doc.rect(margin, yPosition, pageWidth - 2 * margin, 80, 'F');
-    doc.setDrawColor(200, 200, 200);
+    doc.setDrawColor(...COR_LARANJA);
     doc.rect(margin, yPosition, pageWidth - 2 * margin, 80);
     
     doc.setFontSize(14);
@@ -295,13 +347,13 @@ const gerarRelatorio = async () => {
     yPosition += 100;
 
     if (timeStats?.timeRecords && timeStats.timeRecords.length > 0) {
-      doc.setFillColor(...COR_AZUL);
-      doc.rect(margin, yPosition - 10, pageWidth - 2 * margin, 35, 'F');
-      doc.setDrawColor(...COR_AZUL);
-      doc.rect(margin, yPosition - 10, pageWidth - 2 * margin, 35);
-      doc.setFontSize(16);
-      doc.setTextColor(...COR_BRANCA);
-      doc.text('TEMPO POR CARD', margin + 15, yPosition + 15);
+      doc.setFontSize(20);
+      doc.setTextColor(0);
+      doc.text('Tempo por card', margin, yPosition + 15);
+      const lineY4 = yPosition + 25;
+      doc.setLineWidth(1);
+      doc.setDrawColor(100);
+      doc.line(margin, lineY4, pageWidth - margin, lineY4);
       yPosition += 35;
 
       const tableWidth = pageWidth - 2 * margin;
@@ -310,6 +362,7 @@ const gerarRelatorio = async () => {
       const col2Width = 100;
       const col3Width = tableWidth - col1Width - col2Width;
 
+      doc.setFontSize(15);
       doc.setFillColor(...COR_LARANJA);
       doc.rect(margin, yPosition, tableWidth, rowHeight, 'F');
       doc.setFont('helvetica', 'bold');
@@ -339,9 +392,9 @@ const gerarRelatorio = async () => {
         const nivel = card?.nivelResposta || '';
         const corNivel = CORES_NIVEIS[nivel] || COR_CINZA;
         
-        doc.setFillColor(corNivel[0], corNivel[1], corNivel[2], 20);
+        doc.setFillColor(...COR_BRANCA);
         doc.rect(margin, yPosition, tableWidth, rowHeight, 'F');
-        doc.setDrawColor(255, 255, 255);
+        doc.setDrawColor(0);
         doc.rect(margin, yPosition, tableWidth, rowHeight);
         
         doc.setTextColor(0, 0, 0);
@@ -359,9 +412,8 @@ const gerarRelatorio = async () => {
 
     doc.addPage();
     yPosition = margin;
-    
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
     doc.setTextColor(...COR_AZUL);
     doc.text('DISTRIBUIÇÃO DAS RESPOSTAS', pageWidth / 2, yPosition, { align: 'center' });
     yPosition += 30;
@@ -502,7 +554,7 @@ const gerarRelatorio = async () => {
                 marginRight: '8px',
                 borderRadius: '2px'
               }} />
-              <span style={{ fontSize: '14px' }}>
+              <span className="legenda" style={{ fontSize: '14px' }}>
                 {nome.charAt(0).toUpperCase() + nome.slice(1)}
               </span>
             </div>
@@ -594,56 +646,58 @@ const gerarRelatorio = async () => {
 };
 
   return (
+    <>
+    <ThemeManager />
     <IonPage className="pagina">
       <Header />
-      <IonContent>
+      <IonContent className="bodyR">
         <IonGrid id="bodyRelatorio" className="no-print" ref={pdfRef}>
           <IonRow className="rowsRelatorio centroRelatorio">
-            <h1 className="preto">Parabéns, você concluiu esse deck!</h1>
-            <p id="pCentro">Você finalizou todos os flashcards desta etapa com sucesso.</p>
+            <h1 className="preto pDarkmode">Parabéns, você concluiu esse deck!</h1>
+            <p id="pCentro" className="pDarkmode">Você finalizou todos os flashcards desta etapa com sucesso.</p>
           </IonRow>
 
           <IonRow className="rowsRelatorio espacoRelatorio">
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">{totalCardsFeitos}</p>
+                  <p className="txtGrande pDarkmode">{totalCardsFeitos}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={layers} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Total de cards realizados</p>
+                <p className="txtTF pDarkmode">Total de cards realizados</p>
               </IonRow>
             </IonRow>
 
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">{totalAcertos}</p>
+                  <p className="txtGrande pDarkmode">{totalAcertos}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={checkmarkDone} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Total de cards fáceis ou muito fáceis</p>
+                <p className="txtTF pDarkmode">Total de cards fáceis ou muito fáceis</p>
               </IonRow>
             </IonRow>
 
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">{nivelFlashcard}</p>
+                  <p className="txtGrande pDarkmode">{nivelFlashcard}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={cellular} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow className="colDesempenho">
-                <p className="txtTF">Nível</p>
-                <p className="txtTF">Desempenho: <span>{desempenhoFlashcard}</span></p>
+                <p className="txtTF pDarkmode">Nível</p>
+                <p className="txtTF pDarkmode">Desempenho: <span>{desempenhoFlashcard}</span></p>
               </IonRow>
             </IonRow>
           </IonRow>
@@ -703,7 +757,7 @@ const gerarRelatorio = async () => {
           <IonRow className="rowsRelatorio grafico">
             <IonCol size="12" className="ion-text-center">
               <div className="grafico-wrapper">
-                <h2 className="titulo-grafico">Distribuição das respostas</h2>
+                <h2 className="titulo-grafico pDarkmode">Distribuição das respostas</h2>
                 <div className="chart-container">
                   <PieChart width={350} height={350}>
                     <Pie
@@ -735,7 +789,7 @@ const gerarRelatorio = async () => {
           <div className="relatorio-container">
             <IonRow>
               <IonCol size="12">
-                <h2 className="titulo-grafico">Detalhes por card</h2>
+                <h2 className="titulo-grafico pDarkmode">Detalhes por card</h2>
               </IonCol>
 
               {/* Bloco Fácil */}
@@ -849,10 +903,6 @@ const gerarRelatorio = async () => {
                 }}
               />
             )}
-            <IonButton onClick={() => window.print()} className="btnRelatorio">
-              <IonIcon icon={download} className="iconeImpressora" />
-              Salvar estatísticas
-            </IonButton>
           </IonRow>
 
         </IonGrid>
@@ -874,6 +924,7 @@ const gerarRelatorio = async () => {
         </div>
       </IonContent>
     </IonPage>
+    </>
   );
 };
 

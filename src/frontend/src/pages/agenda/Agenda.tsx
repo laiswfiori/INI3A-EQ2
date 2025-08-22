@@ -1,16 +1,19 @@
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { IonPage, IonToolbar, IonContent, IonButton, IonButtons, IonIcon, IonSelect, 
-  IonSelectOption, IonSegment, IonSegmentButton, IonLabel, IonRow, IonCol, IonItem } from '@ionic/react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
+import { IonPage, IonToolbar, IonContent, IonButton, IonButtons, IonIcon, IonSelect, IonSelectOption, 
+  IonSegment, IonSegmentButton, IonLabel, IonRow, IonCol, IonItem, IonSpinner,IonToast } from '@ionic/react';
+import { chevronBack,  chevronForward,  chevronDown, documentText, rocket, school, calendar,  flame, arrowForward, settings } from 'ionicons/icons';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { chevronBack, chevronForward, chevronDown, documentText, rocket, school, calendar, flame } from 'ionicons/icons';
+import './css/geral.css';
+import './css/ui.css';
+import './css/layouts.css';
+import './css/darkmode.css';
 import Header from '../../components/Header';
 import AnimacaoSVG from '../../components/AnimacaoSVG';  
 import API from '../../lib/api';
-import './css/geral.css'; 
-import './css/ui.css'; 
-import './css/layouts.css'; 
-import React from 'react';
+import ThemeManager from '../../utils/ThemeManager';
+import '../../utils/css/variaveisCores.css';
+
 
 interface Atividade {
   id: number;
@@ -33,11 +36,79 @@ export default function () {
     setMenuAberto(!menuAberto);
   };
 
+  const coresIniciais = (() => {
+    try {
+      const raw = localStorage.getItem('coresMaterias');
+      console.log('Cores carregadas do localStorage:', raw); 
+      return raw ? JSON.parse(raw) : {};
+    } catch (error) {
+      console.error('Erro ao ler cores do localStorage:', error);
+      return {};
+    }
+  })();
+
+  const [coresMaterias, setCoresMaterias] = useState<{ [key: string]: string }>(coresIniciais);
+  const [isCoresCarregadas, setIsCoresCarregadas] = useState(true);
+
+  useEffect(() => {
+    const raw = localStorage.getItem('coresMaterias');
+    console.log('Cores carregadas do localStorage no useEffect:', raw); 
+    if (raw) {
+      setCoresMaterias(JSON.parse(raw));
+    }
+  }, []);
+  
+  const [hoveredDay, setHoveredDay] = useState<number | null>(null);
+
+  const [materiaSelecionada, setMateriaSelecionada] = useState<string>('all');
+
+
+  useEffect(() => {
+    const coresSalvas = localStorage.getItem('coresMaterias');
+    if (coresSalvas) {
+       console.log('Cores carregadas do localStorage:', JSON.parse(coresSalvas)); 
+      setCoresMaterias(JSON.parse(coresSalvas));
+    }
+    setIsCoresCarregadas(true);
+  }, []);
+
+  const normalizarNomeMateria = (nome: string) => {
+    const nomeUpper = nome.trim().toUpperCase();
+  
+    const mapa: { [key: string]: string } = {
+      'PORTUGUÊS': 'm1',
+      'PORTUGUES': 'm1',
+      'LITERATURA': 'm1',
+      'INGLÊS': 'm2',
+      'INGLES': 'm2',
+      'ESPANHOL': 'm2',
+      'ARTES': 'm3',
+      'HISTÓRIA': 'm4',
+      'HISTORIA': 'm4',
+      'FILOSOFIA': 'm5',
+      'SOCIOLOGIA': 'm6',
+      'GEOGRAFIA': 'm7',
+      'BIOLOGIA': 'm8',
+      'QUÍMICA': 'm9',
+      'QUIMICA': 'm9',
+      'FÍSICA': 'm10',
+      'FISICA': 'm10',
+      'MATEMÁTICA': 'm11',
+      'MATEMATICA': 'm11'
+    };
+  
+    const classe = mapa[nomeUpper] || '';
+    return { nome: nomeUpper, classe };
+  };  
+
   const location = useLocation();
   const hoje = new Date();
-
   const [currentDate, setCurrentDate] = useState(hoje);
   const [selectedDate, setSelectedDate] = useState(hoje.getDate());
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
+
 
   const [viewMode, setViewMode] = useState<'Mês' | 'Semana'>('Mês');
 
@@ -47,33 +118,39 @@ export default function () {
   ];
   const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
+  const [expandedDay, setExpandedDay] = useState<number | null>(null);
+
   const getDaysInMonth = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay();
-    const days = [];
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const startingDayOfWeek = firstDay.getDay();
+  const days = [];
 
-    const prevMonth = new Date(year, month, 0);
-    const prevMonthDays = prevMonth.getDate();
-    for (let i = startingDayOfWeek; i > 0; i--) {
-      days.push({ day: prevMonthDays - i + 1, isCurrentMonth: false });
-    }
+  // Dias do mês anterior (para completar a primeira semana)
+  const prevMonth = new Date(year, month - 1, 1);
+  const prevMonthDays = new Date(year, month, 0).getDate();
+  for (let i = startingDayOfWeek; i > 0; i--) {
+    days.push({ day: prevMonthDays - i + 1, isCurrentMonth: false });
+  }
 
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push({ day, isCurrentMonth: true });
-    }
+  // Dias do mês atual
+  for (let day = 1; day <= daysInMonth; day++) {
+    days.push({ day, isCurrentMonth: true });
+  }
 
-    const totalCells = Math.ceil(days.length / 7) * 7;
-    let nextMonthDay = 1;
-    while (days.length < totalCells) {
-      days.push({ day: nextMonthDay, isCurrentMonth: false });
-      nextMonthDay++;
-    }
-    return days;
-  };
+  // Dias do próximo mês (para completar a última semana)
+  const totalCells = Math.ceil(days.length / 7) * 7;
+  let nextMonthDay = 1;
+  while (days.length < totalCells) {
+    days.push({ day: nextMonthDay, isCurrentMonth: false });
+    nextMonthDay++;
+  }
+
+  return days;
+};
 
   const navigateMonth = (direction: 'prev' | 'next') => {
     setCurrentDate((prev) => {
@@ -104,16 +181,46 @@ export default function () {
     fetchAtividades();
   }, []);
 
+  const [eventosAgenda, setEventosAgenda] = useState<any[]>([]);
 
-  const contagemStatus = {
+
+  useEffect(() => {
+    const fetchAgendaInteligente = async () => {
+      try {
+        const api = new API();
+        
+        const { agenda } = await api.get("/calendarioEstudos"); 
+
+        const eventos = agenda.flatMap((item: any) =>
+          item.revisoes.map((data: string) => ({
+            data,
+            materia: item.materia_nome,
+            materia_id: item.materia_id, 
+            hora_inicio: item.hora_inicio,
+            hora_fim: item.hora_fim,
+          }))
+        );
+
+        setEventosAgenda(eventos);
+      } catch (error) {
+        console.error("Erro ao carregar a agenda inteligente:", error);
+      }
+    };
+
+    fetchAgendaInteligente();
+  }, []);
+
+  type Status = 'não iniciado' | 'em andamento' | 'concluído';
+
+  const contagemStatus: Record<Status, number> = {
     'não iniciado': 0,
     'em andamento': 0,
     'concluído': 0,
   };
 
   atividades.forEach((a) => {
-    if (contagemStatus.hasOwnProperty(a.status)) {
-      contagemStatus[a.status]++;
+    if (a.status in contagemStatus) {
+      contagemStatus[a.status as Status]++;
     }
   });
 
@@ -180,21 +287,84 @@ export default function () {
     return dataEntrega >= hojeZero && dataEntrega <= dataLimite;
   });
 
-  const horarios = Array.from({ length: 24 }, (_, i) => {
-    const hora = i;
-    return `${hora.toString().padStart(2, '0')}h`;
+ const horarios = Array.from({ length: 24 }, (_, i) => {
+  const hora = i;
+  return {
+    hora: hora.toString().padStart(2, '0'),
+    label: `${hora.toString().padStart(2, '0')}h`
+  };
+});
+
+const getEventosPorDiaEHora = (dia: number, hora: string) => {
+  return eventosAgenda.filter(evento => {
+    const eventoDate = new Date(evento.data);
+    return (
+      eventoDate.getDate() === dia &&
+      eventoDate.getMonth() === hoje.getMonth() &&
+      eventoDate.getFullYear() === hoje.getFullYear() &&
+      evento.hora_inicio.startsWith(`${hora}:`)
+    );
   });
+};
+
+const fetchAgendaInteligente = async () => {
+  try {
+    const api = new API();
+    const { agenda } = await api.get("calendarioEstudos");
+
+    const eventos = agenda.flatMap((item: any) =>
+      item.revisoes.map((data: string) => ({
+        data,
+        materia: item.materia_nome,
+        materia_id: item.materia_id,
+        hora_inicio: item.hora_inicio,
+        hora_fim: item.hora_fim,
+      }))
+    );
+
+    setEventosAgenda(eventos);
+  } catch (error) {
+    console.error("Erro ao carregar a agenda inteligente:", error);
+  }
+};
+
+useEffect(() => {
+  fetchAgendaInteligente();
+}, []);
+
+const parseDbDate = (dateString: string) => {
+  if (!dateString) return new Date();
+  
+  const datePart = dateString.split('T')[0];
+  const [year, month, day] = datePart.split('-').map(Number);
+  
+  return new Date(Date.UTC(year, month - 1, day, 12)); 
+};
+
+const eventosNestaHora = eventosAgenda.filter(evento => {
+  const eventoDate = parseDbDate(evento.data);
+  const diaCorreto = new Date(eventoDate);
+  
+  return (
+    diaCorreto.getMonth() === hoje.getMonth() &&
+    diaCorreto.getFullYear() === hoje.getFullYear()
+  );
+});
+
+  const materiasUnicas = Array.from(new Set(eventosAgenda.map(evento => evento.materia))).sort();
+  const history = useHistory();
+
 
   return (
     <IonPage>
       <Header />
-      <IonContent className="pagAgenda">
+      <IonContent className="bodyAG">
         <IonRow className="rowAgenda">
-          <h1 className="txtAgenda preto">Calendário</h1>
+          <h1 className="txtAgenda pDarkmode">Calendário</h1>
         </IonRow>
         <IonToolbar className="laranja toolbarD">
           <div className="calendar-controls ion-padding-horizontal">
-            <div className="month-navigation">
+            <div className={`month-navigation ${viewMode === 'Semana' ? 'hidden-month-nav' : ''}`}>
               <IonButtons>
                 <IonButton onClick={() => navigateMonth('prev')} fill="clear" color="light">
                   <IonIcon slot="icon-only" icon={chevronBack} />
@@ -210,15 +380,16 @@ export default function () {
               <IonSelect
                 className="category-select"
                 interface="popover"
-                placeholder="Categorias"
-                value="all"
+                placeholder="Matérias"
+                value={materiaSelecionada}
+                onIonChange={(e) => setMateriaSelecionada(e.detail.value)}
               >
-                <IonSelectOption value="all">Todas as Categorias</IonSelectOption>
-                <IonSelectOption value="prova">Prova</IonSelectOption>
-                <IonSelectOption value="simulado">Simulado</IonSelectOption>
-                <IonSelectOption value="vestibular">Vestibular</IonSelectOption>
-                <IonSelectOption value="tarefa">Tarefa</IonSelectOption>
-                <IonSelectOption value="aula">Aula</IonSelectOption>
+                <IonSelectOption value="all">Todas as matérias</IonSelectOption>
+                {materiasUnicas.map((materia, index) => (
+                  <IonSelectOption key={index} value={materia}>
+                    {materia}
+                  </IonSelectOption>
+                ))}
               </IonSelect>
               
               <div className="container">
@@ -248,46 +419,51 @@ export default function () {
           </div>
         </IonToolbar>
         <IonToolbar className="laranja toolbarM">
-          <div className="month-navigation">
-            <div className="btnA">
-              <IonButtons>
-                <IonButton onClick={() => navigateMonth('prev')} fill="clear" color="light">
-                  <IonIcon slot="icon-only" icon={chevronBack} />
-                </IonButton>
-                <IonButton onClick={() => navigateMonth('next')} fill="clear" color="light">
-                  <IonIcon slot="icon-only" icon={chevronForward} />
-                </IonButton>
-              </IonButtons>
-              <span className="month-year-label">{currentMonthYear}</span>
+          <div className="rowMobileMonth">
+            <div className={`month-navigation ${viewMode === 'Semana' ? 'hidden-month-nav' : ''}`}>
+              <div className="btnA">
+                <IonButtons>
+                  <IonButton onClick={() => navigateMonth('prev')} fill="clear" color="light">
+                    <IonIcon slot="icon-only" icon={chevronBack} />
+                  </IonButton>
+                  <IonButton onClick={() => navigateMonth('next')} fill="clear" color="light">
+                    <IonIcon slot="icon-only" icon={chevronForward} />
+                  </IonButton>
+                </IonButtons>
+                <span className="month-year-label">{currentMonthYear}</span>
+              </div>
+              </div>
+            <div className="classBtnMenu">
+              <button
+                className={`menu-line ${menuAberto ? 'opened' : ''}`}
+                onClick={toggleMenu}
+                aria-label="Main Menu"
+                aria-expanded={menuAberto}
+              >
+                <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                  <path className="menu-line menu-line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+                  <path className="menu-line menu-line2" d="M 20,50 H 80" />
+                  <path className="menu-line menu-line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+                </svg>
+              </button>
             </div>
-           <button
-            className={`menu-line ${menuAberto ? 'opened' : ''}`}
-            onClick={toggleMenu}
-            aria-label="Main Menu"
-            aria-expanded={menuAberto}
-          >
-            <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-              <path className="menu-line menu-line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
-              <path className="menu-line menu-line2" d="M 20,50 H 80" />
-              <path className="menu-line menu-line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
-            </svg>
-          </button>
-          </div>
+          </div>          
         </IonToolbar>
         {menuAberto && (
           <div className="view-controls laranja">
               <IonSelect
                 className="category-select"
                 interface="popover"
-                placeholder="Categorias"
-                value="all"
+                placeholder="Matérias"
+                value={materiaSelecionada}
+                onIonChange={(e) => setMateriaSelecionada(e.detail.value)}
               >
-                <IonSelectOption value="all">Todas as Categorias</IonSelectOption>
-                <IonSelectOption value="prova">Prova</IonSelectOption>
-                <IonSelectOption value="simulado">Simulado</IonSelectOption>
-                <IonSelectOption value="vestibular">Vestibular</IonSelectOption>
-                <IonSelectOption value="tarefa">Tarefa</IonSelectOption>
-                <IonSelectOption value="aula">Aula</IonSelectOption>
+                <IonSelectOption value="all">Todas as matérias</IonSelectOption>
+                {materiasUnicas.map((materia, index) => (
+                  <IonSelectOption key={index} value={materia}>
+                    {materia}
+                  </IonSelectOption>
+                ))}
               </IonSelect>
               
               <div className="container">
@@ -315,94 +491,218 @@ export default function () {
               </div>
             </div>
         )}
-        {viewMode === 'Mês' && (
-        <div className="calendar-grid-container">
-          <div className="calendar-grid days-of-week-header">
-            {daysOfWeek.map((day) => (
-              <div key={day} className="day-header">
-                {day}
-              </div>
-            ))}
-          </div>
 
-          <div className="calendar-grid">
-            {days.map((date, index) => (
-              <div
-                key={index}
-                className={`calendar-day 
-                  ${!date.isCurrentMonth ? 'other-month' : ''} 
-                  ${date.day === selectedDate && date.isCurrentMonth ? 'selected-day' : ''}
-                  ${
-                    date.day === hoje.getDate() &&
-                    currentDate.getMonth() === hoje.getMonth() &&
-                    currentDate.getFullYear() === hoje.getFullYear() &&
-                    date.isCurrentMonth
-                      ? 'today-highlight'
-                      : ''
-                  }
-                `}
-                onClick={() => date.isCurrentMonth && setSelectedDate(date.day)}
-              >
-                <span className="day-number">{date.day}</span>
-                <div className="events-container">
-                    {date.isCurrentMonth && date.day === 15 && (
-                        <div className="event-tag event-prova">Prova</div>
-                    )}
-                    {date.isCurrentMonth && date.day === 22 && (
-                        <div className="event-tag event-simulado">Simulado</div>
-                    )}
-                    {date.isCurrentMonth && date.day === 16 && (
-                        <div className="event-tag event-vestibular">Vestibular</div>
-                    )}
-                    {date.isCurrentMonth && date.day === 28 && (
-                        <div className="event-tag event-tarefa">Tarefa</div>
-                    )}
-                    {date.isCurrentMonth && date.day === 27 && (
-                        <div className="event-tag event-aula">Aula</div>
-                    )}
-                </div>
-              </div>
-            ))}
-          </div>
+{viewMode === 'Mês' && (
+  <div className="calendar-grid-container">
+    <div className="calendar-grid days-of-week-header">
+      {daysOfWeek.map((day) => (
+        <div key={day} className="day-header">
+          {day}
         </div>
-        )}
-       {viewMode === 'Semana' && (
-          <div className="calendar-grid-container semana">
-            <div className="calendar-grid days-of-week-header semana-header">
-              <div className="hora-header"></div> 
-              {diasDaSemana.map((dia, idx) => (
-                <div
-                  key={idx}
-                  className={`day-header ${dia.isHoje ? 'today-highlight' : ''} ${dia.ativo ? 'dia-ativo' : ''}`}
-                  onClick={() => {
-                    if (dia.ativo) setSelectedDate(dia.numero);
-                  }}
-                >
-                  <div className="day-number">{dia.numero}</div>
-                  <div className="day-name">{dia.nome}</div>
-                </div>
-              ))}
-            </div>
-            <div className="calendar-grid semana-horarios">
-              {horarios.map((hora, i) => (
-                <React.Fragment key={i}>
-                  <div className="hora-label">{hora}</div>
-                  {diasDaSemana.map((dia, j) => (
-                    <div key={j} className="calendar-day semana-dia-hora">
+      ))}
+    </div>
+
+    <div className="calendar-grid">
+      {days.map((date, index) => {
+        // Filtra eventos APENAS para dias do mês atual
+        const currentDayEvents = date.isCurrentMonth 
+          ? eventosAgenda.filter((evento) => {
+              if (!evento.data) return false;
+              const eventoDate = parseDbDate(evento.data);
+              return (
+                eventoDate.getDate() === date.day &&
+                eventoDate.getMonth() === currentDate.getMonth() &&
+                eventoDate.getFullYear() === currentDate.getFullYear()
+              );
+            })
+          : [];
+
+        return (
+          <div
+            key={index}
+            className={`calendar-day ${!date.isCurrentMonth ? 'other-month' : ''}
+              ${date.day === selectedDate && date.isCurrentMonth ? 'selected-day' : ''}
+              ${
+                date.day === hoje.getDate() &&
+                currentDate.getMonth() === hoje.getMonth() &&
+                currentDate.getFullYear() === hoje.getFullYear() &&
+                date.isCurrentMonth
+                  ? 'today-highlight'
+                  : ''
+              }
+            `}
+            onClick={() => date.isCurrentMonth && setSelectedDate(date.day)}
+            onMouseEnter={() => setHoveredDay(date.day)}
+            onMouseLeave={() => setHoveredDay(null)}
+          >
+            <span className="day-number">{date.day}</span>
+            
+            {date.isCurrentMonth && isCoresCarregadas && (
+              <div className="events-container">
+                {currentDayEvents.slice(0, 2).map((evento, idx) => {
+                  const materiaNome = evento.materia || '';
+                  const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
+                  const corSalva = materiaId ? coresMaterias[materiaId] : undefined;
+
+                  console.log(`Evento ${materiaNome} (ID: ${materiaId}) - evento completo:`, evento);
+                  console.log(`Cor salva para o ID ${materiaId}: ${corSalva}`); 
+
+                  const { classe } = normalizarNomeMateria(materiaNome);
+
+                  return (
+                    <div 
+                      key={`${date.day}-${idx}`}
+                      className={`event-tag ${corSalva ? '' : classe}`}
+                      style={{ backgroundColor: corSalva || undefined }} 
+                    >
+                      <div className="event-title">{materiaNome || 'Evento'}</div>
+                      <div className="event-time">
+                        {evento.hora_inicio} - {evento.hora_fim}
+                      </div>
                     </div>
-                  ))}
-                </React.Fragment>
-              ))}
-            </div>
+                  );
+                })}
+              {currentDayEvents.length > 2 && (
+                    <div className="more-events-wrapper">
+                      <div className="more-events">+{currentDayEvents.length - 2}</div>
+                      <div className="popover-extra">
+                        {currentDayEvents.slice(2).map((evento, idx) => {
+                          const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
+                          const corSalva = materiaId ? coresMaterias[materiaId] : undefined;
+                          const { classe } = normalizarNomeMateria(evento.materia || '');
+
+                          return (
+                            <div 
+                              key={`extra-${date.day}-${idx}`} 
+                              className={`hover-item divHover ${corSalva ? '' : classe}`}
+                              style={{ backgroundColor: corSalva || undefined }}
+                            >
+                              <div className="event-title eventHover">{evento.materia}</div>
+                              <div className="event-time eventHover">
+                                {evento.hora_inicio} - {evento.hora_fim}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+              </div>
+            )}
           </div>
-        )}
-        <div className="legend-container">
-            <div className="legend-item"><div className="legend-color event-prova"></div> Provas</div>
-            <div className="legend-item"><div className="legend-color event-simulado"></div> Simulados</div>
-            <div className="legend-item"><div className="legend-color event-vestibular"></div> Vestibulares</div>
-            <div className="legend-item"><div className="legend-color event-tarefa"></div> Tarefas</div>
-            <div className="legend-item"><div className="legend-color event-aula"></div> Aulas</div>
-        </div>
+        );
+      })}
+    </div>
+  </div>
+)}
+{viewMode === 'Semana' && (
+  <div className="calendar-grid-container semana">
+    <div className="calendar-grid days-of-week-header semana-header">
+      <div className="hora-header"></div>
+      {diasDaSemana.map((diaSemana, idx) => {
+        const diaAtual = new Date();
+        diaAtual.setDate(diaSemana.numero);
+
+        const eventosDoDia = eventosAgenda.filter(evento => {
+          const eventoDate = parseDbDate(evento.data);
+          return (
+            eventoDate.getDate() === diaSemana.numero &&
+            eventoDate.getMonth() === diaAtual.getMonth() &&
+            eventoDate.getFullYear() === diaAtual.getFullYear()
+          );
+        });
+
+        return (
+          <div
+            key={idx}
+            className={`day-header ${diaSemana.isHoje ? 'today-highlight' : ''}`}
+          >
+            <div className="day-number">{diaSemana.numero}</div>
+            <div className="day-name">{diaSemana.nome}</div>
+            {eventosDoDia.length > 0 && <div className="event-dot"></div>}
+          </div>
+        );
+      })}
+    </div>
+
+    <div className="calendar-grid semana-horarios">
+      {horarios.map((horaObj, i) => (
+        <React.Fragment key={i}>
+          <div className="hora-label">{horaObj.label}</div>
+          {diasDaSemana.map((diaSemana, j) => {
+            const diaAtual = new Date();
+            diaAtual.setDate(diaSemana.numero);
+
+            const eventos = eventosAgenda.filter(evento => {
+              const eventoDate = parseDbDate(evento.data);
+              const [horaInicio] = evento.hora_inicio.split(':').map(Number);
+
+              return (
+                eventoDate.getDate() === diaSemana.numero &&
+                eventoDate.getMonth() === diaAtual.getMonth() &&
+                eventoDate.getFullYear() === diaAtual.getFullYear() &&
+                horaInicio === parseInt(horaObj.hora)
+              );
+            });
+
+            return (
+              <div
+                key={j}
+                className={`calendar-day semana-dia-hora ${diaSemana.isHoje ? 'today-cell' : ''}`}
+                style={{ position: 'relative' }}
+              >
+                {eventos.map((evento, k) => {
+                  const [horaInicioH, minInicio] = evento.hora_inicio.split(':').map(Number);
+                  const [horaFimH, minFim] = evento.hora_fim.split(':').map(Number);
+                  
+                  const duracaoMinutos = (horaFimH * 60 + minFim) - (horaInicioH * 60 + minInicio);
+                  
+                  const horaLabelEl = document.querySelector('.hora-label');
+                  const alturaHoraPx = horaLabelEl ? horaLabelEl.getBoundingClientRect().height : 60;
+                  
+                  const pxPorMinuto = alturaHoraPx / 60;
+                  
+                  const alturaPx = Math.max(1, duracaoMinutos * pxPorMinuto);
+                  const topDentroDaHoraPx = minInicio * pxPorMinuto;
+                  const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
+                  const corSalva = materiaId ? coresMaterias[materiaId] : "#3da5d9"; 
+
+                  const { classe } = normalizarNomeMateria(evento.materia); 
+
+                  return (
+                    <div
+                      key={k}
+                      className={`event-tag event-aula ${classe}`}
+                      style={{
+                        position: 'absolute',
+                        top: `${topDentroDaHoraPx}px`,
+                        left: 0,
+                        right: 0,
+                        height: `${alturaPx}px`,
+                        backgroundColor: corSalva,
+                      }}
+                    >
+                      <div className="event-title eSemana">{evento.materia}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </React.Fragment>
+      ))}
+    </div>
+  </div>
+)}
+        <IonRow className="rowIrMat">
+          <p className="pDarkmode addMaisMats">Quer adicionar mais matérias?</p>
+          <div className="contIrMat" onClick={(e) => {  
+            history.push(`/perfil/perfil`);
+          }}>
+            <IonIcon icon={arrowForward} className="iconesIrMat" />
+            <IonIcon icon={settings} className="iconesIrMat" />
+          </div>
+        </IonRow>
         <IonRow className="linhaHorizontal"></IonRow>
         <IonRow className="rowAgenda">
           <h1 className="txtAgenda preto">Review semanal</h1>
@@ -411,49 +711,49 @@ export default function () {
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">{atividades.length}</p>
+                  <p className="txtGrande pDarkmode">{atividades.length}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={documentText} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Total de atividades</p>
+                <p className="txtTF pDarkmode">Total de atividades</p>
               </IonRow>
             </IonRow>
 
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">{atividades.filter(a => a.status === "concluído").length}</p>
+                  <p className="txtGrande pDarkmode">{atividades.filter(a => a.status === "concluído").length}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={school} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Total de atividades concluídas</p>
+                <p className="txtTF pDarkmode">Total de atividades concluídas</p>
               </IonRow>
             </IonRow>
 
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
-                  <p className="txtGrande">5</p>
+                  <p className="txtGrande pDarkmode">5</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
                   <IonIcon icon={rocket} className="iconesTF" />
                 </IonCol>
               </IonRow>
               <IonRow>
-                <p className="txtTF">Total de revisões feitas</p>
+                <p className="txtTF pDarkmode">Total de revisões feitas</p>
               </IonRow>
             </IonRow>
           </IonRow>  
           <IonRow className="rowA rowCentro rowScroll">
             <IonCol className="colAtividades">
               <IonRow className="flexA">
-                <h2>Próximas atividades</h2>
+                <h2 className="pDarkmode">Próximas atividades</h2>
                 <p className="txtDescricao">Atividades para os próximos 7 dias. Não acumule suas obrigações!</p>
               </IonRow>
               <div className="atividades-scroll">
@@ -467,13 +767,6 @@ export default function () {
                             <h2 className="txtTMat">{atividade.titulo}</h2>
                             <p className="txtDescricao">{atividade.tipo}</p>
                           </IonCol>
-                      </IonCol>
-                      <IonCol className="col2M">
-                        <IonRow>
-                          <IonCol id="containerConfig">
-                            <IonButton className="config">...</IonButton>
-                          </IonCol>
-                        </IonRow>
                       </IonCol>
 
                       <IonRow className="rowA">
@@ -506,7 +799,7 @@ export default function () {
             </IonCol>
             <IonCol className="colGrafico">
               <IonRow className="flexA sBorda">
-                <h2>Progresso de estudo</h2>
+                <h2 className="pDarkmode">Progresso de estudo</h2>
                 <p className="txtDescricao">Acompanhe seu progresso usando o flashminder.</p>
               </IonRow>
               <div id="grafico"
@@ -535,14 +828,14 @@ export default function () {
                 <IonCol className="colOfensiva1">
                   <div className="divOfensiva">
                     <IonIcon icon={flame} className="iconeFogo" />
-                    <h3 className="hOfensiva">116 dias</h3>
+                    <h3 className="hOfensiva pDarkmode">116 dias</h3>
                     <p className="txtDescricao pOfensiva">Sequência de login</p>
                   </div>
                 </IonCol>
                 <IonCol className="colOfensiva2">
                   <div className="diasOfensiva">
-                    <h3 className="dias1">214</h3>
-                    <h4>/365</h4>
+                    <h3 className="dias1 pDarkmode">214</h3>
+                    <h4 className="pDarkmode">/365</h4>
                   </div>
                   <IonRow className="barraA">
                     <div className="barraStatusA" style={{ width: `${50}%` }}></div>
@@ -554,8 +847,8 @@ export default function () {
                           key={index}
                           className={`day-item ${dia.isHoje ? 'day-active' : ''}`}
                         >
-                          <div className="day-number">{dia.numero}</div>
-                          <div className="day-name">{dia.nome}</div>
+                          <div className="day-number dayO">{dia.numero}</div>
+                          <div className="day-name dayNO">{dia.nome}</div>
                         </div>
                       ))}
                     </div>
@@ -575,14 +868,14 @@ export default function () {
                 <IonCol className="colOfensiva1">
                   <div className="divOfensiva">
                     <IonIcon icon={flame} className="iconeFogo" />
-                    <h3 className="hOfensiva">116 dias</h3>
+                    <h3 className="hOfensiva pDarkmode">116 dias</h3>
                     <p className="txtDescricao pOfensiva">Sequência de login</p>
                   </div>
                 </IonCol>
                 <IonCol className="colOfensiva2">
                   <div className="diasOfensiva">
-                    <h3 className="dias1">214</h3>
-                    <h4>/365</h4>
+                    <h3 className="dias1 pDarkmode">214</h3>
+                    <h4 className="pDarkmode">/365</h4>
                   </div>               
                   <IonRow className="barraA">
                     <div className="barraStatusA" style={{ width: `${50}%` }}></div>
@@ -596,8 +889,8 @@ export default function () {
                           key={index}
                           className={`day-item ${dia.isHoje ? 'day-active' : ''}`}
                         >
-                          <div className="day-number">{dia.numero}</div>
-                          <div className="day-name">{dia.nome}</div>
+                          <div className="day-number dayO">{dia.numero}</div>
+                          <div className="day-name dayNO">{dia.nome}</div>
                         </div>
                       ))}
                     </div>
@@ -611,10 +904,10 @@ export default function () {
                       ))}
                     </div>
                   </div>   
-                </IonRow>           
+                </IonRow>  
               </IonRow>
             </IonCol>
-          </IonRow>  
+          </IonRow>
       </IonContent>
     </IonPage>
   );

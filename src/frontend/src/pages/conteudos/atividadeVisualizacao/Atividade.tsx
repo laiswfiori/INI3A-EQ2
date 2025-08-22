@@ -6,6 +6,9 @@ import Header from '../../../components/Header';
 import API from '../../../lib/api';
 import './css/ui.css';
 import './css/layouts.css';
+import './css/darkmode.css';
+import ThemeManager from '../../../utils/ThemeManager';
+import '../../../utils/css/variaveisCores.css';
 
 interface Atividade {
   id: number;
@@ -59,17 +62,17 @@ const Atividade: React.FC = () => {
 
   const renderTexto = () => (
     <div className="metadeColuna">
-      <div className="tituloSecao">Texto</div>
+      <div className="tituloSecao pDarkmode">Texto</div>
       {atividade!.conteudo
         .filter(item => item.tipo === 'texto')
-        .map((item, i) => <p key={i}>{item.valor}</p>)}
+        .map((item, i) => <p className="pDarkmode" key={i}>{item.valor}</p>)}
     </div>
   );
 
 
   const renderImagem = () => (
     <div>
-      <div className="tituloSecao">Imagens</div>
+      <div className="tituloSecao pDarkmode">Imagens</div>
       <div className="flexDocumentosImgs flexImgsWide">
         {atividade!.conteudo
           .filter(item => item.tipo === 'imagem')
@@ -83,7 +86,7 @@ const Atividade: React.FC = () => {
 
   const renderPdf = () => (
     <div>
-      <div className="tituloSecao">Documentos</div>
+      <div className="tituloSecao pDarkmode">Documentos</div>
       <div className="flexDocumentosImgs">
         {atividade!.conteudo
           .filter(item => item.tipo === 'arquivo')
@@ -97,12 +100,14 @@ const Atividade: React.FC = () => {
   );
 
   return (
+    <>
+    <ThemeManager />
     <IonPage className="pagina">
       <Header />
-      <IonContent className="body">
+      <IonContent className="bodyAV">
         <IonRow className="contVoltar" onClick={() => history.goBack()}>
           <IonIcon icon={returnDownBack} className="voltarAtividades" />
-          <p className="txtVoltarAtividades">Voltar para atividades</p>
+          <p className="txtVoltarAtividades pDarkmode">Voltar para atividades</p>
         </IonRow>
 
         {loading ? (
@@ -113,13 +118,13 @@ const Atividade: React.FC = () => {
           <p className="error-message">{erro}</p>
         ) : atividade ? (
           <div className="atividade-visualizacao">
-            <h1 className="titulo">{atividade.titulo}</h1>
-            <p className="descricao">{atividade.descricao}</p>
-            <p className="tipo"><strong>Tipo:</strong> {atividade.tipo}</p>
+            <h1 className="titulo pDarkmode">{atividade.titulo}</h1>
+            <p className="descricao pDarkmode">{atividade.descricao}</p>
+            <p className="tipo pDarkmode"><strong>Tipo:</strong> {atividade.tipo}</p>
 
             <div className="linhaHorizontal"></div>
 
-            <h2 className="txtCentro">Atividade</h2>
+            <h2 className="txtCentro pDarkmode">Atividade</h2>
 
             {atividade.conteudo.length === 0 && (
               <p>Não há conteúdo adicionado.</p>
@@ -167,6 +172,7 @@ const Atividade: React.FC = () => {
         )}
       </IonContent>
     </IonPage>
+    </>
   );
 };
 

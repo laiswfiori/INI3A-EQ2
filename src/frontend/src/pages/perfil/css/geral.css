@@ -19,7 +19,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;   
-    justify-content: center;   
     pointer-events: none !important;
     height: 100%;
 }
@@ -43,6 +42,15 @@
     justify-content: center;   
     height: fit-content;
   }
+
+#img {
+  position: absolute;
+  top: 0;
+}
+
+#linhaDivisora {
+  margin-top: 18rem;
+}
 
   .txtPading {
     padding: 0 !important;
@@ -288,6 +296,37 @@ ion-input.inputBioM {
 .rowTraduzir {
   display: flex;
   flex-direction: row;
+}
+
+.colAvancada {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+
+.colAvancadaM {
+  padding: 5%;
+  width: 100%;
+}
+
+.rowAvancados {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.btnAvancados {
+  align-self: center;
+  width: 80%;
+  border-radius: 20px;
+}
+
+.larguraEstudo {
+  width: 100%;
+}
+
+.larguraEstudo2 {
+  width: 100%;
 }
 
 #img {

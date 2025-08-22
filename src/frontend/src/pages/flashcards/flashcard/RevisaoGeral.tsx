@@ -1,4 +1,3 @@
-// Imports
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonButton, IonRow, IonLabel } from '@ionic/react';
@@ -9,8 +8,9 @@ import API from '../../../lib/api';
 import CardFlip from '../components/CardFlip';
 import Header from '../../../components/Header';
 import { useSoundPlayer } from '../../../utils/Som';
+import ThemeManager from '../../../utils/ThemeManager';
+import '../../../utils/css/variaveisCores.css';
 
-// Interfaces
 interface Card {
   id?: number;
   flashcard_id?: number;
@@ -25,7 +25,6 @@ interface TimeRecord {
   timestamp: Date;
 }
 
-// Função para embaralhar
 function shuffleArray<T>(array: T[]): T[] {
   const arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -35,7 +34,6 @@ function shuffleArray<T>(array: T[]): T[] {
   return arr;
 }
 
-// Componente principal
 const RevisaoGeral: React.FC = () => {
   const history = useHistory();
   const api = new API();
@@ -148,47 +146,54 @@ const RevisaoGeral: React.FC = () => {
     return { totalTime, averageTime, totalCards: timeRecords.length };
   };
 
-  const handleNextCard = async (nivel: string) => {
-    if (!mostrarVerso || !cardAtual || !cardAtual.id) return;
+const handleNextCard = async (nivel: string) => {
+  if (!mostrarVerso || !cardAtual || !cardAtual.id) return;
 
-    try {
-      await api.put(`cards/${cardAtual.id}`, { nivel });
-    } catch (error) {
-      console.error(`Erro ao salvar nível do card ${cardAtual.id}:`, error);
+  try {
+    await api.put(`cards/${cardAtual.id}`, { nivel });
+  } catch (error) {
+    console.error(`Erro ao salvar nível do card ${cardAtual.id}:`, error);
+  }
+
+  const novasRespostas = [...respostasAcumuladas, { cardId: cardAtual.id!, nivel }];
+
+  setRespostasAcumuladas(novasRespostas);
+  localStorage.setItem('flashcards_totalFeitos', String(novasRespostas.length));
+  localStorage.setItem('flashcards_respostas', JSON.stringify(novasRespostas));
+
+  setAllCards(prev =>
+    prev.map(c => (c.id === cardAtual.id ? { ...c, nivelResposta: nivel } : c))
+  );
+
+  if (startTimeRef.current) {
+    const now = new Date();
+    const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
+    setTimeRecords(prev => [...prev, { cardId: cardAtual.id!, timeSpent, timestamp: now }]);
+  }
+
+  if (currentCardIndex + 1 < allCards.length) {
+    setCurrentCardIndex(currentCardIndex + 1);
+    setMostrarVerso(false);
+    return;
+  }
+
+  const timeStats = calculateTimeStats();
+
+  history.push('/flashcards/relatorio', {
+    respostas: novasRespostas.map(r => r.nivel),
+    cardsComRespostas: allCards.map(c =>
+      c.id === cardAtual.id ? { ...c, nivelResposta: nivel } : c
+    ),
+    nomeDeck: 'Revisão Geral',
+    revisaoGeral: true,
+    materias: [],
+    timeStats: {
+      totalTime: timeStats.totalTime,
+      averageTime: timeStats.averageTime,
+      timeRecords
     }
-
-    setRespostasAcumuladas(prev => [...prev, { cardId: cardAtual.id!, nivel }]);
-    setAllCards(prev => prev.map(c => (c.id === cardAtual.id ? { ...c, nivelResposta: nivel } : c)));
-
-    if (startTimeRef.current) {
-      const now = new Date();
-      const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
-      setTimeRecords(prev => [...prev, { cardId: cardAtual.id, timeSpent, timestamp: now }]);
-    }
-
-    if (currentCardIndex + 1 < allCards.length) {
-      setCurrentCardIndex(currentCardIndex + 1);
-      setMostrarVerso(false);
-      return;
-    }
-
-    const timeStats = calculateTimeStats();
-
-    history.push('/flashcards/relatorio', {
-      respostas: [...respostasAcumuladas, { cardId: cardAtual.id!, nivel }].map(r => r.nivel),
-      cardsComRespostas: allCards.map(c =>
-        c.id === cardAtual.id ? { ...c, nivelResposta: nivel } : c
-      ),
-      nomeDeck: 'Revisão Geral',
-      revisaoGeral: true,
-      materias: [],
-      timeStats: {
-        totalTime: timeStats.totalTime,
-        averageTime: timeStats.averageTime,
-        timeRecords
-      }
-    });
-  };
+  });
+};
 
   const handleEmojiClick = (nivel: string) => {
     if (nivel === 'muito fácil' || nivel === 'fácil') {
@@ -200,6 +205,8 @@ const RevisaoGeral: React.FC = () => {
   };
 
   return (
+    <>
+    <ThemeManager />
     <IonPage>
       <Header />
       <IonContent className="pagFlashcards">
@@ -273,6 +280,7 @@ const RevisaoGeral: React.FC = () => {
         )}
       </IonContent>
     </IonPage>
+    </>
   );
 };
 

@@ -1,0 +1,43 @@
+.azul {
+    background-color: var(--cor-azulL) !important;
+}
+
+.icones:hover {
+    color: var(--cor-azulA) !important;
+}
+
+.icones:hover + .iconesTxt {
+    color:  var(--cor-azulA) !important;
+}
+
+.iconesMobile:hover {
+    color:  var(--cor-azulA) !important;
+}
+
+.iconesMobile:hover + .iconesTxt {
+    color:  var(--cor-azulA) !important;
+}
+
+.icones.ativo:hover {
+    color:  var(--cor-azulA) !important;
+}
+
+.icones.ativo:hover + .iconesTxt.ativo {
+    color:  var(--cor-azulA) !important;
+}
+
+.iconesMobile.ativo, .iconesTxt.ativo {
+    color:  var(--cor-amareloA) !important;
+}
+
+.iconesMobile.ativo:hover {
+    color:  var(--cor-azulA) !important;
+}
+
+.iconesMobile.ativo:hover + .iconesTxt.ativo {
+    color:  var(--cor-azulA) !important;
+}
+
+.icones.ativo, .iconesTxt.ativo {
+  color: var(--cor-amareloA) !important;
+}

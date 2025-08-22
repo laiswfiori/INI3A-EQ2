@@ -26,7 +26,7 @@ ion-segment-button {
 
 .days-of-week-header {
   border-bottom: 1px solid #333;
-  background-color: #d4d4d4;
+  background-color: #00296b;
 }
 
 .day-header {
@@ -34,13 +34,12 @@ ion-segment-button {
   text-align: center;
   font-size: 0.8rem;
   font-weight: bold;
-  color: black;
+  color: white;
 }
 
 .calendar-day {
   position: relative;
   min-height: 110px;
-  padding: 8px;
   border-bottom: 1px solid #333;
   border-right: 1px solid #333;
   cursor: pointer;
@@ -65,6 +64,7 @@ ion-segment-button {
 }
 
 .other-month {
+  background-color: #ddd;
   color: #555;
   cursor: default;
 }
@@ -114,7 +114,6 @@ ion-segment-button {
   background-color: #a18115; 
   color: #ffde72;
 }
-
 
 .divData {
   background-color: #333;
@@ -203,7 +202,7 @@ ion-segment-button {
 .day-name {
   font-size: 0.7rem;
   height: 20px;
-  color: #666;
+  color: #ddd;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }
@@ -258,4 +257,89 @@ ion-segment-button {
 .divOfensiva {
   background-color: #e2e2e2;
   border-radius: 20px;
+}
+
+.event-tag {
+  background-color: #3da5d9;
+}
+
+
+.event-tag.m1 {
+  background-color: rgb(185, 39, 39);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m2 {
+  background-color: rgb(88, 47, 7);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m3 {
+  background-color: rgb(64, 193, 216);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m4 {
+  background-color: rgb(161, 85, 22);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m5 {
+  background-color: rgb(206, 81, 139);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m6 {
+  background-color: rgb(202, 182, 5);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m7 {
+  background-color: rgb(24, 136, 211);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m8 {
+  background-color: rgb(58, 128, 18);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m9 {
+  background-color: rgb(219, 132, 19);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m10 {
+  background-color: rgb(112, 30, 179);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m11 {
+  background-color: rgb(196, 28, 6);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag {
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-time {
+  color: white;
+}
+
+.eSemana {
+  font-size: 1.2rem;
+  text-align: center;
 }

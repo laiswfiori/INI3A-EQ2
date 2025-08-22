@@ -1,0 +1,107 @@
+.bodyAG {
+    --background: var(--cor-branco) !important;
+}
+
+.day-number {
+    color: var(--cor-preto) !important;
+}
+
+.pDarkmode, .hora-label {
+    color: var(--cor-preto) !important;
+}
+
+.laranja {
+    --background: var(--cor-laranjaA) !important;
+    background-color: var(--cor-laranjaA) !important;
+}
+
+.category-select, .tabs {
+    background-color: var(--cor-amareloL) !important;
+}
+
+.glider {
+    background-color: var(--cor-amareloL2) !important;
+}
+
+.days-of-week-header {
+    background-color: var(--cor-azulE5) !important;
+    --background: var(--cor-azulE2) !important;
+}
+
+.today-highlight {
+    background-color: var(--cor-amarela) !important;
+    color: var(--cor-laranja) !important;
+}
+
+.today-highlight .day-number {
+    color: var(--cor-laranja) !important;
+}
+
+.calendar-day {
+    background-color: var(--cor-brancoC);
+    border-bottom: 1px solid var(--cor-cinza) !important;
+    border-right: 1px solid var(--cor-cinza) !important;
+}
+
+.hora-label, .calendar-grid.semana-horarios {
+    background-color: var(--cor-brancoC) !important;
+    border-bottom: 1px solid var(--cor-cinza) !important;
+    border-right: 1px solid var(--cor-cinza) !important;
+}
+
+.other-month {
+    background-color: var(--cor-cinza7) !important;
+    color: var(--cor-cinza8) !important;
+}
+
+.colAtividades, .colGrafico {
+    background-color: var(--cor-azulE2) !important;
+}
+
+.txtDescricao {
+    color: var(--cor-cinza) !important;
+}
+
+.divOfensiva {
+    background-color: var(--cor-cinza9) !important;
+}
+
+.dayO {
+    color: var(--cor-branco7) !important;
+}
+
+.dayNO {
+    color: var(--cor-cinza7) !important;
+}
+
+.day-name {
+    color: var(--cor-cinza) !important;
+}
+
+.divHover {
+    background-color: var(--cor-brancoC) !important;
+}
+
+.eventHover {
+    color: var(--cor-preto) !important;
+}
+
+.ativAgenda {
+    border-color: #ddd !important;
+}
+
+.date-nav-container {
+    background-color: var(--cor-brancoC) !important;
+}
+
+.day-item:hover .dayO {
+    background-color: var(--cor-cinza10) !important;
+}
+  
+.day-item:hover .dayNO {
+    background-color: var(--cor-cinza10) !important;
+}
+
+.day-active .day-number, .day-active .day-name {
+    background-color:  var(--cor-amarela) !important;
+}

@@ -5,6 +5,9 @@ import { home, calendar, star, documentText, personCircle, notifications, close}
 import './css/ui.css';
 import './css/geral.css';
 import './css/layouts.css';
+import './css/darkmode.css';
+import ThemeManager from '../utils/ThemeManager';
+import '../utils/css/variaveisCores.css';
 import { useSoundPlayer } from './../utils/Som';
 import { useUserProfile } from '../contexts/UserProfileContext';
 
@@ -14,6 +17,10 @@ const Header: React.FC = () => {
   const [menuAberto, setMenuAberto] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
   const [mostrarPopover, setMostrarPopover] = useState(false);
+
+  const savedTheme = localStorage.getItem('theme');
+  const logoSrc = savedTheme === 'dark' ? '/imgs/logoInicioDarkmode.png' : '/imgs/logoInicio.png';
+  const logoMobileSrc = savedTheme === 'dark' ? '/imgs/logoMobileDarkmode.png' : '/imgs/logoMobile.png';
 
   const { playSomNotificacao } = useSoundPlayer();
 
@@ -99,11 +106,13 @@ const Header: React.FC = () => {
   }, []);
 
   return (
+    <>
+    <ThemeManager />
     <IonHeader>
       <IonToolbar>
         <div id="header" className="azul">
-          <div id="logoHome">
-            <IonImg src="/imgs/logoInicio.png" alt="Logo FSMR" id="logo" onClick={navHome}/>
+           <div id="logoHome">
+              <IonImg src={logoSrc} alt="Logo FSMR" id="logo" onClick={navHome}/>
           </div>
 
           <div id="nav" className="azul" ref={navRef}>
@@ -195,7 +204,7 @@ const Header: React.FC = () => {
         </IonPopover>
 
         <div id="headerMobile" className="azul">
-          <IonImg src="/imgs/logo1.png" alt="Logo FSMR" id="logoMobile"/>
+          <IonImg src={logoMobileSrc} alt="Logo FSMR" id="logoMobile" onClick={navHome}/>
 
           <button
             className={`menu-line ${menuAberto ? 'opened' : ''}`}
@@ -250,6 +259,7 @@ const Header: React.FC = () => {
         )}
       </IonToolbar>
     </IonHeader>
+    </>
   );
 };
 

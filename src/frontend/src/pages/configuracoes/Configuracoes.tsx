@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonContent, IonButton, IonImg, IonText } from '@ionic/react';
+import { IonPage, IonContent, IonButton, IonImg, IonText, IonAlert } from '@ionic/react';
 import './css/ui.css';
 import './css/layout.css';
 import './css/geral.css';
@@ -14,14 +14,9 @@ import API from '../../lib/api';
 type Dia = 'Segunda-feira' | 'Terça-feira' | 'Quarta-feira' | 'Quinta-feira' | 'Sexta-feira' | 'Sábado' | 'Domingo';
 
 interface PlanejamentoDia {
-  dia: string;
-  materias: Materia[];
-  horarios: { inicio: string; fim: string }[];
-}
-
-interface Materia{
-  nome: string;
-  id?: number;
+  dia: Dia;
+  materias: { nome: string }[];
+  horario: { inicio: string; fim: string };
 }
 
 interface Periodo {
@@ -41,6 +36,10 @@ const Configuracoes: React.FC = () => {
     message: '',
   });
 
+  const [validMultiSelect, setValidMultiSelect] = useState(false);
+  const [validPeriodo, setValidPeriodo] = useState(false);
+  const [validPlanejamento, setValidPlanejamento] = useState(false);
+
   const isAuthenticated = () => {
     const token = localStorage.getItem('token');
     return !!token;
@@ -50,137 +49,146 @@ const Configuracoes: React.FC = () => {
     history.push('/pagInicial/home');
   };
 
-  const salvar = async () => {
-    const sucesso = await validarPlanejamento();
-    if (sucesso) {
-      history.push(isAuthenticated() ? '/perfil/perfil' : '/logincadastro/logincadastro');
-    }
+  // ✅ Atualizado: remove os dias desmarcados do planejamento
+  const handleDiasSelecionadosChange = (dias: Dia[]) => {
+    setDiasSelecionados(dias);
+    setValidMultiSelect(dias.length > 0);
+    setPlanejamento(prev => prev.filter(p => dias.includes(p.dia)));
   };
 
-  const validarPlanejamento = async () => {
-    if (!periodo.dataInicio || !periodo.dataFim) {
-      setShowAlert({ show: true, message: 'Preencha o período de estudo (início e fim).' });
-      return false;
+  const handlePlanejamentoChange = (dados: PlanejamentoDia[]) => {
+    setPlanejamento(dados);
+
+    let planejamentoValido = true;
+
+    for (const dia of dados) {
+      const materiasPreenchidas = dia.materias.filter((m) => m.nome.trim() !== '');
+      const horarioValido = dia.horario.inicio.trim() !== '' && dia.horario.fim.trim() !== '';
+
+      if (materiasPreenchidas.length === 0 || !horarioValido) {
+        planejamentoValido = false;
+        break;
+      }
+
+      if (dia.horario.fim <= dia.horario.inicio) {
+        planejamentoValido = false;
+        break;
+      }
     }
 
-    if (diasSelecionados.length === 0) {
+    setValidPlanejamento(planejamentoValido && dados.length > 0);
+  };
+
+  const handlePeriodoChange = (p: Periodo) => {
+    setPeriodo(p);
+
+    const hojeISO = new Date().toISOString().split('T')[0];
+    let periodoValido = true;
+
+    if (!p.dataInicio || !p.dataFim) {
+      periodoValido = false;
+    } else if (p.dataInicio < hojeISO || p.dataFim <= p.dataInicio) {
+      periodoValido = false;
+    }
+
+    setValidPeriodo(periodoValido);
+  };
+
+  const salvar = async () => {
+    if (!validMultiSelect) {
       setShowAlert({ show: true, message: 'Selecione pelo menos um dia da semana.' });
-      return false;
+      return;
     }
 
-    for (const dia of planejamento) {
-      const temMateria = dia.materias.some(m => m.nome.trim() !== '');
-      const temHorario = dia.horarios.some(h => h.inicio.trim() !== '' && h.fim.trim() !== '');
+    if (!validPeriodo) {
+      setShowAlert({ show: true, message: 'Período inválido. Verifique as datas.' });
+      return;
+    }
 
-      if (!temMateria || !temHorario) {
-        setShowAlert({ show: true, message: `Preencha ao menos uma matéria e um horário no dia ${dia.dia}.` });
-        return false;
-      }
-
-      const combinacoesInvalidas = dia.horarios.some((h, idx) => {
-        const materia = dia.materias[idx];
-        const materiaPreenchida = materia?.nome.trim() !== '';
-        const horarioPreenchido = h?.inicio.trim() !== '' && h?.fim.trim() !== '';
-        return (materiaPreenchida && !horarioPreenchido) || (!materiaPreenchida && horarioPreenchido);
+    if (!validPlanejamento) {
+      setShowAlert({
+        show: true,
+        message: 'Preencha corretamente o planejamento semanal (matérias e horários).',
       });
-
-      if (combinacoesInvalidas) {
-        setShowAlert({ show: true, message: `Cada matéria precisa ter um horário correspondente no dia ${dia.dia}.` });
-        return false;
-      }
+      return;
     }
-
-    const materiasCriadas: Record<string, number> = {};
-    const api = new API();
-
-    for (const dia of planejamento) {
-      for (const materia of dia.materias) {
-        const nomeTrim = materia.nome.trim();
-        if (!nomeTrim) continue;
-
-        if (!materiasCriadas[nomeTrim]) {
-          try {
-            const data = await api.post('materias', { nome: nomeTrim });
-            materiasCriadas[nomeTrim] = data.id;
-          } catch (e) {
-            setShowAlert({ show: true, message: `Erro ao criar matéria: ${nomeTrim}` });
-            return false;
-          }
-        }
-      }
-    }
-
-    const normalizarDia = (dia: string) => {
-      const mapa: Record<string, string> = {
-        'segunda-feira': 'segunda',
-        'segunda': 'segunda',
-        'terca-feira': 'terca',
-        'terça-feira': 'terca',
-        'terca': 'terca',
-        'terça': 'terca',
-        'quarta-feira': 'quarta',
-        'quarta': 'quarta',
-        'quinta-feira': 'quinta',
-        'quinta': 'quinta',
-        'sexta-feira': 'sexta',
-        'sexta': 'sexta',
-        'sabado': 'sabado',
-        'sábado': 'sabado',
-        'domingo': 'domingo',
-      };
-      return mapa[dia.toLowerCase()] || dia.toLowerCase();
-    };
-
-    const dias_disponiveis: any[] = [];
-
-    for (const dia of planejamento) {
-      const horariosMap = new Map<string, { hora_inicio: string; hora_fim: string; materia_ids: number[] }>();
-
-      for (const materia of dia.materias) {
-        const nomeTrim = materia.nome.trim();
-        const materiaId = materiasCriadas[nomeTrim];
-        if (!materiaId) continue;
-
-        for (const h of dia.horarios) {
-          if (!h.inicio.trim() || !h.fim.trim()) continue;
-
-          const key = `${h.inicio}-${h.fim}`;
-          const hora_inicio = formatToH_i(h.inicio);
-          const hora_fim = formatToH_i(h.fim);
-
-          if (!horariosMap.has(key)) {
-            horariosMap.set(key, {
-              hora_inicio,
-              hora_fim,
-              materia_ids: [materiaId],
-            });
-          } else {
-            const item = horariosMap.get(key)!;
-            if (!item.materia_ids.includes(materiaId)) {
-              item.materia_ids.push(materiaId);
-            }
-          }
-        }
-      }
-
-      for (const horario of horariosMap.values()) {
-        dias_disponiveis.push({
-          dia_semana: normalizarDia(dia.dia),
-          ...horario,
-        });
-      }
-    }
-
-    const payload = {
-      data_inicio: periodo.dataInicio,
-      data_fim: periodo.dataFim,
-      dias_disponiveis,
-    };
 
     try {
+      const materiasCriadas: Record<string, number> = {};
+      const api = new API();
+
+      for (const dia of planejamento) {
+        for (const materia of dia.materias) {
+          const nomeTrim = materia.nome.trim();
+          if (!nomeTrim) continue;
+
+          if (!materiasCriadas[nomeTrim]) {
+            const data = await api.post('materias', { nome: nomeTrim });
+            materiasCriadas[nomeTrim] = data.id;
+          }
+        }
+      }
+
+      const normalizarDia = (dia: string) => {
+        const mapa: Record<string, string> = {
+          'segunda-feira': 'segunda',
+          'segunda': 'segunda',
+          'terca-feira': 'terca',
+          'terça-feira': 'terca',
+          'terca': 'terca',
+          'terça': 'terca',
+          'quarta-feira': 'quarta',
+          'quarta': 'quarta',
+          'quinta-feira': 'quinta',
+          'quinta': 'quinta',
+          'sexta-feira': 'sexta',
+          'sexta': 'sexta',
+          'sabado': 'sabado',
+          'sábado': 'sabado',
+          'domingo': 'domingo',
+        };
+        return mapa[dia.toLowerCase()] || dia.toLowerCase();
+      };
+
+      const dias_disponiveis: any[] = [];
+
+      for (const dia of planejamento) {
+        const { inicio, fim } = dia.horario;
+        if (!inicio.trim() || !fim.trim()) continue;
+
+        const hora_inicio = formatToH_i(inicio);
+        const hora_fim = formatToH_i(fim);
+
+        const materia_ids: number[] = [];
+
+        for (const materia of dia.materias) {
+          const nomeTrim = materia.nome.trim();
+          const materiaId = materiasCriadas[nomeTrim];
+          if (materiaId && !materia_ids.includes(materiaId)) {
+            materia_ids.push(materiaId);
+          }
+        }
+
+        if (materia_ids.length === 0) continue;
+
+        dias_disponiveis.push({
+          dia_semana: normalizarDia(dia.dia),
+          hora_inicio,
+          hora_fim,
+          materia_ids,
+        });
+      }
+
+      const payload = {
+        data_inicio: periodo.dataInicio,
+        data_fim: periodo.dataFim,
+        dias_disponiveis,
+      };
+
       await saveAgendaConfiguracoes(payload);
       setShowAlert({ show: true, message: 'Planejamento salvo com sucesso!' });
-      return true;
+
+      history.push(isAuthenticated() ? '/perfil/perfil' : '/logincadastro/logincadastro');
     } catch (error: any) {
       if (error.response) {
         try {
@@ -194,13 +202,20 @@ const Configuracoes: React.FC = () => {
       } else {
         setShowAlert({ show: true, message: 'Erro ao conectar-se à API.' });
       }
-      return false;
     }
   };
 
   return (
     <IonPage>
       <IonContent>
+        <IonAlert
+          isOpen={showAlert.show}
+          onDidDismiss={() => setShowAlert({ show: false, message: '' })}
+          header="Atenção"
+          message={showAlert.message}
+          buttons={['OK']}
+        />
+
         <div id="body">
           <div className="bubble-background">
             <div className="bubble bubble1"></div>
@@ -212,29 +227,45 @@ const Configuracoes: React.FC = () => {
 
           <div className="configuracoes-container">
             <div className="div111">
-              <div className='scroll'>
-                <div className='grid1'>
+              <div className="scroll">
+                <div className="grid1">
                   <div className="voltarHome">
-                    <h4 className="h444" onClick={navHome}>🠔Home</h4>
-                    <IonImg className="img" src="/imgs/logoSemFundo.png" alt="Ir para pagInicial" onClick={navHome} />
+                    <h4 className="h444" onClick={navHome}>
+                      🠔Home
+                    </h4>
+                    <IonImg
+                      className="img"
+                      src="/imgs/logoSemFundo.png"
+                      alt="Ir para pagInicial"
+                      onClick={navHome}
+                    />
                   </div>
 
                   <div className="avisos">
-                    <h4 className="h333 h41"><b>Seu cadastro foi efetivado. Você está quase lá!</b></h4>
+                    <h4 className="h333 h41">
+                      <b>Seu cadastro foi efetivado. Você está quase lá!</b>
+                    </h4>
                   </div>
                 </div>
 
-                <h3 className="h111"><b>Configure seu plano de estudos</b></h3>
-                <h4 className="h444 h41">*Lembre-se de criar um plano que se adeque à sua rotina.*</h4>
+                <h3 className="h111">
+                  <b>Configure seu plano de estudos</b>
+                </h3>
+                <h4 className="h444 h41">
+                  *Lembre-se de criar um plano que se adeque à sua rotina.*
+                </h4>
 
                 <div>
-                  <MultiSelectDias value={diasSelecionados} onChange={setDiasSelecionados} />
+                  <MultiSelectDias value={diasSelecionados} onChange={handleDiasSelecionadosChange} />
 
                   {diasSelecionados.length > 0 && (
-                    <PlanejamentoSemanal diasSelecionados={diasSelecionados} onChange={setPlanejamento} />
+                    <PlanejamentoSemanal
+                      diasSelecionados={diasSelecionados}
+                      onChange={handlePlanejamentoChange}
+                    />
                   )}
 
-                  <PeriodoEstudo onChange={setPeriodo} />
+                  <PeriodoEstudo onChange={handlePeriodoChange} />
 
                   <hr style={{ marginTop: '20px', borderColor: '#ccc' }} />
 
@@ -244,8 +275,16 @@ const Configuracoes: React.FC = () => {
                     </IonText>
                   )}
 
-                  <IonButton className="botao" onClick={salvar}>Salvar</IonButton>
-                  <IonButton className="botao" onClick={navHome}>Configurar mais tarde</IonButton>
+                  <IonButton
+                    className="botao"
+                    onClick={salvar}
+                    disabled={!(validMultiSelect && validPeriodo && validPlanejamento)}
+                  >
+                    Salvar
+                  </IonButton>
+                  <IonButton className="botao" onClick={navHome}>
+                    Configurar mais tarde
+                  </IonButton>
                 </div>
               </div>
             </div>
@@ -257,5 +296,3 @@ const Configuracoes: React.FC = () => {
 };
 
 export default Configuracoes;
-
-

@@ -49,6 +49,9 @@
 
 .voltar1{
   display: flex;
+  width: 3rem;
+  height: 3rem;
+  color: white;
 }
 
   .bolas {
