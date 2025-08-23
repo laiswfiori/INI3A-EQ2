@@ -28,6 +28,7 @@ interface User {
   email: string;
   password?: string;
   biography: string;
+  google_id?: string;
 }
 
 interface Materia {
@@ -59,11 +60,12 @@ const Perfil: React.FC = () => {
   const history = useHistory();
   const ionRouter = useIonRouter();
   const { somAtivo, toggleSom } = useSoundPlayer();
-
+  const [isGoogleLogin, setIsGoogleLogin] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [view, setView] = useState<'perfil' | 'estudo'>('perfil');
   const [mobileView, setMobileView] = useState<'gerais' | 'perfil' | 'seguranca' | 'estudo'>('gerais');
   const [userData, setUserData] = useState<User | null>(null);
+  const [formData, setFormData] = useState<User | null>(null);
   const [showAlert, setShowAlert] = useState<{ show: boolean, message: string }>({ show: false, message: '' });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -89,8 +91,7 @@ const Perfil: React.FC = () => {
 
   const [notificacoesAtivas, setNotificacoesAtivas] = useState(() => localStorage.getItem('notificacoesAtivas') !== 'false');
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') !== 'dark');
-  const [existeConfiguracao, setExisteConfiguracao] = useState();
-
+  const [existeConfiguracao, setExisteConfiguracao] = useState<boolean>(false);
 
   const toggleTheme = () => {
     const newTheme = !isDarkMode;
@@ -121,32 +122,38 @@ const Perfil: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
+  const fetchUserProfile = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setAuthError(true);
+      setIsLoading(false);
+      history.push('/logincadastro/logincadastro');
+      return;
+    }
+    try {
+      const profileData = await getUserProfile();
+      setUserData(profileData);
+      // --- ADICIONADO: Inicializa o estado do formulário com os dados do perfil ---
+      setFormData(profileData); 
+      
+      if (profileData.google_id) {
+        setIsGoogleLogin(true);
+      }
+    } catch (error: any) {
+      if (error.message && error.message.includes('401')) {
         setAuthError(true);
-        setIsLoading(false);
+        localStorage.removeItem('token');
         history.push('/logincadastro/logincadastro');
-        return;
+      } else {
+        console.error('Erro ao buscar perfil:', error);
+        setShowAlert({ show: true, message: 'Não foi possível carregar os dados do perfil.' });
       }
-      try {
-        const profileData = await getUserProfile();
-        setUserData(profileData);
-      } catch (error: any) {
-        if (error.message && error.message.includes('401')) {
-          setAuthError(true);
-          localStorage.removeItem('token');
-          history.push('/logincadastro/logincadastro');
-        } else {
-          console.error('Erro ao buscar perfil:', error);
-          setShowAlert({ show: true, message: 'Não foi possível carregar os dados do perfil.' });
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchUserProfile();
-  }, [history]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  fetchUserProfile();
+}, [history]);
 
   useEffect(() => {
     const normalizarDiaBackendParaFrontend = (dia: string): string => {
@@ -278,23 +285,29 @@ const Perfil: React.FC = () => {
   };
 
   const handleInputChange = (event: any) => {
-    const { name, value } = event.target;
-    if (userData) {
-      setUserData({ ...userData, [name]: value });
-    }
+    const name = event.target.name;
+    const value = event.detail.value;
+    setFormData(prevState => {
+      if (!prevState) return null;
+      return {
+        ...prevState,
+        [name]: value,
+      };
+    });
   };
 
   const handleSaveProfile = async () => {
-    if (!userData) return;
-    try {
-      const response = await updateUserProfile(userData);
-      setUserData(response.user);
-      setShowAlert({ show: true, message: response.message || 'Perfil atualizado com sucesso!' });
-    } catch (error) {
-      console.error('Erro ao salvar o perfil:', error);
-      setShowAlert({ show: true, message: 'Não foi possível salvar as alterações.' });
-    }
-  };
+  if (!formData) return;
+  try {
+    const response = await updateUserProfile(formData);
+    setUserData(response.user);
+    setFormData(response.user);
+    setShowAlert({ show: true, message: response.message || 'Perfil atualizado com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao salvar o perfil:', error);
+    setShowAlert({ show: true, message: 'Não foi possível salvar as alterações.' });
+  }
+};
 
   const handlePasswordInputChange = (event: any) => {
     const { name, value } = event.target;
@@ -1013,75 +1026,93 @@ const resetarConfiguracoes = async () => {
           </IonRow>
         </IonCol>
 
-        {view === 'perfil' && (
-          <IonCol className="ladoConfig">
-            <div id="infos">
-              <h1 className="preto" id="h1Titulo">Configurações de perfil</h1>
-            </div>
-            <div id="flexColunas">
-              <IonCol className="colunasConfig">
+            {view === 'perfil' && (
+    <IonCol className="ladoConfig">
+        <div id="infos">
+            <h1 className="preto" id="h1Titulo">Configurações de perfil</h1>
+        </div>
+        <div id="flexColunas">
+            <IonCol className="colunasConfig">
                 <p className="labelBio">Nome</p>
-                <IonInput name="name" value={userData.name} onIonChange={handleInputChange} className="inputBio pDarkmode" />
+                {/* Alterado para usar formData */}
+                <IonInput name="name" value={formData?.name || ''} onIonChange={handleInputChange} className="inputBio pDarkmode" />
+                
                 <p className="labelBio">Sobrenome</p>
-                <IonInput name="surname" value={userData.surname} onIonChange={handleInputChange} className="inputBio pDarkmode" />
+                {/* Alterado para usar formData */}
+                <IonInput name="surname" value={formData?.surname || ''} onIonChange={handleInputChange} className="inputBio pDarkmode" />
+                
                 <p className="labelBio">Email</p>
-                <IonInput type="email" name="email" value={userData.email} onIonChange={handleInputChange} className="inputBio pDarkmode" />
+                {/* Alterado para usar formData e manter a lógica do Google login */}
+                <IonInput type="email" name="email" value={formData?.email || ''} onIonChange={handleInputChange} className="inputBio pDarkmode" disabled={isGoogleLogin} />
+                
                 <p className="labelBio">Biografia</p>
-                <IonTextarea name="biography" value={userData.biography || ''} onIonChange={handleInputChange} className="inputBio pDarkmode" placeholder="Escreva sobre você..." />
+                {/* Alterado para usar formData */}
+                <IonTextarea name="biography" value={formData?.biography || ''} onIonChange={handleInputChange} className="inputBio pDarkmode" placeholder="Escreva sobre você..." />
+                
                 <IonButton className="btnConfigBio" id="btnSalvarBio" onClick={handleSaveProfile}>Salvar</IonButton>
-              </IonCol>
-              <IonCol className="colunasConfig" id="col2">
+            </IonCol>
+            
+            <IonCol className="colunasConfig" id="col2">
                 <p className="labelBio">Alterar senha</p>
+                {isGoogleLogin && (
+                    <IonText color="medium" style={{ fontSize: 'small', marginBottom: '10px' }}>
+                        Não é possível alterar a senha de uma conta vinculada ao Google.
+                    </IonText>
+                )}
                 <IonInput
-                  className="inputBioSenha pDarkmode"
-                  label="Senha atual"
-                  labelPlacement="stacked"
-                  type="password"
-                  name="senha_atual"
-                  value={passwordData.senha_atual}
-                  onIonChange={handlePasswordInputChange}
+                    className="inputBioSenha pDarkmode"
+                    label="Senha atual"
+                    labelPlacement="stacked"
+                    type="password"
+                    name="senha_atual"
+                    value={passwordData.senha_atual}
+                    onIonChange={handlePasswordInputChange}
+                    disabled={isGoogleLogin}
                 />
                 <IonInput
-                  className="inputBioSenha pDarkmode"
-                  label="Nova senha"
-                  labelPlacement="stacked"
-                  type="password"
-                  name="nova_senha"
-                  value={passwordData.nova_senha}
-                  onIonChange={handlePasswordInputChange}
+                    className="inputBioSenha pDarkmode"
+                    label="Nova senha"
+                    labelPlacement="stacked"
+                    type="password"
+                    name="nova_senha"
+                    value={passwordData.nova_senha}
+                    onIonChange={handlePasswordInputChange}
+                    disabled={isGoogleLogin}
                 />
                 <IonInput
-                  className="inputBioSenha pDarkmode"
-                  label="Confirmar senha"
-                  labelPlacement="stacked"
-                  type="password"
-                  name="confirmar_senha"
-                  value={passwordData.confirmar_senha}
-                  onIonChange={handlePasswordInputChange}
+                    className="inputBioSenha pDarkmode"
+                    label="Confirmar senha"
+                    labelPlacement="stacked"
+                    type="password"
+                    name="confirmar_senha"
+                    value={passwordData.confirmar_senha}
+                    onIonChange={handlePasswordInputChange}
+                    disabled={isGoogleLogin}
                 />
-                <IonButton className="btnConfigBio" id="btnAlterarBio" onClick={handlePasswordChange}>
-                  Alterar
+                <IonButton className="btnConfigBio" id="btnAlterarBio" onClick={handlePasswordChange} disabled={isGoogleLogin}>
+                    Alterar
                 </IonButton>
+                
                 <div id="excSenha">
-                  <IonRow className="msmLinha">
-                    <IonCheckbox checked={isChecked} onIonChange={handleCheckboxChange} id="check" />
-                    <p className="excp" id="boldExc">Deseja excluir sua conta?</p>
-                  </IonRow>
-                  <IonRow className="msmLinha">
-                    <IonIcon icon={warning} className="iconesBio" />
-                    <p className="excp">ATENÇÃO: essa ação não pode ser desfeita.</p>
-                  </IonRow>
-                  <IonRow>
-                    <p className="excp">Ao confirmar essa ação, sua conta será apagada permanentemente e não poderá ser recuperada.</p>
-                  </IonRow>
-                  <IonRow>
-                    <IonButton className="btnConfigBio" disabled={!isChecked} onClick={handleDeleteClick}>Confirmar</IonButton>
-                  </IonRow>
+                    <IonRow className="msmLinha">
+                        <IonCheckbox checked={isChecked} onIonChange={handleCheckboxChange} id="check" />
+                        <p className="excp" id="boldExc">Deseja excluir sua conta?</p>
+                    </IonRow>
+                    <IonRow className="msmLinha">
+                        <IonIcon icon={warning} className="iconesBio" />
+                        <p className="excp">ATENÇÃO: essa ação não pode ser desfeita.</p>
+                    </IonRow>
+                    <IonRow>
+                        <p className="excp">Ao confirmar essa ação, sua conta será apagada permanentemente e não poderá ser recuperada.</p>
+                    </IonRow>
+                    <IonRow>
+                        <IonButton className="btnConfigBio" disabled={!isChecked} onClick={handleDeleteClick}>Confirmar</IonButton>
+                    </IonRow>
                 </div>
-              </IonCol>
-            </div>
-          </IonCol>
-        )}
+            </IonCol>
+        </div>
+    </IonCol>
+)}
 
         {view === 'estudo' && renderEstudoSectionD()}
       </IonRow>
@@ -1283,33 +1314,45 @@ const resetarConfiguracoes = async () => {
           </IonRow>
         )}
 
-        {mobileView === 'perfil' && (
-          <IonRow id="confPerfil">
-            <h1 className="pDarkmode">Configurações de perfil</h1>
-            <IonRow>
-              <IonRow className="paddingConf">
-                <p className="labelBio">Nome</p>
-                <IonInput name="name" value={userData.name} onIonChange={handleInputChange} className="inputBio pDarkmode" />
-                <p className="labelBio">Sobrenome</p>
-                <IonInput name="surname" value={userData.surname} onIonChange={handleInputChange} className="inputBio pDarkmode" />
-                <p className="labelBio">Email</p>
-                <IonInput type="email" name="email" value={userData.email} onIonChange={handleInputChange} className="inputBio pDarkmode" />
-                <p className="labelBio">Biografia</p>
-                <IonTextarea name="biography" value={userData.biography || ''} onIonChange={handleInputChange} className="inputBio pDarkmode" placeholder="Escreva sobre você..." />
-              </IonRow>
-              <IonRow className="contBtn">
-                <IonButton className="btnConfigBio" id="btnSalvarBio" onClick={handleSaveProfile}>Salvar</IonButton>
-              </IonRow>
-            </IonRow>
-          </IonRow>
-        )}
-
-        {mobileView === 'seguranca' && (
-          <IonRow id="confSeg">
-            <h1 className="pDarkmode">Configurações de segurança</h1>
+       {mobileView === 'perfil' && (
+    <IonRow id="confPerfil">
+        <h1 className="pDarkmode">Configurações de perfil</h1>
+        <IonRow>
             <IonRow className="paddingConf">
-              <p className="labelBioM">Alterar senha</p>
-              <IonInput
+                <p className="labelBio">Nome</p>
+                {/* Alterado para usar formData */}
+                <IonInput name="name" value={formData?.name || ''} onIonChange={handleInputChange} className="inputBio pDarkmode" />
+
+                <p className="labelBio">Sobrenome</p>
+                {/* Alterado para usar formData */}
+                <IonInput name="surname" value={formData?.surname || ''} onIonChange={handleInputChange} className="inputBio pDarkmode" />
+
+                <p className="labelBio">Email</p>
+                {/* Alterado para usar formData e manter a lógica do Google login */}
+                <IonInput type="email" name="email" value={formData?.email || ''} onIonChange={handleInputChange} className="inputBio pDarkmode" disabled={isGoogleLogin} />
+
+                <p className="labelBio">Biografia</p>
+                {/* Alterado para usar formData */}
+                <IonTextarea name="biography" value={formData?.biography || ''} onIonChange={handleInputChange} className="inputBio pDarkmode" placeholder="Escreva sobre você..." />
+            </IonRow>
+            <IonRow className="contBtn">
+                <IonButton className="btnConfigBio" id="btnSalvarBio" onClick={handleSaveProfile}>Salvar</IonButton>
+            </IonRow>
+        </IonRow>
+    </IonRow>
+)}
+
+{mobileView === 'seguranca' && (
+    <IonRow id="confSeg">
+        <h1 className="pDarkmode">Configurações de segurança</h1>
+        <IonRow className="paddingConf">
+            <p className="labelBioM">Alterar senha</p>
+            {isGoogleLogin && (
+                <IonText color="medium" style={{ fontSize: 'small', marginBottom: '10px' }}>
+                    Não é possível alterar a senha de uma conta vinculada ao Google.
+                </IonText>
+            )}
+            <IonInput
                 className="inputBioSenhaM pDarkmode"
                 label="Senha atual"
                 labelPlacement="stacked"
@@ -1317,9 +1360,9 @@ const resetarConfiguracoes = async () => {
                 name="senha_atual"
                 value={passwordData.senha_atual}
                 onIonChange={handlePasswordInputChange}
-              />
-
-              <IonInput
+                disabled={isGoogleLogin}
+            />
+            <IonInput
                 className="inputBioSenhaM pDarkmode"
                 label="Nova senha"
                 labelPlacement="stacked"
@@ -1327,8 +1370,9 @@ const resetarConfiguracoes = async () => {
                 name="nova_senha"
                 value={passwordData.nova_senha}
                 onIonChange={handlePasswordInputChange}
-              />
-              <IonInput
+                disabled={isGoogleLogin}
+            />
+            <IonInput
                 className="inputBioSenhaM pDarkmode"
                 label="Confirmar senha"
                 labelPlacement="stacked"
@@ -1336,34 +1380,34 @@ const resetarConfiguracoes = async () => {
                 name="confirmar_senha"
                 value={passwordData.confirmar_senha}
                 onIonChange={handlePasswordInputChange}
-              />
-
-              <IonRow className="contBtn">
-                <IonButton className="btnConfigBio" id="btnAlterarBio" onClick={handlePasswordChange}>
-                  Alterar
+                disabled={isGoogleLogin}
+            />
+            <IonRow className="contBtn">
+                <IonButton className="btnConfigBio" id="btnAlterarBio" onClick={handlePasswordChange} disabled={isGoogleLogin}>
+                    Alterar
                 </IonButton>
-              </IonRow>
-
-              <div id="excSenhaM">
-                <IonRow className="msmLinha">
-                  <IonCheckbox checked={isChecked} onIonChange={handleCheckboxChange} id="check" />
-                  <p className="excpM" id="boldExcM">Deseja excluir sua conta?</p>
-                </IonRow>
-                <IonRow className="msmLinha">
-                  <IonIcon icon={warning} className="iconesBio" />
-                  <p className="excpM">ATENÇÃO: essa ação não pode ser desfeita.</p>
-                </IonRow>
-                <IonRow>
-                  <p className="excpM">Ao confirmar essa ação, sua conta será apagada permanentemente e não poderá ser recuperada.</p>
-                </IonRow>
-                <IonRow>
-                  <IonButton
-                    className="btnConfigBio" disabled={!isChecked} onClick={handleDeleteClick}>Confirmar</IonButton>
-                </IonRow>
-              </div>
             </IonRow>
-          </IonRow>
-        )}
+
+            <div id="excSenhaM">
+                <IonRow className="msmLinha">
+                    <IonCheckbox checked={isChecked} onIonChange={handleCheckboxChange} id="check" />
+                    <p className="excpM" id="boldExcM">Deseja excluir sua conta?</p>
+                </IonRow>
+                <IonRow className="msmLinha">
+                    <IonIcon icon={warning} className="iconesBio" />
+                    <p className="excpM">ATENÇÃO: essa ação não pode ser desfeita.</p>
+                </IonRow>
+                <IonRow>
+                    <p className="excpM">Ao confirmar essa ação, sua conta será apagada permanentemente e não poderá ser recuperada.</p>
+                </IonRow>
+                <IonRow>
+                    <IonButton
+                        className="btnConfigBio" disabled={!isChecked} onClick={handleDeleteClick}>Confirmar</IonButton>
+                </IonRow>
+            </div>
+        </IonRow>
+    </IonRow>
+)}
 
         {mobileView === 'estudo' && (
           <IonRow id="confEstudo">
