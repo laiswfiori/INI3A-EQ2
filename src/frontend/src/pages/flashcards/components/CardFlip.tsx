@@ -1,13 +1,13 @@
 import React from 'react';
-import { IonCard, IonCardContent, IonIcon } from '@ionic/react'; // Importe IonIcon
-import { arrowBack } from 'ionicons/icons'; // Importe o ícone de seta
+import { IonCard, IonCardContent, IonIcon } from '@ionic/react'; 
+import { arrowBack } from 'ionicons/icons'; 
 import './css/cardFlip.css';
 
 interface CardProps {
   frente: React.ReactNode;
   verso: React.ReactNode;
   mostrarVerso: boolean;
-  onVoltarFrente?: () => void; // Coloquei esse prop opcional para o botão de voltar
+  onVoltarFrente?: () => void; 
 }
 
 const CardFlip: React.FC<CardProps> = ({ frente, verso, mostrarVerso, onVoltarFrente }) => {
@@ -18,7 +18,7 @@ const CardFlip: React.FC<CardProps> = ({ frente, verso, mostrarVerso, onVoltarFr
       </IonCard>
       <IonCard className="card-back">
         <IonCardContent>
-          {mostrarVerso && onVoltarFrente && ( // mostra o botão só no verso e se a prop for fornecida
+          {mostrarVerso && onVoltarFrente && ( 
             <button className="back-to-front-button" onClick={onVoltarFrente}>
               <IonIcon icon={arrowBack} />
             </button>

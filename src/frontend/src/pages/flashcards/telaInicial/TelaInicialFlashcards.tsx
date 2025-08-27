@@ -15,6 +15,7 @@ import CardEditor from '../components/CardEditor';
 import { useIonViewWillEnter } from '@ionic/react';
 import { useSoundPlayer } from '../../../utils/Som';
 import { iconePorMateriaNome } from '../../conteudos/materias/Materias';
+import { validarCamposTopico } from '../../../utils/erros';
 import ThemeManager from '../../../utils/ThemeManager';
 import '../../../utils/css/variaveisCores.css';
 
@@ -58,6 +59,7 @@ interface ConteudoItem {
 const api = new API();
 
 const TelaInicialFlashcards: React.FC = () => {
+  const [error, setError] = useState('');
   const [materias, setMaterias] = useState<Materia[]>([]);
   const [topicos, setTopicos] = useState<Topico[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
@@ -85,42 +87,55 @@ const TelaInicialFlashcards: React.FC = () => {
     descricao: "",
     materia_id: null,
   });
+
+  const handleInputChange = (field: keyof typeof novoTopico, value: string) => {
+    setNovoTopico({ ...novoTopico, [field]: value });
+  };
+
+  const abrirModalNovoTopico = (materia: { id: number; nome: string }) => {
+    setNovoTopico({ titulo: '', descricao: '', materia_id: materia.id });
+    setShowModalNovoTopico(true);
+  };
   
   const criarTopico = async () => {
-    if (!novoTopico.titulo.trim() || !materiaExpandidaId) {
-      presentToast({
-        message: 'Insira um título para o tópico.',
-        duration: 3000,
-        color: 'warning',
-      });
+    const erro = validarCamposTopico(novoTopico);
+    if (erro) {
+      alert(erro);
       return;
     }
+
+    console.log(novoTopico.materia_id)
+  
+    const materiaId = Number(novoTopico.materia_id);
+    if (!materiaId || materiaId <= 0) {
+      alert('Erro: ID da matéria inválido.');
+      return;
+    }
+
+    console.log(materiaId)
+  
+    const apiInstance = new API();
   
     try {
-      await api.post('topicos', {
+      const data = await apiInstance.post('topicos', {
         titulo: novoTopico.titulo,
-        descricao: novoTopico.descricao || '',
-        materia_id: materiaExpandidaId,
+        descricao: novoTopico.descricao,
+        materia_id: materiaId,
       });
   
-      presentToast({
-        message: 'Tópico criado com sucesso!',
-        duration: 2000,
-        color: 'success',
-      });
+      setTopicos(prev => [...prev, { ...data, atividades: [] }]);
   
-      setNovoTopico({ titulo: '', descricao: '', materia_id: null });
-      setShowModalNovoTopico(false);
-      await fetchData();
-    } catch (error) {
+      alert('Tópico criado com sucesso!');
+  
+      setNovoTopico({ titulo: '', descricao: '', materia_id: materiaId });
+  
+      setShowModalNovoTopico(false); 
+    } catch (error: any) {
       console.error('Erro ao criar tópico:', error);
-      presentToast({
-        message: 'Erro ao criar tópico.',
-        duration: 3000,
-        color: 'danger',
-      });
+      alert(error?.response?.data?.message || 'Erro desconhecido ao criar tópico');
     }
-    console.log(novoTopico.titulo, novoTopico.descricao)
+  
+    console.log(novoTopico.titulo, novoTopico.descricao);
   };
   
 
@@ -759,9 +774,14 @@ const setShowCardEditorAndInitialData = (
 
                     {estaExpandida && (
                       <div className="listaTopicos">
-                        <IonRow>
-                          <IonButton onClick={() => setShowModalNovoTopico(true)} className="criarTopico">Criar tópico</IonButton>
-                        </IonRow>
+                      <IonRow>
+                        <IonButton
+                          onClick={() => abrirModalNovoTopico(materia)}
+                          className="criarTopico"
+                        >
+                          Criar tópico
+                        </IonButton>
+                      </IonRow>
                         {(() => {
                           const topicosComFlashcardsNaMateria = topicosDaMateria.filter(topico =>
                             flashcards.some(f => f.topico_id === topico.id)
@@ -1011,26 +1031,33 @@ const setShowCardEditorAndInitialData = (
             )}
           </div>
         </IonModal>
-        <IonModal isOpen={showModalNovoTopico} onDidDismiss={() => setShowModalNovoTopico(false)}>
-  <IonContent className="ion-padding">
-    <h2>Criar Tópico</h2>
-    <IonInput
-      placeholder="Título"
-      value={novoTopico.titulo}
-      onIonChange={(e) => setNovoTopico({ ...novoTopico, titulo: e.detail.value! })}
-    />
-    <IonTextarea
-      placeholder="Descrição (opcional)"
-      value={novoTopico.descricao}
-      onIonInput={(e) => setNovoTopico({ ...novoTopico, descricao: e.detail.value! })}
-    />
-    <IonButton expand="block" onClick={criarTopico}>
-      Salvar
-    </IonButton>
-  </IonContent>
-</IonModal>
-
-
+        <IonModal isOpen={showModalNovoTopico} className="modoAddTopicoF" onDidDismiss={() => setShowModalNovoTopico(false)}>
+          <IonContent className="ion-padding">
+            <IonRow className="contFecharModal">
+              <IonIcon icon={close} className="iconeFecharM" onClick={() => setShowModalNovoTopico(false)} />
+            </IonRow>
+            <IonRow className="centroModal">
+                <h2 className="labelT pDarkmode">Adicionar tópico</h2>
+            </IonRow>
+            <div id="pagAdicionar">
+              <p className="label pDarkmode">Título</p>
+              <IonInput
+                placeholder="Digite o título do tópico"
+                value={novoTopico.titulo} onIonChange={(e) => setNovoTopico({ ...novoTopico, titulo: e.detail.value! })}
+                className="input pDarkmode"
+              />
+              <p className="label pDarkmode">Descrição</p>
+              <IonTextarea
+                placeholder="Escreva uma breve descrição"
+                value={novoTopico.descricao} onIonInput={(e) => setNovoTopico({ ...novoTopico, descricao: e.detail.value! })}
+                className="input pDarkmode"
+              />
+              <IonButton expand="block" onClick={criarTopico} className="btnSalvar btnSalvarDarkmode">
+                Salvar
+              </IonButton>
+            </div>
+          </IonContent>
+        </IonModal>
       </IonContent>
     </IonPage>
     </>

@@ -132,23 +132,7 @@
     color: #d15e06;
 }
 
-.input2, input[type="text"], input[type="time"], textarea, .input {
-  color: #333333;
-  border: 2px solid rgb(213, 213, 213);
-  box-sizing: border-box;
-  height: 40px;
-  width: 100%;
-  transition: color 0.3s, border-color 0.3s;
-}
 
-.input2:focus,
-input[type="text"]:focus,
-input[type="time"]:focus,
-textarea:focus,
-.input:focus {
-  border-color: #00296b !important;
-  outline: none;
-}
 
 .react-select-custom__control {
   border: 2px solid rgb(213, 213, 213) !important;

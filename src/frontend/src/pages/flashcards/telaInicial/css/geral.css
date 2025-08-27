@@ -387,3 +387,20 @@ ion-button.criarTopico::part(native) {
     background-color: #00296b;
     color: white;
   }
+
+  ion-modal.modalAddTopicoF {
+    height: 40%;
+    --max-height: 50%;
+    height: auto;
+}
+
+ion-modal.modalmodalAddTopicoF::part(content), .ion-delegate-host {
+    border-radius: 16px !important; 
+  }
+
+.input-wrapper, .native-wrapper, .native-textarea {
+    border: none !important;
+    border-color: transparent !important;
+    border-width: 0px !important;
+    width: 100%;
+}

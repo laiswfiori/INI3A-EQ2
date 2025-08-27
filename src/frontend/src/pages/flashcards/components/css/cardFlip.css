@@ -33,14 +33,14 @@ ion-card {
 }
 
 .card-front {
-    background: #dad7d7;
+    background: #cfe8e9;
     border: 2px solid #3da5d9 !important;
     z-index: 2;
     transform: rotateY(0deg);
 }
 
 .card-back {
-    background: #dad7d7;
+    background: #ebd1bb;
     border: 2px solid #ea7317 !important;
     z-index: 3;
     transform: rotateY(-180deg);
