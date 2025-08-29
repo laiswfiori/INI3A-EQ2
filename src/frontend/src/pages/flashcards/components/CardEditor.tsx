@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { IonButton, IonIcon, IonRow, IonTextarea, IonLabel } from '@ionic/react';
 import { image, close } from 'ionicons/icons';
+import { Editor } from '@tinymce/tinymce-react';
 import './css/ui.css'; 
 
 interface ConteudoItem {
@@ -19,6 +20,18 @@ interface CardEditorProps {
 const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel, conteudoFrenteInicial = [], conteudoVersoInicial = [] }) => {
   const [textoFrente, setTextoFrente] = useState('');
   const [textoVerso, setTextoVerso] = useState('');
+
+  useEffect(() => {
+    const textoFrenteItem = conteudoFrenteInicial.find(c => c.tipo === 'texto');
+    const imagensFrenteItens = conteudoFrenteInicial.filter(c => c.tipo === 'imagem');
+    setTextoFrente(textoFrenteItem?.valor || '');
+    setImagensFrente(imagensFrenteItens);
+
+    const textoVersoItem = conteudoVersoInicial.find(c => c.tipo === 'texto');
+    const imagensVersoItens = conteudoVersoInicial.filter(c => c.tipo === 'imagem');
+    setTextoVerso(textoVersoItem?.valor || '');
+    setImagensVerso(imagensVersoItens);
+  }, [conteudoFrenteInicial, conteudoVersoInicial]);
   const [imagensFrente, setImagensFrente] = useState<ConteudoItem[]>([]);
   const [imagensVerso, setImagensVerso] = useState<ConteudoItem[]>([]);
 
@@ -71,13 +84,17 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel, conteudoFrent
         <div className="card-side">
           <IonLabel className="side-label">Frente (Pergunta)</IonLabel>
 
-          <IonTextarea
-            placeholder="Digite o conteúdo da frente..."
+          <Editor
+            apiKey="b3ntpf2cbhe9242iuestsixtjy2w25tklyohu21u83232xk8"
             value={textoFrente}
-            onIonChange={e => setTextoFrente(e.detail.value!)}
-            rows={4}
-            autoGrow
-            className="content-textarea"
+                      init={{
+              height: 200,
+              menubar: false,
+              plugins: ['lists', 'link', 'autolink'],
+              toolbar: 'undo redo | bold italic underline | bullist numlist | link',
+              content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+            }}
+            onEditorChange={(content) => setTextoFrente(content)}
           />
 
           <div className="content-preview">
@@ -104,13 +121,17 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel, conteudoFrent
         <div className="card-side">
           <IonLabel className="side-label">Verso (Resposta)</IonLabel>
 
-          <IonTextarea
-            placeholder="Digite o conteúdo do verso..."
+          <Editor
+            apiKey="b3ntpf2cbhe9242iuestsixtjy2w25tklyohu21u83232xk8"
             value={textoVerso}
-            onIonChange={e => setTextoVerso(e.detail.value!)}
-            rows={4}
-            autoGrow
-            className="content-textarea"
+            init={{
+              height: 200,
+              menubar: false,
+              plugins: ['lists', 'link', 'autolink'],
+              toolbar: 'undo redo | bold italic underline | bullist numlist | link',
+              content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+            }}
+            onEditorChange={(content) => setTextoVerso(content)}
           />
 
           <div className="content-preview">

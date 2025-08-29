@@ -55,6 +55,7 @@
   padding: 12px;
   background: #fff;
   overflow: hidden;
+  width: 100%;
 }
 
 .side-label {
@@ -62,6 +63,7 @@
   margin-bottom: 12px;
   color: #444;
   font-size: 0.95rem;
+  width: 100%;
 }
 
 .content-preview {

@@ -298,7 +298,9 @@ const CardsMateria: React.FC = () => {
               <div style={{ padding: 20 }}>
                 {cardAtual.conteudo_frente.map((item, i) => (
                   <div key={i}>
-                    {item.tipo === 'texto' && <p>{item.valor}</p>}
+                    {item.tipo === 'texto' && (
+                      <p dangerouslySetInnerHTML={{ __html: item.valor }} />
+                    )}
                     {item.tipo === 'imagem' && (
                       <img src={item.valor} alt={`imagem-frente-${i}`} style={{ maxWidth: '100%' }} />
                     )}
@@ -311,7 +313,9 @@ const CardsMateria: React.FC = () => {
               <div style={{ padding: 20 }}>
                 {cardAtual.conteudo_verso.map((item, i) => (
                   <div key={i}>
-                    {item.tipo === 'texto' && <p>{item.valor}</p>}
+                    {item.tipo === 'texto' && (
+                      <p dangerouslySetInnerHTML={{ __html: item.valor }} />
+                    )}
                     {item.tipo === 'imagem' && (
                       <img src={item.valor} alt={`imagem-verso-${i}`} style={{ maxWidth: '100%' }} />
                     )}

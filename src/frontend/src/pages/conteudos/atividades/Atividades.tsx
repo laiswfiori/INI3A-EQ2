@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import {
-  IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, 
+import { IonPage, IonContent, IonList, IonItem, IonLabel, IonIcon, IonButton, 
   IonModal, IonPopover, IonInput, IonTextarea, IonRow, IonCol, IonSelect, IonSelectOption
 } from '@ionic/react';
 import { pencil, trash, flash, checkmarkDone, close, checkmark, arrowForward, documentText, reader, map, clipboard, newspaper, images, documentAttach, returnDownBack } from 'ionicons/icons';
+import { Editor } from '@tinymce/tinymce-react';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -678,13 +678,11 @@ const removerItemConteudo = (index: number) => {
               
               <p className="label pDarkmode">Conteúdo</p>
 
-              <IonTextarea
-                placeholder="Digite texto e clique fora para adicionar"
-                className="input pDarkmode"
-                rows={4}
+              <Editor
+                apiKey="b3ntpf2cbhe9242iuestsixtjy2w25tklyohu21u83232xk8"
                 value={textoTemp}
-                onIonChange={(e) => setTextoTemp(e.detail.value!)}
-                onIonBlur={() => {
+                onEditorChange={(content) => setTextoTemp(content)}
+                onBlur={() => {
                   const texto = textoTemp.trim();
                   if (texto) {
                     setNovaAtividade(prev => ({
@@ -693,6 +691,13 @@ const removerItemConteudo = (index: number) => {
                     }));
                     setTextoTemp('');
                   }
+                }}
+                init={{
+                  height: 200,
+                  menubar: false,
+                  plugins: ['lists', 'link', 'autolink'],
+                  toolbar: 'undo redo | bold italic underline | bullist numlist | link',
+                  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
                 }}
               />
               <input
@@ -714,7 +719,7 @@ const removerItemConteudo = (index: number) => {
                   {novaAtividade.conteudo.map((item, idx) => (
                     <div key={idx} className="preview-item">
                       {item.tipo === 'texto' && (
-                        <p>{item.valor}</p>
+                        <div dangerouslySetInnerHTML={{ __html: item.valor }} />
                       )}
                       {item.tipo === 'imagem' && (
                         <div className="preview-img-container">

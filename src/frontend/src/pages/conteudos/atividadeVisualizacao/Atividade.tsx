@@ -65,7 +65,14 @@ const Atividade: React.FC = () => {
       <div className="tituloSecao pDarkmode">Texto</div>
       {atividade!.conteudo
         .filter(item => item.tipo === 'texto')
-        .map((item, i) => <p className="pDarkmode" key={i}>{item.valor}</p>)}
+        .map((item, i) => (
+          <div
+            key={i}
+            className="pDarkmode"
+            dangerouslySetInnerHTML={{ __html: item.valor }}
+          />
+        ))
+      }
     </div>
   );
 
