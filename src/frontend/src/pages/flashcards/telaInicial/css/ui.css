@@ -133,7 +133,7 @@ ion-button.verTopicos::part(native) {
 #btnFechar {
   display: flex;
   justify-content: flex-end !important;
-  align-items: flex-end  !important;
+  align-items: flex-end  !important;    
   overflow: hidden !important;
   position: relative !important;
   background-color: white;
@@ -143,10 +143,14 @@ ion-button#btnFechar::part(native) {
   background-color: white;
   display: flex;
   justify-content: flex-end !important;
+  align-items: flex-end  !important; 
 }
 
 .iconeFechar {
-  margin-left: auto;
+  position: absolute;
+  right: 0;
+  margin-left: auto !important;
+  align-self: flex-end  !important; 
 }
 
 #pDecks {

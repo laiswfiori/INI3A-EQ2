@@ -30,7 +30,28 @@ interface Atividade {
   updated_at: string;
 }
 
+interface Topico {
+  id: number;
+  titulo: string;
+  descricao: string;
+  status: string;
+  materia_id: number;
+  created_at: string;
+  updated_at: string;
+  atividades: Atividade[];
+}
+
+interface Materia {
+  id: number;
+  nome: string;
+  topicos: Topico[];
+}
+
 export default function () {
+  const [topicosFull, setTopicosFull] = useState<Topico[]>([]);
+  const [atividadesFiltradas2, setAtividadesFiltradas2] = useState<Atividade[]>([])
+  const [materias, setMaterias] = useState<Materia[]>([]);
+  const [topicos, setTopicos] = useState<Topico[]>([]);
   const [menuAberto, setMenuAberto] = useState(false);
   const toggleMenu = () => {
     setMenuAberto(!menuAberto);
@@ -58,6 +79,32 @@ export default function () {
     }
   }, []);
   
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const api = new API();
+        const [materiasData, topicosData, atividadesData] = await Promise.all([
+          api.get('materias'),
+          api.get('topicos'),
+          api.get('atividades'),
+        ]);
+  
+        setMaterias(materiasData);
+        setTopicosFull(topicosData);
+  
+        setAtividadesFiltradas2(
+          atividadesData.filter(atividade =>
+            topicosData.some(t => t.id === atividade.topico_id)
+          )
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
   const [hoveredDay, setHoveredDay] = useState<number | null>(null);
 
   const [materiaSelecionada, setMateriaSelecionada] = useState<string>('all');
@@ -76,30 +123,33 @@ export default function () {
     const nomeUpper = nome.trim().toUpperCase();
   
     const mapa: { [key: string]: string } = {
-      'PORTUGUÊS': 'm1',
-      'PORTUGUES': 'm1',
-      'LITERATURA': 'm1',
-      'INGLÊS': 'm2',
-      'INGLES': 'm2',
-      'ESPANHOL': 'm2',
-      'ARTES': 'm3',
-      'HISTÓRIA': 'm4',
-      'HISTORIA': 'm4',
-      'FILOSOFIA': 'm5',
-      'SOCIOLOGIA': 'm6',
-      'GEOGRAFIA': 'm7',
-      'BIOLOGIA': 'm8',
-      'QUÍMICA': 'm9',
-      'QUIMICA': 'm9',
-      'FÍSICA': 'm10',
-      'FISICA': 'm10',
-      'MATEMÁTICA': 'm11',
-      'MATEMATICA': 'm11'
+      'PORTUGUÊS': 'm1A',
+      'PORTUGUES': 'm1A',
+      'LITERATURA': 'm1A',
+      'GRAMÁTICA': 'm1A',
+      'GRAMATICA': 'm1A',
+      'INGLÊS': 'm2A',
+      'INGLES': 'm2A',
+      'ESPANHOL': 'm2A',
+      'ARTES': 'm3A',
+      'HISTÓRIA': 'm4A',
+      'HISTORIA': 'm4A',
+      'FILOSOFIA': 'm5A',
+      'SOCIOLOGIA': 'm6A',
+      'GEOGRAFIA': 'm7A',
+      'BIOLOGIA': 'm8A',
+      'QUÍMICA': 'm9A',
+      'QUIMICA': 'm9A',
+      'FÍSICA': 'm10A',
+      'FISICA': 'm10A',
+      'MATEMÁTICA': 'm11A',
+      'MATEMATICA': 'm11A'
     };
   
     const classe = mapa[nomeUpper] || '';
     return { nome: nomeUpper, classe };
   };  
+
 
   const location = useLocation();
   const hoje = new Date();
@@ -108,6 +158,9 @@ export default function () {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [showToast, setShowToast] = useState(false);
+
+  const topicoMap = Object.fromEntries(topicos.map(t => [t.id, t]));
+  const materiaMap = Object.fromEntries(materias.map(m => [m.id, m]));
 
 
   const [viewMode, setViewMode] = useState<'Mês' | 'Semana'>('Mês');
@@ -129,19 +182,16 @@ export default function () {
   const startingDayOfWeek = firstDay.getDay();
   const days = [];
 
-  // Dias do mês anterior (para completar a primeira semana)
   const prevMonth = new Date(year, month - 1, 1);
   const prevMonthDays = new Date(year, month, 0).getDate();
   for (let i = startingDayOfWeek; i > 0; i--) {
     days.push({ day: prevMonthDays - i + 1, isCurrentMonth: false });
   }
 
-  // Dias do mês atual
   for (let day = 1; day <= daysInMonth; day++) {
     days.push({ day, isCurrentMonth: true });
   }
 
-  // Dias do próximo mês (para completar a última semana)
   const totalCells = Math.ceil(days.length / 7) * 7;
   let nextMonthDay = 1;
   while (days.length < totalCells) {
@@ -504,7 +554,6 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
 
     <div className="calendar-grid">
       {days.map((date, index) => {
-        // Filtra eventos APENAS para dias do mês atual
         const currentDayEvents = date.isCurrentMonth 
           ? eventosAgenda.filter((evento) => {
               if (!evento.data) return false;
@@ -758,42 +807,71 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
               </IonRow>
               <div className="atividades-scroll">
               <IonRow className="flexRA">
-                {atividadesFiltradas.map((atividade) => (
-                  <IonItem key={atividade.id} className="materia-item ativAgenda">
-                    <IonRow className="containerMateria">
-                      <IonCol className="col1MA">
-                        <IonIcon icon={calendar} className="iconesTF" />
+              {atividadesFiltradas.map((atividade) => {
+                const topico = topicosFull.find(t => t.id === atividade.topico_id);
+                const materia = topico ? materias.find(m => m.id === topico.materia_id) : null;
+
+                return (                  
+                <IonItem key={atividade.id} className="materia-item ativAgenda">
+                  <IonRow className="containerMateria">
+                    <IonCol className="col1MA">
+                      {(() => {
+                        const topico: Topico | undefined = topicosFull.find(t => t.id === atividade.topico_id);
+                        const materia: Materia | undefined = topico
+                          ? materias.find((m: Materia) => m.id === topico.materia_id)
+                          : undefined;
+
+                          const cor = materia
+                          ? coresMaterias[String(materia.id)] || normalizarNomeMateria(materia.nome).classe
+                          : undefined;
+                        console.log('materia encontrada:', materia);
+                        console.log('cor atribuída:', cor);
+
+                        return (
+                          <IonIcon 
+                        icon={calendar} 
+                        className={`iconesTF ${materia && !coresMaterias[String(materia.id)] ? normalizarNomeMateria(materia.nome).classe : ''}`}
+                        style={{
+                          color: materia && coresMaterias[String(materia.id)] ? coresMaterias[String(materia.id)] : undefined
+                        }}
+                      />
+                        );
+                      })()}
+                      
+                      <IonRow>
                         <IonCol className="td tdMat">
-                            <h2 className="txtTMat">{atividade.titulo}</h2>
-                            <p className="txtDescricao">{atividade.tipo}</p>
-                          </IonCol>
+                          <h2 className="txtTMat">{atividade.titulo}</h2>
+                          <p className="txtDescricao">{atividade.tipo} • {materia?.nome}</p>
+                        </IonCol>
+                      </IonRow>
+                    </IonCol>
+
+                    <IonRow className="rowA">
+                      <IonCol>
+                        <p className="txtDescricao">{atividade.descricao}</p>
                       </IonCol>
-
-                      <IonRow className="rowA">
-                        <IonCol>
-                          <p className="txtDescricao">{atividade.descricao}</p>
-                        </IonCol>
-                      </IonRow>
-
-                      <IonRow className="rowDivsA rowA">
-                        <IonCol className={`divAgenda divStatus ${getStatusClass(atividade.status)}`}>
-                          <p>{atividade.status}</p>
-                        </IonCol>
-                        <IonCol className="divAgenda divData">
-                          <p>
-                            {atividade.data_entrega
-                              ? new Date(atividade.data_entrega).toLocaleDateString('pt-BR', {
-                                  day: '2-digit',
-                                  month: 'short',
-                                  year: 'numeric',
-                                })
-                              : 'Sem data de entrega'}
-                          </p>
-                        </IonCol>
-                      </IonRow>
                     </IonRow>
-                  </IonItem>
-                ))}
+
+                    <IonRow className="rowDivsA rowA">
+                      <IonCol className={`divAgenda divStatus ${getStatusClass(atividade.status)}`}>
+                        <p>{atividade.status}</p>
+                      </IonCol>
+                      <IonCol className="divAgenda divData">
+                        <p>
+                          {atividade.data_entrega
+                            ? new Date(atividade.data_entrega).toLocaleDateString('pt-BR', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                              })
+                            : 'Sem data de entrega'}
+                        </p>
+                      </IonCol>
+                    </IonRow>
+                  </IonRow>
+                </IonItem>
+                );
+              })} 
               </IonRow>
               </div>
             </IonCol>

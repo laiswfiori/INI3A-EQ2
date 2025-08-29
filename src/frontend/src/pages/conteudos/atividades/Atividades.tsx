@@ -106,6 +106,8 @@ const Atividades: React.FC = () => {
       'PORTUGUÊS': 'm1',
       'PORTUGUES': 'm1',
       'LITERATURA': 'm1',
+      'GRAMÁTICA': 'm1',
+      'GRAMATICA': 'm1',
       'INGLÊS': 'm2',
       'INGLES': 'm2',
       'ESPANHOL': 'm2',

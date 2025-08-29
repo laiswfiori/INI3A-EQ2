@@ -8,11 +8,12 @@ interface CardProps {
   verso: React.ReactNode;
   mostrarVerso: boolean;
   onVoltarFrente?: () => void; 
+  noAnim?: boolean;
 }
 
-const CardFlip: React.FC<CardProps> = ({ frente, verso, mostrarVerso, onVoltarFrente }) => {
+const CardFlip: React.FC<CardProps> = ({ frente, verso, mostrarVerso, onVoltarFrente, noAnim }) => {
   return (
-    <div className={`card-container ${mostrarVerso ? 'flipped' : ''}`}>
+    <div className={`card-container ${mostrarVerso ? 'flipped' : ''} ${noAnim ? 'no-anim' : ''} animate-in`}>
       <IonCard className="card-front">
         <IonCardContent>{frente}</IonCardContent>
       </IonCard>

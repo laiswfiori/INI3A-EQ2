@@ -38,6 +38,7 @@ interface Materia {
 
 interface Flashcard {
   id: number;
+  usuario_id: number;
   topico_id: number;
   titulo: string;
   cards: Card[];
@@ -166,39 +167,49 @@ const TelaInicialFlashcards: React.FC = () => {
   const history = useHistory();
   const [presentToast] = useIonToast();
 
+
   const fetchData = async () => {
-  try {
-    const [materiasDataRaw, topicosDataRaw, flashcardsDataRaw, cardsDataRaw] = await Promise.all([
-      api.get('materias'),
-      api.get('topicos'),
-      api.get('flashcards'),
-      api.get('cards'),
-    ]);
-
-    const materiasData = materiasDataRaw as Materia[];
-    const topicosData = topicosDataRaw as Topico[];
-    const flashcardsData = flashcardsDataRaw as Flashcard[];
-    const cardsData = cardsDataRaw as Card[];
-
-    const flashcardsComCards = flashcardsData.map((flashcard: Flashcard) => ({
-      ...flashcard,
-      cards: cardsData.filter((card: Card) => card.flashcard_id === flashcard.id),
-    }));
-
-    setMaterias(materiasData);
-    setTopicos(topicosData);
-    setFlashcards(flashcardsComCards);
-    setCards(cardsData);
-
-  } catch (error) {
-    console.error('Erro ao buscar dados iniciais:', error);
-    presentToast({
-      message: 'Erro ao carregar dados. Tente novamente mais tarde.',
-      duration: 3000,
-      color: 'danger',
-    });
-  }
-};
+    try {
+      const [materiasDataRaw, topicosDataRaw, flashcardsDataRaw, cardsDataRaw] = await Promise.all([
+        api.get('materias'),
+        api.get('topicos'),
+        api.get('flashcards'),
+        api.get('cards'),
+      ]);
+  
+      const materiasData = materiasDataRaw as Materia[];
+      const topicosData = topicosDataRaw as Topico[];
+      const flashcardsData = flashcardsDataRaw as Flashcard[];
+      const cardsData = cardsDataRaw as Card[];
+  
+      const flashcardsComCards = flashcardsData.map((flashcard: Flashcard) => ({
+        ...flashcard,
+        cards: cardsData.filter((card: Card) => card.flashcard_id === flashcard.id),
+      }));
+  
+      const flashcardsDoUsuario = flashcardsComCards.filter(f =>
+        topicosData.some(t => t.id === f.topico_id && materiasData.some(m => m.id === t.materia_id))
+      );
+  
+      const cardsDoUsuario = cardsData.filter(c =>
+        flashcardsDoUsuario.some(f => f.id === c.flashcard_id)
+      );
+  
+      setMaterias(materiasData);
+      setTopicos(topicosData);
+      setFlashcards(flashcardsDoUsuario);
+      setCards(cardsDoUsuario);
+  
+    } catch (error) {
+      console.error('Erro ao buscar dados iniciais:', error);
+      presentToast({
+        message: 'Erro ao carregar dados. Tente novamente mais tarde.',
+        duration: 3000,
+        color: 'danger',
+      });
+    }
+  };
+  
 
 useIonViewWillEnter(() => {
   fetchData();

@@ -230,6 +230,15 @@ const Flashcards: React.FC = () => {
       timeStats
     });
   };
+
+  const [noAnim, setNoAnim] = useState(false);
+
+  useEffect(() => {
+    setMostrarVerso(false);
+    setNoAnim(true);
+    const id = requestAnimationFrame(() => setNoAnim(false));
+    return () => cancelAnimationFrame(id);
+  }, [currentCardIndex]);
   
 
   if (!isIdValido) {
@@ -284,6 +293,7 @@ const Flashcards: React.FC = () => {
 
         <IonRow className="contF">
           <CardFlip
+            key={cardAtual.id ?? currentCardIndex}
             frente={
               <div style={{ padding: 20 }}>
                 {cardAtual.conteudo_frente.map((item, i) => (
@@ -311,6 +321,7 @@ const Flashcards: React.FC = () => {
               </div>
             }
             mostrarVerso={mostrarVerso}
+            noAnim={noAnim}
           />
         </IonRow>
 

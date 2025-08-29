@@ -264,67 +264,67 @@ ion-segment-button {
 }
 
 
-.event-tag.m1 {
+.event-tag.m1A {
   background-color: rgb(185, 39, 39);
   border-radius: 10px;
   padding: 4%;
 }
 
-.event-tag.m2 {
+.event-tag.m2A {
   background-color: rgb(88, 47, 7);
   border-radius: 10px;
   padding: 4%;
 }
 
-.event-tag.m3 {
+.event-tag.m3A {
   background-color: rgb(64, 193, 216);
   border-radius: 10px;
   padding: 4%;
 }
 
-.event-tag.m4 {
+.event-tag.m4A {
   background-color: rgb(161, 85, 22);
   border-radius: 10px;
   padding: 4%;
 }
 
-.event-tag.m5 {
+.event-tag.m5A {
   background-color: rgb(206, 81, 139);
   border-radius: 10px;
   padding: 4%;
 }
 
-.event-tag.m6 {
+.event-tag.m6A {
   background-color: rgb(202, 182, 5);
   border-radius: 10px;
   padding: 4%;
 }
 
-.event-tag.m7 {
+.event-tag.m7A {
   background-color: rgb(24, 136, 211);
   border-radius: 10px;
   padding: 4%;
 }
 
-.event-tag.m8 {
+.event-tag.m8A {
   background-color: rgb(58, 128, 18);
   border-radius: 10px;
   padding: 4%;
 }
 
-.event-tag.m9 {
+.event-tag.m9A {
   background-color: rgb(219, 132, 19);
   border-radius: 10px;
   padding: 4%;
 }
 
-.event-tag.m10 {
+.event-tag.m10A {
   background-color: rgb(112, 30, 179);
   border-radius: 10px;
   padding: 4%;
 }
 
-.event-tag.m11 {
+.event-tag.m11A {
   background-color: rgb(196, 28, 6);
   border-radius: 10px;
   padding: 4%;
@@ -342,4 +342,48 @@ ion-segment-button {
 .eSemana {
   font-size: 1.2rem;
   text-align: center;
+}
+
+.m1A {
+  color: rgb(185, 39, 39) !important;
+}
+
+.m2A {
+  color: rgb(88, 47, 7) !important;
+}
+
+.m3A {
+  color: rgb(64, 193, 216) !important;
+}
+
+.m4A {
+  color: rgb(161, 85, 22) !important;
+}
+
+.m5A {
+  color: rgb(206, 81, 139) !important;
+}
+
+.m6A {
+  color: rgb(202, 182, 5) !important;
+}
+
+.m7A {
+  color: rgb(24, 136, 211) !important;
+}
+
+.m8A {
+  color: rgb(58, 128, 18) !important;
+}
+
+.m9A {
+  color: rgb(219, 132, 19) !important;
+}
+
+.m10A {
+  color: rgb(112, 30, 179) !important;
+}
+
+.m11A {
+  color: rgb(196, 28, 6) !important;
 }

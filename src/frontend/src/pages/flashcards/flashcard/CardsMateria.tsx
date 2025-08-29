@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react'; // só adicionei useRef
+import React, { useState, useEffect, useRef } from 'react'; 
 import { useParams, useHistory } from 'react-router-dom';
-import { IonPage, IonContent, IonButton, IonRow, IonLabel } from '@ionic/react'; // adicionei IonLabel para exibir tempo (opcional)
+import { IonPage, IonContent, IonButton, IonRow, IonLabel } from '@ionic/react';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layouts.css';
@@ -243,7 +243,14 @@ const CardsMateria: React.FC = () => {
     }
   };
   
+  const [noAnim, setNoAnim] = useState(false);
 
+  useEffect(() => {
+    setMostrarVerso(false);
+    setNoAnim(true);
+    const id = requestAnimationFrame(() => setNoAnim(false));
+    return () => cancelAnimationFrame(id);
+  }, [currentCardIndex]);
 
   if (cards.length === 0) {
     return (
@@ -286,6 +293,7 @@ const CardsMateria: React.FC = () => {
 
         <IonRow className="contF">
           <CardFlip
+          key={cardAtual.id ?? currentCardIndex}
             frente={
               <div style={{ padding: 20 }}>
                 {cardAtual.conteudo_frente.map((item, i) => (
@@ -313,6 +321,7 @@ const CardsMateria: React.FC = () => {
               </div>
             }
             mostrarVerso={mostrarVerso}
+            noAnim={noAnim}
           />
         </IonRow>
 

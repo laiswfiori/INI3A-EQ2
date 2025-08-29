@@ -119,6 +119,16 @@ const RevisaoGeral: React.FC = () => {
     return `${mins}m ${secs}s`;
   };
 
+  const [noAnim, setNoAnim] = useState(false);
+  
+  useEffect(() => {
+    setMostrarVerso(false);
+    setNoAnim(true);
+    const id = requestAnimationFrame(() => setNoAnim(false));
+    return () => cancelAnimationFrame(id);
+  }, [currentCardIndex]);
+
+
   if (allCards.length === 0) {
     return (
       <IonPage>
@@ -225,6 +235,7 @@ const handleNextCard = async (nivel: string) => {
 
         <IonRow className="contF">
           <CardFlip
+            key={cardAtual.id ?? currentCardIndex}
             frente={
               <div style={{ padding: 20 }}>
                 {cardAtual.conteudo_frente.map((item, i) => (
@@ -252,6 +263,7 @@ const handleNextCard = async (nivel: string) => {
               </div>
             }
             mostrarVerso={mostrarVerso}
+            noAnim={noAnim}
           />
         </IonRow>
 
