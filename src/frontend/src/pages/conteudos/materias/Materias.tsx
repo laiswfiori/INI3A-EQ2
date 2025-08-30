@@ -189,7 +189,11 @@ const Materias: React.FC = () => {
 
   const handleSalvar = async () => {
     const nomeValidado = novaMateria.nome?.trim() || '';
-    const erro = validarCamposMateria({ nome: nomeValidado });
+
+    const idMateriaEditada = modoModal === 'editar' ? materiaSelecionada?.id : null;
+
+    // Passa a lista de matérias e o ID da matéria em edição para a validação
+    const erro = validarCamposMateria({ nome: nomeValidado }, materias, idMateriaEditada);
     if (erro) {
       alert(erro);
       return;
@@ -423,7 +427,7 @@ const Materias: React.FC = () => {
                 labelPlacement="stacked"
                 placeholder="Digite o nome da matéria"
                 value={novaMateria.nome}
-                onIonChange={(e) => handleInputChange('nome', e.detail.value!)}
+                onIonInput={(e) => handleInputChange('nome', e.detail.value!)}
                 className="input pDarkmode"
               />
               <IonButton expand="block" onClick={handleSalvar} className="btnSalvar btnSalvarDarkmode">

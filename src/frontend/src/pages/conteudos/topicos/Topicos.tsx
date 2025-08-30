@@ -220,7 +220,9 @@ const Topicos: React.FC = () => {
   };
 
   const handleSalvar = async () => {
-    const erro = validarCamposTopico(novoTopico);
+    const idTopicoEditado = modoModal === 'editar' ? topicoSelecionado?.id : null;
+
+    const erro = validarCamposTopico(novoTopico, topicos, idTopicoEditado);
     if (erro) {
       alert(erro);
       return;
@@ -239,9 +241,9 @@ const Topicos: React.FC = () => {
 
     try {
       const data = await method.call(api, endpoint, {
-        titulo: novoTopico.titulo,
+        titulo: novoTopico.titulo.trim(),
         materia_id: novoTopico.materia_id,
-        descricao: novoTopico.descricao,
+        descricao: novoTopico.descricao.trim(),
       });
 
       if (modoModal === 'editar') {
@@ -444,7 +446,7 @@ const Topicos: React.FC = () => {
               <IonInput
                 placeholder="Digite o título do tópico"
                 value={novoTopico.titulo}
-                onIonChange={(e) => handleInputChange('titulo', e.detail.value!)}
+                onIonInput={(e) => handleInputChange('titulo', e.detail.value!)}
                 className="input pDarkmode"
               />
               <p className="label pDarkmode">Descrição</p>

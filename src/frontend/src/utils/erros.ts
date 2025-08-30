@@ -46,31 +46,86 @@ export function validarCamposAtividade(atividade: { titulo: string; tipo: string
   return null;
 }
 
+type MateriaSimples = {
+  id: number | string;
+  nome: string;
+};
 
 // Validações para matérias
-export function validarNomeMateria(nome: string): string | null {
-  if (!nome.trim()) {
+export function validarNomeMateria(
+  nome: string,
+  materias: MateriaSimples[],
+  idMateriaEditada: number | string | null = null
+): string | null {
+  const nomeTrimmed = nome.trim();
+
+  if (!nomeTrimmed) {
     return 'O nome da matéria é obrigatório.';
   }
+
+  if (/\s/.test(nomeTrimmed)) {
+    return 'O nome da matéria não pode conter espaços.';
+  }
+
+  const nomeUpperCase = nomeTrimmed.toUpperCase();
+
+  const materiaExistente = materias.find(
+    (materia) => materia.nome.trim().toUpperCase() === nomeUpperCase
+  );
+
+  // Se uma matéria com o mesmo nome existe e não é a matéria que está sendo editada
+  if (materiaExistente && materiaExistente.id !== idMateriaEditada) {
+    return 'Matéria já existe.';
+  }
+
   return null;
 }
 
 
-export function validarCamposMateria(materia: { nome: string }): string | null {
-  const erros = [
-    validarNomeMateria(materia.nome),
-  ].filter(Boolean);
-
-  if (erros.length > 0) return erros[0];
+export function validarCamposMateria(
+  materia: { nome: string },
+  materias: MateriaSimples[],
+  idMateriaEditada: number | string | null = null): string | null {
+  const erros = [validarNomeMateria(materia.nome, materias, idMateriaEditada)].filter(Boolean); // Filtra valores nulos ou vazios
+  if (erros.length > 0) {
+    return erros[0];
+  }
   return null;
 }
 
+type TopicoSimples = {
+  id: number | string;
+  titulo: string;
+};
 
 // Validações para tópicos
-export function validarTituloTopico(titulo: string): string | null {
-  if (!titulo.trim()) {
+export function validarTituloTopico(
+  titulo: string,
+  topicosDaMateria: TopicoSimples[],
+  idTopicoEditado: number | string | null = null
+): string | null {
+  const tituloTrimmed = titulo.trim();
+
+  if (!tituloTrimmed) {
     return 'O título do tópico é obrigatório.';
   }
+
+  // Normaliza o título para a comparação: remove todos os espaços e converte para maiúsculo.
+  const tituloNormalizado = tituloTrimmed.replace(/\s+/g, '').toUpperCase();
+
+  const topicoExistente = topicosDaMateria.find((topico) => {
+    const tituloExistenteNormalizado = topico.titulo
+      .trim()
+      .replace(/\s+/g, '')
+      .toUpperCase();
+    return tituloExistenteNormalizado === tituloNormalizado;
+  });
+
+  // Se um tópico com o mesmo título normalizado já existe E não é o tópico que está sendo editado
+  if (topicoExistente && topicoExistente.id !== idTopicoEditado) {
+    return 'Este tópico já existe nesta matéria.';
+  }
+
   return null;
 }
 
@@ -81,11 +136,15 @@ export function validarDescricaoTopico(descricao: string): string | null {
   return null;
 }
 
-export function validarCamposTopico(topico: { titulo: string; descricao: string }): string | null {
+export function validarCamposTopico(
+  topico: { titulo: string; descricao: string },
+  topicosDaMateria: TopicoSimples[],
+  idTopicoEditado: number | string | null = null
+): string | null {
   const erros = [
-    validarTituloTopico(topico.titulo),
+    validarTituloTopico(topico.titulo, topicosDaMateria, idTopicoEditado),
     validarDescricaoTopico(topico.descricao),
-  ].filter(Boolean);
+  ].filter(Boolean); // Filtra valores nulos
 
   if (erros.length > 0) return erros[0];
   return null;
