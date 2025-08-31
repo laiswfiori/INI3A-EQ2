@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Services\AgendaHeuristicaService;
+use App\Services\NivelCalculoService;
 use App\Models\AgendaConfiguracao;
 use App\Models\Materia;
-use App\Models\Topico;
-use App\Models\Atividade;
-use App\Models\Flashcard;
 use App\Models\CalendarioEstudos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -16,10 +14,12 @@ use Illuminate\Support\Facades\Auth;
 class CalendarioEstudosController extends Controller
 {
     protected $agendaService;
+    protected $nivelService;
 
-    public function __construct(AgendaHeuristicaService $agendaService)
+    public function __construct(AgendaHeuristicaService $agendaService, NivelCalculoService $nivelService)
     {
         $this->agendaService = $agendaService;
+        $this->nivelService = $nivelService;
         $this->middleware('auth');
     }
 
@@ -45,59 +45,10 @@ class CalendarioEstudosController extends Controller
             }
             $materiaIds = $materiaIds->unique()->values();
 
+            // Recalcular níveis antes de gerar a agenda (garantia)
+            $this->nivelService->recalcularTodosOsNiveis();
+
             $materias = Materia::whereIn('id', $materiaIds)->get()->keyBy('id');
-            $topicos = Topico::whereIn('materia_id', $materiaIds)->get()->groupBy('materia_id');
-
-            $mapNivelParaNumero = [
-                'muito fácil' => 1,
-                'fácil' => 2,
-                'médio' => 3,
-                'difícil' => 4,
-                'muito difícil' => 5,
-            ];
-            $mapNumeroParaNivel = [
-                1 => 'muito fácil',
-                2 => 'fácil',
-                3 => 'médio',
-                4 => 'difícil',
-                5 => 'muito difícil',
-            ];
-
-            foreach ($materias as $materia) {
-                $topicosMateria = $topicos[$materia->id] ?? collect();
-
-                foreach ($topicosMateria as $topico) {
-                    $atividades = Atividade::where('topico_id', $topico->id)->pluck('nivel');
-                    $flashcards = Flashcard::where('topico_id', $topico->id)->pluck('nivel');
-
-                    $todosNiveis = $atividades->merge($flashcards)->map(function ($nivel) use ($mapNivelParaNumero) {
-                        return $mapNivelParaNumero[$nivel] ?? 3;
-                    });
-
-                    $media = $todosNiveis->avg();
-                    $nivelAtribuido = round($media);
-
-                    $topico->nivel = $mapNumeroParaNivel[$nivelAtribuido] ?? 'médio';
-                    $topico->save();
-                }
-
-                $topicosAtualizados = Topico::where('materia_id', $materia->id)->pluck('nivel')->map(function ($nivel) use ($mapNivelParaNumero) {
-                    return $mapNivelParaNumero[$nivel] ?? 3;
-                });
-
-                $nivelMedio = $topicosAtualizados->avg() ?: 3;
-
-                if ($nivelMedio <= 2.5) {
-                    $dificuldadeTexto = 'fácil';
-                } elseif ($nivelMedio <= 3.5) {
-                    $dificuldadeTexto = 'médio';
-                } else {
-                    $dificuldadeTexto = 'difícil';
-                }
-
-                $materia->dificuldade = $dificuldadeTexto;
-                $materia->save();
-            }
 
             foreach ($config->diasDisponiveis as $dia) {
                 $dia->materias = collect();
@@ -146,7 +97,6 @@ class CalendarioEstudosController extends Controller
                 ]);
             }
 
-
             return response()->json(['agenda' => $agenda]);
 
         } catch (\Throwable $e) {
@@ -156,6 +106,18 @@ class CalendarioEstudosController extends Controller
                 'trace' => $e->getTraceAsString(),
             ]);
             return response()->json(['message' => 'Erro interno ao gerar agenda.'], 500);
+        }
+    }
+
+    // Método adicional para recalcular níveis manualmente se necessário
+    public function recalcularNiveis()
+    {
+        try {
+            $this->nivelService->recalcularTodosOsNiveis();
+            return response()->json(['message' => 'Níveis recalculados com sucesso.']);
+        } catch (\Throwable $e) {
+            Log::error('Erro ao recalcular níveis:', ['erro' => $e->getMessage()]);
+            return response()->json(['message' => 'Erro ao recalcular níveis.'], 500);
         }
     }
 }
