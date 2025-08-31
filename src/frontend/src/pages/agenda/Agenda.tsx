@@ -404,6 +404,20 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
   const materiasUnicas = Array.from(new Set(eventosAgenda.map(evento => evento.materia))).sort();
   const history = useHistory();
 
+const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
+  if (!isCurrentMonth) return [];
+  
+  return atividades.filter(atividade => {
+    if (!atividade.data_entrega) return false;
+    
+    const dataEntrega = new Date(atividade.data_entrega);
+    return (
+      dataEntrega.getDate() === dia &&
+      dataEntrega.getMonth() === currentDate.getMonth() &&
+      dataEntrega.getFullYear() === currentDate.getFullYear()
+    );
+  });
+};
 
   return (
     <IonPage>
@@ -542,6 +556,7 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
             </div>
         )}
 
+
 {viewMode === 'Mês' && (
   <div className="calendar-grid-container">
     <div className="calendar-grid days-of-week-header">
@@ -566,6 +581,31 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
             })
           : [];
 
+        const atividadesDoDia = getAtividadesPorDia(date.day, date.isCurrentMonth);
+
+        const todosEventos = [
+          ...currentDayEvents.map(evento => ({
+            tipo: 'estudo',
+            titulo: evento.materia,
+            materia_id: evento.materia_id,
+            horario: `${evento.hora_inicio} - ${evento.hora_fim}`,
+            status: null
+          })),
+          ...atividadesDoDia.map(atividade => {
+            const topico = topicosFull.find(t => t.id === atividade.topico_id);
+            const materia = topico ? materias.find(m => m.id === topico.materia_id) : null;
+            
+            return {
+              tipo: 'atividade',
+              titulo: atividade.titulo,
+              materia_nome: materia?.nome || 'Matéria não encontrada',
+              materia_id: materia?.id,
+              status: atividade.status,
+              data_entrega: atividade.data_entrega
+            };
+          })
+        ];
+
         return (
           <div
             key={index}
@@ -588,54 +628,84 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
             
             {date.isCurrentMonth && isCoresCarregadas && (
               <div className="events-container">
-                {currentDayEvents.slice(0, 2).map((evento, idx) => {
-                  const materiaNome = evento.materia || '';
+                {todosEventos.slice(0, 2).map((evento, idx) => {
                   const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
                   const corSalva = materiaId ? coresMaterias[materiaId] : undefined;
-
-                  console.log(`Evento ${materiaNome} (ID: ${materiaId}) - evento completo:`, evento);
-                  console.log(`Cor salva para o ID ${materiaId}: ${corSalva}`); 
-
+                  const materiaNome = evento.titulo || evento.materia_nome || '';
                   const { classe } = normalizarNomeMateria(materiaNome);
 
                   return (
                     <div 
                       key={`${date.day}-${idx}`}
-                      className={`event-tag ${corSalva ? '' : classe}`}
-                      style={{ backgroundColor: corSalva || undefined }} 
+                      className={`event-tag ${evento.tipo === 'atividade' ? 'event-atividade' : ''} ${corSalva ? '' : classe} ${
+                        evento.status === 'concluído' ? 'status-concluido' : 
+                        evento.status === 'em andamento' ? 'status-em-andamento' : 
+                        evento.status === 'não iniciado' ? 'status-nao-iniciado' : ''
+                      }`}
+                      style={{ backgroundColor: corSalva || undefined }}
                     >
-                      <div className="event-title">{materiaNome || 'Evento'}</div>
-                      <div className="event-time">
-                        {evento.hora_inicio} - {evento.hora_fim}
+                      <div className="event-title">
+                        {evento.tipo === 'atividade' && (
+                          <span className="event-type-indicator">📝 </span>
+                        )}
+                        {materiaNome || 'Evento'}
                       </div>
+                      {evento.tipo === 'estudo' ? (
+                        <div className="event-time">{evento.horario}</div>
+                      ) : (
+                        <div className="event-status">
+                          {evento.status === 'concluído' && '✅'}
+                          {evento.status === 'em andamento' && '⏳'}
+                          {evento.status === 'não iniciado' && '⭕'}
+                          <span className="status-text">{evento.status}</span>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
-              {currentDayEvents.length > 2 && (
-                    <div className="more-events-wrapper">
-                      <div className="more-events">+{currentDayEvents.length - 2}</div>
-                      <div className="popover-extra">
-                        {currentDayEvents.slice(2).map((evento, idx) => {
-                          const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
-                          const corSalva = materiaId ? coresMaterias[materiaId] : undefined;
-                          const { classe } = normalizarNomeMateria(evento.materia || '');
 
-                          return (
-                            <div 
-                              key={`extra-${date.day}-${idx}`} 
-                              className={`hover-item divHover ${corSalva ? '' : classe}`}
-                              style={{ backgroundColor: corSalva || undefined }}
-                            >
-                              <div className="event-title eventHover">{evento.materia}</div>
-                              <div className="event-time eventHover">
-                                {evento.hora_inicio} - {evento.hora_fim}
-                              </div>
+                {todosEventos.length > 2 && (
+                  <div className="more-events-wrapper">
+                    <div className="more-events">+{todosEventos.length - 2}</div>
+                    <div className="popover-extra">
+                      {todosEventos.slice(2).map((evento, idx) => {
+                        const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
+                        const corSalva = materiaId ? coresMaterias[materiaId] : undefined;
+                        const materiaNome = evento.titulo || evento.materia_nome || '';
+                        const { classe } = normalizarNomeMateria(materiaNome);
+
+                        return (
+                          <div 
+                            key={`extra-${date.day}-${idx}`} 
+                            className={`hover-item divHover ${evento.tipo === 'atividade' ? 'event-atividade' : ''} ${corSalva ? '' : classe} ${
+                              evento.status === 'concluído' ? 'status-concluido' : 
+                              evento.status === 'em andamento' ? 'status-em-andamento' : 
+                              evento.status === 'não iniciado' ? 'status-nao-iniciado' : ''
+                            }`}
+                            style={{ backgroundColor: corSalva || undefined }}
+                          >
+                            <div className="event-title eventHover">
+                              {evento.tipo === 'atividade' && (
+                                <span className="event-type-indicator">📝 </span>
+                              )}
+                              {materiaNome}
                             </div>
-                          );
-                        })}
-                      </div>
+                            {evento.tipo === 'estudo' ? (
+                              <div className="event-time eventHover">{evento.horario}</div>
+                            ) : (
+                              <div className="event-status eventHover">
+                                {evento.status === 'concluído' && '✅'}
+                                {evento.status === 'em andamento' && '⏳'}
+                                {evento.status === 'não iniciado' && '⭕'}
+                                <span className="status-text">{evento.status}</span>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
-                  )}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -644,6 +714,7 @@ const eventosNestaHora = eventosAgenda.filter(evento => {
     </div>
   </div>
 )}
+
 {viewMode === 'Semana' && (
   <div className="calendar-grid-container semana">
     <div className="calendar-grid days-of-week-header semana-header">
