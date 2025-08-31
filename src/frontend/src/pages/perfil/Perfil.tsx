@@ -40,7 +40,7 @@ interface HorarioEstudo {
   dia_semana: string;
   horario_inicio: string;
   horario_fim: string;
-  materias: Materia[];
+  materias: Materia[] | null;
 }
 
 interface DiaAgendaPayload {
@@ -218,18 +218,6 @@ const Perfil: React.FC = () => {
     setIsChecked(e.detail.checked);
   };
 
-  const handleDiaToggle = (dia: string) => {
-    setHorariosDeEstudo(prev => {
-      const existe = prev.some(h => h.dia_semana === dia);
-      if (existe) {
-        return prev.filter(h => h.dia_semana !== dia);
-      } else {
-        const novoHorario: HorarioEstudo = { dia_semana: dia, horario_inicio: '', horario_fim: '', materias: [] };
-        return [...prev, novoHorario].sort((a, b) => diasSemana.indexOf(a.dia_semana) - diasSemana.indexOf(b.dia_semana));
-      }
-    });
-  };
-
   const handleTimeChange = (dia: string, tipo: 'inicio' | 'fim', valor: string) => {
     setHorariosDeEstudo(prev => prev.map(h =>
       h.dia_semana === dia ? { ...h, [tipo === 'inicio' ? 'horario_inicio' : 'horario_fim']: valor } : h
@@ -237,18 +225,45 @@ const Perfil: React.FC = () => {
   };
 
   const handleMateriaSelect = (dia: string, selectedMateriaIds: number[]) => {
-    setHorariosDeEstudo(prev =>
-      prev.map(h => {
-        if (h.dia_semana === dia) {
-          const novasMaterias = selectedMateriaIds
-            .map(id => materiasDisponiveis.find((m: Materia) => m.id === id))
-            .filter((m): m is Materia => m !== undefined);
-          return { ...h, materias: novasMaterias };
+  setHorariosDeEstudo(prev =>
+    prev.map(h => {
+      if (h.dia_semana === dia) {
+        // Se nenhuma matéria selecionada, define como null
+        if (selectedMateriaIds.length === 0) {
+          return { ...h, materias: null };
         }
-        return h;
-      })
-    );
-  };
+        
+        const novasMaterias = selectedMateriaIds
+          .map(id => materiasDisponiveis.find((m: Materia) => m.id === id))
+          .filter((m): m is Materia => m !== undefined);
+        
+        // Se após o filtro não sobrou nenhuma matéria válida, define como null
+        return { 
+          ...h, 
+          materias: novasMaterias.length > 0 ? novasMaterias : null 
+        };
+      }
+      return h;
+    })
+  );
+};
+
+const handleDiaToggle = (dia: string) => {
+  setHorariosDeEstudo(prev => {
+    const existe = prev.some(h => h.dia_semana === dia);
+    if (existe) {
+      return prev.filter(h => h.dia_semana !== dia);
+    } else {
+      const novoHorario: HorarioEstudo = { 
+        dia_semana: dia, 
+        horario_inicio: '', 
+        horario_fim: '', 
+        materias: null // ← Agora inicia como null
+      };
+      return [...prev, novoHorario].sort((a, b) => diasSemana.indexOf(a.dia_semana) - diasSemana.indexOf(b.dia_semana));
+    }
+  });
+};
 
   const criarNovaMateria = async () => {
     if (!novaMateriaNome.trim()) {
@@ -381,7 +396,7 @@ const Perfil: React.FC = () => {
       }
     }
 
-    const diasSemMateria = horariosDeEstudo.filter(h => h.materias.length === 0);
+    const diasSemMateria = horariosDeEstudo.filter(h => h.materias?.length === 0);
     if (diasSemMateria.length > 0) {
       const dias = diasSemMateria.map(d => d.dia_semana).join(', ');
       setShowAlert({ show: true, message: `Selecione pelo menos uma matéria para os dias: ${dias}.` });
@@ -422,9 +437,11 @@ const Perfil: React.FC = () => {
       }
 
       const grupo = mapaDias.get(key)!;
-      for (const materia of h.materias) {
-        if (!grupo.materia_ids.includes(materia.id)) {
-          grupo.materia_ids.push(materia.id);
+      if (h.materias) {
+        for (const materia of h.materias) {
+          if (!grupo.materia_ids.includes(materia.id)) {
+            grupo.materia_ids.push(materia.id);
+          } 
         }
       }
     }
@@ -646,7 +663,7 @@ const resetarConfiguracoes = async () => {
                 <IonItem className="colDiasAvancados">
                   <IonLabel>Materias existentes</IonLabel>
                   <IonSelect
-                    value={horario.materias.map(m => m.id)}
+                    value={horario.materias?.map(m => m.id)}
                     multiple={true}
                     placeholder="Selecione as matérias"
                     onIonChange={e => handleMateriaSelect(horario.dia_semana, e.detail.value)}
@@ -775,7 +792,7 @@ const resetarConfiguracoes = async () => {
                 <IonItem className="colDiasAvancados">
                   <IonLabel>Materias existentes</IonLabel>
                   <IonSelect
-                    value={horario.materias.map(m => m.id)}
+                    value={horario.materias?.map(m => m.id)}
                     multiple={true}
                     placeholder="Selecione as matérias"
                     onIonChange={e => handleMateriaSelect(horario.dia_semana, e.detail.value)}
