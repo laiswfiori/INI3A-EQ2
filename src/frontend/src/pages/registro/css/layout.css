@@ -29,6 +29,8 @@
         justify-content: center;
         .h1{
             text-align: center;
+            margin-top: 30px !important;
+            margin-bottom: -10px;
         }
         input{
             padding: 3%;
@@ -152,7 +154,8 @@
     }
     .h1{
         font-size: 1.4rem !important;
-        margin-bottom: -25px;
+        margin-top: -10px !important;
+        margin-bottom: -10px;
     }
     .h2{
         font-size: 1rem !important;
@@ -229,6 +232,7 @@
 
     .h1{
         text-align: center;
+        margin-top: 40px !important;
     }
 
     .btnGoogle{
