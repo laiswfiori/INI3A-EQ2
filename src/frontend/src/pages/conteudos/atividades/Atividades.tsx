@@ -792,7 +792,7 @@ const removerItemConteudo = (index: number) => {
 
         <AvaliarModal
           isOpen={showModalAvaliar}
-          onDidDismiss={() => setShowModalAvaliar(false)}
+          onClose={() => setShowModalAvaliar(false)} 
           atividade={atividadeAvaliar}
           onSalvar={salvarAvaliacao}
         />

@@ -96,6 +96,15 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
     }
   };
 
+  const handleClose = () => {
+    setNivel(null);
+    setExercicios(null);
+    setAcertos(null);
+    setNota(null);
+    setValor(null);
+    onClose();
+  };
+
   return (
     <IonRow className="centro">
       <IonModal isOpen={isOpen} onDidDismiss={onClose} id="modalAvaliar">
@@ -173,7 +182,7 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
             <IonButton expand="block" onClick={handleSalvar} className="btnAvaliarAtiv btnSalvarAvaliacao">
               Salvar avaliação
             </IonButton>
-            <IonButton expand="block" color="medium" onClick={onClose} className="btnAvaliarAtiv btnCancelarAvaliacao">
+            <IonButton expand="block" color="medium" onClick={handleClose} className="btnAvaliarAtiv btnCancelarAvaliacao">
               Cancelar
             </IonButton>
           </IonRow>

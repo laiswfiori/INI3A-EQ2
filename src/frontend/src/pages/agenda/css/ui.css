@@ -387,3 +387,78 @@ ion-segment-button {
 .m11A {
   color: rgb(196, 28, 6) !important;
 }
+
+.iconeFlag {
+  width: 1rem;
+}
+
+
+.event-atividade {
+  background-color: var(--cor-brancoC) !important;
+}
+
+.event-atividade.m1A {
+  border: 2px solid  rgb(185, 39, 39);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m2A {
+  border: 2px solid rgb(88, 47, 7);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m3A {
+  border: 2px solid rgb(64, 193, 216);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m4A {
+  border: 2px solid rgb(161, 85, 22);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m5A {
+  border: 2px solid rgb(206, 81, 139);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m6A {
+  border: 2px solid rgb(202, 182, 5);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m7A {
+  border: 2px solid rgb(24, 136, 211);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m8A {
+  border: 2px solid rgb(58, 128, 18);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m9A {
+  border: 2px solid rgb(219, 132, 19);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m10A {
+  border: 2px solid rgb(112, 30, 179);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m11A {
+  border: 2px solid rgb(196, 28, 6);
+  border-radius: 10px;
+  padding: 4%;
+}

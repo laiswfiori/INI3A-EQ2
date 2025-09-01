@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import { IonPage, IonToolbar, IonContent, IonButton, IonButtons, IonIcon, IonSelect, IonSelectOption, 
   IonSegment, IonSegmentButton, IonLabel, IonRow, IonCol, IonItem, IonSpinner,IonToast } from '@ionic/react';
-import { chevronBack,  chevronForward,  chevronDown, documentText, rocket, school, calendar,  flame, arrowForward, settings } from 'ionicons/icons';
+import { chevronBack,  chevronForward,  chevronDown, documentText, rocket, school, calendar,  flame, arrowForward, settings, flag } from 'ionicons/icons';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import './css/geral.css';
 import './css/ui.css';
@@ -629,34 +629,32 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
             {date.isCurrentMonth && isCoresCarregadas && (
               <div className="events-container">
                 {todosEventos.slice(0, 2).map((evento, idx) => {
-                  const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
-                  const corSalva = materiaId ? coresMaterias[materiaId] : undefined;
-                  const materiaNome = evento.titulo || evento.materia_nome || '';
-                  const { classe } = normalizarNomeMateria(materiaNome);
-
+                const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
+                const corSalva = materiaId ? coresMaterias[materiaId] : undefined;
+                const materiaNomeParaClasse = evento.tipo === 'atividade' ? evento.materia_nome : evento.titulo || evento.materia_nome || '';
+                const { classe } = normalizarNomeMateria(materiaNomeParaClasse);
                   return (
                     <div 
                       key={`${date.day}-${idx}`}
-                      className={`event-tag ${evento.tipo === 'atividade' ? 'event-atividade' : ''} ${corSalva ? '' : classe} ${
+                      className={`event-tag ${evento.tipo === 'atividade' ? 'event-atividade' : ''} ${classe} ${
                         evento.status === 'concluído' ? 'status-concluido' : 
                         evento.status === 'em andamento' ? 'status-em-andamento' : 
                         evento.status === 'não iniciado' ? 'status-nao-iniciado' : ''
                       }`}
                       style={{ backgroundColor: corSalva || undefined }}
                     >
-                      <div className="event-title">
+                      <div className={`event-title ${evento.tipo === 'atividade' ? 'pDarkmode' : ''}`}>
                         {evento.tipo === 'atividade' && (
-                          <span className="event-type-indicator">📝 </span>
+                          <span className="event-type-indicator"></span>
                         )}
-                        {materiaNome || 'Evento'}
+                        {evento.titulo}
+                        {evento.tipo === 'atividade' && ` - ${evento.materia_nome}`}
                       </div>
                       {evento.tipo === 'estudo' ? (
                         <div className="event-time">{evento.horario}</div>
                       ) : (
-                        <div className="event-status">
-                          {evento.status === 'concluído' && '✅'}
-                          {evento.status === 'em andamento' && '⏳'}
-                          {evento.status === 'não iniciado' && '⭕'}
+                        <div className={`event-status ${evento.tipo === 'atividade' ? 'pDarkmode' : ''}`}>
+                          <IonIcon icon={flag} className="iconeFlag" />
                           <span className="status-text">{evento.status}</span>
                         </div>
                       )}
@@ -677,26 +675,25 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
                         return (
                           <div 
                             key={`extra-${date.day}-${idx}`} 
-                            className={`hover-item divHover ${evento.tipo === 'atividade' ? 'event-atividade' : ''} ${corSalva ? '' : classe} ${
+                            className={`event-tag ${evento.tipo === 'atividade' ? 'event-atividade' : ''} ${classe} ${
                               evento.status === 'concluído' ? 'status-concluido' : 
                               evento.status === 'em andamento' ? 'status-em-andamento' : 
                               evento.status === 'não iniciado' ? 'status-nao-iniciado' : ''
                             }`}
                             style={{ backgroundColor: corSalva || undefined }}
                           >
-                            <div className="event-title eventHover">
+                            <div className="event-title">
                               {evento.tipo === 'atividade' && (
-                                <span className="event-type-indicator">📝 </span>
+                                <span className="event-type-indicator"></span>
                               )}
-                              {materiaNome}
+                              {evento.titulo}
+                              {evento.tipo === 'atividade' && ` - ${evento.materia_nome}`}
                             </div>
                             {evento.tipo === 'estudo' ? (
                               <div className="event-time eventHover">{evento.horario}</div>
                             ) : (
                               <div className="event-status eventHover">
-                                {evento.status === 'concluído' && '✅'}
-                                {evento.status === 'em andamento' && '⏳'}
-                                {evento.status === 'não iniciado' && '⭕'}
+                                <IonIcon icon={flag} className="iconeFlag" />
                                 <span className="status-text">{evento.status}</span>
                               </div>
                             )}

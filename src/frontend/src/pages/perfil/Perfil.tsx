@@ -225,28 +225,26 @@ const Perfil: React.FC = () => {
   };
 
   const handleMateriaSelect = (dia: string, selectedMateriaIds: number[]) => {
-  setHorariosDeEstudo(prev =>
-    prev.map(h => {
-      if (h.dia_semana === dia) {
-        // Se nenhuma matéria selecionada, define como null
-        if (selectedMateriaIds.length === 0) {
-          return { ...h, materias: null };
+    setHorariosDeEstudo(prev =>
+      prev.map(h => {
+        if (h.dia_semana === dia) {
+          if (selectedMateriaIds.length === 0) {
+            return { ...h, materias: null };
+          }
+          
+          const novasMaterias = selectedMateriaIds
+            .map(id => materiasDisponiveis.find((m: Materia) => m.id === id))
+            .filter((m): m is Materia => m !== undefined);
+          
+          return { 
+            ...h, 
+            materias: novasMaterias.length > 0 ? novasMaterias : null 
+          };
         }
-        
-        const novasMaterias = selectedMateriaIds
-          .map(id => materiasDisponiveis.find((m: Materia) => m.id === id))
-          .filter((m): m is Materia => m !== undefined);
-        
-        // Se após o filtro não sobrou nenhuma matéria válida, define como null
-        return { 
-          ...h, 
-          materias: novasMaterias.length > 0 ? novasMaterias : null 
-        };
-      }
-      return h;
-    })
-  );
-};
+        return h;
+      })
+    );
+  };
 
 const handleDiaToggle = (dia: string) => {
   setHorariosDeEstudo(prev => {
