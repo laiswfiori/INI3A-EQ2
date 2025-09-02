@@ -486,6 +486,8 @@ const removerItemConteudo = (index: number) => {
               const materia = topico ? materias.find(m => m.id === topico.materia_id) : null;
               const nomeMateria = materia ? materia.nome : '';
               const classeMateria = normalizarNomeMateria(nomeMateria);
+              const materiaId = materia ? String(materia.id) : '';
+              const corSalva = materiaId ? coresMaterias[materiaId] : undefined;
               console.log('nomeMateria:', nomeMateria, 'classeMateria:', classeMateria);
               return (
                 <IonItem key={atividade.id} className={`atividade-item ${atividade.status === 'concluído' ? 'concluida' : ''}`}>
@@ -501,6 +503,8 @@ const removerItemConteudo = (index: number) => {
                         <IonIcon 
                           icon={getIconPorTipo(atividade.tipo)} 
                           className={`livro ${classeMateria} livroA`}
+                          style={corSalva ? { color: corSalva } : {}}
+                          
                         />
                       )}
 

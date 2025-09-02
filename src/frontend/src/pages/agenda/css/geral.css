@@ -23,6 +23,11 @@
   gap: 8px;
 }
 
+.month-navigation {
+  max-width: 60%;
+
+}
+
 .month-year-label {
   font-size: 1.1rem;
   font-weight: 500;
@@ -524,10 +529,9 @@
 }
 
 .classBtnMenu {
-  width: 100%;
-    display: flex;
-    justify-content: flex-end !important;  
-    align-items: center;
+  display: flex;
+  justify-content: flex-end !important;  
+  align-items: center;
 }
 
 .hidden-month-nav {

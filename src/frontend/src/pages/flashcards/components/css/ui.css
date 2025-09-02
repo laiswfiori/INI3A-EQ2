@@ -1,7 +1,7 @@
 .card-editor-modal {
   --width: 90%;
   --max-width: 800px;
-  --height: 85%;
+  --height: 100%;
   --border-radius: 12px;
   --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
@@ -40,10 +40,12 @@
 
 .card-sides-container {
   display: flex;
+  flex-direction: column;
   gap: 16px;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  overflow-y: auto;  
+  overflow-x: hidden;
 }
 
 .card-side {
@@ -56,6 +58,7 @@
   background: #fff;
   overflow: hidden;
   width: 100%;
+  min-height: 300px;
 }
 
 .side-label {
@@ -68,13 +71,13 @@
 
 .content-preview {
   flex: 1;
-  min-height: 100px;
-  max-height: 300px;
+  /* min-height: 100px;
+  max-height: 300px; */
   border: 1px dashed #eaeaea;
   border-radius: 6px;
   padding: 8px;
   margin-bottom: 12px;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   background-color: #fafafa;
 }
 
@@ -157,6 +160,7 @@
   --padding-start: 8px;
   --padding-end: 8px;
   --color: #428cff;
+  width: 100%;
 }
 
 .action-row {
@@ -234,7 +238,6 @@
   }
 
   .image-button {
-    position: absolute !important;
     top: 120px !important;
     left: 16px !important;
     width: 36px !important;
@@ -249,7 +252,7 @@
     margin-bottom: 16px !important;
     min-height: 200px !important;
     max-height: none !important;
-    overflow-y: auto !important;
+    /* overflow-y: auto !important; */
   }
 
   .card-side {
@@ -261,11 +264,11 @@
     flex-direction: column !important;
     gap: 16px !important;
     max-height: 75vh !important;
-    overflow-y: auto !important;
+    /* overflow-y: auto !important; */
   }
 
   .card-editor-container {
-    overflow-y: auto !important;
+    /* overflow-y: auto !important; */
     height: 100% !important;
   }
 
@@ -280,9 +283,9 @@
 
 
 
-ion-modal {
+/* ion-modal {
   --max-height: 90vh;
-}
+} */
 
 ion-modal ion-content {
   --padding-start: 0;

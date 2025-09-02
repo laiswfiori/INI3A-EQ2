@@ -163,10 +163,18 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel, conteudoFrent
         </IonButton>
         <IonButton
           onClick={() => {
-            onSave(
-              [{ tipo: 'texto', valor: textoFrente }, ...imagensFrente],
-              [{ tipo: 'texto', valor: textoVerso }, ...imagensVerso]
-            );
+            const frente: ConteudoItem[] = [];
+            const verso: ConteudoItem[] = [];
+            if (textoFrente.trim() !== '') {
+              frente.push({ tipo: 'texto', valor: textoFrente });
+            }
+            if (textoVerso.trim() !== '') {
+              verso.push({ tipo: 'texto', valor: textoVerso });
+            }
+            frente.push(...imagensFrente);
+            verso.push(...imagensVerso);
+
+            onSave(frente, verso);
           }}
           disabled={!podeSalvar}
           className="action-button btnSalvarCard"

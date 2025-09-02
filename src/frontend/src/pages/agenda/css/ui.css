@@ -395,6 +395,7 @@ ion-segment-button {
 
 .event-atividade {
   background-color: var(--cor-brancoC) !important;
+  border: 2px solid  #3da5d9;
 }
 
 .event-atividade.m1A {

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IonHeader, IonToolbar, IonImg, IonTabButton, IonIcon, IonLabel, IonPopover, IonContent, IonButton, IonCol, IonRow } from '@ionic/react';
-import { home, calendar, star, documentText, personCircle, notifications, close} from 'ionicons/icons';
+import { home, calendar, star, documentText, personCircle, notifications, close, alarm} from 'ionicons/icons';
 import './css/ui.css';
 import './css/geral.css';
 import './css/layouts.css';
@@ -48,6 +48,14 @@ const Header: React.FC = () => {
     }
   };
 
+  const navEstudo = () => {
+    if (isAuthenticated()) {
+      history.push('/estudo/estudo');
+    } else {
+      history.push('/logincadastro/logincadastro');
+    }
+  };
+
   const navConteudos = () => {
     if (isAuthenticated()) {
       history.push('/conteudos/materias');
@@ -77,7 +85,6 @@ const Header: React.FC = () => {
   const rotaFlashcardsAtiva =
   location.pathname.includes('/flashcards') ||
   location.pathname.startsWith('/flashcard/');
-
 
   useEffect(() => {
     const checkPopover = () => {
@@ -125,6 +132,13 @@ const Header: React.FC = () => {
               <IonTabButton className="azul" tab="flashcards" onClick={navFlashcards}>
                 <IonIcon icon={star} className={`icones ${rotaFlashcardsAtiva ? 'ativo' : ''}`} />
                 <IonLabel className={`iconesTxt ${rotaFlashcardsAtiva ? 'ativo' : ''}`}>Flashcards</IonLabel>
+              </IonTabButton>
+            </div>
+
+            <div>
+              <IonTabButton className="azul" tab="estudo" onClick={navEstudo}>
+                <IonIcon icon={alarm} className={`icones ${location.pathname.startsWith('/estudo') ? 'ativo' : ''}`} />
+                <IonLabel className={`iconesTxt ${location.pathname.startsWith('/estudo') ? 'ativo' : ''}`}>Sala de estudo</IonLabel>
               </IonTabButton>
             </div>
 
@@ -217,6 +231,10 @@ const Header: React.FC = () => {
               <div className="menu2" onClick={navFlashcards}>
                 <IonIcon icon={star} className={`iconesMobile ${rotaFlashcardsAtiva ? 'ativo' : ''}`} />
                 <IonLabel className={`iconesTxt ${rotaFlashcardsAtiva ? 'ativo' : ''}`}>Flashcards</IonLabel>
+              </div>
+              <div className="menu2" onClick={navEstudo}>
+                <IonIcon icon={alarm} className={`iconesMobile ${location.pathname.startsWith('/estudo') ? 'ativo' : ''}`} />
+                <IonLabel className={`iconesTxt ${location.pathname.startsWith('/estudo') ? 'ativo' : ''}`}>Flashcards</IonLabel>
               </div>
               <div className="menu2" onClick={navConteudos}>
                 <IonIcon icon={documentText} className={`iconesMobile ${rotaMateriasAtiva ? 'ativo' : ''}`} />

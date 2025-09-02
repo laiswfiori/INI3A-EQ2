@@ -211,8 +211,33 @@ export default function () {
     });
   };
 
+  const navigateWeek = (direction: 'prev' | 'next') => {
+    setCurrentDate((prev) => {
+      const newDate = new Date(prev);
+      const dias = direction === 'prev' ? -7 : 7;
+      newDate.setDate(prev.getDate() + dias);
+      return newDate;
+    });
+  };
+
   const days = getDaysInMonth(currentDate);
   const currentMonthYear = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+  const getCurrentWeekRange = () => {
+    const inicioSemana = new Date(currentDate);
+    const diaSemana = inicioSemana.getDay(); // 0 = domingo
+    inicioSemana.setDate(inicioSemana.getDate() - diaSemana);
+  
+    const fimSemana = new Date(inicioSemana);
+    fimSemana.setDate(inicioSemana.getDate() + 6);
+  
+    const format = (d: Date) =>
+      `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth()+1).toString().padStart(2,'0')}`;
+  
+    return `${format(inicioSemana)} - ${format(fimSemana)}`;
+  };
+  
+  const currentWeekRange = getCurrentWeekRange();
+  
 
   const [atividades, setAtividades] = useState<Atividade[]>([]);
 
@@ -288,33 +313,67 @@ export default function () {
     return '';
   };
 
-  const semanaAtual = () => {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0); 
-
-    const diaSemana = hoje.getDay();
-    const inicioSemana = new Date(hoje);
-    inicioSemana.setDate(hoje.getDate() - diaSemana); 
-
+  const getDiasDaSemana = (date: Date) => {
+    const diaSemana = date.getDay(); 
+    const inicioSemana = new Date(date);
+    inicioSemana.setDate(date.getDate() - diaSemana);
+    inicioSemana.setHours(0,0,0,0);
+  
     const dias = [];
-
+  
     for (let i = 0; i < 7; i++) {
       const dia = new Date(inicioSemana);
       dia.setDate(inicioSemana.getDate() + i);
-      dia.setHours(0, 0, 0, 0); 
       dias.push({
         numero: dia.getDate(),
         nome: dia.toLocaleDateString('pt-BR', { weekday: 'short' }),
-        isHoje:
-          dia.getTime() === hoje.getTime(),
-        ativo: dia.getTime() <= hoje.getTime(), 
+        isHoje: dia.toDateString() === hoje.toDateString(),
+        mes: dia.getMonth(),
+        ano: dia.getFullYear()
       });
     }
-
+  
     return dias;
   };
 
-  const diasDaSemana = semanaAtual();
+  const diasDaSemana = getDiasDaSemana(currentDate);
+
+  const getEventosPorData = (data: Date) => {
+    const eventosDoDia = eventosAgenda.filter(evento => {
+      if (!evento.data) return false;
+      const eventoDate = parseDbDate(evento.data);
+      return (
+        eventoDate.getDate() === data.getDate() &&
+        eventoDate.getMonth() === data.getMonth() &&
+        eventoDate.getFullYear() === data.getFullYear()
+      );
+    });
+
+    const atividadesDoDia = getAtividadesPorDia(data.getDate(), true); 
+
+    return [
+      ...eventosDoDia.map(evento => ({
+        tipo: 'estudo',
+        titulo: evento.materia,
+        materia_id: evento.materia_id,
+        horario: `${evento.hora_inicio} - ${evento.hora_fim}`,
+        status: null
+      })),
+      ...atividadesDoDia.map(atividade => {
+        const topico = topicosFull.find(t => t.id === atividade.topico_id);
+        const materia = topico ? materias.find(m => m.id === topico.materia_id) : null;
+
+        return {
+          tipo: 'atividade',
+          titulo: atividade.titulo,
+          materia_nome: materia?.nome || 'Matéria não encontrada',
+          materia_id: materia?.id,
+          status: atividade.status,
+          data_entrega: atividade.data_entrega
+        };
+      })
+    ];
+  };
 
   const hojeZero = new Date();
   hojeZero.setHours(0, 0, 0, 0);
@@ -427,92 +486,108 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
           <h1 className="txtAgenda pDarkmode">Calendário</h1>
         </IonRow>
         <IonToolbar className="laranja toolbarD">
-          <div className="calendar-controls ion-padding-horizontal">
-            <div className={`month-navigation ${viewMode === 'Semana' ? 'hidden-month-nav' : ''}`}>
-              <IonButtons>
-                <IonButton onClick={() => navigateMonth('prev')} fill="clear" color="light">
-                  <IonIcon slot="icon-only" icon={chevronBack} />
-                </IonButton>
-                <IonButton onClick={() => navigateMonth('next')} fill="clear" color="light">
-                  <IonIcon slot="icon-only" icon={chevronForward} />
-                </IonButton>
-              </IonButtons>
-              <span className="month-year-label">{currentMonthYear}</span>
-            </div>
+  <div className="calendar-controls ion-padding-horizontal">
+    <div className="month-navigation">
+      <IonButtons>
+        <IonButton 
+          onClick={() => viewMode === 'Mês' ? navigateMonth('prev') : navigateWeek('prev')} 
+          fill="clear" color="light"
+        >
+          <IonIcon slot="icon-only" icon={chevronBack} />
+        </IonButton>
+        <IonButton 
+          onClick={() => viewMode === 'Mês' ? navigateMonth('next') : navigateWeek('next')} 
+          fill="clear" color="light"
+        >
+          <IonIcon slot="icon-only" icon={chevronForward} />
+        </IonButton>
+      </IonButtons>
+      <span className="month-year-label">
+        {viewMode === 'Mês' ? currentMonthYear : currentWeekRange}
+      </span>
+    </div>
 
-            <div className="view-controls">
-              <IonSelect
-                className="category-select"
-                interface="popover"
-                placeholder="Matérias"
-                value={materiaSelecionada}
-                onIonChange={(e) => setMateriaSelecionada(e.detail.value)}
-              >
-                <IonSelectOption value="all">Todas as matérias</IonSelectOption>
-                {materiasUnicas.map((materia, index) => (
-                  <IonSelectOption key={index} value={materia}>
-                    {materia}
-                  </IonSelectOption>
-                ))}
-              </IonSelect>
-              
-              <div className="container">
-                <div className="tabs">
-                  <input
-                    type="radio"
-                    name="tabs"
-                    id="radio-1"   
-                    checked={viewMode === 'Mês'}
-                    onChange={() => setViewMode('Mês')}          
-                  />
-                  <label htmlFor="radio-1" className="tab">Mês</label>
+    <div className="view-controls">
+      <IonSelect
+        className="category-select"
+        interface="popover"
+        placeholder="Matérias"
+        value={materiaSelecionada}
+        onIonChange={(e) => setMateriaSelecionada(e.detail.value)}
+      >
+        <IonSelectOption value="all">Todas as matérias</IonSelectOption>
+        {materiasUnicas.map((materia, index) => (
+          <IonSelectOption key={index} value={materia}>{materia}</IonSelectOption>
+        ))}
+      </IonSelect>
 
-                  <input
-                    type="radio"
-                    name="tabs"
-                    id="radio-2"
-                    checked={viewMode === 'Semana'}
-                    onChange={() => setViewMode('Semana')}
-                  />
-                  <label htmlFor="radio-2" className="tab">Semana</label>
+      <div className="container">
+        <div className="tabs">
+          <input
+            type="radio"
+            name="tabs"
+            id="radio-1"   
+            checked={viewMode === 'Mês'}
+            onChange={() => setViewMode('Mês')}          
+          />
+          <label htmlFor="radio-1" className="tab">Mês</label>
 
-                  <span className="glider" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </IonToolbar>
-        <IonToolbar className="laranja toolbarM">
-          <div className="rowMobileMonth">
-            <div className={`month-navigation ${viewMode === 'Semana' ? 'hidden-month-nav' : ''}`}>
-              <div className="btnA">
-                <IonButtons>
-                  <IonButton onClick={() => navigateMonth('prev')} fill="clear" color="light">
-                    <IonIcon slot="icon-only" icon={chevronBack} />
-                  </IonButton>
-                  <IonButton onClick={() => navigateMonth('next')} fill="clear" color="light">
-                    <IonIcon slot="icon-only" icon={chevronForward} />
-                  </IonButton>
-                </IonButtons>
-                <span className="month-year-label">{currentMonthYear}</span>
-              </div>
-              </div>
-            <div className="classBtnMenu">
-              <button
-                className={`menu-line ${menuAberto ? 'opened' : ''}`}
-                onClick={toggleMenu}
-                aria-label="Main Menu"
-                aria-expanded={menuAberto}
-              >
-                <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-                  <path className="menu-line menu-line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
-                  <path className="menu-line menu-line2" d="M 20,50 H 80" />
-                  <path className="menu-line menu-line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
-                </svg>
-              </button>
-            </div>
-          </div>          
-        </IonToolbar>
+          <input
+            type="radio"
+            name="tabs"
+            id="radio-2"
+            checked={viewMode === 'Semana'}
+            onChange={() => setViewMode('Semana')}
+          />
+          <label htmlFor="radio-2" className="tab">Semana</label>
+
+          <span className="glider" />
+        </div>
+      </div>
+    </div>
+  </div>
+</IonToolbar>
+
+<IonToolbar className="laranja toolbarM">
+  <div className="rowMobileMonth">
+    <div className="month-navigation">
+      <div className="btnA">
+        <IonButtons>
+          <IonButton 
+            onClick={() => viewMode === 'Mês' ? navigateMonth('prev') : navigateWeek('prev')} 
+            fill="clear" color="light"
+          >
+            <IonIcon slot="icon-only" icon={chevronBack} />
+          </IonButton>
+          <IonButton 
+            onClick={() => viewMode === 'Mês' ? navigateMonth('next') : navigateWeek('next')} 
+            fill="clear" color="light"
+          >
+            <IonIcon slot="icon-only" icon={chevronForward} />
+          </IonButton>
+        </IonButtons>
+        <span className="month-year-label">
+          {viewMode === 'Mês' ? currentMonthYear : currentWeekRange}
+        </span>
+      </div>
+    </div>
+    <div className="classBtnMenu">
+      <button
+        className={`menu-line ${menuAberto ? 'opened' : ''}`}
+        onClick={toggleMenu}
+        aria-label="Main Menu"
+        aria-expanded={menuAberto}
+      >
+        <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+          <path className="menu-line menu-line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+          <path className="menu-line menu-line2" d="M 20,50 H 80" />
+          <path className="menu-line menu-line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+        </svg>
+      </button>
+    </div>
+  </div>          
+</IonToolbar>
+
         {menuAberto && (
           <div className="view-controls laranja">
               <IonSelect
@@ -555,98 +630,53 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
               </div>
             </div>
         )}
-
-
 {viewMode === 'Mês' && (
   <div className="calendar-grid-container">
     <div className="calendar-grid days-of-week-header">
       {daysOfWeek.map((day) => (
-        <div key={day} className="day-header">
-          {day}
-        </div>
+        <div key={day} className="day-header">{day}</div>
       ))}
     </div>
 
     <div className="calendar-grid">
       {days.map((date, index) => {
-        const currentDayEvents = date.isCurrentMonth 
-          ? eventosAgenda.filter((evento) => {
-              if (!evento.data) return false;
-              const eventoDate = parseDbDate(evento.data);
-              return (
-                eventoDate.getDate() === date.day &&
-                eventoDate.getMonth() === currentDate.getMonth() &&
-                eventoDate.getFullYear() === currentDate.getFullYear()
-              );
-            })
-          : [];
+        const todosEventos = date.isCurrentMonth ? getEventosPorData(new Date(currentDate.getFullYear(), currentDate.getMonth(), date.day)) : [];
 
-        const atividadesDoDia = getAtividadesPorDia(date.day, date.isCurrentMonth);
-
-        const todosEventos = [
-          ...currentDayEvents.map(evento => ({
-            tipo: 'estudo',
-            titulo: evento.materia,
-            materia_id: evento.materia_id,
-            horario: `${evento.hora_inicio} - ${evento.hora_fim}`,
-            status: null
-          })),
-          ...atividadesDoDia.map(atividade => {
-            const topico = topicosFull.find(t => t.id === atividade.topico_id);
-            const materia = topico ? materias.find(m => m.id === topico.materia_id) : null;
-            
-            return {
-              tipo: 'atividade',
-              titulo: atividade.titulo,
-              materia_nome: materia?.nome || 'Matéria não encontrada',
-              materia_id: materia?.id,
-              status: atividade.status,
-              data_entrega: atividade.data_entrega
-            };
-          })
-        ];
+        const eventosFiltrados = todosEventos.filter(evento =>
+          materiaSelecionada === 'all' || evento.materia_id === materias.find(m => m.nome === materiaSelecionada)?.id
+        );
 
         return (
           <div
             key={index}
-            className={`calendar-day ${!date.isCurrentMonth ? 'other-month' : ''}
-              ${date.day === selectedDate && date.isCurrentMonth ? 'selected-day' : ''}
-              ${
-                date.day === hoje.getDate() &&
-                currentDate.getMonth() === hoje.getMonth() &&
-                currentDate.getFullYear() === hoje.getFullYear() &&
-                date.isCurrentMonth
-                  ? 'today-highlight'
-                  : ''
-              }
-            `}
+            className={`calendar-day ${!date.isCurrentMonth ? 'other-month' : ''} ${date.day === selectedDate && date.isCurrentMonth ? 'selected-day' : ''} ${
+              date.day === hoje.getDate() && currentDate.getMonth() === hoje.getMonth() && currentDate.getFullYear() === hoje.getFullYear() && date.isCurrentMonth
+                ? 'today-highlight'
+                : ''
+            }`}
             onClick={() => date.isCurrentMonth && setSelectedDate(date.day)}
             onMouseEnter={() => setHoveredDay(date.day)}
             onMouseLeave={() => setHoveredDay(null)}
           >
             <span className="day-number">{date.day}</span>
-            
             {date.isCurrentMonth && isCoresCarregadas && (
               <div className="events-container">
-                {todosEventos.slice(0, 2).map((evento, idx) => {
-                const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
-                const corSalva = materiaId ? coresMaterias[materiaId] : undefined;
-                const materiaNomeParaClasse = evento.tipo === 'atividade' ? evento.materia_nome : evento.titulo || evento.materia_nome || '';
-                const { classe } = normalizarNomeMateria(materiaNomeParaClasse);
+                {eventosFiltrados.slice(0,2).map((evento, idx) => {
+                  const materiaId = evento.materia_id ? String(evento.materia_id) : '';
+                  const corSalva = materiaId ? coresMaterias[materiaId] : undefined;
+                  const materiaNomeParaClasse = evento.tipo === 'atividade' ? evento.materia_nome : evento.titulo || evento.materia_nome || '';
+                  const { classe } = normalizarNomeMateria(materiaNomeParaClasse);
                   return (
-                    <div 
-                      key={`${date.day}-${idx}`}
-                      className={`event-tag ${evento.tipo === 'atividade' ? 'event-atividade' : ''} ${classe} ${
-                        evento.status === 'concluído' ? 'status-concluido' : 
-                        evento.status === 'em andamento' ? 'status-em-andamento' : 
-                        evento.status === 'não iniciado' ? 'status-nao-iniciado' : ''
-                      }`}
-                      style={{ backgroundColor: corSalva || undefined }}
-                    >
+                    <div key={`${date.day}-${idx}`} className={`event-tag ${evento.tipo === 'atividade' ? 'event-atividade' : ''} ${classe} ${
+                      evento.status === 'concluído' ? 'status-concluido' : 
+                      evento.status === 'em andamento' ? 'status-em-andamento' : 
+                      evento.status === 'não iniciado' ? 'status-nao-iniciado' : ''
+                    }`} style={{
+                      backgroundColor: corSalva || undefined,
+                      ...(evento.tipo === 'atividade' ? { borderColor: corSalva } : {})
+                    }}>
                       <div className={`event-title ${evento.tipo === 'atividade' ? 'pDarkmode' : ''}`}>
-                        {evento.tipo === 'atividade' && (
-                          <span className="event-type-indicator"></span>
-                        )}
+                        {evento.tipo === 'atividade' && <span className="event-type-indicator"></span>}
                         {evento.titulo}
                         {evento.tipo === 'atividade' && ` - ${evento.materia_nome}`}
                       </div>
@@ -661,38 +691,33 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
                     </div>
                   );
                 })}
-
-                {todosEventos.length > 2 && (
+                {eventosFiltrados.length > 2 && (
                   <div className="more-events-wrapper">
-                    <div className="more-events">+{todosEventos.length - 2}</div>
+                    <div className="more-events">+{eventosFiltrados.length - 2}</div>
                     <div className="popover-extra">
-                      {todosEventos.slice(2).map((evento, idx) => {
-                        const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
+                      {eventosFiltrados.slice(2).map((evento, idx) => {
+                        const materiaId = evento.materia_id ? String(evento.materia_id) : '';
                         const corSalva = materiaId ? coresMaterias[materiaId] : undefined;
-                        const materiaNome = evento.titulo || evento.materia_nome || '';
-                        const { classe } = normalizarNomeMateria(materiaNome);
-
+                        const materiaNomeParaClasse = evento.tipo === 'atividade' ? evento.materia_nome : evento.titulo || evento.materia_nome || '';
+                        const { classe } = normalizarNomeMateria(materiaNomeParaClasse);
                         return (
-                          <div 
-                            key={`extra-${date.day}-${idx}`} 
-                            className={`event-tag ${evento.tipo === 'atividade' ? 'event-atividade' : ''} ${classe} ${
-                              evento.status === 'concluído' ? 'status-concluido' : 
-                              evento.status === 'em andamento' ? 'status-em-andamento' : 
-                              evento.status === 'não iniciado' ? 'status-nao-iniciado' : ''
-                            }`}
-                            style={{ backgroundColor: corSalva || undefined }}
-                          >
-                            <div className="event-title">
-                              {evento.tipo === 'atividade' && (
-                                <span className="event-type-indicator"></span>
-                              )}
+                          <div key={`extra-${date.day}-${idx}`} className={`event-tag ${evento.tipo === 'atividade' ? 'event-atividade' : ''} ${classe} ${
+                            evento.status === 'concluído' ? 'status-concluido' : 
+                            evento.status === 'em andamento' ? 'status-em-andamento' : 
+                            evento.status === 'não iniciado' ? 'status-nao-iniciado' : ''
+                          }`} style={{
+                            backgroundColor: corSalva || undefined,
+                            ...(evento.tipo === 'atividade' ? { borderColor: corSalva } : {})
+                          }}>
+                            <div className={`event-title ${evento.tipo === 'atividade' ? 'pDarkmode' : ''}`}>
+                              {evento.tipo === 'atividade' && <span className="event-type-indicator"></span>}
                               {evento.titulo}
                               {evento.tipo === 'atividade' && ` - ${evento.materia_nome}`}
                             </div>
                             {evento.tipo === 'estudo' ? (
                               <div className="event-time eventHover">{evento.horario}</div>
                             ) : (
-                              <div className="event-status eventHover">
+                              <div className={`event-status eventHover ${evento.tipo === 'atividade' ? 'pDarkmode' : ''}`}>
                                 <IonIcon icon={flag} className="iconeFlag" />
                                 <span className="status-text">{evento.status}</span>
                               </div>
@@ -717,26 +742,17 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
     <div className="calendar-grid days-of-week-header semana-header">
       <div className="hora-header"></div>
       {diasDaSemana.map((diaSemana, idx) => {
-        const diaAtual = new Date();
-        diaAtual.setDate(diaSemana.numero);
-
-        const eventosDoDia = eventosAgenda.filter(evento => {
-          const eventoDate = parseDbDate(evento.data);
-          return (
-            eventoDate.getDate() === diaSemana.numero &&
-            eventoDate.getMonth() === diaAtual.getMonth() &&
-            eventoDate.getFullYear() === diaAtual.getFullYear()
-          );
-        });
+        const dataDoDia = new Date(diaSemana.ano, diaSemana.mes, diaSemana.numero);
+        const todosEventos = getEventosPorData(dataDoDia);
+        const eventosFiltrados = todosEventos.filter(evento =>
+          materiaSelecionada === 'all' || evento.materia_id === materias.find(m => m.nome === materiaSelecionada)?.id
+        );
 
         return (
-          <div
-            key={idx}
-            className={`day-header ${diaSemana.isHoje ? 'today-highlight' : ''}`}
-          >
+          <div key={idx} className={`day-header ${diaSemana.isHoje ? 'today-highlight' : ''}`}>
             <div className="day-number">{diaSemana.numero}</div>
             <div className="day-name">{diaSemana.nome}</div>
-            {eventosDoDia.length > 0 && <div className="event-dot"></div>}
+            {eventosFiltrados.length > 0 && <div className="event-dot"></div>}
           </div>
         );
       })}
@@ -747,59 +763,40 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
         <React.Fragment key={i}>
           <div className="hora-label">{horaObj.label}</div>
           {diasDaSemana.map((diaSemana, j) => {
-            const diaAtual = new Date();
-            diaAtual.setDate(diaSemana.numero);
+            const dataDoDia = new Date(diaSemana.ano, diaSemana.mes, diaSemana.numero);
+            const todosEventosDoDia = getEventosPorData(dataDoDia);
 
-            const eventos = eventosAgenda.filter(evento => {
-              const eventoDate = parseDbDate(evento.data);
-              const [horaInicio] = evento.hora_inicio.split(':').map(Number);
-
-              return (
-                eventoDate.getDate() === diaSemana.numero &&
-                eventoDate.getMonth() === diaAtual.getMonth() &&
-                eventoDate.getFullYear() === diaAtual.getFullYear() &&
-                horaInicio === parseInt(horaObj.hora)
-              );
+            const eventosNaHora = todosEventosDoDia.filter(evento => {
+              if (!evento.horario) return false;
+              const [horaInicio] = evento.horario.split(' - ')[0].split(':').map(Number);
+              return horaInicio === parseInt(horaObj.hora);
             });
 
             return (
-              <div
-                key={j}
-                className={`calendar-day semana-dia-hora ${diaSemana.isHoje ? 'today-cell' : ''}`}
-                style={{ position: 'relative' }}
-              >
-                {eventos.map((evento, k) => {
-                  const [horaInicioH, minInicio] = evento.hora_inicio.split(':').map(Number);
-                  const [horaFimH, minFim] = evento.hora_fim.split(':').map(Number);
-                  
+              <div key={j} className={`calendar-day semana-dia-hora ${diaSemana.isHoje ? 'today-cell' : ''}`} style={{ position: 'relative' }}>
+                {eventosNaHora.map((evento, k) => {
+                  const [horaInicioH, minInicio] = evento.horario.split(' - ')[0].split(':').map(Number);
+                  const [horaFimH, minFim] = evento.horario.split(' - ')[1].split(':').map(Number);
+
                   const duracaoMinutos = (horaFimH * 60 + minFim) - (horaInicioH * 60 + minInicio);
-                  
-                  const horaLabelEl = document.querySelector('.hora-label');
-                  const alturaHoraPx = horaLabelEl ? horaLabelEl.getBoundingClientRect().height : 60;
-                  
+                  const alturaHoraPx = 60;
                   const pxPorMinuto = alturaHoraPx / 60;
-                  
                   const alturaPx = Math.max(1, duracaoMinutos * pxPorMinuto);
                   const topDentroDaHoraPx = minInicio * pxPorMinuto;
-                  const materiaId = evento.materia_id ? String(evento.materia_id) : ''; 
-                  const corSalva = materiaId ? coresMaterias[materiaId] : "#3da5d9"; 
-
-                  const { classe } = normalizarNomeMateria(evento.materia); 
+                  const corSalva = evento.materia_id ? coresMaterias[String(evento.materia_id)] : "#3da5d9";
+                  const materiaNomeParaClasse = evento.tipo === 'atividade' ? evento.materia_nome : evento.titulo || evento.materia_nome || '';
+                  const { classe } = normalizarNomeMateria(materiaNomeParaClasse);
 
                   return (
-                    <div
-                      key={k}
-                      className={`event-tag event-aula ${classe}`}
-                      style={{
-                        position: 'absolute',
-                        top: `${topDentroDaHoraPx}px`,
-                        left: 0,
-                        right: 0,
-                        height: `${alturaPx}px`,
-                        backgroundColor: corSalva,
-                      }}
-                    >
-                      <div className="event-title eSemana">{evento.materia}</div>
+                    <div key={k} className={`event-tag event-aula ${classe}`} style={{
+                      position: 'absolute',
+                      top: `${topDentroDaHoraPx}px`,
+                      left: 0,
+                      right: 0,
+                      height: `${alturaPx}px`,
+                      backgroundColor: corSalva,
+                    }}>
+                      <div className="event-title eSemana">{evento.tipo === 'atividade' ? evento.titulo : evento.titulo}</div>
                     </div>
                   );
                 })}
