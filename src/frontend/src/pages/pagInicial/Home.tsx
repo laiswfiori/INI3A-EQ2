@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { IonPage, IonContent, IonImg, IonIcon, IonLabel, IonButton } from '@ionic/react';
-import { library, brush, book, school, accessibility, earth, leaf, flask, planet, calculator } from 'ionicons/icons';
+import { IonPage, IonContent, IonImg, IonIcon, IonLabel, IonRow } from '@ionic/react';
+import { library, brush, book, school, accessibility, earth, leaf, flask, planet, calculator, star } from 'ionicons/icons';
 import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
@@ -64,6 +64,228 @@ const Home: React.FC = () => {
         
         <IonContent>
           <div id="bodyHome">
+
+          <section id="s5">
+            <IonRow className="ion-justify-content-center ion-padding">
+              <IonIcon icon="star" className="iconEstrela" />
+              <IonIcon icon="star" className="iconEstrela" />
+              <IonIcon icon="star" className="iconEstrela" />
+              <IonIcon icon="star" className="iconEstrela" />
+              <IonIcon icon="star" className="iconEstrela" />
+            </IonRow>
+
+            <IonRow className="ion-justify-content-center ion-padding">
+              <h2 className="pDarkmode">
+                Pare de esquecer tudo o que você{" "}
+                <span className="txtAprendeu">já aprendeu</span>
+              </h2>
+            </IonRow>
+
+            <IonRow className="ion-justify-content-center ion-padding">
+              <p className="pDarkmode">
+                Realize revisões, atividades e tenha uma agenda inteligente
+              </p>
+            </IonRow>
+
+            <div className="hidden lg:block relative" >
+              <div
+                className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
+                style={{ left: "-2rem", top: "14rem", animationDelay: "0.359605s" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-test-tube-diagonal stroke-current size-8 text-primary"
+                  aria-hidden="true"
+                  data-testid="lucide-test-tube-diagonal"
+                >
+                  <path d="M21 7 6.82 21.18a2.83 2.83 0 0 1-3.99-.01a2.83 2.83 0 0 1 0-4L17 3"></path>
+                  <path d="m16 2 6 6"></path>
+                  <path d="M12 16H4"></path>
+                </svg>
+              </div>
+
+              <div
+                className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
+                style={{ left: "4rem", top: "20rem", animationDelay: "0.712048s" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-atom stroke-current size-12 text-quinary svgFlutuante"
+                  aria-hidden="true"
+                  data-testid="lucide-atom"
+                >
+                  <circle cx="12" cy="12" r="1"></circle>
+                  <path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z"></path>
+                  <path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z"></path>
+                </svg>
+              </div>
+
+              <div
+                className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
+                style={{ left: "-6rem", top: "24rem", animationDelay: "1.03126s" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-spell-check stroke-current size-6 text-tertiary-10 svgFlutuante"
+                  aria-hidden="true"
+                  data-testid="lucide-spell-check"
+                >
+                  <path d="m6 16 6-12 6 12"></path>
+                  <path d="M8 12h8"></path>
+                  <path d="m16 20 2 2 4-4"></path>
+                </svg>
+              </div>
+
+              <div
+                className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
+                style={{ left: "0rem", top: "30rem", animationDelay: "0.980146s" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-radical stroke-current size-8 text-secondary svgFlutuante"
+                  aria-hidden="true"
+                  data-testid="lucide-radical"
+                >
+                  <path d="M3 12h3.28a1 1 0 0 1 .948.684l2.298 7.934a.5.5 0 0 0 .96-.044L13.82 4.771A1 1 0 0 1 14.792 4H21"></path>
+                </svg>
+              </div>
+
+              <div
+                className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
+                style={{ left: "58rem", top: "15rem", animationDelay: "1.0243s" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-scroll stroke-current size-12 text-quaternary svgFlutuante"
+                  aria-hidden="true"
+                  data-testid="lucide-scroll"
+                >
+                  <path d="M19 17V5a2 2 0 0 0-2-2H4"></path>
+                  <path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"></path>
+                </svg>
+              </div>
+
+              <div
+                className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
+                style={{ left: "52rem", top: "23rem", animationDelay: "0.0434575s" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-dna stroke-current size-8 text-primary svgFlutuante"
+                  aria-hidden="true"
+                  data-testid="lucide-dna"
+                >
+                  <path d="m10 16 1.5 1.5"></path>
+                  <path d="m14 8-1.5-1.5"></path>
+                  <path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"></path>
+                  <path d="m16.5 10.5 1 1"></path>
+                  <path d="m17 6-2.891-2.891"></path>
+                  <path d="M2 15c6.667-6 13.333 0 20-6"></path>
+                  <path d="m20 9 .891.891"></path>
+                  <path d="M3.109 14.109 4 15"></path>
+                  <path d="m6.5 12.5 1 1"></path>
+                  <path d="m7 18 2.891 2.891"></path>
+                  <path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"></path>
+                </svg>
+              </div>
+
+              <div
+                className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
+                style={{ left: "65rem", top: "26rem", animationDelay: "1.5279s" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-book-open stroke-current size-6 text-secondary svgFlutuante"
+                  aria-hidden="true"
+                  data-testid="lucide-book-open"
+                >
+                  <path d="M12 7v14"></path>
+                  <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path>
+                </svg>
+              </div>
+
+              <div
+                className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
+                style={{ left: "58rem", top: "31rem", animationDelay: "0.788296s" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-earth stroke-current size-8 text-tertiary-10 svgFlutuante"
+                  aria-hidden="true"
+                  data-testid="lucide-earth"
+                >
+                  <path d="M21.54 15H17a2 2 0 0 0-2 2v4.54"></path>
+                  <path d="M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17"></path>
+                  <path d="M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05"></path>
+                  <circle cx="12" cy="12" r="10"></circle>
+                </svg>
+              </div>
+            </div>
+          </section>
 
             <section id="s1">
               <div id="divTxtHome">
