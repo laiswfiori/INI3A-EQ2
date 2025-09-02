@@ -95,14 +95,18 @@ export default class API {
         }
       }
 
-      const responseData = await response.json();
+      const text = await response.text();
+      let inicio  = text.indexOf("{");
+      let json = text.substring(inicio);
 
+      const responseData = JSON.parse(json);
       if (!response.ok) {
         const error: any = new Error(`HTTP error! status: ${response.status}`);
         error.response = response;
         error.data = responseData;
         throw error;
       }
+
 
       if (isAuthEndpoint) {
         if (responseData.access_token) {
