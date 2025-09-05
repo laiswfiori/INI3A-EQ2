@@ -73,7 +73,6 @@ const Perfil: React.FC = () => {
   const [loadingConfig, setLoadingConfig] = useState<boolean>(false);
   const [checked, setChecked] = useState(false);
 
-
   const [passwordData, setPasswordData] = useState({
     senha_atual: '',
     nova_senha: '',
@@ -169,47 +168,55 @@ const Perfil: React.FC = () => {
       return diaMap[dia.toLowerCase()] || dia;
     };
 
-    const carregarDadosEstudo = async () => {
-      setLoadingConfig(true);
-      try {
-        const materiasRes = await getMaterias();
-        setMateriasDisponiveis(materiasRes);
+const carregarDadosEstudo = async () => {
+  setLoadingConfig(true);
+  try {
+    const { configuracao, materias_disponiveis } = await getAgendaConfiguracoes();
 
-        const config = await getAgendaConfiguracoes();
+    console.log('✔️ Configuração recebida:', configuracao);
+    console.log('✔️ Matérias disponíveis:', materias_disponiveis);
 
-        if (config && config.dias_disponiveis && config.dias_disponiveis.length > 0) {
-          const dias: HorarioEstudo[] = config.dias_disponiveis.map((diaBackend: any) => {
-            const materiaIds = Array.isArray(diaBackend.materia_ids) ? diaBackend.materia_ids : [];
-            
-            const materiasFormatadas: Materia[] = materiaIds.map((mId: number) => {
-              const encontrada = materiasRes.find((m: Materia) => m.id === mId);
-              return encontrada || { id: mId, nome: `ID ${mId}` };
-            });
+    setMateriasDisponiveis(materias_disponiveis);
 
-            return {
-              dia_semana: normalizarDiaBackendParaFrontend(diaBackend.dia_semana),
-              horario_inicio: diaBackend.hora_inicio,
-              horario_fim: diaBackend.hora_fim,
-              materias: materiasFormatadas,
-            };
-          });
+    if (configuracao && configuracao.dias_disponiveis && configuracao.dias_disponiveis.length > 0) {
+      const dias: HorarioEstudo[] = configuracao.dias_disponiveis.map((diaBackend: any) => {
+        const materiaIds = Array.isArray(diaBackend.materia_ids) ? diaBackend.materia_ids : [];
 
-          setHorariosDeEstudo(dias.sort((a, b) => diasSemana.indexOf(a.dia_semana) - diasSemana.indexOf(b.dia_semana)));
-          setPeriodoEstudo({
-            inicio: config.data_inicio || '',
-            fim: config.data_fim || '',
-          });
-        } else {
-          setHorariosDeEstudo([]);
-          setPeriodoEstudo({ inicio: '', fim: '' });
-        }
-      } catch (error) {
-        console.error("Erro ao carregar dados de estudo:", error);
-        setShowAlert({ show: true, message: 'Erro ao carregar configurações de estudo. Tente novamente.' });
-      } finally {
-        setLoadingConfig(false);
-      }
-    };
+        const materiasFormatadas: Materia[] = materiaIds.map((mId: number) => {
+          const encontrada = materias_disponiveis.find((m: Materia) => m.id === mId);
+          return encontrada || { id: mId, nome: `ID ${mId}` };
+        });
+
+        return {
+          dia_semana: normalizarDiaBackendParaFrontend(diaBackend.dia_semana),
+          horario_inicio: diaBackend.hora_inicio,
+          horario_fim: diaBackend.hora_fim,
+          materias: materiasFormatadas.length > 0 ? materiasFormatadas : null,
+        };
+      });
+
+      setHorariosDeEstudo(dias.sort((a, b) =>
+        diasSemana.indexOf(a.dia_semana) - diasSemana.indexOf(b.dia_semana)
+      ));
+
+      setPeriodoEstudo({
+        inicio: configuracao.data_inicio || '',
+        fim: configuracao.data_fim || '',
+      });
+
+      setExisteConfiguracao(true);
+    } else {
+      setHorariosDeEstudo([]);
+      setPeriodoEstudo({ inicio: '', fim: '' });
+      setExisteConfiguracao(false);
+    }
+  } catch (error) {
+    console.error("❌ Erro ao carregar dados de estudo:", error);
+    setShowAlert({ show: true, message: 'Erro ao carregar configurações de estudo. Tente novamente.' });
+  } finally {
+    setLoadingConfig(false);
+  }
+};
 
     carregarDadosEstudo();
   }, []);
@@ -494,24 +501,45 @@ const resetarPreferencias = () => {
 };
 
 const buscarConfiguracao = async () => {
+  setLoadingConfig(true);
   try {
     const api = new API();
-    const resposta = await api.get('agendaConfiguracao'); // ajuste para o endpoint correto
-    const configuracao = resposta; // se o API wrapper já estiver parseando o JSON
+    const resposta = await api.get('agendaConfiguracao');
+    console.log('Configuração recebida: ', resposta);
+
+    const { configuracao, materias_disponiveis } = resposta;
 
     if (configuracao && configuracao.id) {
-      console.log('ID da configuração:', configuracao.id);
       setExisteConfiguracao(true);
 
-      // você pode salvar em estado, navegar, ou usar como quiser
+      setPeriodoEstudo({
+        inicio: configuracao.data_inicio,
+        fim: configuracao.data_fim,
+      });
+
+      const dias = configuracao.dias_disponiveis.map((dia: any) => ({
+        dia_semana: dia.dia_semana,
+        horario_inicio: dia.hora_inicio,
+        horario_fim: dia.hora_fim,
+        materias: (dia.materia_ids || []).map((id: number) => {
+          const materia = materias_disponiveis.find((m: any) => m.id === id);
+          return materia ? { id: materia.id, nome: materia.nome } : null;
+        }).filter(Boolean),
+      }));
+
+      setHorariosDeEstudo(dias);
+      setMateriasDisponiveis(materias_disponiveis);
     } else {
       console.warn('Nenhuma configuração encontrada.');
       setExisteConfiguracao(false);
     }
   } catch (error) {
     console.error('Erro ao buscar configuração:', error);
+  } finally {
+    setLoadingConfig(false);
   }
 };
+
 
 
 const resetarConfiguracoes = async () => {

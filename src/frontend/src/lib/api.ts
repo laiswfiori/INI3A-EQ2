@@ -97,8 +97,8 @@ export default class API {
 
       const text = await response.text();
       let inicio  = text.indexOf("{");
+      inicio = inicio > text.indexOf("[") ? text.indexOf("[") : inicio;
       let json = text.substring(inicio);
-
       const responseData = JSON.parse(json);
       if (!response.ok) {
         const error: any = new Error(`HTTP error! status: ${response.status}`);
