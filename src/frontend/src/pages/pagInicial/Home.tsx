@@ -75,22 +75,26 @@ const Home: React.FC = () => {
             </IonRow>
 
             <IonRow className="ion-justify-content-center ion-padding">
-              <h2 className="pDarkmode">
+              <div className="txtCentro2">
+              <h2 className="pDarkmode titulo">
                 Pare de esquecer tudo o que você{" "}
-                <span className="txtAprendeu">já aprendeu</span>
+                <span className="txtAprendeu">já aprendeu.</span>
               </h2>
+              </div>
             </IonRow>
 
             <IonRow className="ion-justify-content-center ion-padding">
-              <p className="pDarkmode">
-                Realize revisões, atividades e tenha uma agenda inteligente
+            <div className="txtCentro2">
+              <p className="pDarkmode subtitulo">
+                Realize revisões, atividades e tenha uma agenda inteligente.
               </p>
+            </div>
             </IonRow>
 
             <div className="hidden lg:block relative" >
               <div
                 className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
-                style={{ left: "-2rem", top: "14rem", animationDelay: "0.359605s" }}
+                style={{ left: "-2rem", top: "1rem", animationDelay: "0.359605s" }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -113,8 +117,8 @@ const Home: React.FC = () => {
               </div>
 
               <div
-                className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
-                style={{ left: "4rem", top: "20rem", animationDelay: "0.712048s" }}
+                className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out sumir"
+                style={{ left: "4rem", top: "-5rem", animationDelay: "0.712048s" }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +142,7 @@ const Home: React.FC = () => {
 
               <div
                 className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
-                style={{ left: "-6rem", top: "24rem", animationDelay: "1.03126s" }}
+                style={{ left: "-6rem", top: "-9rem", animationDelay: "1.03126s" }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -162,7 +166,7 @@ const Home: React.FC = () => {
 
               <div
                 className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
-                style={{ left: "0rem", top: "30rem", animationDelay: "0.980146s" }}
+                style={{ left: "0rem", top: "-15rem", animationDelay: "0.980146s" }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -184,7 +188,7 @@ const Home: React.FC = () => {
 
               <div
                 className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
-                style={{ left: "58rem", top: "15rem", animationDelay: "1.0243s" }}
+                style={{ right: "-2rem", top: "0rem", animationDelay: "1.0243s" }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -206,8 +210,8 @@ const Home: React.FC = () => {
               </div>
 
               <div
-                className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
-                style={{ left: "52rem", top: "23rem", animationDelay: "0.0434575s" }}
+                className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out sumir"
+                style={{ right: "4rem", top: "-8rem", animationDelay: "0.0434575s" }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -239,7 +243,7 @@ const Home: React.FC = () => {
 
               <div
                 className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
-                style={{ left: "65rem", top: "26rem", animationDelay: "1.5279s" }}
+                style={{ right: "-6rem", top: "-11rem", animationDelay: "1.5279s" }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -262,7 +266,7 @@ const Home: React.FC = () => {
 
               <div
                 className="infinite absolute z-[1] flex animate-float rounded-full bg-white p-4 ease-in-out"
-                style={{ left: "58rem", top: "31rem", animationDelay: "0.788296s" }}
+                style={{ right: "0rem", top: "-16rem", animationDelay: "0.788296s" }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

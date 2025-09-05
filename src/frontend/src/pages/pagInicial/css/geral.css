@@ -255,3 +255,39 @@ ion-button#btnLogin::part(native):hover {
     transform: scale(1.05);
 }
 
+.size-6 {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.size-8 {
+    width: 2rem;
+    height: 2rem;
+}
+
+.size-12 {
+    width: 3rem;
+    height: 3rem;
+}
+
+.animate-float {
+    position: absolute;
+    animation: float 3s ease-in-out infinite;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.txtCentro2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+}
+
+#s5 {
+    padding-bottom: 10%;
+}

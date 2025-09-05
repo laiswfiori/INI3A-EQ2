@@ -152,6 +152,10 @@
     .cardFraquezas {
         width: 90% !important;
     }
+
+    .sumir {
+        display: none;
+    }
 }
 
 @media (min-width: 425px) and (max-width: 767px) {
@@ -205,5 +209,11 @@
 
     .carta {
         width: 100%;
+    }
+}
+
+@media (max-width: 425px) {
+    #s5 {
+        display: none;
     }
 }
