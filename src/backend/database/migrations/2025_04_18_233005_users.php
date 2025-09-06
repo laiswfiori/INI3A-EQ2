@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('surname', 255); 
             $table->string('email', 255)->unique(); 
             $table->string('password', 255);
+            $table->integer('streak')->default(1);
+            $table->date('last_streak_update')->after('streak');
             $table->string('biography', 255)->nullable(); 
             
             $table->timestamps(); 
