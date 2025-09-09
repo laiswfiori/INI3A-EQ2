@@ -12,15 +12,16 @@
 }
 
 .ladoPerfil {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;   
-    pointer-events: none !important;
-    height: 100%;
+  position: relative; /* Ativa o z-index */
+  z-index: 20; 
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;   
+  height: 100%;
 }
 
 #flexColunas {
@@ -34,14 +35,14 @@
   width: 100%;
 }
 
-  #img, #imgM {
-    width: 100%;
-    padding: 5%;
-    display: flex;
-    align-items: center;   
-    justify-content: center;   
-    height: fit-content;
-  }
+#img, #imgM {
+  width: 100%;
+  padding: 5%;
+  display: flex;
+  align-items: center;   
+  justify-content: center;   
+  height: fit-content;
+}
 
 #img {
   position: absolute;
@@ -49,7 +50,7 @@
 }
 
 #linhaDivisora {
-  margin-top: 18rem;
+  margin-top: 1rem;
 }
 
   .txtPading {
@@ -63,6 +64,10 @@
     color: white;
     margin: 0;
     padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
 #linhaDivisora, #linhaDivisoraM {
@@ -135,11 +140,13 @@
 }
 
 .ladoConfig, .ladoEstudo {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    padding-left: 5%;
+  position: relative;
+  z-index: 10;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  padding-left: 5%;
 }
 
 .msmLinha {
@@ -327,4 +334,49 @@ ion-input.inputBioM {
 
 .larguraEstudo2 {
   width: 100%;
+}
+
+#iconePerfil {
+  width: 120px;       /* Define uma largura fixa */
+  height: 120px;      /* Define uma altura fixa */
+  border-radius: 50%; /* Transforma o container em um círculo */
+  object-fit: cover;  /* Garante que a imagem preencha o círculo sem distorcer */
+  cursor: pointer;    /* Mostra uma "mãozinha" para indicar que é clicável */
+  background-color: #f0f0f0; /* Cor de fundo caso a imagem demore a carregar */
+}
+
+/* Efeito de "hover" para dar feedback visual ao usuário */
+#img:hover #iconePerfil {
+  filter: brightness(0.9);
+  transition: filter 0.2s ease-in-out;
+}
+
+#img {
+  position: relative; /* Ativa o z-index para este container */
+  z-index: 10;      /* Coloca este elemento na frente de outros */
+  cursor: pointer;    /* Mostra a "mãozinha" no container inteiro */
+  padding: 10px;      /* Aumenta a área de clique */
+  border-radius: 50%; /* Cantos arredondados para o feedback de hover */
+  transition: background-color 0.2s ease-in-out;
+}
+
+.avatar-header {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 2px; /* Adiciona um pequeno espaço entre a imagem e o texto */
+}
+
+/* Estilos para o avatar no header (mobile) */
+.avatar-header-mobile {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 2px; /* Adiciona um pequeno espaço entre a imagem e o texto */
+}
+
+
+ion-tab-button[tab="perfil"]::part(native) {
+  display: flex;
+  flex-direction: column; /* Garante o layout vertical */
+  align-items: center;    /* Centraliza a foto/ícone horizontalmente */
+  justify-content: center;
 }

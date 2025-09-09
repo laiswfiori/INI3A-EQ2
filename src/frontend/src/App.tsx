@@ -2,6 +2,7 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { SoundProvider } from './utils/Som';
+import { AuthProvider } from './contexts/AuthContext';
 
 import PrivateRoute from './components/PrivateRoute';
 
@@ -72,44 +73,46 @@ const App: React.FC = () => {
 
   return (
     <IonApp>
-      <SoundProvider>
-        <IonReactRouter>
-          <IonRouterOutlet>
-            <Route path="/pagInicial/home" component={Home} exact />
-            <Route path="/login/login" component={Login} exact />
-            <Route path="/registro/registro" component={Registro} exact />
-            <Route path="/logincadastro/logincadastro" component={LoginCadastro} exact />
-            <Route path="/conteudos/materias" component={Matérias} exact />
-            <Route path="/conteudos/topicos" component={Topicos} exact />
-            <Route path="/conteudos/atividades" component={Atividades} exact />
-            <Route path="/conteudos/atividade" component={Atividade} exact />
-            <Route path="/perfil/perfil" component={Perfil} exact />
-            <Route path="/configuracoes/configuracoes" component={Configuracoes} exact />
-            <Route path="/agenda/agenda" component={Agenda} exact />
-            <Route path="/flashcards/flashcards" component={Flashcards} exact />
-            <Route path="/flashcards/telainicialflashcards" component={TelaInicialFlashcards} exact />
-            <Route path="/flashcards/relatorio" component={Relatorio} exact />
-            <Route path="/senha/confirmar" component={Confirmar} exact />
-            <Route path="/senha/concluir" component={Concluir} exact />
-            <Route path="/senha/alterar" component={Alterar} exact />
-            <Route path="/estudo/estudo" component={Estudo} exact />
+      <AuthProvider>
+        <SoundProvider>
+          <IonReactRouter>
+            <IonRouterOutlet>
+              <Route path="/pagInicial/home" component={Home} exact />
+              <Route path="/login/login" component={Login} exact />
+              <Route path="/registro/registro" component={Registro} exact />
+              <Route path="/logincadastro/logincadastro" component={LoginCadastro} exact />
+              <Route path="/conteudos/materias" component={Matérias} exact />
+              <Route path="/conteudos/topicos" component={Topicos} exact />
+              <Route path="/conteudos/atividades" component={Atividades} exact />
+              <Route path="/conteudos/atividade" component={Atividade} exact />
+              <Route path="/perfil/perfil" component={Perfil} exact />
+              <Route path="/configuracoes/configuracoes" component={Configuracoes} exact />
+              <Route path="/agenda/agenda" component={Agenda} exact />
+              <Route path="/flashcards/flashcards" component={Flashcards} exact />
+              <Route path="/flashcards/telainicialflashcards" component={TelaInicialFlashcards} exact />
+              <Route path="/flashcards/relatorio" component={Relatorio} exact />
+              <Route path="/senha/confirmar" component={Confirmar} exact />
+              <Route path="/senha/concluir" component={Concluir} exact />
+              <Route path="/senha/alterar" component={Alterar} exact />
+              <Route path="/estudo/estudo" component={Estudo} exact />
 
-            <Route path="/materias/:id" component={Topicos} exact />
-            <Route path="/topicos/:id" component={Atividades} exact />
-            <Route path="/atividades/:id" component={Atividade} exact />
+              <Route path="/materias/:id" component={Topicos} exact />
+              <Route path="/topicos/:id" component={Atividades} exact />
+              <Route path="/atividades/:id" component={Atividade} exact />
 
-            <Route path="/flashcard/revisaoGeral" component={RevisaoGeral} exact />
-            <Route path="/flashcard/materia/:id" component={CardsMateria} exact />
-            <Route path="/flashcard/:id(\d+)" component={Flashcards} exact />
+              <Route path="/flashcard/revisaoGeral" component={RevisaoGeral} exact />
+              <Route path="/flashcard/materia/:id" component={CardsMateria} exact />
+              <Route path="/flashcard/:id(\d+)" component={Flashcards} exact />
 
-            
+              
 
-            <Route exact path="/">
-              <Redirect to="/pagInicial/home" />
-            </Route>
-          </IonRouterOutlet>
-        </IonReactRouter>
-      </SoundProvider>
+              <Route exact path="/">
+                <Redirect to="/pagInicial/home" />
+              </Route>
+            </IonRouterOutlet>
+          </IonReactRouter>
+        </SoundProvider>
+      </AuthProvider>
     </IonApp>
   );
 };

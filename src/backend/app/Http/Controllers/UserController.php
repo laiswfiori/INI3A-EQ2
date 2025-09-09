@@ -43,6 +43,19 @@ class UserController extends Controller
         ], 200);
     }
 
+    public function atualizarFotoPerfil(Request $request)
+    {
+        $this->validate($request, [
+            'foto_perfil' => 'required|string', // Espera uma string (Base64)
+        ]);
+        
+        $user = Auth::user();
+        $user->foto_perfil = $request->input('foto_perfil');
+        $user->save();
+
+        return response()->json($user);
+    }
+
     public function changePassword(Request $request)
     {
         $this->validate($request, [

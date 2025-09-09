@@ -37,6 +37,8 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         // Rotas de listagem de usuários
         $router->get('users/{id}', 'UserController@singleUser');
         $router->get('users', 'UserController@allUsers');
+
+        $router->post('/foto', 'UserController@atualizarFotoPerfil');
     });
 
      // --- Rotas de Preferências de Estudo (ATUALIZADO) ---

@@ -1,8 +1,27 @@
+type AtividadeSimples = {
+  id: number | string;
+  titulo: string;
+};
+
 // Validações para atividades
-export function validarTituloAtividade(titulo: string): string | null {
-  if (!titulo.trim()) {
+export function validarTituloAtividade( titulo: string, atividadesDoTopico: AtividadeSimples[], idAtividadeEditada: number | string | null = null ): string | null {
+  const tituloTrimmed = titulo.trim();
+
+  if (!tituloTrimmed) {
     return 'O título da atividade é obrigatório.';
   }
+
+  const tituloUpperCase = tituloTrimmed.toUpperCase();
+
+  const atividadeExistente = atividadesDoTopico.find(
+    (atividade) => atividade.titulo.trim().toUpperCase() === tituloUpperCase
+  );
+
+  // Se uma atividade com o mesmo título já existe E não é a atividade que está sendo editada
+  if (atividadeExistente && atividadeExistente.id !== idAtividadeEditada) {
+    return 'Já existe uma atividade com este título neste tópico.';
+  }
+
   return null;
 }
 
@@ -34,13 +53,19 @@ export function validarDataEntrega(data_entrega: string | undefined): string | n
   return null;
 }
 
-export function validarCamposAtividade(atividade: { titulo: string; tipo: string; descricao: string, data_entrega: string | undefined }): string | null {
+export function validarCamposAtividade(
+  // A assinatura da função agora inclui os parâmetros para a validação de duplicidade
+  atividade: { titulo: string; tipo: string; descricao: string, data_entrega: string | undefined },
+  atividadesDoTopico: AtividadeSimples[],
+  idAtividadeEditada: number | string | null = null
+): string | null {
   const erros = [
-    validarTituloAtividade(atividade.titulo),
+    // A chamada para validar o título agora passa os argumentos necessários
+    validarTituloAtividade(atividade.titulo, atividadesDoTopico, idAtividadeEditada),
     validarDescricaoAtividade(atividade.descricao),
     validarTipoAtividade(atividade.tipo),
     validarDataEntrega(atividade.data_entrega),
-  ].filter(Boolean);
+  ].filter(Boolean); // Filtra os resultados nulos
 
   if (erros.length > 0) return erros[0];
   return null;

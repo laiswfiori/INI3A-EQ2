@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IonPage, IonContent, IonCol, IonRow, IonIcon, IonButton,
   IonInput, IonCheckbox, IonTextarea, IonAlert, IonSpinner,
@@ -20,6 +20,7 @@ import Header from '../../components/Header';
 import ThemeManager from '../../utils/ThemeManager';
 import '../../utils/css/variaveisCores.css';
 import { useSoundPlayer } from '../../utils/Som';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface User {
   id: number;
@@ -29,6 +30,7 @@ interface User {
   password?: string;
   biography: string;
   google_id?: string;
+  foto_perfil?: string;
 }
 
 interface Materia {
@@ -73,6 +75,10 @@ const Perfil: React.FC = () => {
   const [loadingConfig, setLoadingConfig] = useState<boolean>(false);
   const [checked, setChecked] = useState(false);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { user, updateUser, logout: authLogout  } = useAuth();
+  
   const [passwordData, setPasswordData] = useState({
     senha_atual: '',
     nova_senha: '',
@@ -91,6 +97,35 @@ const Perfil: React.FC = () => {
   const [notificacoesAtivas, setNotificacoesAtivas] = useState(() => localStorage.getItem('notificacoesAtivas') !== 'false');
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') !== 'dark');
   const [existeConfiguracao, setExisteConfiguracao] = useState<boolean>(false);
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const imagemBase64 = reader.result as string;
+      try {
+        const api = new API();
+        const updatedUserData = await api.post('/api/foto', { foto_perfil: imagemBase64 });
+        
+        // Atualiza o estado global (para o Header) e o estado local (para esta página)
+        updateUser(updatedUserData);
+        setUserData(updatedUserData);
+        setFormData(updatedUserData);
+
+        setShowAlert({ show: true, message: 'Foto de perfil atualizada com sucesso!' });
+      } catch (error) {
+        console.error('Erro ao atualizar a foto de perfil:', error);
+        setShowAlert({ show: true, message: 'Não foi possível atualizar a foto. Tente novamente.' });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   const toggleTheme = () => {
     const newTheme = !isDarkMode;
@@ -134,6 +169,7 @@ const Perfil: React.FC = () => {
       setUserData(profileData);
       // --- ADICIONADO: Inicializa o estado do formulário com os dados do perfil ---
       setFormData(profileData); 
+      updateUser(profileData);
       
       if (profileData.google_id) {
         setIsGoogleLogin(true);
@@ -152,7 +188,7 @@ const Perfil: React.FC = () => {
     }
   };
   fetchUserProfile();
-}, [history]);
+}, [history, updateUser]);
 
   useEffect(() => {
     const normalizarDiaBackendParaFrontend = (dia: string): string => {
@@ -300,6 +336,7 @@ const handleDiaToggle = (dia: string) => {
   };
 
   const logout = () => {
+    authLogout();
     localStorage.removeItem('token');
     history.push('/logincadastro/logincadastro');
   };
@@ -322,6 +359,8 @@ const handleDiaToggle = (dia: string) => {
     const response = await updateUserProfile(formData);
     setUserData(response.user);
     setFormData(response.user);
+    updateUser(response.user);
+
     setShowAlert({ show: true, message: response.message || 'Perfil atualizado com sucesso!' });
   } catch (error) {
     console.error('Erro ao salvar o perfil:', error);
@@ -575,7 +614,7 @@ const resetarConfiguracoes = async () => {
 };
 
 
-  if (isLoading || authError) {
+  if (isLoading) {
     return (
       <>
         <ThemeManager />
@@ -590,7 +629,7 @@ const resetarConfiguracoes = async () => {
     );
   }
 
-  if (!userData) {
+  if (!user) {
     return (
       <>
         <ThemeManager />
@@ -868,10 +907,14 @@ const resetarConfiguracoes = async () => {
       <ThemeManager />
       <IonRow id="lDesktop" className="pagPerfil">
         <IonCol className="ladoPerfil">
-          <IonRow id="img">
-            <IonIcon icon={personCircle} id="iconePerfil" />
+          <IonRow id="img" onClick={handleImageClick} style={{ cursor: 'pointer' }}>
+            {user?.foto_perfil ? (
+              <IonImg src={user.foto_perfil} id="iconePerfil" />
+            ) : (
+              <IonIcon icon={personCircle} id="iconePerfil" />
+            )}
             <div id="txtOi">
-              <p className="txtPading">Olá, {userData?.name}.</p>
+              <p className="txtPading">Olá, {user?.name}.</p>
             </div>
           </IonRow>
           <IonRow id="linhaDivisora"></IonRow>
@@ -1166,10 +1209,14 @@ const resetarConfiguracoes = async () => {
     <>
       <ThemeManager />
       <IonRow id="lMobile" className="pagPerfilM">
-        <IonRow id="imgM">
-          <IonIcon icon={personCircle} id="iconePerfil" />
+        <IonRow id="imgM" onClick={handleImageClick} style={{ cursor: 'pointer' }}>
+          {userData?.foto_perfil ? (
+            <IonImg src={user.foto_perfil} id="iconePerfil" />
+          ) : (
+            <IonIcon icon={personCircle} id="iconePerfil" />
+          )}
           <div id="txtOi">
-            <p className="txtPading">Olá, {userData?.name}.</p>
+            <p className="txtPading">Olá, {user?.name}.</p>
           </div>
         </IonRow>
         <IonRow id="contOpsConfig">
@@ -1481,6 +1528,14 @@ const resetarConfiguracoes = async () => {
             {renderDesktopView()}
             {renderMobileView()}
           </IonRow>
+
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+          />
 
           <IonAlert
             isOpen={showAlert.show}

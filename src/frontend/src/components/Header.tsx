@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';  // <-- Importa useLocation
-import { IonHeader, IonToolbar, IonImg, IonTabButton, IonIcon, IonLabel, IonPopover, IonContent, IonButton, IonCol, IonRow } from '@ionic/react';
+import { useHistory, useLocation } from 'react-router-dom';
+import { IonHeader, IonToolbar, IonImg, IonTabButton, IonIcon, IonLabel, IonPopover, IonContent, IonButton, IonRow, IonAvatar } from '@ionic/react';
 import { home, calendar, star, documentText, personCircle, notifications, close, alarm } from 'ionicons/icons';
 import './css/ui.css';
 import './css/geral.css';
@@ -9,13 +9,16 @@ import './css/darkmode.css';
 import ThemeManager from '../utils/ThemeManager';
 import '../utils/css/variaveisCores.css';
 import { useSoundPlayer } from './../utils/Som';
+import { useAuth } from '../contexts/AuthContext'; // 1. ADICIONADO: Importa o hook de autenticação
 
 const Header: React.FC = () => {
   const history = useHistory();
-  const location = useLocation();  // <-- Usa o hook para obter a location atual
+  const location = useLocation();
   const [menuAberto, setMenuAberto] = useState(false);
   const navRef = useRef<HTMLDivElement | null>(null);
   const [mostrarPopover, setMostrarPopover] = useState(false);
+
+  const { user } = useAuth(); // 3. ADICIONADO: Pega o usuário do estado global
 
   const savedTheme = localStorage.getItem('theme');
   const logoSrc = savedTheme === 'dark' ? '/imgs/logoInicioDarkmode.png' : '/imgs/logoInicio.png';
@@ -23,18 +26,13 @@ const Header: React.FC = () => {
 
   const { playSomNotificacao } = useSoundPlayer();
 
-  const isAuthenticated = () => {
-    const token = localStorage.getItem('token');
-    return !!token;
-  };
-
+  // 4. MODIFICADO: A função isAuthenticated foi removida. Usaremos o 'user' do useAuth.
   const navHome = () => {
     history.push('/pagInicial/home');
-    window.location.reload();
   };
 
   const navAgenda = () => {
-    if (isAuthenticated()) {
+    if (user) { // MODIFICADO
       history.push('/agenda/agenda');
     } else {
       history.push('/logincadastro/logincadastro');
@@ -42,7 +40,7 @@ const Header: React.FC = () => {
   };
 
   const navFlashcards = () => {
-    if (isAuthenticated()) {
+    if (user) { // MODIFICADO
       history.push('/flashcards/telainicialflashcards');
     } else {
       history.push('/logincadastro/logincadastro');
@@ -50,7 +48,7 @@ const Header: React.FC = () => {
   };
 
   const navEstudo = () => {
-    if (isAuthenticated()) {
+    if (user) { // MODIFICADO
       history.push('/estudo/estudo');
     } else {
       history.push('/logincadastro/logincadastro');
@@ -58,7 +56,7 @@ const Header: React.FC = () => {
   };
 
   const navConteudos = () => {
-    if (isAuthenticated()) {
+    if (user) { // MODIFICADO
       history.push('/conteudos/materias');
     } else {
       history.push('/logincadastro/logincadastro');
@@ -66,7 +64,7 @@ const Header: React.FC = () => {
   };
 
   const navPerfil = () => {
-    if (isAuthenticated()) {
+    if (user) { // MODIFICADO
       history.push('/perfil/perfil');
     } else {
       history.push('/logincadastro/logincadastro');
@@ -122,6 +120,7 @@ const Header: React.FC = () => {
             </div>
 
             <div id="nav" className="azul" ref={navRef}>
+              {/* Links de navegação permanecem os mesmos */}
               <div>
                 <IonTabButton className="azul" tab="agenda" onClick={navAgenda}>
                   <IonIcon icon={calendar} className={`icones ${location.pathname.startsWith('/agenda') ? 'ativo' : ''}`} />
@@ -151,13 +150,18 @@ const Header: React.FC = () => {
               </div>
             </div>
 
+            {/* 5. MODIFICADO: Botão de Perfil do Desktop */}
             <div>
               <IonTabButton className="azul" tab="perfil" onClick={navPerfil}>
-                <IonIcon icon={personCircle} className={`icones ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`} />
+                <IonAvatar className="avatar-header">
+                  <img src={user?.foto_perfil || personCircle} alt="Perfil" />
+                </IonAvatar>
                 <IonLabel className={`iconesTxt ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}>Perfil</IonLabel>
               </IonTabButton>
             </div>
           </div>
+          
+          {/* Popover e Header Mobile */}
           <IonButton
             id="popover-trigger"
             ref={(el) => {
@@ -223,6 +227,7 @@ const Header: React.FC = () => {
           {menuAberto && (
             <div id="mobileMenu" className="azul" ref={navRef}>
               <div id="linksMenu">
+                {/* Links mobile permanecem os mesmos */}
                 <div className="menu2" onClick={navAgenda}>
                   <IonIcon icon={calendar} className={`iconesMobile ${location.pathname.startsWith('/agenda') ? 'ativo' : ''}`} />
                   <IonLabel className={`iconesTxt ${location.pathname.startsWith('/agenda') ? 'ativo' : ''}`}>Agenda</IonLabel>
@@ -233,14 +238,17 @@ const Header: React.FC = () => {
                 </div>
                 <div className="menu2" onClick={navEstudo}>
                   <IonIcon icon={alarm} className={`iconesMobile ${location.pathname.startsWith('/estudo') ? 'ativo' : ''}`} />
-                  <IonLabel className={`iconesTxt ${location.pathname.startsWith('/estudo') ? 'ativo' : ''}`}>Sala de estudo</IonLabel> {/* Corrigido texto aqui */}
+                  <IonLabel className={`iconesTxt ${location.pathname.startsWith('/estudo') ? 'ativo' : ''}`}>Sala de estudo</IonLabel>
                 </div>
                 <div className="menu2" onClick={navConteudos}>
                   <IonIcon icon={documentText} className={`iconesMobile ${rotaMateriasAtiva ? 'ativo' : ''}`} />
                   <IonLabel className={`iconesTxt ${rotaMateriasAtiva ? 'ativo' : ''}`}>Conteúdos</IonLabel>
                 </div>
+                {/* 6. MODIFICADO: Botão de Perfil do Menu Mobile */}
                 <div className="menu2" onClick={navPerfil}>
-                  <IonIcon icon={personCircle} className={`iconesMobile ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`} />
+                  <IonAvatar className="avatar-header-mobile">
+                     <img src={user?.foto_perfil || personCircle} alt="Perfil" />
+                  </IonAvatar>
                   <IonLabel className={`iconesTxt ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}>Perfil</IonLabel>
                 </div>
               </div>
@@ -253,3 +261,4 @@ const Header: React.FC = () => {
 };
 
 export default Header;
+

@@ -250,7 +250,13 @@ const Atividades: React.FC = () => {
   };
 
   const handleSalvar = async () => {
-    const erro = validarCamposAtividade(novaAtividade);
+    // Pega o ID da atividade apenas se estiver no modo de edição
+    const idAtividadeEditada = modoModal === 'editar' ? atividadeSelecionada?.id : null;
+
+    // CORREÇÃO AQUI: Passamos a lista de atividades (que deve estar no seu estado)
+    // e o ID da atividade em edição para a função de validação.
+    const erro = validarCamposAtividade(novaAtividade, atividades, idAtividadeEditada);
+
     if (erro) {
       alert(erro);
       return;
@@ -258,7 +264,7 @@ const Atividades: React.FC = () => {
 
     if (novaAtividade.data_entrega) {
       const hoje = new Date();
-      hoje.setHours(0, 0, 0, 0); 
+      hoje.setHours(0, 0, 0, 0);
       const dataEntrega = new Date(novaAtividade.data_entrega);
 
       if (dataEntrega < hoje) {
@@ -267,10 +273,18 @@ const Atividades: React.FC = () => {
       }
     }
 
-
     const conteudoFinal = textoTemp.trim()
       ? [...novaAtividade.conteudo, { tipo: 'texto', valor: textoTemp.trim() }]
       : novaAtividade.conteudo;
+
+    // Prepara o objeto final para enviar à API
+    const atividadeParaSalvar = {
+      ...novaAtividade,
+      conteudo: conteudoFinal,
+      data_entrega: novaAtividade.data_entrega && novaAtividade.data_entrega.trim() !== ''
+        ? novaAtividade.data_entrega
+        : undefined,
+    };
 
     try {
       const api = new API();
@@ -280,10 +294,7 @@ const Atividades: React.FC = () => {
 
       const method = modoModal === 'editar' ? api.put : api.post;
 
-      const data = await method.call(api, endpoint, {
-        ...novaAtividade,
-        conteudo: conteudoFinal,
-      });
+      const data = await method.call(api, endpoint, atividadeParaSalvar);
 
       if (modoModal === 'editar') {
         setAtividades(prev =>
@@ -293,17 +304,7 @@ const Atividades: React.FC = () => {
         setAtividades(prev => [...prev, data]);
       }
 
-      const atividadeParaSalvar = {
-      ...novaAtividade,
-      conteudo: conteudoFinal,
-      data_entrega: novaAtividade.data_entrega && novaAtividade.data_entrega.trim() !== ''
-        ? novaAtividade.data_entrega
-        : undefined,
-    };
-
-    console.log('Objeto final para salvar:', atividadeParaSalvar)
-
-
+      // Limpa os campos do formulário
       setTextoTemp('');
       setNovaAtividade({
         titulo: '',
@@ -322,7 +323,7 @@ const Atividades: React.FC = () => {
       alert(error?.response?.data?.message || 'Erro ao salvar atividade');
     }
   };
-
+  
   const handleEditar = () => {
     if (atividadeSelecionada) {
       setNovaAtividade({
