@@ -17,6 +17,8 @@ type SoundContextType = {
   playSomNotificacao: () => void;
   playSomPaginas: () => void;
   playSomLareira: () => void;
+  stopSomPaginas: () => void; 
+  stopSomLareira: () => void;
   somAtivo: boolean;
   toggleSom: () => void;
 };
@@ -34,8 +36,8 @@ export const SoundProvider = ({ children }: { children: ReactNode }) => {
   const [playRespCerta] = useSound(somRespCerta);
   const [playRespErrada] = useSound(somRespErrada);
   const [playNotificacao] = useSound(somNotificacao);
-  const [playPaginas] = useSound(somPaginas);
-  const [playLareira] = useSound(somLareira);
+  const [playPaginas, { stop: stopPaginas }] = useSound(somPaginas);
+  const [playLareira, { stop: stopLareira }] = useSound(somLareira);
 
   useEffect(() => {
     localStorage.setItem('somAtivo', somAtivo.toString());
@@ -49,6 +51,9 @@ export const SoundProvider = ({ children }: { children: ReactNode }) => {
   const playSomPaginas = () => { if (somAtivo) playPaginas(); };
   const playSomLareira = () => { if (somAtivo) playLareira(); };
 
+  const stopSomPaginas = () => stopPaginas();
+  const stopSomLareira = () => stopLareira();
+
   const toggleSom = () => setSomAtivo(prev => !prev);
 
   const value = {
@@ -61,6 +66,8 @@ export const SoundProvider = ({ children }: { children: ReactNode }) => {
     playSomLareira,
     somAtivo,
     toggleSom,
+    stopSomPaginas,
+    stopSomLareira,
   };
 
   return (
