@@ -120,7 +120,6 @@ const Header: React.FC = () => {
             </div>
 
             <div id="nav" className="azul" ref={navRef}>
-              {/* Links de navegação permanecem os mesmos */}
               <div>
                 <IonTabButton className="azul" tab="agenda" onClick={navAgenda}>
                   <IonIcon icon={calendar} className={`icones ${location.pathname.startsWith('/agenda') ? 'ativo' : ''}`} />
@@ -150,18 +149,16 @@ const Header: React.FC = () => {
               </div>
             </div>
 
-            {/* 5. MODIFICADO: Botão de Perfil do Desktop */}
             <div>
               <IonTabButton className="azul" tab="perfil" onClick={navPerfil}>
-                <IonAvatar className="avatar-header">
-                  <img src={user?.foto_perfil || personCircle} alt="Perfil" />
+                <IonAvatar className={`avatar-header icones ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}>
+                  <img src={user?.foto_perfil || personCircle} alt="Perfil" className={`icones ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`} />
                 </IonAvatar>
                 <IonLabel className={`iconesTxt ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}>Perfil</IonLabel>
               </IonTabButton>
             </div>
           </div>
           
-          {/* Popover e Header Mobile */}
           <IonButton
             id="popover-trigger"
             ref={(el) => {
@@ -227,7 +224,6 @@ const Header: React.FC = () => {
           {menuAberto && (
             <div id="mobileMenu" className="azul" ref={navRef}>
               <div id="linksMenu">
-                {/* Links mobile permanecem os mesmos */}
                 <div className="menu2" onClick={navAgenda}>
                   <IonIcon icon={calendar} className={`iconesMobile ${location.pathname.startsWith('/agenda') ? 'ativo' : ''}`} />
                   <IonLabel className={`iconesTxt ${location.pathname.startsWith('/agenda') ? 'ativo' : ''}`}>Agenda</IonLabel>
@@ -244,7 +240,6 @@ const Header: React.FC = () => {
                   <IonIcon icon={documentText} className={`iconesMobile ${rotaMateriasAtiva ? 'ativo' : ''}`} />
                   <IonLabel className={`iconesTxt ${rotaMateriasAtiva ? 'ativo' : ''}`}>Conteúdos</IonLabel>
                 </div>
-                {/* 6. MODIFICADO: Botão de Perfil do Menu Mobile */}
                 <div className="menu2" onClick={navPerfil}>
                   <IonAvatar className="avatar-header-mobile">
                      <img src={user?.foto_perfil || personCircle} alt="Perfil" />

@@ -337,46 +337,52 @@ ion-input.inputBioM {
 }
 
 #iconePerfil {
-  width: 120px;       /* Define uma largura fixa */
-  height: 120px;      /* Define uma altura fixa */
-  border-radius: 50%; /* Transforma o container em um círculo */
-  object-fit: cover;  /* Garante que a imagem preencha o círculo sem distorcer */
-  cursor: pointer;    /* Mostra uma "mãozinha" para indicar que é clicável */
-  background-color: #f0f0f0; /* Cor de fundo caso a imagem demore a carregar */
+  width: 120px;      
+  height: 120px;      
+  border-radius: 50%;
+  object-fit: cover; 
+  cursor: pointer;   
+  background-color: #f0f0f0; 
 }
 
-/* Efeito de "hover" para dar feedback visual ao usuário */
 #img:hover #iconePerfil {
   filter: brightness(0.9);
   transition: filter 0.2s ease-in-out;
 }
 
 #img {
-  position: relative; /* Ativa o z-index para este container */
-  z-index: 10;      /* Coloca este elemento na frente de outros */
-  cursor: pointer;    /* Mostra a "mãozinha" no container inteiro */
-  padding: 10px;      /* Aumenta a área de clique */
-  border-radius: 50%; /* Cantos arredondados para o feedback de hover */
+  position: relative; 
+  z-index: 10;      
+  cursor: pointer;   
+  padding: 10px;      
+  border-radius: 50%; 
   transition: background-color 0.2s ease-in-out;
 }
 
 .avatar-header {
   width: 50px;
   height: 50px;
-  margin-bottom: 2px; /* Adiciona um pequeno espaço entre a imagem e o texto */
+  margin-bottom: 2px; 
+  color: white !important;
+  --color: white !important;
 }
 
-/* Estilos para o avatar no header (mobile) */
+ion-avatar.avatar-header {
+  color: white !important;
+  --color: white !important;
+  --background: white !important; 
+}
+
 .avatar-header-mobile {
   width: 32px;
   height: 32px;
-  margin-bottom: 2px; /* Adiciona um pequeno espaço entre a imagem e o texto */
+  margin-bottom: 2px; 
 }
 
 
 ion-tab-button[tab="perfil"]::part(native) {
   display: flex;
-  flex-direction: column; /* Garante o layout vertical */
-  align-items: center;    /* Centraliza a foto/ícone horizontalmente */
+  flex-direction: column; 
+  align-items: center;    
   justify-content: center;
 }

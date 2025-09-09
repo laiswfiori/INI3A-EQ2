@@ -113,7 +113,6 @@ const Perfil: React.FC = () => {
         const api = new API();
         const updatedUserData = await api.post('/api/foto', { foto_perfil: imagemBase64 });
         
-        // Atualiza o estado global (para o Header) e o estado local (para esta página)
         updateUser(updatedUserData);
         setUserData(updatedUserData);
         setFormData(updatedUserData);
@@ -167,7 +166,6 @@ const Perfil: React.FC = () => {
     try {
       const profileData = await getUserProfile();
       setUserData(profileData);
-      // --- ADICIONADO: Inicializa o estado do formulário com os dados do perfil ---
       setFormData(profileData); 
       updateUser(profileData);
       
@@ -299,7 +297,7 @@ const handleDiaToggle = (dia: string) => {
         dia_semana: dia, 
         horario_inicio: '', 
         horario_fim: '', 
-        materias: null // ← Agora inicia como null
+        materias: null 
       };
       return [...prev, novoHorario].sort((a, b) => diasSemana.indexOf(a.dia_semana) - diasSemana.indexOf(b.dia_semana));
     }
