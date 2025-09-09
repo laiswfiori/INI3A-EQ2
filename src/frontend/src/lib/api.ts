@@ -94,12 +94,35 @@ export default class API {
           this.isRefreshing = false;
         }
       }
+const text = await response.text();
 
-      const text = await response.text();
-      let inicio  = text.indexOf("{");
-      inicio = inicio > text.indexOf("[") ? text.indexOf("[") : inicio;
-      let json = text.substring(inicio);
-      const responseData = JSON.parse(json);
+let responseData;
+
+try {
+  responseData = JSON.parse(text);
+} catch {
+  // tenta achar a posição do primeiro { ou [
+  const indexObj = text.indexOf("{");
+  const indexArr = text.indexOf("[");
+
+  const indicesValidos = [indexObj, indexArr].filter(i => i !== -1);
+
+  if (indicesValidos.length === 0) {
+    // Nenhum JSON encontrado, retorna o texto bruto para não quebrar
+    responseData = text;
+  } else {
+    const inicio = Math.min(...indicesValidos);
+    const jsonSubstring = text.substring(inicio);
+
+    try {
+      responseData = JSON.parse(jsonSubstring);
+    } catch (e) {
+      // Se ainda falhar, retorna texto bruto
+      responseData = text;
+    }
+  }
+}
+
       if (!response.ok) {
         const error: any = new Error(`HTTP error! status: ${response.status}`);
         error.response = response;

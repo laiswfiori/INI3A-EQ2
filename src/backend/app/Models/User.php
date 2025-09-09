@@ -21,7 +21,7 @@ class User extends Model implements AuthenticatableContract, JWTSubject, CanRese
      *
      * @var array
      */
-    protected $fillable = ['name', 'surname' ,'email','password','biography', 'foto_perfil'];
+    protected $fillable = ['name', 'surname' ,'email','password','biography', 'foto_perfil', 'streak', 'last_streak_update'];
 
     /**
      * The attributes that should be hidden for arrays.

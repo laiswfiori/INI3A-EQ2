@@ -7,6 +7,15 @@
 .h11{
   color: black !important;
 }
+.obs2 {
+  text-decoration: underline; 
+  cursor: pointer;             
+  transition: color 0.3s ease; 
+}
+
+.obs2:hover {
+  color: #00296b;
+}
   .bolas {
     border-radius: 50%;
     background: linear-gradient(45deg, #00296b, #3da5d9);

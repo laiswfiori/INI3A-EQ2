@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('email', 255)->unique(); 
             $table->string('password', 255);
             $table->longText('foto_perfil')->nullable();
+            $table->integer('streak')->default(1);
+            $table->date('last_streak_update')->after('streak');
             $table->string('biography', 255)->nullable(); 
             
             $table->timestamps(); 

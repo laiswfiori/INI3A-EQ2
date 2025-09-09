@@ -20,6 +20,8 @@ class AuthController extends Controller
             'surname' => $request->surname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'streak' => 1,
+            'last_streak_update' => Carbon::today(),
         ]);
 
         $token = Auth::login($user);
