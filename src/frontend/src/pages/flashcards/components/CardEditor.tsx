@@ -87,8 +87,9 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel, conteudoFrent
           <Editor
             apiKey="b3ntpf2cbhe9242iuestsixtjy2w25tklyohu21u83232xk8"
             value={textoFrente}
-                      init={{
-              height: 200,
+            init={{
+              minHeight: 800, // Optional, sets a minimum height
+    height: 800,
               menubar: false,
               plugins: ['lists', 'link', 'autolink'],
               toolbar: 'undo redo | bold italic underline | bullist numlist | link',
@@ -125,7 +126,8 @@ const CardEditor: React.FC<CardEditorProps> = ({ onSave, onCancel, conteudoFrent
             apiKey="b3ntpf2cbhe9242iuestsixtjy2w25tklyohu21u83232xk8"
             value={textoVerso}
             init={{
-              height: 200,
+              minHeight: 500,
+              height: 500,
               menubar: false,
               plugins: ['lists', 'link', 'autolink'],
               toolbar: 'undo redo | bold italic underline | bullist numlist | link',

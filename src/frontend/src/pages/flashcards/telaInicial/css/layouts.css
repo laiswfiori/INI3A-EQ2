@@ -28,6 +28,12 @@
     .criarTopico {
         width: 60%;
     }
+    #revisao {
+        padding-bottom: 10%;
+    }
+    #divisoes {
+        margin-top: 5%;
+    }
 }
 
 @media (min-width: 768px) {
@@ -79,6 +85,19 @@
         width: 60%;
     }
 }
+
+@media (max-width: 425px) {
+    #revisao {
+        padding-bottom: 5%;
+    }
+    .txtMobileRev {
+        font-size: 1.5rem;
+    }
+    .revisaoGeral {
+        padding: 1.5rem 1.5rem;
+    }
+}
+
 
 @media (max-width: 375px) {
     #dCapelo {

@@ -560,7 +560,7 @@ const setShowCardEditorAndInitialData = (
               <IonIcon icon={school} id="iconeCapelo" />
             </IonCol>
             <IonCol id="d1">
-              <p className="txtGeral pDarkmode">Revisão do dia!</p>
+              <p className="txtGeral txtMobileRev pDarkmode">Revisão do dia!</p>
               <IonButton className="revisaoGeral" onClick={() => {
                   playSomIniciar();   
                   history.push('/flashcard/revisaoGeral');

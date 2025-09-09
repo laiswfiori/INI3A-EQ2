@@ -41,28 +41,30 @@ const Estudo: React.FC = () => {
         setTimeLeft(POMODORO_TIME);
     };
 
-    const { playSomPaginas, playSomLareira, somAtivo} = useSoundPlayer();
+    const { playSomPaginas, playSomLareira, somAtivo, stopSomPaginas, stopSomLareira } = useSoundPlayer();
 
     const estudoRef = useRef({ intervalPag: 0, intervalLareira: 0 });
 
     useEffect(() => {
-    if (somAtivo) {
-        playSomPaginas();
-        estudoRef.current.intervalPag = window.setInterval(() => {
-        playSomPaginas();
-        }, 10000); 
-
-        playSomLareira();
-        estudoRef.current.intervalLareira = window.setInterval(() => {
-        playSomLareira();
-        }, 15000); 
-    }
-
-    return () => {
-        clearInterval(estudoRef.current.intervalPag);
-        clearInterval(estudoRef.current.intervalLareira);
-    };
-    }, []);
+      if (somAtivo) {
+          playSomPaginas();
+          estudoRef.current.intervalPag = window.setInterval(() => {
+              playSomPaginas();
+          }, 10000); 
+  
+          playSomLareira();
+          estudoRef.current.intervalLareira = window.setInterval(() => {
+              playSomLareira();
+          }, 15000); 
+      }
+  
+      return () => {
+          clearInterval(estudoRef.current.intervalPag);
+          clearInterval(estudoRef.current.intervalLareira);
+          stopSomPaginas();
+          stopSomLareira();
+      };
+  }, [somAtivo, playSomPaginas, playSomLareira, stopSomPaginas, stopSomLareira]);
 
   return (
     <>

@@ -71,8 +71,8 @@
 
 .content-preview {
   flex: 1;
-  /* min-height: 100px;
-  max-height: 300px; */
+   /* min-height: 1000px; */
+  /* max-height: 300px; */
   border: 1px dashed #eaeaea;
   border-radius: 6px;
   padding: 8px;
@@ -250,15 +250,15 @@
 
   .content-preview {
     margin-bottom: 16px !important;
-    min-height: 200px !important;
-    max-height: none !important;
+    /* min-height: 200px !important;
+    max-height: none !important; */
     /* overflow-y: auto !important; */
   }
 
-  .card-side {
+  /* .card-side {
     min-height: 400px !important;
     max-height: none !important;
-  }
+  } */
 
   .card-sides-container {
     flex-direction: column !important;
