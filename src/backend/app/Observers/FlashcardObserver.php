@@ -8,22 +8,12 @@ class FlashcardObserver
 {
     protected $nivelService;
 
-    public function __construct(NivelCalculoService $nivelService)
+    public function __construct()
     {
-        $this->nivelService = $nivelService;
+        $this->nivelService = app(NivelCalculoService::class);
     }
-
-    public function created(Flashcard $flashcard)
-    {
-        $this->nivelService->atualizarNivelTopico($flashcard->topico_id);
-    }
-
+    
     public function updated(Flashcard $flashcard)
-    {
-        $this->nivelService->atualizarNivelTopico($flashcard->topico_id);
-    }
-
-    public function deleted(Flashcard $flashcard)
     {
         $this->nivelService->atualizarNivelTopico($flashcard->topico_id);
     }

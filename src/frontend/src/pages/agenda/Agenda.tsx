@@ -13,7 +13,14 @@ import AnimacaoSVG from '../../components/AnimacaoSVG';
 import API from '../../lib/api';
 import ThemeManager from '../../utils/ThemeManager';
 import '../../utils/css/variaveisCores.css';
+import { getUserProfile } from '../../lib/endpoints';
 
+interface UserProfile {
+  id: number;
+  name: string;
+  login: number; // A sequência de dias consecutivos
+  streak: number; // O total de dias no ano
+}
 
 interface Atividade {
   id: number;
@@ -53,9 +60,17 @@ export default function () {
   const [materias, setMaterias] = useState<Materia[]>([]);
   const [topicos, setTopicos] = useState<Topico[]>([]);
   const [menuAberto, setMenuAberto] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
   const toggleMenu = () => {
     setMenuAberto(!menuAberto);
   };
+  const [usuario, setUsuario] = useState<UserProfile>({
+  id: 0,
+  name: '',
+  login: 0,
+  streak: 0
+});
+
 
   const coresIniciais = (() => {
     try {
@@ -70,6 +85,20 @@ export default function () {
 
   const [coresMaterias, setCoresMaterias] = useState<{ [key: string]: string }>(coresIniciais);
   const [isCoresCarregadas, setIsCoresCarregadas] = useState(true);
+
+    useEffect(() => {
+    const carregarDadosDoUsuario = async () => {
+      try {
+        const dadosDoUsuario = await getUserProfile();
+        setUsuario(dadosDoUsuario);
+      } catch (error) {
+        console.error("Falha ao carregar o perfil do usuário:", error);
+        setErro("Não foi possível carregar os dados.");
+      }
+    };
+
+    carregarDadosDoUsuario();
+  }, []);
 
   useEffect(() => {
     const raw = localStorage.getItem('coresMaterias');
@@ -971,13 +1000,13 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
                 <IonCol className="colOfensiva1">
                   <div className="divOfensiva">
                     <IonIcon icon={flame} className="iconeFogo" />
-                    <h3 className="hOfensiva pDarkmode">116 dias</h3>
+                    <h3 className="hOfensiva p/fix 'usuario' is possibly 'null'.Darkmode">{usuario.login}</h3>
                     <p className="txtDescricao pOfensiva">Sequência de login</p>
                   </div>
                 </IonCol>
                 <IonCol className="colOfensiva2">
                   <div className="diasOfensiva">
-                    <h3 className="dias1 pDarkmode">214</h3>
+                    <h3 className="dias1 pDarkmode">{usuario.streak}</h3>
                     <h4 className="pDarkmode">/365</h4>
                   </div>
                   <IonRow className="barraA">
@@ -1011,13 +1040,13 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
                 <IonCol className="colOfensiva1">
                   <div className="divOfensiva">
                     <IonIcon icon={flame} className="iconeFogo" />
-                    <h3 className="hOfensiva pDarkmode">116 dias</h3>
+                    <h3 className="hOfensiva pDarkmode">{usuario.login} dias</h3>
                     <p className="txtDescricao pOfensiva">Sequência de login</p>
                   </div>
                 </IonCol>
                 <IonCol className="colOfensiva2">
                   <div className="diasOfensiva">
-                    <h3 className="dias1 pDarkmode">214</h3>
+                    <h3 className="dias1 pDarkmode">{usuario.streak}</h3>
                     <h4 className="pDarkmode">/365</h4>
                   </div>               
                   <IonRow className="barraA">

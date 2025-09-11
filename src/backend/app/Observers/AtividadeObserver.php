@@ -9,23 +9,15 @@ class AtividadeObserver
 {
     protected $nivelService;
 
-    public function __construct(NivelCalculoService $nivelService)
+    public function __construct()
     {
-        $this->nivelService = $nivelService;
+        $this->nivelService = app(NivelCalculoService::class);
     }
 
-    public function created(Atividade $atividade)
-    {
-        $this->nivelService->atualizarNivelTopico($atividade->topico_id);
-    }
 
     public function updated(Atividade $atividade)
     {
         $this->nivelService->atualizarNivelTopico($atividade->topico_id);
     }
 
-    public function deleted(Atividade $atividade)
-    {
-        $this->nivelService->atualizarNivelTopico($atividade->topico_id);
-    }
 }

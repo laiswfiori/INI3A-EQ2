@@ -50,6 +50,9 @@ class UserController extends Controller
         ]);
         
         $user = Auth::user();
+        if (!($user instanceof User)) {
+            return response()->json(['message' => 'Authentication error: Could not get user model.'], 500);
+        }
         $user->foto_perfil = $request->input('foto_perfil');
         $user->save();
 

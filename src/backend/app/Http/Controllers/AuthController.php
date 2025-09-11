@@ -21,14 +21,17 @@ class AuthController extends Controller
             'surname' => $request->surname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'streak' => 1,
-            'last_streak_update' => Carbon::today(),
+            'streak' => 0,
+            'login' => 1,
+            'last_login_update' => Carbon::now()->toDateString(),
+
         ]);
 
         $token = Auth::login($user);
 
         return $this->respondWithToken($token);
     }
+
     public function login(Request $request)
     {
         $this->validate($request, [
@@ -43,6 +46,17 @@ class AuthController extends Controller
         }
 
         return $this->respondWithToken($token);
+
+        $user = Auth::user();
+        if ($user) {
+            $hoje = Carbon::now()->toDateString();
+
+            if ($user && $user->last_login_update !== $hoje) {
+                $user->login += 1;
+                $user->last_login_update = $hoje;
+                $user->save();
+            }
+        }
     }
 
         public function handleGoogleCallback(Request $request)

@@ -25,13 +25,6 @@ export function validarTituloAtividade( titulo: string, atividadesDoTopico: Ativ
   return null;
 }
 
-export function validarDescricaoAtividade(descricao: string): string | null {
-  if (!descricao.trim()) {
-    return 'A descrição da atividade é obrigatória.';
-  }
-  return null;
-}
-
 export function validarTipoAtividade(tipo: string): string | null {
   if (!tipo.trim()) {
     return 'O tipo da atividade é obrigatório.';
@@ -62,7 +55,6 @@ export function validarCamposAtividade(
   const erros = [
     // A chamada para validar o título agora passa os argumentos necessários
     validarTituloAtividade(atividade.titulo, atividadesDoTopico, idAtividadeEditada),
-    validarDescricaoAtividade(atividade.descricao),
     validarTipoAtividade(atividade.tipo),
     validarDataEntrega(atividade.data_entrega),
   ].filter(Boolean); // Filtra os resultados nulos
@@ -126,7 +118,7 @@ type TopicoSimples = {
 // Validações para tópicos
 export function validarTituloTopico(
   titulo: string,
-  topicosDaMateria: TopicoSimples[],
+  topicosDaMateria: TopicoSimples[] = [],
   idTopicoEditado: number | string | null = null
 ): string | null {
   const tituloTrimmed = titulo.trim();
@@ -134,6 +126,9 @@ export function validarTituloTopico(
   if (!tituloTrimmed) {
     return 'O título do tópico é obrigatório.';
   }
+
+  // Protege contra undefined
+  if (!Array.isArray(topicosDaMateria)) return null;
 
   // Normaliza o título para a comparação: remove todos os espaços e converte para maiúsculo.
   const tituloNormalizado = tituloTrimmed.replace(/\s+/g, '').toUpperCase();
@@ -146,18 +141,10 @@ export function validarTituloTopico(
     return tituloExistenteNormalizado === tituloNormalizado;
   });
 
-  // Se um tópico com o mesmo título normalizado já existe E não é o tópico que está sendo editado
   if (topicoExistente && topicoExistente.id !== idTopicoEditado) {
     return 'Este tópico já existe nesta matéria.';
   }
 
-  return null;
-}
-
-export function validarDescricaoTopico(descricao: string): string | null {
-  if (!descricao.trim()) {
-    return 'A descrição do tópico é obrigatória.';
-  }
   return null;
 }
 
@@ -168,7 +155,6 @@ export function validarCamposTopico(
 ): string | null {
   const erros = [
     validarTituloTopico(topico.titulo, topicosDaMateria, idTopicoEditado),
-    validarDescricaoTopico(topico.descricao),
   ].filter(Boolean); // Filtra valores nulos
 
   if (erros.length > 0) return erros[0];

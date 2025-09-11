@@ -17,8 +17,10 @@ return new class extends Migration
             $table->string('email', 255)->unique(); 
             $table->string('password', 255);
             $table->longText('foto_perfil')->nullable();
-            $table->integer('streak')->default(1);
-            $table->date('last_streak_update')->after('streak');
+            $table->integer('streak')->default(0);
+            $table->date('last_streak_update')->nullable()->after('streak');
+            $table->integer('login')->default(1);
+            $table->date('last_login_update')->nullable()->after('login');
             $table->string('biography', 255)->nullable(); 
             
             $table->timestamps(); 

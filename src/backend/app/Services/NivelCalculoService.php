@@ -6,6 +6,9 @@ use App\Models\Topico;
 use App\Models\Materia;
 use App\Models\Atividade;
 use App\Models\Flashcard;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class NivelCalculoService
 {
@@ -24,6 +27,18 @@ class NivelCalculoService
         4 => 'difícil',
         5 => 'muito difícil',
     ];
+
+    public function atualizarStreakSeNecessario()
+    {
+        $user = Auth::user(); // Corrigido: pega o usuário autenticado
+        $hoje = Carbon::now()->toDateString();
+
+        if ($user && $user instanceof \Illuminate\Database\Eloquent\Model && $user->last_streak_update !== $hoje) {
+            $user->streak += 1;
+            $user->last_streak_update = $hoje;
+            $user->save();
+        }
+    }
 
     public function atualizarNivelTopico($topicoId)
     {
@@ -74,6 +89,7 @@ class NivelCalculoService
             $materia->dificuldade = $dificuldadeTexto;
             $materia->save();
         }
+        $this-> atualizarStreakSeNecessario();
     }
 
     public function recalcularTodosOsNiveis()
