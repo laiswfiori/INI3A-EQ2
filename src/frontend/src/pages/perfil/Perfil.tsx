@@ -146,7 +146,7 @@ const Perfil: React.FC = () => {
   }, []);
 
   const navEstudar = () => {
-    history.push('/estudo/estudo');  
+    history.replace('/estudo/estudo');  
   };
 
   const [mostrarGuia, setMostrarGuia] = useState(false);
@@ -160,7 +160,7 @@ const Perfil: React.FC = () => {
       if (!token) {
         setAuthError(true);
         setIsLoading(false);
-        history.push('/logincadastro/logincadastro');
+        history.replace('/logincadastro/logincadastro');
         return;
       }
       try {
@@ -176,7 +176,7 @@ const Perfil: React.FC = () => {
         if (error.message && error.message.includes('401')) {
           setAuthError(true);
           localStorage.removeItem('token');
-          history.push('/logincadastro/logincadastro');
+          history.replace('/logincadastro/logincadastro');
         } else {
           console.error('Erro ao buscar perfil:', error);
           setShowAlert({ show: true, message: 'Não foi possível carregar os dados do perfil.' });
@@ -336,7 +336,7 @@ const handleDiaToggle = (dia: string) => {
   const logout = () => {
     authLogout();
     localStorage.removeItem('token');
-    history.push('/logincadastro/logincadastro');
+    history.replace('/logincadastro/logincadastro');
   };
 
   const handleInputChange = (event: any) => {
@@ -406,7 +406,7 @@ const handleDiaToggle = (dia: string) => {
     try {
       await deleteUserAccount();
       localStorage.removeItem('token');
-      history.push('/logincadastro/logincadastro');
+      history.replace('/logincadastro/logincadastro');
       alert('Sua conta foi excluída com sucesso.');
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || 'Não foi possível excluir a conta.';

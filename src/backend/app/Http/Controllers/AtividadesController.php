@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Atividade;
+use \App\Models\Topico;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,13 @@ class AtividadesController extends Controller
             return response()->json(['message' => 'Usuário não autenticado.'], 401);
         }
 
-        $atividades = Atividade::all();
+        $usuarioId = Auth::id();
+        $topicoIds = Topico::whereHas('materia', function($q) use ($usuarioId) {
+            $q->where('usuario_id', $usuarioId);
+        })->pluck('id');
+
+
+        $atividades = Atividade::whereIn('topico_id', $topicoIds)->get();
 
         return response()->json($atividades);
     }

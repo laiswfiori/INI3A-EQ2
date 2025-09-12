@@ -28,46 +28,46 @@ const Header: React.FC = () => {
 
   // 4. MODIFICADO: A função isAuthenticated foi removida. Usaremos o 'user' do useAuth.
   const navHome = () => {
-    history.push('/pagInicial/home');
+    history.replace('/pagInicial/home');
   };
 
   const navAgenda = () => {
     if (user) { // MODIFICADO
-      history.push('/agenda/agenda');
+      history.replace('/agenda/agenda');
     } else {
-      history.push('/logincadastro/logincadastro');
+      history.replace('/logincadastro/logincadastro');
     }
   };
 
   const navFlashcards = () => {
     if (user) { // MODIFICADO
-      history.push('/flashcards/telainicialflashcards');
+      history.replace('/flashcards/telainicialflashcards');
     } else {
-      history.push('/logincadastro/logincadastro');
+      history.replace('/logincadastro/logincadastro');
     }
   };
 
   const navEstudo = () => {
     if (user) { // MODIFICADO
-      history.push('/estudo/estudo');
+      history.replace('/estudo/estudo');
     } else {
-      history.push('/logincadastro/logincadastro');
+      history.replace('/logincadastro/logincadastro');
     }
   };
 
   const navConteudos = () => {
     if (user) { // MODIFICADO
-      history.push('/conteudos/materias');
+      history.replace('/conteudos/materias');
     } else {
-      history.push('/logincadastro/logincadastro');
+      history.replace('/logincadastro/logincadastro');
     }
   };
 
   const navPerfil = () => {
     if (user) { // MODIFICADO
-      history.push('/perfil/perfil');
+      history.replace('/perfil/perfil');
     } else {
-      history.push('/logincadastro/logincadastro');
+      history.replace('/logincadastro/logincadastro');
     }
   };
 

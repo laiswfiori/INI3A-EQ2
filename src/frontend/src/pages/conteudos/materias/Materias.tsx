@@ -396,7 +396,7 @@ const Materias: React.FC = () => {
                         </IonRow>
                       </IonRow>
                       <IonRow className="contIrTopicos">
-                          <IonButton className="btnIrTopicos" onClick={() => history.push(`/materias/${materia.id}`)}>
+                          <IonButton className="btnIrTopicos" onClick={() => history.replace(`/materias/${materia.id}`)}>
                             Ir para tópicos
                             <IonIcon icon={arrowForward} className="setaMat" />
                           </IonButton>

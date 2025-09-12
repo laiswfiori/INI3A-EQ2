@@ -46,7 +46,7 @@ const Configuracoes: React.FC = () => {
   };
 
   const navHome = () => {
-    history.push('/pagInicial/home');
+    history.replace('/pagInicial/home');
   };
 
   // ✅ Atualizado: remove os dias desmarcados do planejamento
@@ -188,7 +188,7 @@ const Configuracoes: React.FC = () => {
       await saveAgendaConfiguracoes(payload);
       setShowAlert({ show: true, message: 'Planejamento salvo com sucesso!' });
 
-      history.push(isAuthenticated() ? '/perfil/perfil' : '/logincadastro/logincadastro');
+      history.replace(isAuthenticated() ? '/perfil/perfil' : '/logincadastro/logincadastro');
     } catch (error: any) {
       if (error.response) {
         try {

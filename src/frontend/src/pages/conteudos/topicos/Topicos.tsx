@@ -413,7 +413,7 @@ const Topicos: React.FC = () => {
                       />
                     </IonRow>
                     <IonRow className="contIrTopicos">
-                      <IonButton className="btnIrTopicos" onClick={() => history.push(`/topicos/${topico.id}`)}>
+                      <IonButton className="btnIrTopicos" onClick={() => history.replace(`/topicos/${topico.id}`)}>
                         Ir para atividades
                         <IonIcon icon={arrowForward} className="setaMat" />
                       </IonButton>
