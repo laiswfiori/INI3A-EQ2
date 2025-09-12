@@ -154,39 +154,39 @@ const Perfil: React.FC = () => {
     setMostrarGuia(!mostrarGuia);
   };
 
-  useEffect(() => {
-  const fetchUserProfile = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setAuthError(true);
-      setIsLoading(false);
-      history.push('/logincadastro/logincadastro');
-      return;
-    }
-    try {
-      const profileData = await getUserProfile();
-      setUserData(profileData);
-      setFormData(profileData); 
-      updateUser(profileData);
-      
-      if (profileData.google_id) {
-        setIsGoogleLogin(true);
-      }
-    } catch (error: any) {
-      if (error.message && error.message.includes('401')) {
+    useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
         setAuthError(true);
-        localStorage.removeItem('token');
+        setIsLoading(false);
         history.push('/logincadastro/logincadastro');
-      } else {
-        console.error('Erro ao buscar perfil:', error);
-        setShowAlert({ show: true, message: 'Não foi possível carregar os dados do perfil.' });
+        return;
       }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  fetchUserProfile();
-}, [history, updateUser]);
+      try {
+        const profileData = await getUserProfile();
+        setUserData(profileData);
+        setFormData(profileData);
+        updateUser(profileData);
+
+        if (profileData.google_id) {
+          setIsGoogleLogin(true);
+        }
+      } catch (error: any) {
+        if (error.message && error.message.includes('401')) {
+          setAuthError(true);
+          localStorage.removeItem('token');
+          history.push('/logincadastro/logincadastro');
+        } else {
+          console.error('Erro ao buscar perfil:', error);
+          setShowAlert({ show: true, message: 'Não foi possível carregar os dados do perfil.' });
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchUserProfile();
+  }, [history]); 
 
   useEffect(() => {
     const normalizarDiaBackendParaFrontend = (dia: string): string => {
