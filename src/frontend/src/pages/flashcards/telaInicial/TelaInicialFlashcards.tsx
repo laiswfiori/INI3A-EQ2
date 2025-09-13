@@ -89,6 +89,14 @@ const TelaInicialFlashcards: React.FC = () => {
     materia_id: null,
   });
 
+  const cleanContent = (htmlString) => {
+    let cleanedString = htmlString.replace(/<[^>]*>/g, '');
+
+    cleanedString = cleanedString.replace(/\s+/g, ' ').trim();
+    
+    return cleanedString;
+  };
+
   const handleInputChange = (field: keyof typeof novoTopico, value: string) => {
     setNovoTopico({ ...novoTopico, [field]: value });
   };
@@ -947,56 +955,55 @@ const setShowCardEditorAndInitialData = (
                 </IonButton>
 
                 {cardsTemp.length > 0 && (
-                  <div className="listaCardsPreview">
+                <div className="listaCardsPreview">
                     <h4>{flashcardIdParaEditar ? 'Cards existentes:' : 'Cards adicionados:'}</h4>
                     {cardsTemp.map((card, index) => (
-                      <div key={index} className="cardPreviewItem">
-                        <div className="cardPreviewContent">
-                          <IonRow className="rowRC">
-                            <h5>Card {index + 1}</h5>
-                            <IonCol className="colRC">
-                              <IonButton
-                                onClick={() => setShowCardEditorAndInitialData(true, card.conteudo_frente, card.conteudo_verso, index)}
-                                className="btnEditarCard"
-                              >
-                                Editar
-                              </IonButton>
-                              <IonButton
-                                onClick={() => removerCardTemp(index)}
-                                className="btnRemoverCard"
-                              >
-                                Remover
-                              </IonButton>
-                            </IonCol>
-                          </IonRow>
-                          <div className="cardPreviewSides">
-                            <div>
-                              <strong>Frente:</strong>
-                              {card.conteudo_frente.map((item, i) => (
-                                <div key={i}>
-                                  {item.tipo === 'texto' && <p>{item.valor}</p>}
-                                  {item.tipo === 'imagem' && item.valor && <img src={item.valor} alt="frente" className="image-preview-thumbnail" />}
-                                  {item.tipo === 'arquivo' && <p>Arquivo: {item.nome}</p>}
+                        <div key={index} className="cardPreviewItem">
+                            <div className="cardPreviewContent">
+                                <IonRow className="rowRC">
+                                    <h5>Card {index + 1}</h5>
+                                    <IonCol className="colRC">
+                                        <IonButton
+                                            onClick={() => setShowCardEditorAndInitialData(true, card.conteudo_frente, card.conteudo_verso, index)}
+                                            className="btnEditarCard"
+                                        >
+                                            Editar
+                                        </IonButton>
+                                        <IonButton
+                                            onClick={() => removerCardTemp(index)}
+                                            className="btnRemoverCard"
+                                        >
+                                            Remover
+                                        </IonButton>
+                                    </IonCol>
+                                </IonRow>
+                                <div className="cardPreviewSides">
+                                    <div>
+                                        <strong>Frente:</strong>
+                                        {card.conteudo_frente.map((item, i) => (
+                                            <div key={i}>
+                                                {item.tipo === 'texto' && <p>{cleanContent(item.valor)}</p>}
+                                                {item.tipo === 'imagem' && item.valor && <img src={item.valor} alt="frente" className="image-preview-thumbnail" />}
+                                                {item.tipo === 'arquivo' && <p>Arquivo: {item.nome}</p>}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div>
+                                        <strong>Verso:</strong>
+                                        {card.conteudo_verso.map((item, i) => (
+                                            <div key={i}>
+                                                {item.tipo === 'texto' && <p>{cleanContent(item.valor)}</p>}
+                                                {item.tipo === 'imagem' && item.valor && <img src={item.valor} alt="verso" className="image-preview-thumbnail" />}
+                                                {item.tipo === 'arquivo' && <p>Arquivo: {item.nome}</p>}
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                              ))}
                             </div>
-                            <div>
-                              <strong>Verso:</strong>
-                              {card.conteudo_verso.map((item, i) => (
-                                <div key={i}>
-                                  {item.tipo === 'texto' && <p>{item.valor}</p>}
-                                  {item.tipo === 'imagem' && item.valor && <img src={item.valor} alt="verso" className="image-preview-thumbnail" />}
-                                  {item.tipo === 'arquivo' && <p>Arquivo: {item.nome}</p>}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
                         </div>
-                      </div>
                     ))}
-                  </div>
-                )}
-
+                </div>
+            )}
                 <IonButton
                   expand="block"
                   className="btnSalvar bntSFlashcard"
