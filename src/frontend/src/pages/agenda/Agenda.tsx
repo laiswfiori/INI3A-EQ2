@@ -18,8 +18,8 @@ import { getUserProfile } from '../../lib/endpoints';
 interface UserProfile {
   id: number;
   name: string;
-  login: number; // A sequência de dias consecutivos
-  streak: number; // O total de dias no ano
+  login: number; 
+  streak: number; 
 }
 
 interface Atividade {
@@ -507,10 +507,38 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
   });
 };
 
+  const [agendaConfig, setAgendaConfig] = useState<any>(null);
+  const [carregandoAgenda, setCarregandoAgenda] = useState(true);
+
+  useEffect(() => {
+    const fetchAgendaConfig = async () => {
+      setCarregandoAgenda(true);
+      try {
+        const api = new API();
+        const response = await api.get('agendaConfiguracao');
+        setAgendaConfig(response.configuracao);
+      } catch (error) {
+        setAgendaConfig(null);
+      } finally {
+        setCarregandoAgenda(false);
+      }
+    };
+    fetchAgendaConfig();
+  }, []);
+
   return (
     <IonPage>
       <Header />
       <IonContent className="bodyAG">
+        {carregandoAgenda ? (
+          <IonRow className="rowAgenda"><IonSpinner name="dots" /></IonRow>
+        ) : (
+          !agendaConfig && (
+            <IonRow className="rowAgenda">
+              <h2 className="txtAgenda avisoAgenda">Você ainda não possui uma agenda configurada.</h2>
+            </IonRow>
+          )
+        )}
         <IonRow className="rowAgenda">
           <h1 className="txtAgenda pDarkmode">Calendário</h1>
         </IonRow>
