@@ -249,80 +249,117 @@ const Atividades: React.FC = () => {
     setNovaAtividade({ ...novaAtividade, [field]: value });
   };
 
-  const handleSalvar = async () => {
-    // Pega o ID da atividade apenas se estiver no modo de edição
-    const idAtividadeEditada = modoModal === 'editar' ? atividadeSelecionada?.id : null;
+const handleSalvar = async () => {
+  // utilitário: recebe "YYYY-MM-DD" (ou outro formato) e retorna uma string "YYYY-MM-DD" com +1 dia
+  const addOneDayToDateString = (dateStr: string | undefined): string | undefined => {
+    if (!dateStr) return undefined;
 
-    // CORREÇÃO AQUI: Passamos a lista de atividades (que deve estar no seu estado)
-    // e o ID da atividade em edição para a função de validação.
-    const erro = validarCamposAtividade(novaAtividade, atividades, idAtividadeEditada);
+    const ymdRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (ymdRegex.test(dateStr)) {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      const d = new Date(year, month - 1, day); // cria como local date
+      d.setDate(d.getDate() + 1); // soma 1 dia
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const da = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${da}`;
+    }
 
-    if (erro) {
-      alert(erro);
+    // fallback: tenta criar Date e somar 1 dia (menos robusto para strings ambíguas)
+    const d = new Date(dateStr);
+    if (Number.isNaN(d.getTime())) return undefined;
+    d.setDate(d.getDate() + 1);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const da = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${da}`;
+  };
+
+  // Pega o ID da atividade apenas se estiver no modo de edição
+  const idAtividadeEditada = modoModal === 'editar' ? atividadeSelecionada?.id : null;
+
+  // valida campos (sua função existente)
+  const erro = validarCamposAtividade(novaAtividade, atividades, idAtividadeEditada);
+
+  if (erro) {
+    alert(erro);
+    return;
+  }
+
+  // validação de data (usando +1 dia para evitar o problema de timezone)
+  if (novaAtividade.data_entrega) {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const dataEntregaAjustadaStr = addOneDayToDateString(novaAtividade.data_entrega);
+    if (!dataEntregaAjustadaStr) {
+      alert('Formato de data inválido.');
       return;
     }
+    const [ano, mes, dia] = dataEntregaAjustadaStr.split('-').map(Number);
+    const dataEntrega = new Date(ano, mes - 1, dia);
+    dataEntrega.setHours(0, 0, 0, 0);
 
-    if (novaAtividade.data_entrega) {
-      const hoje = new Date();
-      hoje.setHours(0, 0, 0, 0);
-      const dataEntrega = new Date(novaAtividade.data_entrega);
-
-      if (dataEntrega < hoje) {
-        alert('A data de entrega deve ser hoje ou uma data futura.');
-        return;
-      }
+    if (dataEntrega < hoje) {
+      alert('A data de entrega deve ser hoje ou uma data futura.');
+      return;
     }
+  }
 
-    const conteudoFinal = textoTemp.trim()
-      ? [...novaAtividade.conteudo, { tipo: 'texto', valor: textoTemp.trim() }]
-      : novaAtividade.conteudo;
+  const conteudoFinal = textoTemp.trim()
+    ? [...novaAtividade.conteudo, { tipo: 'texto', valor: textoTemp.trim() }]
+    : novaAtividade.conteudo;
 
-    // Prepara o objeto final para enviar à API
-    const atividadeParaSalvar = {
-      ...novaAtividade,
-      conteudo: conteudoFinal,
-      data_entrega: novaAtividade.data_entrega && novaAtividade.data_entrega.trim() !== ''
-        ? novaAtividade.data_entrega
-        : undefined,
-    };
+  // prepara data_entrega para envio: já ajustada (+1 dia) ou undefined
+  const dataEntregaParaSalvar = novaAtividade.data_entrega && novaAtividade.data_entrega.trim() !== ''
+    ? addOneDayToDateString(novaAtividade.data_entrega)
+    : undefined;
 
-    try {
-      const api = new API();
-      const endpoint = modoModal === 'editar'
-        ? `atividades/${atividadeSelecionada?.id}`
-        : `atividades`;
-
-      const method = modoModal === 'editar' ? api.put : api.post;
-
-      const data = await method.call(api, endpoint, atividadeParaSalvar);
-
-      if (modoModal === 'editar') {
-        setAtividades(prev =>
-          prev.map(a => a.id === atividadeSelecionada?.id ? data : a)
-        );
-      } else {
-        setAtividades(prev => [...prev, data]);
-      }
-
-      // Limpa os campos do formulário
-      setTextoTemp('');
-      setNovaAtividade({
-        titulo: '',
-        descricao: '',
-        topico_id: novaAtividade.topico_id,
-        status: 'não iniciado',
-        tipo: '',
-        conteudo: [],
-        data_entrega: '',
-      });
-
-      setShowModal(false);
-      setShowPopover(false);
-    } catch (error: any) {
-      console.error(`Erro ao ${modoModal === 'editar' ? 'editar' : 'adicionar'} atividade:`, error);
-      alert(error?.response?.data?.message || 'Erro ao salvar atividade');
-    }
+  // Prepara o objeto final para enviar à API
+  const atividadeParaSalvar = {
+    ...novaAtividade,
+    conteudo: conteudoFinal,
+    data_entrega: dataEntregaParaSalvar,
   };
+
+  try {
+    const api = new API();
+    const endpoint = modoModal === 'editar'
+      ? `atividades/${atividadeSelecionada?.id}`
+      : `atividades`;
+
+    const method = modoModal === 'editar' ? api.put : api.post;
+
+    const data = await method.call(api, endpoint, atividadeParaSalvar);
+
+    if (modoModal === 'editar') {
+      setAtividades(prev =>
+        prev.map(a => a.id === atividadeSelecionada?.id ? data : a)
+      );
+    } else {
+      setAtividades(prev => [...prev, data]);
+    }
+
+    // Limpa os campos do formulário
+    setTextoTemp('');
+    setNovaAtividade({
+      titulo: '',
+      descricao: '',
+      topico_id: novaAtividade.topico_id,
+      status: 'não iniciado',
+      tipo: '',
+      conteudo: [],
+      data_entrega: '',
+    });
+
+    setShowModal(false);
+    setShowPopover(false);
+  } catch (error: any) {
+    console.error(`Erro ao ${modoModal === 'editar' ? 'editar' : 'adicionar'} atividade:`, error);
+    alert(error?.response?.data?.message || 'Erro ao salvar atividade');
+  }
+};
+
   
   const handleEditar = () => {
     if (atividadeSelecionada) {
