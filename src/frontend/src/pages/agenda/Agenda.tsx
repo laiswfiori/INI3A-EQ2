@@ -1038,7 +1038,7 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
                     <h4 className="pDarkmode">/365</h4>
                   </div>
                   <IonRow className="barraA">
-                    <div className="barraStatusA" style={{ width: `${50}%` }}></div>
+                    <div className="barraStatusA" style={{ width: `${(usuario.streak / 365) * 100}%` }}></div>
                   </IonRow>
                   <div className="date-nav-and-indicators">
                     <div className="date-nav-container">
