@@ -152,7 +152,11 @@ const Header: React.FC = () => {
             <div>
               <IonTabButton className="azul" tab="perfil" onClick={navPerfil}>
                 <IonAvatar className={`avatar-header icones ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}>
-                  <img src={user?.foto_perfil || personCircle} alt="Perfil" className={`icones ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`} />
+                  {user?.foto_perfil ? (
+                    <img src={user.foto_perfil} alt="Perfil" />
+                  ) : (
+                    <IonIcon icon={personCircle} className={`icones ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`} />
+                  )}
                 </IonAvatar>
                 <IonLabel className={`iconesTxt ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}>Perfil</IonLabel>
               </IonTabButton>
@@ -240,9 +244,13 @@ const Header: React.FC = () => {
                   <IonIcon icon={documentText} className={`iconesMobile ${rotaMateriasAtiva ? 'ativo' : ''}`} />
                   <IonLabel className={`iconesTxt ${rotaMateriasAtiva ? 'ativo' : ''}`}>Conteúdos</IonLabel>
                 </div>
-                <div className="menu2" onClick={navPerfil}>
+               <div className="menu2" onClick={navPerfil}>
                   <IonAvatar className="avatar-header-mobile">
-                     <img src={user?.foto_perfil || personCircle} alt="Perfil" />
+                    {user?.foto_perfil ? (
+                      <img src={user.foto_perfil} alt="Perfil" />
+                    ) : (
+                      <IonIcon icon={personCircle} />
+                    )}
                   </IonAvatar>
                   <IonLabel className={`iconesTxt ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}>Perfil</IonLabel>
                 </div>

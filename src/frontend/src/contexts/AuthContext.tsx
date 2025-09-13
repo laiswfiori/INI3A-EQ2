@@ -36,9 +36,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const token = localStorage.getItem('token'); 
     if (token) {
       try {
-        // MODIFICADO: Corrigida a rota para a que existe no seu backend
-        const userData = await api.get('api/profile'); 
-        setUser(userData);
+        const response = await api.get('api/profile'); 
+        setUser(response.user);
       } catch (error) {
         console.error('Falha ao buscar usuário, token inválido?', error);
         setUser(null);

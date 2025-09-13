@@ -12,7 +12,7 @@
 }
 
 .ladoPerfil {
-  position: relative; /* Ativa o z-index */
+  position: relative; 
   z-index: 20; 
   grid-column-start: 1;
   grid-column-end: 2;
@@ -20,7 +20,7 @@
   grid-row-end: 2;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;   
+  align-items: center; /* <-- ALTERE DE 'flex-start' PARA 'center' */
   height: 100%;
 }
 
@@ -47,6 +47,13 @@
 #img {
   position: absolute;
   top: 0;
+  width: 100%;
+  padding: 5%;
+  display: flex;
+  flex-direction: column; /* <-- ADICIONE ESTA LINHA */
+  align-items: center;   
+  justify-content: center;   
+  height: fit-content;
 }
 
 #linhaDivisora {
@@ -59,7 +66,6 @@
   }
   
   #iconePerfil {
-    align-self: flex-start;
     font-size: 10rem;
     color: white;
     margin: 0;
@@ -360,11 +366,17 @@ ion-input.inputBioM {
 }
 
 .avatar-header {
-  width: 50px;
-  height: 50px;
+  width: 47px;
+  height: 47px;
   margin-bottom: 2px; 
   color: white !important;
   --color: white !important;
+}
+
+.avatar-header ion-icon {
+  font-size: 100%; /* Faz o ícone preencher o avatar de 32x32 */
+  width: 100%; /* Garante que o ícone ocupe todo o espaço */
+  height: 100%; /* Garante que o ícone ocupe todo o espaço */
 }
 
 ion-avatar.avatar-header {
@@ -374,11 +386,17 @@ ion-avatar.avatar-header {
 }
 
 .avatar-header-mobile {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   margin-bottom: 2px; 
+  color: white;
 }
 
+.avatar-header-mobile ion-icon {
+  font-size: 100%; /* Faz o ícone preencher o avatar de 32x32 */
+  width: 100%; /* Garante que o ícone ocupe todo o espaço */
+  height: 100%; /* Garante que o ícone ocupe todo o espaço */
+}
 
 ion-tab-button[tab="perfil"]::part(native) {
   display: flex;
