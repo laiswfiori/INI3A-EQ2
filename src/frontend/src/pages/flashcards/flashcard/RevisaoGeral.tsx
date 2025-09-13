@@ -258,7 +258,7 @@ const RevisaoGeral: React.FC = () => {
 
     // Navega para a página de relatório
     const timeStats = calculateTimeStats();
-    history.push('/flashcards/relatorio', {
+    history.replace('/flashcards/relatorio', {
       respostas: novasRespostas.map(r => r.nivel),
       // CORREÇÃO 4: Passa a variável correta com todas as respostas
       cardsComRespostas: cardsAtualizados,

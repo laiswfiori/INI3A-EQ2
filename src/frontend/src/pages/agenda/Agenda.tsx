@@ -840,7 +840,7 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
         <IonRow className="rowIrMat">
           <p className="pDarkmode addMaisMats">Quer adicionar mais matérias?</p>
           <div className="contIrMat" onClick={(e) => {  
-            history.push(`/perfil/perfil`);
+            history.replace(`/perfil/perfil`);
           }}>
             <IonIcon icon={arrowForward} className="iconesIrMat" />
             <IonIcon icon={settings} className="iconesIrMat" />

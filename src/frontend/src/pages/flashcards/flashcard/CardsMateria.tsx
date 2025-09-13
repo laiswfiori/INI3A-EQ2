@@ -225,7 +225,7 @@ const CardsMateria: React.FC = () => {
         setCurrentCardIndex(currentCardIndex + 1);
         setMostrarVerso(false);
       } else {
-        history.push('/flashcards/relatorio', {
+        history.replace('/flashcards/relatorio', {
           respostas: novasRespostas,
           cardsComRespostas: cardsAtualizados,
           nomeDeck: titulo,

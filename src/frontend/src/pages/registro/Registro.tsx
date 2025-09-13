@@ -68,7 +68,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
       const data = await loginWithGoogle(googleResponse.credential);
       if (data && data.access_token) {
         localStorage.setItem('token', data.access_token);
-        history.push('/pagInicial/home');
+        history.replace('/pagInicial/home');
         window.location.reload();
       } else {
         throw new Error("A resposta do servidor não continha um token de acesso.");
@@ -105,7 +105,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
       const data = await registerUser(novoUsuario);
       if (data && data.access_token) {
         localStorage.setItem('token', data.access_token);
-        history.push('/configuracoes/configuracoes');
+        history.replace('/configuracoes/configuracoes');
         window.location.reload();
       }
     } catch (error: any) {
@@ -119,7 +119,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
   return (
     <div id="body">
       <div className="cadastro-container">
-        <IonRow className="contVoltar" onClick={() => history.push('/pagInicial/home')}>
+        <IonRow className="contVoltar" onClick={() => history.replace('/pagInicial/home')}>
           <IonIcon icon={returnDownBack} className="voltar" />
         </IonRow>
         <div className="div1">

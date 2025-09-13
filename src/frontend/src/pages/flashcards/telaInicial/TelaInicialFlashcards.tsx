@@ -307,7 +307,7 @@ const filtrarFlashcardsDoUsuario = (
   };
 
   const estudarTopico = (topicoId: number) => {
-    history.push(`/flashcards/estudar/${topicoId}`);
+    history.replace(`/flashcards/estudar/${topicoId}`);
   };
 
 const handleSalvarOuAtualizarFlashcard = async (): Promise<void> => {
@@ -563,7 +563,7 @@ const setShowCardEditorAndInitialData = (
               <p className="txtGeral txtMobileRev pDarkmode">Revisão do dia!</p>
               <IonButton className="revisaoGeral" onClick={() => {
                   playSomIniciar();   
-                  history.push('/flashcard/revisaoGeral');
+                  history.replace('/flashcard/revisaoGeral');
                 }}>
                 <span className="textIniciar">Iniciar</span>
                 <span> <svg  className="svgIniciar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 15" fill="none">
@@ -753,7 +753,7 @@ const setShowCardEditorAndInitialData = (
                           onClick={(e) => {
                             e.stopPropagation();
                             playSomIniciar();   
-                            history.push(`/flashcard/materia/${materia.id}`);
+                            history.replace(`/flashcard/materia/${materia.id}`);
                           }}
                         >
                           Estudar
@@ -835,7 +835,7 @@ const setShowCardEditorAndInitialData = (
                                           <div className="grupoBotoesFlashcard">
                                             <IonButton onClick={() => {
                                               playSomIniciar();
-                                              history.push(`/flashcard/${flashcard.id}`);
+                                              history.replace(`/flashcard/${flashcard.id}`);
                                             }}
                                             className="btnFlash btnEstudar pDarkmode">
                                               <IonIcon icon={flash} className="iconesOpFlash btnEstudar" />

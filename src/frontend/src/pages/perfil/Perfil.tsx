@@ -146,7 +146,7 @@ const Perfil: React.FC = () => {
   }, []);
 
   const navEstudar = () => {
-    history.push('/estudo/estudo');  
+    history.replace('/estudo/estudo');  
   };
 
   const [mostrarGuia, setMostrarGuia] = useState(false);
@@ -154,39 +154,39 @@ const Perfil: React.FC = () => {
     setMostrarGuia(!mostrarGuia);
   };
 
-  useEffect(() => {
-  const fetchUserProfile = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setAuthError(true);
-      setIsLoading(false);
-      history.push('/logincadastro/logincadastro');
-      return;
-    }
-    try {
-      const profileData = await getUserProfile();
-      setUserData(profileData);
-      setFormData(profileData); 
-      updateUser(profileData);
-      
-      if (profileData.google_id) {
-        setIsGoogleLogin(true);
-      }
-    } catch (error: any) {
-      if (error.message && error.message.includes('401')) {
+    useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
         setAuthError(true);
-        localStorage.removeItem('token');
-        history.push('/logincadastro/logincadastro');
-      } else {
-        console.error('Erro ao buscar perfil:', error);
-        setShowAlert({ show: true, message: 'Não foi possível carregar os dados do perfil.' });
+        setIsLoading(false);
+        history.replace('/logincadastro/logincadastro');
+        return;
       }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  fetchUserProfile();
-}, [history, updateUser]);
+      try {
+        const profileData = await getUserProfile();
+        setUserData(profileData);
+        setFormData(profileData);
+        updateUser(profileData);
+
+        if (profileData.google_id) {
+          setIsGoogleLogin(true);
+        }
+      } catch (error: any) {
+        if (error.message && error.message.includes('401')) {
+          setAuthError(true);
+          localStorage.removeItem('token');
+          history.replace('/logincadastro/logincadastro');
+        } else {
+          console.error('Erro ao buscar perfil:', error);
+          setShowAlert({ show: true, message: 'Não foi possível carregar os dados do perfil.' });
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchUserProfile();
+  }, [history]); 
 
   useEffect(() => {
     const normalizarDiaBackendParaFrontend = (dia: string): string => {
@@ -336,7 +336,7 @@ const handleDiaToggle = (dia: string) => {
   const logout = () => {
     authLogout();
     localStorage.removeItem('token');
-    history.push('/logincadastro/logincadastro');
+    history.replace('/logincadastro/logincadastro');
   };
 
   const handleInputChange = (event: any) => {
@@ -406,7 +406,7 @@ const handleDiaToggle = (dia: string) => {
     try {
       await deleteUserAccount();
       localStorage.removeItem('token');
-      history.push('/logincadastro/logincadastro');
+      history.replace('/logincadastro/logincadastro');
       alert('Sua conta foi excluída com sucesso.');
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || 'Não foi possível excluir a conta.';

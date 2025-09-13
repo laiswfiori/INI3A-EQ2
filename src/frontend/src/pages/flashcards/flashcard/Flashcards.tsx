@@ -221,7 +221,7 @@ const Flashcards: React.FC = () => {
       timeRecords: updatedTimeRecords
     };
   
-    history.push('/flashcards/relatorio', {
+    history.replace('/flashcards/relatorio', {
       respostas: novasRespostas,
       cardsComRespostas: cardsAtualizados,
       nomeDeck: tituloDeck,

@@ -16,4 +16,9 @@ class Topico extends Model
     ];
     protected $primaryKey = 'id';
 
+    public function materia()
+    {
+        return $this->belongsTo(Materia::class, 'materia_id');
+    }
+
 }

@@ -562,7 +562,7 @@ const removerItemConteudo = (index: number) => {
                           onClick={async () => {
                             playSomIniciar();
                             await alterarStatus(atividade, 'em andamento');
-                            history.push(`/atividades/${atividade.id}`);
+                            history.replace(`/atividades/${atividade.id}`);
                           }}
                         >
                           <IonIcon icon={flash} className="iconesPopover" id="raio" />
@@ -589,7 +589,7 @@ const removerItemConteudo = (index: number) => {
                             expand="block"
                             className="btnIC"
                             id="btnVer"
-                            onClick={() => history.push(`/atividades/${atividade.id}`)}
+                            onClick={() => history.replace(`/atividades/${atividade.id}`)}
                           >
                             <IonIcon icon={arrowForward} className="iconesPopover" id="ver" />
                             Ver
@@ -602,7 +602,7 @@ const removerItemConteudo = (index: number) => {
                           expand="block"
                           className="btnIC"
                           id="btnVer"
-                          onClick={() => history.push(`/atividades/${atividade.id}`)}
+                          onClick={() => history.replace(`/atividades/${atividade.id}`)}
                         >
                           <IonIcon icon={arrowForward} className="iconesPopover" id="ver" />
                           Ver

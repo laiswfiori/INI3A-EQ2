@@ -74,7 +74,7 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
       if (data && data.access_token) {
         console.log('Usuário logado com sucesso:', data);
         localStorage.setItem('token', data.access_token);
-        history.push('/pagInicial/home');
+        history.replace('/pagInicial/home');
         window.location.reload();
       } else {
         setErro('Credenciais inválidas.');
@@ -93,7 +93,7 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
       if (data && data.access_token) {
         console.log('Usuário logado/cadastrado com sucesso via Google:', data);
         localStorage.setItem('token', data.access_token);
-        history.push('/pagInicial/home');
+        history.replace('/pagInicial/home');
         window.location.reload();
       } else {
         throw new Error("A resposta do servidor não continha um token de acesso.");
@@ -123,7 +123,7 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
     <IonPage>
       <div id="bodyLogin">
         <div className="loginContainer">
-          <IonRow className="contVoltar" onClick={() => history.push('/pagInicial/home')}>
+          <IonRow className="contVoltar" onClick={() => history.replace('/pagInicial/home')}>
             <IonIcon icon={returnDownBack} className="voltar1" />
           </IonRow>
           <div className="div11">
@@ -182,7 +182,7 @@ const Login: React.FC<LoginProps> = ({ goToCadastro }) => {
               </ul>
             )}
 
-            <h3 className="h33 obs2" onClick={() => history.push('/senha/confirmar')}>Esqueci minha senha</h3>
+            <h3 className="h33 obs2" onClick={() => history.replace('/senha/confirmar')}>Esqueci minha senha</h3>
             <IonButton className="btnEntrar" onClick={handleLogar} disabled={!formValid}>
               <h3 className='h33'>Entrar</h3>
             </IonButton>
