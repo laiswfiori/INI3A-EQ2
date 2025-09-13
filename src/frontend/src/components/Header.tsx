@@ -49,7 +49,7 @@ const Header: React.FC = () => {
 
   const navEstudo = () => {
     if (user) { // MODIFICADO
-      history.replace('/estudo/estudo');
+      history.push('/estudo/estudo');
     } else {
       history.replace('/logincadastro/logincadastro');
     }
