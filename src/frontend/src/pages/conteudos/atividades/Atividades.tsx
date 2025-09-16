@@ -499,7 +499,15 @@ const removerItemConteudo = (index: number) => {
       <IonContent className="bodyA">
         <h1 className="titulo titDarkMode">Atividades</h1>
         <div className="linhaHorizontal"></div>
-        <IonRow className="contVoltarT"  onClick={() => history.goBack()}>
+        <IonRow
+          className="contVoltarT"
+          onClick={() => {
+            // Busca o topico atual pelo id da URL
+            const topicoAtual = topicos.find(t => t.id === Number(id));
+            const materiaId = topicoAtual ? topicoAtual.materia_id : '';
+            history.push('/materias/' + materiaId);
+          }}
+        >
           <IonIcon icon={returnDownBack} className="voltarT pDarkmode"/>
           <p className="txtVoltarT pDarkmode">Voltar para tópicos</p>
         </IonRow>

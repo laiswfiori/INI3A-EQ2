@@ -32,11 +32,14 @@ class NivelCalculoService
     {
         $user = Auth::user(); // Corrigido: pega o usuário autenticado
         $hoje = Carbon::now()->toDateString();
+        $ontem = Carbon::yesterday()->toDateString();
 
-        if ($user && $user instanceof \Illuminate\Database\Eloquent\Model && $user->last_streak_update !== $hoje) {
+        if ($user && $user instanceof \Illuminate\Database\Eloquent\Model && ($user->last_streak_update == $hoje || $user->last_streak_update == $ontem)) {
             $user->streak += 1;
             $user->last_streak_update = $hoje;
             $user->save();
+        } else {
+            $user->streak = 0;
         }
     }
 

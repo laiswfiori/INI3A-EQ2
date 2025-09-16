@@ -323,9 +323,14 @@ const Topicos: React.FC = () => {
       <IonContent className="bodyT">
         <h1 className="titulo titDarkMode">Tópicos</h1>
         <div className="linhaHorizontal"></div>
-        <IonRow className="contVoltarT"  onClick={() => history.goBack()}>
-            <IonIcon icon={returnDownBack} className="voltarT pDarkmode"/>
-            <p className="txtVoltarT pDarkmode">Voltar para matérias</p>
+        <IonRow
+          className="contVoltarT"
+          onClick={() => {
+            history.push(`/conteudos/materias`);
+          }}
+        >
+          <IonIcon icon={returnDownBack} className="voltarT pDarkmode"/>
+          <p className="txtVoltarT pDarkmode">Voltar para matérias</p>
         </IonRow>
 
         {loading ? (

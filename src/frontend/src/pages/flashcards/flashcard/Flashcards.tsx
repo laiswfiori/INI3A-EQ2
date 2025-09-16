@@ -52,6 +52,34 @@ const Flashcards: React.FC = () => {
 
   const { playSomRespCerta, playSomRespErrada } = useSoundPlayer();
 
+  // Função para iniciar o timer de um card
+  const startCardTimer = () => {
+    startTimeRef.current = new Date();
+    setCurrentTime(0);
+    
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    
+    timerRef.current = setInterval(() => {
+      setCurrentTime(prev => prev + 1);
+    }, 1000);
+  };
+
+  // Função para parar o timer e calcular o tempo gasto
+  const stopCardTimer = (): number => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+
+    if (!startTimeRef.current) return 0;
+    
+    const now = new Date();
+    const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
+    return timeSpent;
+  };
+
   useEffect(() => {
     const fetchCards = async () => {
       if (!isIdValido) return;
@@ -68,6 +96,11 @@ const Flashcards: React.FC = () => {
         setRespostas([]);
         setTimeRecords([]);
         setCurrentTime(0);
+        
+        // Inicia o timer para o primeiro card após carregar
+        if (cardsDoFlash.length > 0) {
+          setTimeout(() => startCardTimer(), 100);
+        }
       } catch (err) {
         console.error('Erro ao carregar flashcard ou cards:', err);
       }
@@ -76,43 +109,46 @@ const Flashcards: React.FC = () => {
     fetchCards();
   }, [flashcardId]);
 
+  // Effect para mudança de card
   useEffect(() => {
-    if (cards.length > 0) {
-      if (startTimeRef.current && currentCardIndex > 0) {
-        const now = new Date();
-        const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
-        
-        const newRecord: TimeRecord = {
-          cardId: cards[currentCardIndex - 1]?.id,
-          timeSpent,
-          timestamp: now
-        };
-        
-        setTimeRecords(prev => [...prev, newRecord]);
-      }
+    if (cards.length === 0) return;
 
-      startTimeRef.current = new Date();
-      setCurrentTime(0);
+    // Para o timer do card anterior e salva o tempo se não for o primeiro card
+    if (currentCardIndex > 0) {
+      const timeSpent = stopCardTimer();
       
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
+      const newRecord: TimeRecord = {
+        cardId: cards[currentCardIndex - 1]?.id,
+        timeSpent,
+        timestamp: new Date()
+      };
       
-      timerRef.current = setInterval(() => {
-        setCurrentTime(prev => prev + 1);
-      }, 1000);
+      setTimeRecords(prev => [...prev, newRecord]);
     }
 
+    // Inicia o timer para o novo card
+    setTimeout(() => startCardTimer(), 100);
+    
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
     };
-  }, [currentCardIndex, cards]);
+  }, [currentCardIndex]);
 
+  // Effect para resetar o verso quando muda de card
   useEffect(() => {
     setMostrarVerso(false);
   }, [currentCardIndex]);
+
+  // Cleanup do timer quando o componente desmonta
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -168,27 +204,24 @@ const Flashcards: React.FC = () => {
     localStorage.setItem('flashcards_respostas', JSON.stringify(novasRespostasAcumuladas));
     localStorage.setItem('flashcards_totalFeitos', String(novasRespostasAcumuladas.length));
   
+    // Se não é o último card, vai para o próximo
     if (currentCardIndex + 1 < cards.length) {
       setCurrentCardIndex(currentCardIndex + 1);
       setMostrarVerso(false);
       return;
     }
 
-    let updatedTimeRecords = timeRecords;
-    if (startTimeRef.current) {
-      const now = new Date();
-      const timeSpent = (now.getTime() - startTimeRef.current.getTime()) / 1000;
+    // É o último card - para o timer e calcula o tempo final
+    const finalTimeSpent = stopCardTimer();
+    const finalTimeRecord: TimeRecord = {
+      cardId: cards[currentCardIndex]?.id,
+      timeSpent: finalTimeSpent,
+      timestamp: new Date()
+    };
+    
+    const updatedTimeRecords = [...timeRecords, finalTimeRecord];
   
-      const newRecord: TimeRecord = {
-        cardId: cards[currentCardIndex]?.id,
-        timeSpent,
-        timestamp: now
-      };
-  
-      updatedTimeRecords = [...timeRecords, newRecord];
-      setTimeRecords(updatedTimeRecords);
-    }
-  
+    // Calcula o nível final do flashcard
     const total = cardsAtualizados.reduce((acc, c) => {
       switch (c.nivelResposta) {
         case 'muito fácil': return acc + 1;
@@ -213,6 +246,7 @@ const Flashcards: React.FC = () => {
       console.error('Erro ao salvar nível geral do flashcard:', err);
     }
   
+    // Calcula as estatísticas finais de tempo
     const timeStats = {
       totalTime: updatedTimeRecords.reduce((sum, r) => sum + r.timeSpent, 0),
       averageTime: updatedTimeRecords.length > 0
@@ -221,6 +255,7 @@ const Flashcards: React.FC = () => {
       timeRecords: updatedTimeRecords
     };
   
+    // Navega para o relatório
     history.replace('/flashcards/relatorio', {
       respostas: novasRespostas,
       cardsComRespostas: cardsAtualizados,

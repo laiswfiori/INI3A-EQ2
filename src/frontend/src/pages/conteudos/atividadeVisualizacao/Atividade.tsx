@@ -12,6 +12,7 @@ import '../../../utils/css/variaveisCores.css';
 
 interface Atividade {
   id: number;
+  topico_id: number; // <-- Adicione este campo!
   titulo: string;
   descricao: string;
   conteudo: { tipo: 'texto' | 'imagem' | 'arquivo', valor: string, nome?: string }[];
@@ -112,9 +113,13 @@ const Atividade: React.FC = () => {
     <IonPage className="pagina">
       <Header />
       <IonContent className="bodyAV">
-        <IonRow className="contVoltar" onClick={() => history.goBack()}>
-          <IonIcon icon={returnDownBack} className="voltarAtividades" />
-          <p className="txtVoltarAtividades pDarkmode">Voltar para atividades</p>
+        <IonRow
+          className="contVoltar"
+          onClick={() => history.replace(`/topicos/${atividade?.topico_id}`)}
+          style={{ cursor: 'pointer', alignItems: 'center' }}
+        >
+          <IonIcon icon={returnDownBack} className="voltarT pDarkmode"/>
+          <p className="txtVoltarT pDarkmode">Voltar para atividades</p>
         </IonRow>
 
         {loading ? (
