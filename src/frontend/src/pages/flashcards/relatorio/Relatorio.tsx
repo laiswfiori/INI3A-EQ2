@@ -563,6 +563,14 @@ const gerarRelatorio = async () => {
     </div>
   );
 
+  const cleanContent = (htmlString) => {
+    let cleanedString = htmlString.replace(/<[^>]*>/g, '');
+
+    cleanedString = cleanedString.replace(/\s+/g, ' ').trim();
+    
+    return cleanedString;
+  };
+
   const renderCardContent = (card: any) => {
     const primeiroTexto = card.conteudo_frente.find((item: ConteudoItem) => 
       item.tipo === 'texto' && item.valor.trim() !== ''
@@ -576,9 +584,11 @@ const gerarRelatorio = async () => {
       return <img src={primeiraImagem.valor} alt="preview" className="card-imagem" />;
     }
     if (primeiroTexto) {
-      const displayContent = primeiroTexto.valor.length > 50 ? 
-        primeiroTexto.valor.substring(0, 47) + '...' : 
-        primeiroTexto.valor;
+       const textoLimpo = cleanContent(primeiroTexto.valor);
+
+      const displayContent = textoLimpo.length > 50 ? 
+        textoLimpo.substring(0, 47) + '...' : 
+        textoLimpo;
       return <p className="card-texto">{displayContent}</p>;
     }
     return <p className="card-sem-conteudo">[Sem conteúdo para exibir]</p>;
@@ -611,7 +621,8 @@ const gerarRelatorio = async () => {
   pdfUrl: string;
   onClose: () => void;
   onDownload: () => void;
-}) => {
+  }) => {
+
   return (
     <div className="modal-overlay">
       <div className="modal-content">
@@ -792,7 +803,6 @@ const gerarRelatorio = async () => {
                 <h2 className="titulo-grafico pDarkmode">Detalhes por card</h2>
               </IonCol>
 
-              {/* Bloco Fácil */}
               <IonCol size="12">
                 <div className="bloco-dificuldade bloco-facil">
                   <div className="cabecalho-bloco">
@@ -821,7 +831,6 @@ const gerarRelatorio = async () => {
                 </div>
               </IonCol>
 
-              {/* Bloco Médio */}
               <IonCol size="12">
                 <div className="bloco-dificuldade bloco-medio">
                   <div className="cabecalho-bloco">
@@ -850,7 +859,6 @@ const gerarRelatorio = async () => {
                 </div>
               </IonCol>
 
-              {/* Bloco Difícil */}
               <IonCol size="12">
                 <div className="bloco-dificuldade bloco-dificil">
                   <div className="cabecalho-bloco">

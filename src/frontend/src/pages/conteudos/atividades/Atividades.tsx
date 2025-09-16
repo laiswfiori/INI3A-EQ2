@@ -60,6 +60,15 @@ const Atividades: React.FC = () => {
   const [popoverEvent, setPopoverEvent] = useState<MouseEvent | undefined>(undefined);
   const [textoTemp, setTextoTemp] = useState('');
 
+  const cleanContent = (htmlString) => {
+    let cleanedString = htmlString.replace(/<[^>]*>/g, '');
+
+    cleanedString = cleanedString.replace(/\s+/g, ' ').trim();
+    
+    return cleanedString;
+  };
+
+
   const [imagensPreview, setImagensPreview] = useState<{ [atividadeId: number]: string }>({});
 
   const inputImagemRef = useRef<HTMLInputElement>(null);
