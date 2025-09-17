@@ -57,6 +57,7 @@ class AuthController extends Controller
             $user->login += 1;
         } else {
             $user->login = 1;
+            $user->streak = 0;
         }
 
         $user->last_login_update = $hoje;
@@ -119,6 +120,7 @@ class AuthController extends Controller
                 $user->login += 1;
             } else {
                 $user->login = 1;
+                $user->streak = 0;
             }
 
             $user->last_login_update = $hoje;
