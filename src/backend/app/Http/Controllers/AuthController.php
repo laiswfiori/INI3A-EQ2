@@ -45,18 +45,24 @@ class AuthController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token);
-
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
-        if ($user) {
-            $hoje = Carbon::now()->toDateString();
+        $hoje = Carbon::now()->toDateString();
+        $ontem = Carbon::yesterday()->toDateString();
 
-            if ($user && $user->last_login_update !== $hoje) {
-                $user->login += 1;
-                $user->last_login_update = $hoje;
-                $user->save();
-            }
+        if ($user->last_login_update === $hoje) {
+
         }
+        else if ($user->last_login_update === $ontem) {
+            $user->login += 1;
+        } else {
+            $user->login = 1;
+        }
+
+        $user->last_login_update = $hoje;
+        $user->save();
+        
+        return $this->respondWithToken($token);
     }
 
         public function handleGoogleCallback(Request $request)
@@ -103,6 +109,21 @@ class AuthController extends Controller
 
             // Loga o usuário (seja o que encontramos ou o que criamos) e retorna o token.
             $token = Auth::login($user);
+
+            $hoje = Carbon::now()->toDateString();
+            $ontem = Carbon::yesterday()->toDateString();
+
+            if ($user->last_login_update === $hoje) {
+                
+            } elseif ($user->last_login_update === $ontem) {
+                $user->login += 1;
+            } else {
+                $user->login = 1;
+            }
+
+            $user->last_login_update = $hoje;
+            $user->save();
+
 
             if (!$token) {
                 return response()->json(['message' => 'Não foi possível autenticar o usuário.'], 500);

@@ -30,17 +30,28 @@ class NivelCalculoService
 
     public function atualizarStreakSeNecessario()
     {
-        $user = Auth::user(); // Corrigido: pega o usuário autenticado
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        if (!$user) {
+            return; 
+        }
+
         $hoje = Carbon::now()->toDateString();
         $ontem = Carbon::yesterday()->toDateString();
 
-        if ($user && $user instanceof \Illuminate\Database\Eloquent\Model && ($user->last_streak_update == $hoje || $user->last_streak_update == $ontem)) {
-            $user->streak += 1;
-            $user->last_streak_update = $hoje;
-            $user->save();
-        } else {
-            $user->streak = 0;
+        if ($user->last_streak_update === null) {
+            $user->streak = 1;
         }
+        else if ($user->last_streak_update === $hoje) {
+            return;
+        }else if ($user->last_streak_update === $ontem) {
+            $user->streak += 1;
+        } else {
+            $user->streak = 1;
+        }
+
+        $user->last_streak_update = $hoje;
+        $user->save();
     }
 
     public function atualizarNivelTopico($topicoId)
