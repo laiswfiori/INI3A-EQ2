@@ -64,6 +64,7 @@ $app->configure('auth');
 $app->configure('mail');
 // ADICIONADO: Carrega o arquivo de configuração config/jwt.php
 $app->configure('jwt'); 
+$app->configure('filesystems');
 
 /*
 |--------------------------------------------------------------------------
@@ -100,6 +101,7 @@ $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(App\Providers\AppServiceProvider::class);
+$app->register(Illuminate\Filesystem\FilesystemServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

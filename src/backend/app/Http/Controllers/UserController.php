@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -45,17 +47,56 @@ class UserController extends Controller
 
     public function atualizarFotoPerfil(Request $request)
     {
-        $this->validate($request, [
-            'foto_perfil' => 'required|string', // Espera uma string (Base64)
+        $validator = Validator::make($request->all(), [
+            'foto_perfil' => 'nullable|string',
         ]);
-        
-        $user = Auth::user();
-        if (!($user instanceof User)) {
-            return response()->json(['message' => 'Authentication error: Could not get user model.'], 500);
-        }
-        $user->foto_perfil = $request->input('foto_perfil');
-        $user->save();
 
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $user = Auth::user();
+        $imagemBase64 = $request->input('foto_perfil');
+
+        // Deleta a foto antiga do armazenamento, se ela existir
+        if ($user->foto_perfil) {
+            // Remove o /storage/ do caminho para corresponder ao disco 'public'
+            $pathAntigo = str_replace('/storage/', '', $user->foto_perfil);
+            if (Storage::disk('public')->exists($pathAntigo)) {
+                Storage::disk('public')->delete($pathAntigo);
+            }
+        }
+        
+        if ($imagemBase64) {
+            // Se uma nova imagem foi enviada, salva ela
+            try {
+                $partes = explode(';', $imagemBase64);
+                $mime = explode(':', $partes[0])[1];
+                // Pega a extensão a partir do mime type, ex: "webp"
+                $extensao = explode('/', $mime)[1];
+
+                // Pega apenas os dados da imagem, depois da vírgula
+                $file_data = substr($imagemBase64, strpos($imagemBase64, ',') + 1);
+
+                // Cria o nome do arquivo com a extensão CORRETA
+                $imageName = 'fotos_perfil/user_' . $user->id . '_' . time() . '.' . $extensao;
+                
+                Storage::disk('public')->put($imageName, base64_decode($file_data));
+
+                $baseUrl = env('APP_URL', 'http://localhost:8000'); // Pega a URL do .env ou usa um padrão
+                $urlImagem = $baseUrl . '/storage/' . $imageName;
+                $user->foto_perfil = $urlImagem;
+
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Erro ao processar a nova imagem.'], 500);
+            }
+        } else {
+            // Se a imagem enviada for nula, define o campo no banco de dados como nulo
+            $user->foto_perfil = null;
+        }
+
+        $user->save();
+        $user->refresh();
         return response()->json($user);
     }
 

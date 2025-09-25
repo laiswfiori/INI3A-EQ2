@@ -21,6 +21,7 @@ import ThemeManager from '../../utils/ThemeManager';
 import '../../utils/css/variaveisCores.css';
 import { useSoundPlayer } from '../../utils/Som';
 import { useAuth } from '../../contexts/AuthContext';
+import ModalAlterarFoto from './ModalAlterarFoto';
 
 interface User {
   id: number;
@@ -75,6 +76,8 @@ const Perfil: React.FC = () => {
   const [loadingConfig, setLoadingConfig] = useState<boolean>(false);
   const [checked, setChecked] = useState(false);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { user, updateUser, logout: authLogout  } = useAuth();
@@ -112,18 +115,43 @@ const Perfil: React.FC = () => {
       try {
         const api = new API();
         const updatedUserData = await api.post('/api/foto', { foto_perfil: imagemBase64 });
+
+        console.log("--------------------------------");
+        console.log("API RESPONDEU COM SUCESSO!");
+        console.log("Dados recebidos do backend:", updatedUserData);
+        console.log("URL da nova imagem na resposta:", updatedUserData.foto_perfil);
+        console.log("Estado 'userData' (local) ANTES de atualizar:", userData);
         
         updateUser(updatedUserData);
         setUserData(updatedUserData);
         setFormData(updatedUserData);
 
         setShowAlert({ show: true, message: 'Foto de perfil atualizada com sucesso!' });
+        setIsModalOpen(false); // Fecha o modal
       } catch (error) {
         console.error('Erro ao atualizar a foto de perfil:', error);
         setShowAlert({ show: true, message: 'Não foi possível atualizar a foto. Tente novamente.' });
       }
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleRemoveFile = async () => {
+    try {
+        const api = new API();
+        // A API deve ser capaz de interpretar um valor nulo/vazio como remoção
+        const updatedUserData = await api.post('/api/foto', { foto_perfil: null });
+
+        updateUser(updatedUserData);
+        setUserData(updatedUserData);
+        setFormData(updatedUserData);
+        
+        setShowAlert({ show: true, message: 'Foto de perfil removida.' });
+        setIsModalOpen(false); // Fecha o modal
+    } catch (error) {
+        console.error('Erro ao remover a foto de perfil:', error);
+        setShowAlert({ show: true, message: 'Não foi possível remover a foto. Tente novamente.' });
+    }
   };
 
   const toggleTheme = () => {
@@ -905,9 +933,9 @@ const resetarConfiguracoes = async () => {
       <ThemeManager />
       <IonRow id="lDesktop" className="pagPerfil">
         <IonCol className="ladoPerfil">
-          <IonRow id="img" onClick={handleImageClick} style={{ cursor: 'pointer' }}>
-            {user?.foto_perfil ? (
-              <IonImg src={user.foto_perfil} id="iconePerfil" />
+          <IonRow id="img" onClick={() => setIsModalOpen(true)} style={{ cursor: 'pointer' }} >
+            {userData?.foto_perfil ? (
+              <IonImg key={userData.foto_perfil} src={userData.foto_perfil} id="iconePerfil" />
             ) : (
               <IonIcon icon={personCircle} id="iconePerfil" />
             )}
@@ -1207,9 +1235,9 @@ const resetarConfiguracoes = async () => {
     <>
       <ThemeManager />
       <IonRow id="lMobile" className="pagPerfilM">
-        <IonRow id="imgM" onClick={handleImageClick} style={{ cursor: 'pointer' }}>
+        <IonRow id="imgM" onClick={() => setIsModalOpen(true)} style={{ cursor: 'pointer' }}>
           {userData?.foto_perfil ? (
-            <IonImg src={user.foto_perfil} id="iconePerfil" />
+            <IonImg src={userData.foto_perfil} id="iconePerfil" />
           ) : (
             <IonIcon icon={personCircle} id="iconePerfil" />
           )}
@@ -1541,6 +1569,14 @@ const resetarConfiguracoes = async () => {
             header={'Aviso'}
             message={showAlert.message}
             buttons={['OK']}
+          />
+
+          <ModalAlterarFoto
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onAlterar={handleFileChange}
+            onRemover={handleRemoveFile}
+            fotoAtual={user?.foto_perfil || personCircle}
           />
           <IonAlert
             isOpen={showDeleteConfirm}
