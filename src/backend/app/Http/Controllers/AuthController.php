@@ -11,6 +11,7 @@ use Google_Client;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use GuzzleHttp\Client as GuzzleClient;
 
 class AuthController extends Controller
 {
@@ -78,7 +79,9 @@ class AuthController extends Controller
                 return response()->json(['message' => 'Google Client ID não configurado no servidor.'], 500);
             }
 
+            $guzzleClient = new GuzzleClient(['verify' => false]);
             $googleClient = new Google_Client(['client_id' => $googleClientId]);
+            $googleClient->setHttpClient($guzzleClient);
             $payload = $googleClient->verifyIdToken($request->token);
 
             if (!$payload) {

@@ -1,5 +1,3 @@
-/* src/frontend/src/pages/perfil/css/modal.css */
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -13,14 +11,13 @@
   z-index: 1000;
 }
 
-.modal-content {
+body .modal-content {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
   text-align: center;
   position: relative;
-  width: 90%;
-  max-width: 400px;
+  width: 350px;
   color: #333; /* Adicionado para garantir a cor do texto no modo claro */
 }
 
@@ -66,4 +63,27 @@
 .btn-remover {
   background-color: #dc3545;
   color: white;
+}
+
+body.dark .modal-content {
+  background-color: #021025;
+  color: #f1f1f1;
+  border: 1px solid #00296b;
+}
+
+body.dark .modal-content h2 {
+   color: #ffffff;
+}
+
+body.dark .modal-close-icon {
+  color: #f1f1f1;
+}
+
+body.dark .modal-profile-pic {
+  border-color: #00296b;
+}
+
+body.dark .btn-alterar {
+  background-color: #ea7317;
+  color: #ffffff;
 }
