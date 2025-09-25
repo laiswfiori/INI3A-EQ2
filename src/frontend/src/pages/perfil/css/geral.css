@@ -87,10 +87,19 @@
   border-bottom: 4px solid #00296b;
 }
 
+.native-wrapper {
+  padding: 2% !important;
+}
+
 #configs {
-    padding-left: 2%;
     display: flex;
     flex-direction: row;
+}
+
+.centroDBranco {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 #dBranco {
@@ -331,7 +340,15 @@ ion-input.inputBioM {
 .btnAvancados {
   align-self: center;
   width: 80%;
-  border-radius: 20px;
+  border-radius: 500px !important;
+}
+
+.btnAvancados::part(native) {
+  border-radius: 500px !important;
+}
+
+.colDiasAvancados {
+  border-radius: 50px !important;
 }
 
 .larguraEstudo {

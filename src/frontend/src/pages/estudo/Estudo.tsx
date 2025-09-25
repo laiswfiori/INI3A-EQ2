@@ -26,7 +26,6 @@ const Estudo: React.FC = () => {
         if (isRunning && timeLeft > 0) {
             timer = setInterval(() => setTimeLeft((t) => t - 1), 1000);
         } else if (timeLeft === 0) {
-            setIsRunning(false);
             if (isStudyPhase) {
                 setIsStudyPhase(false);
                 setTimeLeft(POMODORO_BREAK_TIME);

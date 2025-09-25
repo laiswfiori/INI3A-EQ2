@@ -623,3 +623,22 @@
   align-items: center;
   cursor: pointer;
 }
+
+.flexRowA {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.naoConfig {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.linhaHorizontalA {
+  height: 5px;
+  background-color: #ea7317;
+  width: 100%;
+}

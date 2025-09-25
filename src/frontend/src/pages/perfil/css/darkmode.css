@@ -31,7 +31,7 @@
 }
 
 .name {
-    color: var(--cor-cinza2) !important;
+    color: #334155!important;
 }
 
 #opsConfig .radio input:checked + .name {

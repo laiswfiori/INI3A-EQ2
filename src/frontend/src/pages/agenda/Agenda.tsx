@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import { IonPage, IonToolbar, IonContent, IonButton, IonButtons, IonIcon, IonSelect, IonSelectOption, 
   IonSegment, IonSegmentButton, IonLabel, IonRow, IonCol, IonItem, IonSpinner,IonToast } from '@ionic/react';
-import { chevronBack,  chevronForward,  chevronDown, documentText, rocket, school, calendar,  flame, arrowForward, settings, flag } from 'ionicons/icons';
+import { chevronBack,  chevronForward,  chevronDown, documentText, rocket, school, calendar,  flame, arrowForward, settings, flag, alertCircle } from 'ionicons/icons';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import './css/geral.css';
 import './css/ui.css';
@@ -334,7 +334,7 @@ export default function () {
     { name: 'Concluído', value: contagemStatus['concluído'] },
   ];
 
-  const COLORS = ['#d1250e', '#a18115', '#086e10'];
+  const COLORS = ['#F44336', '#FFC107', '#4CAF50'];
 
   const getStatusClass = (status: string) => {
     if (status === 'não iniciado') return 'status-vermelho';
@@ -534,8 +534,12 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
           <IonRow className="rowAgenda"><IonSpinner name="dots" /></IonRow>
         ) : (
           !agendaConfig && (
-            <IonRow className="rowAgenda">
-              <h2 className="txtAgenda avisoAgenda">Você ainda não possui uma agenda configurada.</h2>
+            <IonRow className="rowAgenda flexRowA">
+              <IonRow className="naoConfig">
+                <IonIcon icon={alertCircle} id="iconeAlerta" />
+                <h2 className="txtAgenda avisoAgenda pDarkmode">Você ainda não possui uma agenda configurada.</h2>
+              </IonRow>
+              <IonRow className="linhaHorizontalA"></IonRow>
             </IonRow>
           )
         )}
