@@ -115,6 +115,13 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
     }
   };
 
+  useEffect(() => {
+  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+  if (isMac) {
+    document.body.classList.add('mac-os');
+  }
+}, []);
+
   return (
     <div id="body">
       <div className="cadastro-container">
@@ -133,17 +140,17 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
           {showRequiredFieldsMsg && <p className="mustError">* Todos os campos são obrigatórios.</p>}
           
           <h2 className="h2"><b>Nome</b></h2>
-          <input type="text" value={name} onChange={(e) => setNome(e.target.value)} />
+          <input className="input" type="text" value={name} onChange={(e) => setNome(e.target.value)} />
           
           <h2 className="h2"><b>Sobrenome</b></h2>
-          <input type="text" value={surname} onChange={(e) => setSobrenome(e.target.value)} />
+          <input className="input" type="text" value={surname} onChange={(e) => setSobrenome(e.target.value)} />
 
           <h2 className="h2"><b>Email</b></h2>
-          <input type="email" value={email} maxLength={254} onChange={(e) => setEmail(e.target.value)} />
+          <input className="input" type="email" value={email} maxLength={254} onChange={(e) => setEmail(e.target.value)} />
           {emailError && <p className="nameError">{emailError}</p>}
 
           <h2 className="h2"><b>Senha</b></h2>
-          <input type="password" value={password} onChange={(e) => setSenha(e.target.value)} />
+          <input className="input" type="password" value={password} onChange={(e) => setSenha(e.target.value)} />
           {passwordErrors.length > 0 && (
             <ul className="nameError">
               {passwordErrors.map((err, idx) => <li key={idx}>{err}</li>)}

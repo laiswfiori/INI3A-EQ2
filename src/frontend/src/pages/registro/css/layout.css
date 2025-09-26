@@ -1,4 +1,10 @@
 @media (min-width: 1025px){ /*widescreen*/
+    .mac-os .div1 {
+        height: 50% !important;
+    }
+    .mac-os .input {
+        padding: 6px !important;
+    }
     .cadastro-container{
         display: grid;
         grid-template-rows: 1fr 20fr 1fr;
@@ -350,5 +356,11 @@
     .h1e{
         font-size: 1.4rem !important;
     }
+}
+
+.mac-os .cadastro-container {
+  height: auto !important;
+  min-height: 100vh;
+  overflow-y: auto;
 }
 
