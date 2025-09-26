@@ -7,7 +7,6 @@ import './css/layout.css';
 import './css/ui.css';
 import './../../components/Animacao.css';
 import { registerUser, loginWithGoogle } from '../../lib/endpoints';
-import  AnimacaoSVG  from '../../components/AnimacaoSVG';
 
 declare global {
   interface Window {

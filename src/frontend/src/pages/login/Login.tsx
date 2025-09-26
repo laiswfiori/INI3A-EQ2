@@ -7,7 +7,6 @@ import './css/geral.css';
 import './css/ui.css';
 import './css/layout.css';
 import './../../components/Animacao.css';
-import  AnimacaoSVG  from '../../components/AnimacaoSVG';
 
 declare global {
   interface Window {
