@@ -57,7 +57,7 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
     }
     setPasswordErrors(errors);
 
-    setShowRequiredFieldsMsg(anyEmptyField);  // linha corrigida
+    setShowRequiredFieldsMsg(anyEmptyField);
     setFormValid(valid && !anyEmptyField);
   }, [name, surname, email, password]);
 
@@ -114,13 +114,6 @@ const Registro: React.FC<RegistroProps> = ({ goToLogin }) => {
       else setErro('Erro ao cadastrar usuário.');
     }
   };
-
-  useEffect(() => {
-  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-  if (isMac) {
-    document.body.classList.add('mac-os');
-  }
-}, []);
 
   return (
     <div id="body">
