@@ -147,6 +147,7 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
                 value={exercicios ?? ''}
                 onIonChange={e => setExercicios(Number(e.detail.value))}
                 min={0}
+                style={{backgroundColor: "#eeecec", borderRadius: "6px"}}
               />
               <IonLabel className="pDarkmode">Número de acertos</IonLabel>
               <IonInput
@@ -155,6 +156,7 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
                 onIonChange={e => setAcertos(Number(e.detail.value))}
                 min={0}
                 max={exercicios ?? undefined}
+                style={{backgroundColor: "#eeecec", borderRadius: "6px"}}
               />
             </>
           )}
@@ -167,6 +169,7 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
                 value={nota ?? ''}
                 onIonChange={e => setNota(Number(e.detail.value))}
                 min={0}
+                style={{backgroundColor: "#eeecec", borderRadius: "6px"}}
               />
               <IonLabel className="pDarkmode">Valor total</IonLabel>
               <IonInput
@@ -174,6 +177,7 @@ const AvaliarModal: React.FC<Props> = ({ isOpen, onClose, atividade, onSalvar })
                 value={valor ?? ''}
                 onIonChange={e => setValor(Number(e.detail.value))}
                 min={0}
+                style={{backgroundColor: "#eeecec", borderRadius: "6px"}}
               />
             </>
           )}
