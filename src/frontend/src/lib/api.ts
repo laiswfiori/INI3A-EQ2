@@ -5,7 +5,7 @@ export default class API {
   private isRefreshing = false; // Flag para evitar múltiplas tentativas de refresh
 
   constructor() {
-    this.apiUrl = prod ? 'API_PROD' : 'http://localhost:8000';
+    this.apiUrl = prod ? 'API_PROD' : 'http://eq2.ini3a.projetoscti.com.br/backend/public';
   }
 
   private getToken(): string | null {

@@ -1,7 +1,0 @@
-.pDarkmode, .btnIniciarPausar::part(native), .iconeReiniciar {
-    color: var(--cor-preto) !important;
-}
-
-.btnIniciarPausar::part(native) {
-    background-color: var(--cor-cinza2) !important;
-}
