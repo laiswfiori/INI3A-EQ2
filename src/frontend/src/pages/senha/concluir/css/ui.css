@@ -50,7 +50,7 @@ ion-button.btnEnviar::part(native):hover {
 }
 
 #imgFim {
-    background-image:  url('/imgs/pessoaFim.jpeg');
+    background-image:  url('/assets/pessoaFim.jpeg');
     background-repeat: no-repeat; 
     background-size: cover;       
     background-position: center;
