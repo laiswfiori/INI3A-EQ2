@@ -1,0 +1,469 @@
+.icones.ativo, .iconesTxt.ativo {
+  color: #ffe99d; 
+}
+
+.laranja {
+  --background: #ea7317 !important;
+  background-color: #ea7317 !important;
+  color: white !important;
+}
+
+ion-select::part(icon) {
+  color: black;
+}
+
+.view-segment {
+  --background: #fec601;
+  border-radius: 8px;
+}
+
+ion-segment-button {
+  --color: #5a5a5a;
+  --color-checked: black;
+  --indicator-color: #ffe99d; 
+  text-transform: none;
+}
+
+.days-of-week-header {
+  border-bottom: 1px solid #333;
+  background-color: #00296b;
+}
+
+.day-header {
+  padding: 12px 4px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: white;
+}
+
+.calendar-day {
+  position: relative;
+  min-height: 110px;
+  border-bottom: 1px solid #333;
+  border-right: 1px solid #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.calendar-day:hover {
+  background-color: #d4d4d4;
+}
+
+
+.calendar-day:nth-child(7n) {
+  border-right: none;
+}
+
+.calendar-grid:last-child .calendar-day:nth-last-child(-n+7) {
+    border-bottom: none;
+}
+
+.day-number {
+  font-weight: 500;
+}
+
+.other-month {
+  background-color: #ddd;
+  color: #555;
+  cursor: default;
+}
+
+.other-month:hover {
+  background-color: transparent;
+}
+
+.today-highlight {
+  color: #ea7317;
+}
+
+.event-prova { background-color: #00296b; }
+.event-simulado { background-color: #ea3017; }
+.event-vestibular { background-color: #3da5d9; }
+.event-tarefa { background-color: #fec601; }
+.event-aula { background-color: #086e10; }
+
+.txtDescricao {
+  font-size: 1rem;
+  color: #494949;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.divAgenda {
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem !important;
+}
+
+.divStatus {
+  color: white;
+  width: 15%;
+  max-width: 15%;
+  font-weight: bold;
+}
+
+.status-vermelho {
+  background-color: #F44336; 
+  color: white; 
+}
+
+.status-amarelo {
+  background-color: #FFC107; 
+  color: black;
+}
+
+.divData {
+  background-color: #333;
+  color: white;
+  width: 30%;
+  max-width: 30%;
+}
+
+.sBorda {
+  border: none !important
+}
+
+.iconeFogo {
+  font-size: 4rem;
+  color: #be1632;
+}
+
+.hOfensiva {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.pOfensiva {
+  text-align: center;
+}
+
+.dias1 {
+  font-size: 2rem;
+}
+
+.barraA {
+  width: 100%;
+  height: 16px;
+  background-color: #e0e0e0;
+  border-radius: 12px;
+}
+
+.barraStatusA {
+  height: 100%;
+  border-radius: 12px;
+  background-color: #ea7317; 
+  transition: width 0.3s ease-in-out;
+}
+
+.date-nav-and-indicators {
+  position: relative;
+}
+
+.date-nav-container {
+  background-color: white;
+  border-radius: 16px;
+  padding: 12px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.day-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.day-number,
+.day-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.day-number {
+  font-size: 1.2rem;
+  font-weight: 600;
+  height: 28px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding-top: 5px;
+}
+
+.day-name {
+  font-size: 0.7rem;
+  height: 20px;
+  color: #ddd;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.day-item:hover .day-number,
+.day-item:hover .day-name {
+  background-color: #f8f8f8;
+}
+
+.day-active .day-number,
+.day-active .day-name {
+  background-color: #ffe99d;
+}
+
+.indicator-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+  padding: 0 28px;
+  box-sizing: border-box;
+}
+
+.indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #d0d0ce;
+  position: relative;
+  z-index: 2;
+}
+
+.indicator-active {
+  background-color: #be1632;
+}
+
+.indicator-line {
+  position: absolute;
+  top: 50%;
+  left: 32px;
+  right: 32px;
+  height: 1px;
+  border-top: 1.5px dashed #d0d0ce;
+  z-index: 1;
+}
+
+.rowOfensivaD {
+  border: 1px solid #e2e2e2;
+  border-radius: 20px;
+}
+
+.divOfensiva {
+  background-color: #e2e2e2;
+  border-radius: 20px;
+}
+
+.event-tag {
+  background-color: #3da5d9;
+}
+
+
+.event-tag.m1A {
+  background-color: rgb(185, 39, 39);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m2A {
+  background-color: rgb(88, 47, 7);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m3A {
+  background-color: rgb(64, 193, 216);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m4A {
+  background-color: rgb(161, 85, 22);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m5A {
+  background-color: rgb(206, 81, 139);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m6A {
+  background-color: rgb(202, 182, 5);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m7A {
+  background-color: rgb(24, 136, 211);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m8A {
+  background-color: rgb(58, 128, 18);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m9A {
+  background-color: rgb(219, 132, 19);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m10A {
+  background-color: rgb(112, 30, 179);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag.m11A {
+  background-color: rgb(196, 28, 6);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-tag {
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-time {
+  color: white;
+}
+
+.eSemana {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.m1A {
+  color: rgb(185, 39, 39) !important;
+}
+
+.m2A {
+  color: rgb(88, 47, 7) !important;
+}
+
+.m3A {
+  color: rgb(64, 193, 216) !important;
+}
+
+.m4A {
+  color: rgb(161, 85, 22) !important;
+}
+
+.m5A {
+  color: rgb(206, 81, 139) !important;
+}
+
+.m6A {
+  color: rgb(202, 182, 5) !important;
+}
+
+.m7A {
+  color: rgb(24, 136, 211) !important;
+}
+
+.m8A {
+  color: rgb(58, 128, 18) !important;
+}
+
+.m9A {
+  color: rgb(219, 132, 19) !important;
+}
+
+.m10A {
+  color: rgb(112, 30, 179) !important;
+}
+
+.m11A {
+  color: rgb(196, 28, 6) !important;
+}
+
+.iconeFlag {
+  width: 1rem;
+}
+
+
+.event-atividade {
+  background-color: var(--cor-brancoC) !important;
+  border: 2px solid  #3da5d9;
+}
+
+.event-atividade.m1A {
+  border: 2px solid  rgb(185, 39, 39);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m2A {
+  border: 2px solid rgb(88, 47, 7);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m3A {
+  border: 2px solid rgb(64, 193, 216);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m4A {
+  border: 2px solid rgb(161, 85, 22);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m5A {
+  border: 2px solid rgb(206, 81, 139);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m6A {
+  border: 2px solid rgb(202, 182, 5);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m7A {
+  border: 2px solid rgb(24, 136, 211);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m8A {
+  border: 2px solid rgb(58, 128, 18);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m9A {
+  border: 2px solid rgb(219, 132, 19);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m10A {
+  border: 2px solid rgb(112, 30, 179);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.event-atividade.m11A {
+  border: 2px solid rgb(196, 28, 6);
+  border-radius: 10px;
+  padding: 4%;
+}
+
+.avisoAgenda {
+  font-size: 1.2rem !important;
+}

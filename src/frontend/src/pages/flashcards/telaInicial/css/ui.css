@@ -1,0 +1,423 @@
+.icones.ativo, .iconesTxt.ativo {
+  color: #ffe99d; 
+}
+
+#bodyTelaInicialFlashcards {
+    background-color: white;
+}
+
+.txtGeral {
+    font-weight: 700;
+    font-size: 2rem;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.revisaoGeral {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.5rem;
+    background-color: #ea7317;
+    border: 5px solid #fec601;
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    height: 35% !important;
+  }
+
+  ion-button.revisaoGeral::part(native) {
+    background-color: #ea7317;
+    box-shadow: none;
+    height: 100%;
+}
+
+  .textIniciar {
+    font-size: 1.5em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding-right: 10%;
+  }
+
+  #revisaoGeral {
+    padding-top: 5px;
+    height: 100%;
+    width: fit-content;
+  }
+
+.svgIniciar {
+    width: 2rem !important;
+    height: auto !important;
+  }
+
+  .revisaoGeral:hover {
+    border: 5px solid #c29800;
+    background-color: #d45c00;
+  }
+  .revisaoGeral:active {
+    border: 5px solid #af4c00;
+  }
+  .revisaoGeral:hover #btnIniciar svg {
+    all: unset;
+    animation: jello-vertical 0.9s both;
+    transform-origin: left;
+  }
+  
+  @keyframes jello-vertical {
+    0% {
+      transform: scale3d(1, 1, 1);
+    }
+    30% {
+      transform: scale3d(0.75, 1.25, 1);
+    }
+    40% {
+      transform: scale3d(1.25, 0.75, 1);
+    }
+    50% {
+      transform: scale3d(0.85, 1.15, 1);
+    }
+    65% {
+      transform: scale3d(1.05, 0.95, 1);
+    }
+    75% {
+      transform: scale3d(0.95, 1.05, 1);
+    }
+    100% {
+      transform: scale3d(1, 1, 1);
+    }
+  }
+  
+#btnAlerta {
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+#btnAlerta {
+  all: unset;
+  cursor: pointer;
+  z-index: 999999999;
+}
+
+ion-button#btnAlerta::part(native) {
+  all: unset;
+  cursor: pointer;
+  z-index: 999999999;
+}
+
+#iconeAlerta {
+  font-size: 1.5rem;
+  color: #3da5d9;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+ion-button#btnAlerta:hover {
+  cursor: pointer;
+}
+ 
+.iconeFechar, .iconeFecharM {
+  font-size: 1.5rem;
+  color: #ce2711;
+  cursor: pointer;
+}
+
+ion-button.verTopicos::part(native) {
+  all: unset;
+  cursor: pointer !important;
+  z-index: 999999999;
+}
+
+#btnFechar {
+  display: flex;
+  justify-content: flex-end !important;
+  align-items: flex-end  !important;    
+  overflow: hidden !important;
+  position: relative !important;
+  background-color: white;
+}
+
+ion-button#btnFechar::part(native) {
+  background-color: white;
+  display: flex;
+  justify-content: flex-end !important;
+  align-items: flex-end  !important; 
+}
+
+.iconeFechar {
+  position: absolute;
+  right: 0;
+  margin-left: auto !important;
+  align-self: flex-end  !important; 
+}
+
+#pDecks {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.txtGrande {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.estDivs {
+    border-radius: 20px;
+    background-color: #fff7d8;
+    padding: 2%;
+    padding-bottom: 0;
+}
+
+#txtRevisar {
+  font-weight: 600;
+  color: #00296b;
+}
+
+ion-button#btnEstudar::part(native) {
+  all: unset;
+  cursor: pointer;
+  pointer-events: auto;
+  background-color: #3da5d9;
+  width: 100%;
+  max-width: 100% !important;
+  border-radius: 15px;
+}
+
+#btnEstudar {
+  display: flex;
+  justify-content: flex-start;
+  width: 75%;
+  overflow: hidden;
+  position: relative;
+}
+
+ion-button#btnEstudar::part(native):hover {
+  background-color: #00296b;
+}
+
+ion-button#btnMais::part(native) {
+  all: unset;
+  cursor: pointer;
+  pointer-events: auto;
+  border: 2px solid #3da5d9;
+  width: 100%;
+  border-radius: 15px;
+  color: black;
+  font-size: 1.2rem;
+}
+
+#btnMais {
+  display: flex;
+  justify-content: flex-start;
+  width: 20%;
+  overflow: hidden;
+  position: relative;
+}
+
+ion-button#btnMais::part(native):hover {
+  background-color: #00296b;
+  color: white;
+}
+
+.livroF {
+  font-size: 5rem;
+  color: #3da5d9;
+}
+
+ion-button.verTopicos::part(native) {
+  all: unset;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 999999999;
+  background-color: #00296b;
+  width: 100%;
+  border-radius: 15px;
+  color: black;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.verTopicos {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+ion-button.verTopicos::part(native):hover {
+  background-color: #3da5d9;
+}
+
+.setaTopico {
+  font-size: 2rem;
+  color: #3da5d9;
+}
+
+.txtTopico {
+  font-size: 1.2rem;
+  padding: 0;
+  margin: 0;
+}
+
+.fecharMobile {
+  display: flex !important;
+  align-items: center; 
+  justify-content: flex-start;
+  width: 100%;
+  z-index: 10;
+}
+
+.iconeFechar {
+  font-size: 2rem;
+  color: #ce2711;
+  margin: 0;
+}
+
+.botaoAbrirEstatisticas {
+  display: flex !important;
+  align-items: center; 
+  justify-content: flex-start;
+  width: 100%;
+  bottom: 1rem;
+  right: 1rem;
+  gap: 1%;
+  background-color: #fff;
+  padding: 12px;
+  z-index: 999;
+  cursor: pointer;
+}
+
+.botaoAbrirEstatisticas ion-icon {
+  font-size: 1.5rem;
+  color: #af4c00;
+}
+
+.btnFlash {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border: 0.5px solid #00296b;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+  }
+
+  ion-button.btnFlash::part(native) {
+    background-color: #fff;
+    border: 0.5px solid #00296b;
+    color: black;
+    border-radius: 50px;
+    box-shadow: none;
+}
+
+.btnEstudar {
+  color: #fec601;
+}
+
+ion-button.btnEstudar::part(native):hover {
+  color: #fec601;
+}
+
+.btnEditar {
+  color: #3da5d9;
+}
+
+ion-button.btnEditar::part(native):hover {
+  color: #3da5d9;
+}
+
+.btnExcluir {
+  color: #ce2711;
+}
+
+ion-button.btnExcluir::part(native):hover {
+  color: #ce2711;
+}
+
+.btnAdicionarCard {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #3da5d9;
+    border: 0.5px solid #00296b;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+  }
+
+  ion-button.btnAdicionarCard::part(native) {
+    background-color: #3da5d9;
+    border: 0.5px solid #00296b;
+    color: white;
+    border-radius: 20px;
+    box-shadow: none;
+}
+
+.btnEditarCard {
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 20%;
+  }
+
+ion-button.btnEditarCard::part(native) {
+    background-color: white;
+    border: 0.5px solid #00296b;
+    color: black;
+    border-radius: 20px;
+    box-shadow: none;
+}
+
+  ion-button.btnEditarCard::part(native):hover {
+    color: #00296b;
+}
+
+.btnRemoverCard {
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 20%;
+  }
+
+  ion-button.btnRemoverCard::part(native) {
+    background-color: white;
+    border: 0.5px solid #ce2711;
+    color: black;
+    border-radius: 20px;
+    box-shadow: none;
+}
+
+  ion-button.btnRemoverCard::part(native):hover {
+    color: #ce2711;
+}
+
+.btnFecharOpcoes {
+  border: 0.5px solid #ce2711 !important;
+}
+
+.btnFecharOpcoes::part(native) {
+  border: 0.5px solid #ce2711 !important;
+}
+
+.imgMF {
+  min-height: 3.2rem;
+  min-width: 3.2rem;
+  max-height: 3.8rem;
+  max-width: 7rem;
+}

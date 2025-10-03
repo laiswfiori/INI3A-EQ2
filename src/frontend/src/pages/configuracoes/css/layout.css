@@ -1,0 +1,153 @@
+@media (min-width: 1025px){
+    .configuracoes-container{
+        display: grid;
+        grid-template-columns: 1fr 5fr 1fr;
+    }
+    .div111{
+        grid-column-start: 2;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 95%;
+        margin-top: 3%;
+    }
+    .botao{
+        margin-top: 5%;
+    }
+    .img{
+        width: 150px;
+    }
+    .grid1{
+        margin: -3%;
+    }
+    .voltarHome{
+        h4{
+            margin-bottom: -20%;
+        }
+    }
+    .h111{
+        font-size: 1.8rem;
+        margin-top: 2%;
+    }
+    .h333{
+        font-size: 1.1rem;
+    }
+    .h444{
+        font-size: 0.9rem;
+    }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+    .configuracoes-container{
+        display: grid;
+        grid-template-columns: 1fr 5fr 1fr;
+    }
+    .div111{
+        grid-column-start: 2;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 95%;
+        margin-top: 2%;
+    }
+    .botao{
+        margin-top: 5%;
+    }
+    .img{
+        width: 150px;
+        grid-column-start: 1;
+    }
+    .grid1{
+        margin: -3%;
+    }
+    .voltarHome{
+        h4{
+            margin-bottom: -20%;
+        }
+    }
+    .h111{
+        font-size: 1.8rem;
+    }
+    .h333{
+        font-size: 1.4rem;
+        margin-top: 4%;
+    }
+    .h444{
+        font-size: 0.9rem;
+    }
+}
+@media (min-width: 320px) and (max-width: 767px){
+    #body{
+        padding-top: 160px;
+    }
+    .configuracoes-container{
+        margin: 2px;
+    }
+    .div111{
+        display: flex;
+        flex-direction: column;
+        width: 102%;
+        margin-left: -1%;
+        margin-top: -23%;
+    }
+    .botao{
+        margin-top: 5%;
+    }
+    .img{
+        width: 150px;
+        margin-top: 100px;
+    }
+    .avisos{
+        margin-top: 0%;
+    }
+    .voltarHome{
+        h4{
+            margin-bottom: -120px;
+            margin-left: -30px;
+        }
+    }
+    .h111{
+        font-size: 1.5rem;
+    }
+    .h333{
+        font-size: 0.9rem;
+        margin-top: 4%;
+    }
+    .h444{
+        font-size: 0.7rem;
+    }
+}
+@media (max-width: 767px) {
+    .configuracoes-container {
+        display: block;
+        padding: 0 1rem;
+        margin-top: -60px;
+    }
+    .img{
+        width: 120px;
+        margin-left: -30%;
+    }
+}
+@media (max-width: 320px) {
+    #body{
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+    .div111{
+        margin-top: -4%;
+        width: 100%;
+    }
+    .img{
+        width: 120px;
+        margin-left: -30%;
+    }
+    .h111{
+        font-size: 1.5rem;
+    }
+    .h333{
+        font-size: 0.8rem;
+        margin-top: 4%;
+    }
+    .h444{
+        font-size: 0.7rem;
+    }
+}
