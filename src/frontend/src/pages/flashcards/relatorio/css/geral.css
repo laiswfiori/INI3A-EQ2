@@ -1,0 +1,761 @@
+/* ========== Layout Principal ========== */
+#bodyRelatorio {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2%;
+    padding: 0;
+}
+
+.rowsRelatorio {
+    width: 100%;
+}
+
+.rowsRelatorio.grafico {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* ========== Centralizações e Espaçamentos ========== */
+.centroRelatorio {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.espacoRelatorio {
+    justify-content: space-around;
+}
+
+.centrobtns {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5%;
+}
+
+.colDesempenho {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.centroCards {
+    margin-top: 2%;
+    border-top: 2px solid #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.rowsRelatorio.centroCards {
+    padding: 15px;
+}
+
+/* ========== Tipografia ========== */
+p {
+    padding: 0;
+    margin: 1%;
+}
+
+#txtDetalhes {
+    text-align: center;
+}
+
+.preto {
+    color: #000;
+}
+
+/* ========== Gráficos ========== */
+.grafico-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.titulo-grafico {
+    text-align: center;
+    margin-bottom: 5%;
+    width: 100%;
+}
+
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.recharts-wrapper,
+.recharts-surface {
+    margin: 0 auto;
+}
+
+.recharts-sector:hover {
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.recharts-legend-wrapper {
+    bottom: -10px !important;
+    width: 100% !important;
+}
+
+/* ========== Títulos e Containers Gerais ========== */
+.relatorio-container {
+    padding: 15px;
+}
+
+.titulo-principal {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ========== Blocos de Dificuldade ========== */
+.bloco-dificuldade {
+    margin: 0 5% 4%;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.bloco-facil {
+    background-color: #f0f9f0;
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.1);
+}
+
+.bloco-medio {
+    background-color: #fff9e6;
+    box-shadow: 0 4px 12px rgba(255, 160, 0, 0.1);
+}
+
+.bloco-dificil {
+    background-color: #ffebee;
+    box-shadow: 0 4px 12px rgba(220, 40, 40, 0.1);
+}
+
+/* Cabeçalhos */
+.cabecalho-bloco {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.icone-dificuldade {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.icone-facil { background-color: #2e7d32; }
+.icone-medio { background-color: #ffa000; }
+.icone-dificil { background-color: #c62828; }
+
+.titulo-bloco {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.titulo-facil { color: #2e7d32; }
+.titulo-medio { color: #ffa000; }
+.titulo-dificil { color: #c62828; }
+
+/* ========== Cards Gerais ========== */
+.card-container {
+    width: 90%;
+    height: 100%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card-container:hover {
+    transform: translateY(-5px);
+}
+
+.card-group-title {
+    margin: 20px 0 10px 15px;
+    color: #333;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.card-titulo {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.badge-dificuldade {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-facil {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.badge-medio {
+    background-color: #fff3e0;
+    color: #ffa000;
+}
+
+.badge-dificil {
+    background-color: #ffcdd2;
+    color: #c62828;
+}
+
+.card-content {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+.card-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.card-content p {
+    font-size: 0.8em;
+    margin: 0;
+    padding: 0 5px;
+    text-align: center;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-rotulo {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.card-resposta {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Cores das respostas */
+.response-easy, .resposta-facil { color: #28a745; font-weight: bold; }
+.response-very-easy { color: #1e7e34; font-weight: bold; }
+.response-medium, .resposta-medio { color: #ffa000; font-weight: bold; }
+.response-hard { color: #fd7e14; font-weight: bold; }
+.response-very-hard, .resposta-muito-dificil { color: #c62828; font-weight: bold; }
+.resposta-dificil { color: #e65100; }
+
+/* ========== Tempo de Execução ========== */
+.txtTempo {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.tempo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.tempo-valor {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.tempo-label {
+    font-size: 1rem;
+    color: #7f8c8d;
+    margin-top: 5px;
+}
+
+/* ========== Tempo - Cards ========== */
+.tempo-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+    justify-items: center;
+}
+
+.tempo-card-item {
+    background: #f5f7fa;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #e0e0e0;
+    transition: all 0.2s
+;
+}
+
+.tempo-card-item:hover {
+transform: translateY(-2px);
+background: #fff;
+}
+
+.tempo-card-numero {
+font-weight: 500;
+color: #34495e;
+font-size: 0.9rem;
+}
+
+.tempo-card-tempo {
+font-weight: bold;
+color: #2c3e50;
+margin-top: 5px;
+font-size: 1.1rem;
+}
+
+/* ========== Responsividade ========== */
+@media (max-width: 768px) {
+.tempo-cards-container {
+grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+}.txtGrande { font-size: 1.5rem; }
+.txtTF { font-size: 0.9rem; }
+
+.tempo-summary {
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tempo-stats-header h2 {
+    font-size: 1.2rem;
+}
+
+.tempo-label, .tempo-value {
+    font-size: 0.9rem;
+}
+
+.tempo-summary-item {
+    width: 100%;
+    justify-content: center;
+}
+}
+
+/* ========================================= */
+/* CSS OTIMIZADO PARA ESTATÍSTICAS DE TEMPO */
+/* ========================================= */
+
+/* Container Principal - Suave e Compacto */
+.tempo-stats-container {
+    background-color: #fff7d8; /* Cor de fundo clara e integrada, similar ao original */
+    border-radius: 12px; /* Cantos levemente arredondados */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Sombra mais delicada */
+    padding: 20px; /* Redução do padding para ser menor */
+    margin-bottom: 25px; /* Espaçamento padrão */
+    border: 1px solid #e6e9ed; /* Borda sutil, similar ao original */
+    transition: all 0.2s ease-in-out; /* Transição suave para interações */
+    overflow: hidden;
+}
+
+.tempo-stats-container:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08); /* Sombra um pouco maior ao hover */
+    transform: translateY(-2px); /* Elevação sutil */
+}
+
+/* Cabeçalho da Seção de Tempo - Compacto e Alinhado à Esquerda */
+.tempo-stats-header {
+    display: flex;
+    flex-direction: column; /* Mantém o título e o resumo empilhados */
+    align-items: flex-start; /* Alinha o conteúdo à esquerda, como .estDivs */
+    cursor: pointer;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08); /* Linha divisória mais suave, do original */
+    margin-bottom: 15px;
+}
+
+/* Título da Seção de Tempo */
+.tempo-title {
+    font-size: 1.4em;
+    color: #333; /* Cor escura para contraste, do original */
+    font-weight: 600; /* Levemente menos negrito */
+    margin-bottom: 10px;
+    display: flex; /* Mantém o ícone de seta ao lado do texto do título */
+    align-items: center;
+    gap: 8px;
+    width: 100%; /* Garante que o título ocupe a largura total para alinhamento */
+    justify-content: space-between; /* Alinha o título do texto à esquerda e o ícone à direita */
+}
+
+/* Ícone de Alternância (Seta) */
+.tempo-toggle-icon {
+    font-size: 1em;
+    color: #666; /* Cor do ícone, do original */
+    transition: transform 0.2s ease;
+}
+
+.tempo-stats-header.expanded .tempo-toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Resumo do Tempo - Flexível e Ajustado */
+.tempo-summary {
+    display: flex;
+    justify-content: space-between; /* Distribuição uniforme */
+    width: 100%;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* Item Individual do Resumo (Tempo Total ou Tempo Médio) */
+.tempo-summary-item {
+    display: flex;
+    flex-direction: row; /* Alinha o ícone e o texto lado a lado */
+    align-items: center;
+    justify-content: space-between; /* Alinha o ícone à esquerda e o texto à direita, como .espDiv */
+    background-color: #ffffff; /* Fundo branco para o item, do original */
+    padding: 12px 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03); /* Sombra bem sutil */
+    flex: 1;
+    min-width: 160px; /* Ajustado para acomodar o layout em linha */
+    transition: transform 0.15s ease;
+    text-align: left; /* Alinha o texto à esquerda dentro do item */
+}
+
+.tempo-summary-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Container do Ícone */
+.tempo-icon-container {
+    background-color: #3da5d9; /* Cor de destaque para o círculo do ícone, do original */
+    border-radius: 50%;
+    width: 35px; /* Tamanho do círculo do ícone levemente menor */
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px; /* Espaço à direita do ícone */
+    margin-bottom: 0; /* Remove margem inferior */
+    flex-shrink: 0; /* Impede que o ícone encolha */
+}
+
+/* Ícone */
+.tempo-icon {
+    font-size: 1.2em; /* Tamanho do ícone ajustado */
+    color: #ffffff; /* Cor branca para o ícone, do original */
+}
+
+/* Rótulo do Tempo */
+.tempo-label {
+    font-size: 0.8em;
+    color: #777; /* Cor cinza para o rótulo, do original */
+    margin: 0;
+    font-weight: 500;
+    text-align: right; /* Alinha o rótulo à direita */
+    flex-grow: 1; /* Permite que o rótulo ocupe o espaço restante */
+}
+
+/* Valor do Tempo */
+.tempo-value {
+    font-size: 1.2em; /* Fonte menor para o valor */
+    color: #444; /* Cor escura para o valor, do original */
+    font-weight: 700;
+    margin: 0;
+    text-align: right; /* Alinha o valor à direita */
+}
+
+/* Detalhes do Tempo - Expandido */
+.tempo-details {
+    margin-top: 15px;
+    padding-top: 15px;
+}
+
+/* Subtítulo dos Detalhes */
+.tempo-subtitle {
+    font-size: 1.2em;
+    color: #444; /* Cor do subtítulo, do original */
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+/* Container dos Cards de Tempo */
+.tempo-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+}
+
+/* Item Individual do Card de Tempo */
+.tempo-card-item {
+    background-color: #ffffff; /* Fundo branco, do original */
+    border-radius: 8px;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.05); /* Borda muito suave, do original */
+    transition: all 0.15s ease;
+}
+
+.tempo-card-item:hover {
+    transform: translateY(-1px);
+    background-color: #f5f7fa; /* Fundo levemente mais escuro ao hover */
+}
+
+/* Número do Card */
+.tempo-card-numero {
+    font-size: 0.9em;
+    color: #555; /* Cor do número do card, do original */
+    font-weight: 500;
+}
+
+/* Tempo Gasto no Card */
+.tempo-card-tempo {
+    font-size: 0.9em;
+    color: #3da5d9; /* Cor de destaque para o tempo, do original */
+    font-weight: 600;
+}
+
+/* Media Queries para Responsividade (Ajustado para ser mais compacto) */
+@media (max-width: 768px) {
+    .tempo-stats-container {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .tempo-title {
+        font-size: 1.3em;
+    }
+
+    .tempo-summary {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .tempo-summary-item {
+        width: 100%;
+        max-width: 250px;
+        padding: 10px 12px;
+    }
+
+    .tempo-icon-container {
+        width: 35px;
+        height: 35px;
+    }
+
+    .tempo-icon {
+        font-size: 1.2em;
+    }
+
+    .tempo-value {
+        font-size: 1.1em;
+    }
+
+    .tempo-subtitle {
+        font-size: 1.1em;
+    }
+
+    .tempo-cards-container {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    }
+
+    .tempo-card-item {
+        padding: 8px 12px;
+    }
+
+    .tempo-card-numero, .tempo-card-tempo {
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .tempo-stats-container {
+        padding: 12px;
+    }
+
+    .tempo-title {
+        font-size: 1.1em;
+    }
+
+    .tempo-summary-item {
+        padding: 8px 10px;
+        min-width: 120px;
+    }
+
+    .tempo-icon-container {
+        width: 30px;
+        height: 30px;
+    }
+
+    .tempo-icon {
+        font-size: 1em;
+    }
+
+    .tempo-label {
+        font-size: 0.7em;
+    }
+
+    .tempo-value {
+        font-size: 1em;
+    }
+
+    .tempo-subtitle {
+        font-size: 1em;
+    }
+
+    .tempo-cards-container {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    }
+}
+
+@media print {
+  .bloco-facil, .bloco-medio, .bloco-dificil {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 20px;
+  }
+  
+  .card-container {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+}
+/* No seu arquivo de CSS */
+.recharts-responsive-container {
+  position: relative !important;
+}
+
+.recharts-layer.recharts-pie-labels {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.recharts-label {
+  font-size: 14px !important;
+  font-weight: bold !important;
+  fill: #333 !important;
+}
+
+@media print {
+  body {
+    visibility: visible !important;
+  }
+  .recharts-wrapper {
+    position: relative !important;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 900px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.pdf-preview-container {
+  flex: 1;
+  min-height: 0;
+  margin: 15px 0;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.download-button {
+  background-color: #00296b;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cancel-button {
+  background-color: #f0f0f0;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
