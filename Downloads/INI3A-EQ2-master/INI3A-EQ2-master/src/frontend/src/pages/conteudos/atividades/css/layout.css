@@ -1,0 +1,67 @@
+@media (max-width: 767px) {
+    .atividade-item {
+        height: 60%;
+        margin-top: 5%;
+    }
+     .btnIC {
+        width: 60%;
+      }
+      #containerConfig{
+        width: fit-content !important;
+        max-width: fit-content !important;
+      }
+}
+
+@media (max-width: 768px) {
+    .atividade-item {
+        width: 100%;
+    }
+}
+
+@media (min-width: 798px) {
+    .atividade-item {
+        width: 45%;
+    }
+}
+
+@media (max-width: 767px) {
+    ion-modal.modalAdd {
+        padding-right: 5%;
+        padding-left: 5%;
+    }
+
+    ion-button.opcoes::part(native) {
+        max-width: 100%;
+        min-width: 70%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    ion-modal.modalAdd {
+       --max-height: 30%;
+    }
+
+    ion-button.opcoes::part(native) {
+        max-width: 30%;
+        min-width: 10%;
+    }
+}
+
+@media (min-width: 1025px) {
+    ion-button.opcoes::part(native) {
+        max-width: 100%;
+        min-width: 70%;
+    }
+}
+
+@media (max-width: 320px) {
+    .txtTitMat {
+        font-size: 1rem !important;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .btnIrTopicos {
+        width: 60%;
+      }
+}

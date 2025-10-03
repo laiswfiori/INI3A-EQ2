@@ -1,0 +1,132 @@
+#s1 {
+    background-color: #f1ebd7;
+}
+
+#s3, #s5 {
+    background-color: #3da5d9;
+}
+
+.titulo {
+    font-weight: 700 !important;
+    padding: 0 !important;
+    text-align: center !important;
+    color: black !important;
+}
+
+.subtitulo {
+    font-weight: 500 !important;
+    padding: 0;
+    text-align: center;
+    color: black !important;
+}
+
+h1 {
+    padding: 0;
+}
+
+.iconesM {
+    font-size: 5rem; 
+    color: white;
+}
+
+#m1 {
+    background-color: rgb(185, 39, 39);
+}
+
+#m2 {
+    background-color: rgb(64, 193, 216);
+}
+
+#m3 {
+    background-color: rgb(161, 85, 22);
+}
+
+#m4 {
+    background-color: rgb(206, 81, 139);
+}
+
+#m5 {
+    background-color: rgb(202, 182, 5);
+}
+
+#m6 {
+    background-color: rgb(24, 136, 211);
+}
+
+#m7 {
+    background-color: rgb(58, 128, 18);
+}
+
+#m8 {
+    background-color: rgb(219, 132, 19);
+}
+
+#m9 {
+    background-color: rgb(112, 30, 179);
+}
+
+#m10 {
+    background-color: rgb(196, 28, 6);
+}
+
+.iconesTxtM {
+    color: white;
+}
+
+.relative {
+    position: relative;
+}
+
+.ease-in-out {
+   transition-timing-function: cubic-bezier(.4,0,.2,1);
+}
+
+
+@keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+
+
+.lucide-test-tube-diagonal {
+    stroke: rgb(8, 121, 187);
+}
+
+.lucide-atom {
+    stroke: rgb(30, 138, 106);
+}
+
+.lucide-spell-check {
+    stroke: rgb(212, 182, 8);
+}
+
+.lucide-radical {
+    stroke: rgb(86, 8, 212);
+}
+
+.lucide-scroll {
+    stroke: rgb(212, 107, 8);
+}
+
+.lucide-dna {
+    stroke: rgb(8, 205, 212);
+}
+
+.lucide-book-open {
+    stroke: rgb(212, 8, 8);
+}
+
+.lucide-earth {
+    stroke: rgb(194, 76, 174);
+}
+
+.txtAprendeu {
+    color: #fde499;
+}

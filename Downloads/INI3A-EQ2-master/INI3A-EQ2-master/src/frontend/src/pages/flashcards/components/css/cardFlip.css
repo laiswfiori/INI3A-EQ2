@@ -1,0 +1,84 @@
+.card-container {
+  position: relative;
+  width: 70%;
+  height: 30rem;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.card-content-md p {
+    font-size: 2.2rem;
+    font-weight: normal;
+    line-height: 1.5;
+}
+
+ion-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 4rem;
+  backface-visibility: hidden;
+  transition: transform 1.5s ease;
+  box-shadow: none;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.card-front {
+    background: #cfe8e9;
+    border: 2px solid #3da5d9 !important;
+    z-index: 2;
+    transform: rotateY(0deg);
+}
+
+.card-back {
+    background: #ebd1bb;
+    border: 2px solid #ea7317 !important;
+    z-index: 3;
+    transform: rotateY(-180deg);
+}
+
+.card-container.flipped .card-front {
+  transform: rotateY(180deg);
+}
+
+.card-container.flipped .card-back {
+  transform: rotateY(0deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  inset: 0;         
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden; 
+  transition: transform 1.5s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+.card-container.no-anim .card-front,
+.card-container.no-anim .card-back {
+  transition: none !important;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card-container.animate-in {
+  animation: fadeSlideIn 0.4s ease-out;
+}

@@ -1,0 +1,60 @@
+@media (max-width: 767px) {
+    .topico-item {
+        height: 60%;
+        margin-top: 5%;
+    }
+}
+
+@media (max-width: 768px) {
+    .topico-item {
+        width: 100%;
+    }
+}
+
+@media (min-width: 798px) {
+    .topico-item {
+        width: 45%;
+    }
+}
+
+@media (max-width: 767px) {
+    ion-modal.modalAddTop {
+        padding-right: 5%;
+        padding-left: 5%;
+    }
+
+    ion-button.opcoes::part(native) {
+        max-width: 100%;
+        min-width: 70%;
+    }
+    .voltarT, .txtVoltarT {
+        color: white !important;
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    ion-modal.modalAddTop {
+       --max-height: 100%;
+    }
+
+    ion-button.opcoes::part(native) {
+        max-width: 100%;
+        min-width: 70%;
+    }
+    .voltarT, .txtVoltarT {
+        color: white !important;
+        font-size: 1.2rem;
+    }
+}
+
+@media (min-width: 1025px) {
+    ion-button.opcoes::part(native) {
+        max-width: 100%;
+        min-width: 70%;
+    }
+    .voltarT, .txtVoltarT {
+        color: white !important;
+        font-size: 1.2rem;
+    }
+}
