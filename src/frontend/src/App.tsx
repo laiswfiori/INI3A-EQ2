@@ -61,6 +61,7 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import './global.css';
 import { useEffect } from 'react';
 import idioma from './utils/idioma';
 

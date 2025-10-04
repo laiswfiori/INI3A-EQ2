@@ -1,0 +1,6 @@
+/* CSS Global para Forçar a Visibilidade da Página */
+
+.ion-page.ion-page-invisible {
+  opacity: 1 !important;
+  visibility: visible !important;
+}

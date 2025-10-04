@@ -2,6 +2,8 @@
     background-color: #00296b;
     height: 100vh;
     padding-left: 2%;
+    opacity: 1.0 !important;
+    
 }
 
 .nameError2{
