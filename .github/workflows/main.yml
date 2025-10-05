@@ -15,4 +15,4 @@ jobs:
         server: projetoscti.com.br
         username: eq2ini3a
         password: ${{ secrets.ftp_password }}
-        server-dir: /var/www/eq2.in3a.projetoscti.com.br/public_html
+        server-dir: ./INI3A-EQ2/
