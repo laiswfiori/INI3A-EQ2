@@ -10,12 +10,9 @@ jobs:
     - name: Get latest code
       uses: actions/checkout@v4    
     - name: Sync files
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: projetoscti.com.br
-        port: 4026
         username: eq2ini3a
-        password: eq33a996
-        local_path: ./
-        remote_path: /var/www/eq2.in3a.projetoscti.com.br/public_html
-        sftp_only: true
+        password: ${{ secrets.ftp_password }}
+        server-dir: /var/www/eq2.in3a.projetoscti.com.br/public_html
