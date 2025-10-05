@@ -13,6 +13,6 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: projetoscti.com.br
-        username: projetoscti02
+        username: eq2ini3a
         password: ${{ secrets.ftp_password }}
         server-dir: ./INI3A-EQ2/
