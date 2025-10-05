@@ -16,5 +16,4 @@ jobs:
         username: projetoscti02
         password: ${{ secrets.ftp_password }}
         port: 4026
-        local_path: ./
-        remote_path: /var/www/eq2.in3a.projetoscti.com.br/public_html
+        server-dir: /var/www/eq2.in3a.projetoscti.com.br/public_html
