@@ -15,4 +15,5 @@ jobs:
         server: projetoscti.com.br
         username: eq2ini3a
         password: ${{ secrets.ftp_password }}
+        port: 4026
         server-dir: ./INI3A-EQ2/
