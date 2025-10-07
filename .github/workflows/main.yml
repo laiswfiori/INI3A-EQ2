@@ -8,4 +8,4 @@
     password: ${{secrets.FTP_PASSWORD}}
     port: 4026
     uploads: |
-    ./src/ => /var/www/eq2.ini3a.projetoscti.com.br/public_html/
+    ./src/backend/ => /var/www/eq2.ini3a.projetoscti.com.br/public_html/api/
