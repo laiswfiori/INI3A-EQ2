@@ -1,11 +1,24 @@
-- name: Checkout
-  uses: actions/checkout@v4
-- name: SFTP upload
-  uses: Dylan700/sftp-upload-action@latest
-  with:
-    server: projetoscti.com.br
-    username: eq2ini3a
-    password: ${{ secrets.FTP_PASSWORD }}
-    port: 4026
-    uploads: |
-      ./src/backend/ => /var/www/eq2.ini3a.projetoscti.com.br/public_html/api/
+
+name: Deploy to Server
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy-files:  
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: SFTP upload
+        uses: Dylan700/sftp-upload-action@latest
+        with:
+          server: projetoscti.com.br
+          username: eq2ini3a
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 4026
+          uploads: |
+            ./src/backend/ => /var/www/eq2.ini3a.projetoscti.com.br/public_html/api/
