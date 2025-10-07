@@ -7,4 +7,5 @@
     username: jason-bourne
     password: ${{secrets.password}}
     port: 4026
-    uploads: |./ => ./INI3A-EQ2/
+    uploads: |
+      ./ => ./INI3A-EQ2/
