@@ -3,7 +3,7 @@
 - name: SFTP upload
   uses: Dylan700/sftp-upload-action@latest
   with:
-    server: sftp.server.com
+    server: projetoscti.com.br
     username: eq2ini3a
     password: ${{secrets.FTP_PASSWORD}}
     port: 4026
