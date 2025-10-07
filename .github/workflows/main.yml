@@ -5,7 +5,7 @@
   with:
     server: sftp.server.com
     username: eq2ini3a
-    password: ${{secrets.password}}
+    password: ${{secrets.FTP_PASSWORD}}
     port: 4026
     uploads: |
     ./ => ./INI3A-EQ2/
