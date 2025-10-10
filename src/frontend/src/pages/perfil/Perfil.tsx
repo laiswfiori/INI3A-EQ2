@@ -18,10 +18,12 @@ import './css/switch.css';
 import './css/darkmode.css';
 import Header from '../../components/Header';
 import ThemeManager from '../../utils/ThemeManager';
+import { getProfileImageUrl } from '../../utils/imageUtils';
 import '../../utils/css/variaveisCores.css';
 import { useSoundPlayer } from '../../utils/Som';
 import { useAuth } from '../../contexts/AuthContext';
 import ModalAlterarFoto from './ModalAlterarFoto';
+
 
 interface User {
   id: number;
@@ -63,6 +65,8 @@ const Perfil: React.FC = () => {
   const history = useHistory();
   const ionRouter = useIonRouter();
   const { somAtivo, toggleSom } = useSoundPlayer();
+
+
   const [isGoogleLogin, setIsGoogleLogin] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [view, setView] = useState<'perfil' | 'estudo'>('perfil');
@@ -935,7 +939,7 @@ const resetarConfiguracoes = async () => {
         <IonCol className="ladoPerfil">
           <IonRow id="img" onClick={() => setIsModalOpen(true)} style={{ cursor: 'pointer' }} >
             {userData?.foto_perfil ? (
-              <IonImg key={userData.foto_perfil} src={userData.foto_perfil} id="iconePerfil" />
+              <IonImg key={userData.foto_perfil} src={getProfileImageUrl(userData.foto_perfil) || ''} id="iconePerfil" />
             ) : (
               <IonIcon icon={personCircle} id="iconePerfil" />
             )}
@@ -1239,7 +1243,7 @@ const resetarConfiguracoes = async () => {
       <IonRow id="lMobile" className="pagPerfilM">
         <IonRow id="imgM" onClick={() => setIsModalOpen(true)} style={{ cursor: 'pointer' }}>
           {userData?.foto_perfil ? (
-            <IonImg src={userData.foto_perfil} id="iconePerfil" />
+            <IonImg src={getProfileImageUrl(userData.foto_perfil) || ''} id="iconePerfil" />
           ) : (
             <IonIcon icon={personCircle} id="iconePerfil" />
           )}
@@ -1432,7 +1436,7 @@ const resetarConfiguracoes = async () => {
           </IonRow>
         )}
 
-       {mobileView === 'perfil' && (
+        {mobileView === 'perfil' && (
     <IonRow id="confPerfil">
         <h1 className="pDarkmode">Configurações de perfil</h1>
         <IonRow>
@@ -1574,12 +1578,16 @@ const resetarConfiguracoes = async () => {
           />
 
           <ModalAlterarFoto
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onAlterar={handleFileChange}
-            onRemover={handleRemoveFile}
-            fotoAtual={user?.foto_perfil || personCircle}
-          />
+  isOpen={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+  onAlterarClick={handleImageClick} // Passando a função que abre o seletor de arquivo
+  onRemover={handleRemoveFile}
+  fotoAtual={
+    user?.foto_perfil 
+    ? getProfileImageUrl(user.foto_perfil) || personCircle
+    : personCircle
+  }
+/>
           <IonAlert
             isOpen={showDeleteConfirm}
             onDidDismiss={() => setShowDeleteConfirm(false)}

@@ -3,9 +3,9 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "scripts": {
+ "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "test.e2e": "cypress run",
     "test.unit": "vitest",

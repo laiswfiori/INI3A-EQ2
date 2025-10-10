@@ -55,15 +55,16 @@ class UserController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         $imagemBase64 = $request->input('foto_perfil');
 
         // Deleta a foto antiga do armazenamento, se ela existir
         if ($user->foto_perfil) {
-            // Remove o /storage/ do caminho para corresponder ao disco 'public'
-            $pathAntigo = str_replace('/storage/', '', $user->foto_perfil);
-            if (Storage::disk('public')->exists($pathAntigo)) {
-                Storage::disk('public')->delete($pathAntigo);
+            // Como agora vamos salvar o caminho relativo, não precisamos mais do str_replace
+            // O caminho salvo no banco já será 'fotos_perfil/nome_do_arquivo.ext'
+            if (Storage::disk('public')->exists($user->foto_perfil)) {
+                Storage::disk('public')->delete($user->foto_perfil);
             }
         }
         
@@ -72,22 +73,24 @@ class UserController extends Controller
             try {
                 $partes = explode(';', $imagemBase64);
                 $mime = explode(':', $partes[0])[1];
-                // Pega a extensão a partir do mime type, ex: "webp"
                 $extensao = explode('/', $mime)[1];
-
-                // Pega apenas os dados da imagem, depois da vírgula
                 $file_data = substr($imagemBase64, strpos($imagemBase64, ',') + 1);
 
-                // Cria o nome do arquivo com a extensão CORRETA
+                // Este é o caminho relativo que vamos salvar
                 $imageName = 'fotos_perfil/user_' . $user->id . '_' . time() . '.' . $extensao;
                 
                 Storage::disk('public')->put($imageName, base64_decode($file_data));
 
-                $baseUrl = env('APP_URL', 'http://localhost:8000'); // Pega a URL do .env ou usa um padrão
-                $urlImagem = $baseUrl . '/storage/' . $imageName;
-                $user->foto_perfil = $urlImagem;
+                // --- CORREÇÃO PRINCIPAL ---
+                // LINHA MODIFICADA: Salve APENAS o caminho relativo no banco
+                $user->foto_perfil = $imageName;
+                // LINHAS REMOVIDAS: Não montamos mais a URL completa aqui
+                // $baseUrl = env('APP_URL', 'http://localhost:8000');
+                // $urlImagem = $baseUrl . '/storage/' . $imageName;
 
             } catch (\Exception $e) {
+                // Adiciona um log para depuração, se necessário
+                // \Log::error('Erro ao salvar imagem: ' . $e->getMessage());
                 return response()->json(['message' => 'Erro ao processar a nova imagem.'], 500);
             }
         } else {

@@ -10,6 +10,7 @@ import ThemeManager from '../utils/ThemeManager';
 import '../utils/css/variaveisCores.css';
 import { useSoundPlayer } from './../utils/Som';
 import { useAuth } from '../contexts/AuthContext'; // 1. ADICIONADO: Importa o hook de autenticação
+import { getProfileImageUrl } from '../utils/imageUtils';
 
 const Header: React.FC = () => {
   const history = useHistory();
@@ -153,7 +154,7 @@ const Header: React.FC = () => {
               <IonTabButton className="azul" tab="perfil" onClick={navPerfil}>
                 <IonAvatar className={`avatar-header icones ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`}>
                   {user?.foto_perfil ? (
-                    <img src={user.foto_perfil} alt="Perfil" />
+                    <img src={getProfileImageUrl(user.foto_perfil) || ''} alt="Perfil" />
                   ) : (
                     <IonIcon icon={personCircle} className={`icones ${location.pathname.startsWith('/perfil') ? 'ativo' : ''}`} />
                   )}
@@ -247,7 +248,7 @@ const Header: React.FC = () => {
                <div className="menu2" onClick={navPerfil}>
                   <IonAvatar className="avatar-header-mobile">
                     {user?.foto_perfil ? (
-                      <img src={user.foto_perfil} alt="Perfil" />
+                      <img src={getProfileImageUrl(user.foto_perfil) || ''} alt="Perfil" />
                     ) : (
                       <IonIcon icon={personCircle} />
                     )}

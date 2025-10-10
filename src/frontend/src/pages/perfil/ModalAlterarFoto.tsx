@@ -1,28 +1,30 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { IonIcon } from '@ionic/react';
 import { closeCircleOutline } from 'ionicons/icons';
 import './css/modal.css';
 
+// --- Interface de Props Corrigida ---
 interface ModalAlterarFotoProps {
   isOpen: boolean;
   onClose: () => void;
-  onAlterar: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onAlterarClick: () => void; // Prop para lidar com o CLIQUE no botão
   onRemover: () => void;
   fotoAtual: string;
 }
 
-const ModalAlterarFoto: React.FC<ModalAlterarFotoProps> = ({ isOpen, onClose, onAlterar, onRemover, fotoAtual }) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+const ModalAlterarFoto: React.FC<ModalAlterarFotoProps> = ({ 
+  isOpen, 
+  onClose, 
+  onAlterarClick, // Nova prop sendo usada
+  onRemover, 
+  fotoAtual 
+}) => {
+  // O useRef e a função handleAlterarClick foram removidos daqui
+  // A lógica agora está centralizada no Perfil.tsx
 
   if (!isOpen) {
     return null;
   }
-
-  const handleAlterarClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
 
   return (
     <div className="modal-overlay">
@@ -31,14 +33,12 @@ const ModalAlterarFoto: React.FC<ModalAlterarFotoProps> = ({ isOpen, onClose, on
         <h2>Gerenciar Foto</h2>
         <div className="modal-body">
           <img src={fotoAtual} alt="Foto de perfil" className="modal-profile-pic" />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={onAlterar}
-            ref={fileInputRef}
-            style={{ display: 'none' }}
-          />
-          <button onClick={handleAlterarClick} className="btn-alterar">Alterar Foto</button>
+          
+          {/* O input de arquivo escondido foi removido deste componente */}
+
+          {/* --- Botão Corrigido --- */}
+          {/* Agora o onClick chama a função que recebemos via props do Perfil.tsx */}
+          <button onClick={onAlterarClick} className="btn-alterar">Alterar Foto</button>
           <button onClick={onRemover} className="btn-remover">Remover Foto</button>
         </div>
       </div>
