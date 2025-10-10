@@ -246,13 +246,13 @@
     grid-column: 1 / 4;
     display: flex;
     flex-direction: column;
-    width: 120%;
-    height: 120%;
+    width: 100%;
+    height: 100%;
     max-height: 75vh;
     padding: 30px 8%;
     margin: 0 auto;
     margin-top: -150px;
-    margin-left: -30px;
+    margin-left: 0px;
     border-radius: 10px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -324,6 +324,7 @@
 
   .voltar {
     font-size: 22px;
+    margin-top: -30PX;
   }
 
   .div1 {
@@ -335,7 +336,7 @@
     max-height: 75vh;
     padding: 20px 5%;
     margin: 0 auto;
-    margin-top: 15px;
+    margin-top: -40px;
     border-radius: 10px;
     overflow-y: auto;
     overflow-x: hidden;

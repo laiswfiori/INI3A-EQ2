@@ -47,7 +47,7 @@ class NivelCalculoService
         }else if ($user->last_streak_update === $ontem) {
             $user->streak += 1;
         } else {
-            $user->streak = 1;
+            $user->streak = 0;
         }
 
         $user->last_streak_update = $hoje;

@@ -900,6 +900,20 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
             <IonRow className="estDivs">
               <IonRow className="espDiv">
                 <IonCol className="altD">
+                  <p className="txtGrande pDarkmode">{atividades.filter(a => a.status === "em andamento").length}</p>
+                </IonCol>
+                <IonCol className="altD iconFim">
+                  <IonIcon icon={rocket} className="iconesTF" />
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <p className="txtTF pDarkmode">Total de atividades em andamento</p>
+              </IonRow>
+            </IonRow>
+
+            <IonRow className="estDivs">
+              <IonRow className="espDiv">
+                <IonCol className="altD">
                   <p className="txtGrande pDarkmode">{atividades.filter(a => a.status === "concluído").length}</p>
                 </IonCol>
                 <IonCol className="altD iconFim">
@@ -911,19 +925,6 @@ const getAtividadesPorDia = (dia: number, isCurrentMonth: boolean) => {
               </IonRow>
             </IonRow>
 
-            <IonRow className="estDivs">
-              <IonRow className="espDiv">
-                <IonCol className="altD">
-                  <p className="txtGrande pDarkmode">5</p>
-                </IonCol>
-                <IonCol className="altD iconFim">
-                  <IonIcon icon={rocket} className="iconesTF" />
-                </IonCol>
-              </IonRow>
-              <IonRow>
-                <p className="txtTF pDarkmode">Total de revisões feitas</p>
-              </IonRow>
-            </IonRow>
           </IonRow>  
           <IonRow className="rowA rowCentro rowScroll">
             <IonCol className="colAtividades">
