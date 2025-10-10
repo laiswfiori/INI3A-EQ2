@@ -21,4 +21,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 4026
           uploads: |
-            ./src/backend/ => /var/www/eq2.ini3a.projetoscti.com.br/public_html/api/
+            ./src/backend/ => /var/www/eq2.ini3a.projetoscti.com.br/public_html/backend/
