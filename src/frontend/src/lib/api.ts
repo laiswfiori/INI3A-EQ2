@@ -1,11 +1,10 @@
-const prod = false;
-
 export default class API {
   apiUrl: string = "";
   private isRefreshing = false; // Flag para evitar múltiplas tentativas de refresh
 
   constructor() {
-    this.apiUrl = prod ? 'API_PROD' : 'http://eq2.ini3a.projetoscti.com.br/backend/public';
+    this.apiUrl = import.meta.env.VITE_API_URL;
+    //this.apiUrl = prod ? 'API_PROD' : 'http://eq2.ini3a.projetoscti.com.br/backend/public';
   }
 
   private getToken(): string | null {
