@@ -660,6 +660,8 @@ const setShowCardEditorAndInitialData = (
                 </IonRow>
               </div>
 
+              <IonIcon icon={flash} className="iconesTFS2" />
+
               <div className="estDivs">
                 <IonRow className="espDiv">
                   <IonCol className="altD">
@@ -674,19 +676,6 @@ const setShowCardEditorAndInitialData = (
                 </IonRow>
               </div>
 
-              <div className="estDivs">
-                <IonRow className="espDiv">
-                  <IonCol className="altD">
-                    <p className="txtGrande pDarkmode">0</p> 
-                  </IonCol>
-                  <IonCol className="altD iconFim">
-                    <IonIcon icon={time} className="iconesTF" />
-                  </IonCol>
-                </IonRow>
-                <IonRow>
-                  <p className="txtTF pDarkmode">Matérias para revisar hoje</p>
-                </IonRow>
-              </div>
             </IonRow>
           )}
           <IonRow id="decks" className="p0">
