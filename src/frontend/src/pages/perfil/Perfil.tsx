@@ -384,7 +384,8 @@ const handleDiaToggle = (dia: string) => {
   };
 
   const handleSaveProfile = async () => {
-  if (!formData) return;
+    console.log('Salvando perfil com dados:', formData);
+    if (!formData) return;
   try {
     const response = await updateUserProfile(formData);
     setUserData(response.user);

@@ -50,7 +50,7 @@ ion-button.btnEnviar::part(native):hover {
 }
 
 #imgInicio, #imgInicioMobile {
-    background-image:  url('/assets/pessoaInicio.jpeg');
+    background-image:  url('/imgs/pessoaInicio.jpeg');
     background-repeat: no-repeat; 
     background-size: cover;       
     background-position: center;

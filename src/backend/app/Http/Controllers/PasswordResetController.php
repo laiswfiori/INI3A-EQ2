@@ -79,7 +79,7 @@ class PasswordResetController extends Controller
 
     private function sendResetEmail($email, $token)
     {
-        $frontendUrl = env('FRONTEND_URL', 'http://localhost:8100');
+        $frontendUrl = env('FRONTEND_URL', 'http://eq2.ini3a.projetoscti.com.br');
         $resetUrl = "{$frontendUrl}/senha/alterar?token={$token}&email=" . urlencode($email);
 
         $subject = 'Seu Link para alteração de Senha';
